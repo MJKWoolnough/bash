@@ -1,14 +1,17 @@
 package bash
 
 import (
+	"errors"
 	"io"
 
 	"vimagination.zapto.org/parser"
 )
 
 const (
-	whitespace = " \t"
-	newline    = "\n"
+	whitespace  = " \t"
+	newline     = "\n"
+	doubleStops = "\\\n`$\""
+	singleStops = "\n'"
 )
 
 const (
@@ -32,6 +35,10 @@ func (b *bashTokeniser) lastTokenDepth() byte {
 	}
 
 	return b.tokenDepth[len(b.tokenDepth)-1]
+}
+
+func (b *bashTokeniser) popTokenDepth() {
+	b.tokenDepth = b.tokenDepth[len(b.tokenDepth)-1]
 }
 
 func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -75,6 +82,32 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 }
 
 func (b *bashTokeniser) string(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	stops := singleStops
+
+	if b.lastTokenDepth() == '"' {
+		stops = doubleStops
+	}
+
+	for {
+		switch t.ExceptRun(stops) {
+		default:
+			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '\n':
+			return t.ReturnError(ErrInvalidCharacter)
+		case '`':
+			return t.Return(TokenString, b.backtick)
+		case '$':
+			return t.Return(TokenString, b.identifier)
+		case '"', '\'':
+			t.Next()
+			b.popTokenDepth()
+
+			return t.Return(TokenString, b.main)
+		case '\\':
+			t.Next()
+			t.Next()
+		}
+	}
 }
 
 func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -82,3 +115,11 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 
 func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 }
+
+func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+var ErrInvalidCharacter = errors.New("invalid character")
