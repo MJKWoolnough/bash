@@ -3,15 +3,17 @@ package bash
 import (
 	"errors"
 	"io"
+	"strings"
 
 	"vimagination.zapto.org/parser"
 )
 
 const (
-	whitespace  = " \t"
-	newline     = "\n"
-	doubleStops = "\\\n`$\""
-	singleStops = "\n'"
+	whitespace      = " \t"
+	newline         = "\n"
+	doubleStops     = "\\\n`$\""
+	singleStops     = "\n'"
+	braceGroupStart = "\\\"'`(){}- \t\n"
 )
 
 const (
@@ -171,6 +173,60 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 }
 
 func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	switch c := t.Peek(); c {
+	default:
+		return b.word(t)
+	case '<':
+		t.Next()
+		t.Accept("<&>")
+	case '>':
+		t.Next()
+		t.Accept(">&|")
+	case '|':
+		t.Next()
+		t.Accept("&|")
+	case '&':
+		t.Next()
+		t.Accept("&")
+	case ';':
+		t.Next()
+		t.Accept(";")
+		t.Accept(";&")
+	case '"', '\'':
+		return b.stringStart(t)
+	case '(':
+		t.Next()
+		b.pushTokenDepth(')')
+	case '{':
+		t.Next()
+
+		if strings.ContainsRune(braceGroupStart, t.Peek()) {
+			b.pushTokenDepth('}')
+
+			return t.Return(TokenPunctuator, b.main)
+		}
+
+		return b.braceExpansion(t)
+	case '}', ')':
+		if rune(b.lastTokenDepth()) != c {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		b.popTokenDepth()
+	case '=':
+		t.Next()
+	case '$':
+		return b.identifier(t)
+	case '`':
+		if b.lastTokenDepth() != '`' {
+			return b.backtick(t)
+		}
+
+		b.popTokenDepth()
+		t.Next()
+	}
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -186,6 +242,12 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 }
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 }
 
 var ErrInvalidCharacter = errors.New("invalid character")
