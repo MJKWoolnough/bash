@@ -9,11 +9,11 @@ import (
 )
 
 const (
-	whitespace      = " \t"
-	newline         = "\n"
-	doubleStops     = "\\\n`$\""
-	singleStops     = "\n'"
-	braceGroupStart = "\\\"'`(){}- \t\n"
+	whitespace  = " \t"
+	newline     = "\n"
+	doubleStops = "\\\n`$\""
+	singleStops = "\n'"
+	word        = "\\\"'`(){}- \t\n"
 )
 
 const (
@@ -200,7 +200,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '{':
 		t.Next()
 
-		if strings.ContainsRune(braceGroupStart, t.Peek()) {
+		if strings.ContainsRune(word, t.Peek()) {
 			b.pushTokenDepth('}')
 
 			return t.Return(TokenPunctuator, b.main)
@@ -230,6 +230,29 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 }
 
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Next()
+
+	if t.Accept("(") {
+		if t.Accept("(") {
+			b.pushTokenDepth('>')
+
+			return t.Return(TokenPunctuator, b.main)
+		}
+
+		b.pushTokenDepth(')')
+
+		return t.Return(TokenPunctuator, b.main)
+	}
+
+	if t.Accept("{") {
+		b.pushTokenDepth('}')
+
+		return t.Return(TokenPunctuator, b.word)
+	}
+
+	t.ExceptRun(word)
+
+	return t.Return(TokenIdentifier, b.main)
 }
 
 func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
