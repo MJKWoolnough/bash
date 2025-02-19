@@ -37,8 +37,12 @@ func (b *bashTokeniser) lastTokenDepth() byte {
 	return b.tokenDepth[len(b.tokenDepth)-1]
 }
 
+func (b *bashTokeniser) pushTokenDepth(c byte) {
+	b.tokenDepth = append(b.tokenDepth, c)
+}
+
 func (b *bashTokeniser) popTokenDepth() {
-	b.tokenDepth = b.tokenDepth[len(b.tokenDepth)-1]
+	b.tokenDepth = b.tokenDepth[:len(b.tokenDepth)-1]
 }
 
 func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -111,6 +115,59 @@ func (b *bashTokeniser) string(t *parser.Tokeniser) (parser.Token, parser.TokenF
 }
 
 func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	var early bool
+
+	switch c := t.Peek(); c {
+	case -1:
+		return t.ReturnError(io.ErrUnexpectedEOF)
+	case '"', '\'':
+		return b.stringStart(t)
+	case '$':
+		return b.identifier(t)
+	case '+', '-', '&', '|':
+		early = true
+
+		fallthrough
+	case '<', '>':
+		t.Next()
+
+		if t.Peek() == c {
+			t.Next()
+
+			if early {
+				break
+			}
+		}
+
+		t.Accept("=")
+	case '=', '!', '*', '/', '%', '^':
+		t.Next()
+		t.Accept("=")
+	case '~', '?', ':', ',':
+		t.Next()
+	case ')':
+		t.Next()
+
+		if !t.Accept(")") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		b.popTokenDepth()
+	case '(':
+		t.Next()
+
+		if !t.Accept("(") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		b.pushTokenDepth('>')
+	case '0':
+		return b.zero(t)
+	default:
+		return b.number(t)
+	}
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -120,6 +177,15 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 }
 
 func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+}
+
+func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 }
 
 var ErrInvalidCharacter = errors.New("invalid character")
