@@ -256,6 +256,10 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 }
 
 func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	b.pushTokenDepth('`')
+	t.Next()
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
