@@ -9,13 +9,15 @@ import (
 )
 
 const (
-	whitespace  = " \t"
-	newline     = "\n"
-	doubleStops = "\\\n`$\""
-	singleStops = "\n'"
-	word        = "\\\"'`(){}- \t\n"
-	hexDigit    = "0123456789ABCDEFabcdef"
-	octalDigit  = "012345678"
+	whitespace   = " \t"
+	newline      = "\n"
+	doubleStops  = "\\\n`$\""
+	singleStops  = "\n'"
+	word         = "\\\"'`(){}- \t\n"
+	hexDigit     = "0123456789ABCDEFabcdef"
+	octalDigit   = "012345678"
+	decimalDigit = "0123456789"
+	numberChars  = decimalDigit + "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz@_"
 )
 
 const (
@@ -295,6 +297,21 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 }
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if !t.Accept(decimalDigit) {
+		return word(t)
+	}
+
+	t.AcceptRun(decimalDigit)
+
+	if t.Accept("#") {
+		if !t.Accept(numberChars) {
+			return t.ReturnError(ErrInvalidNumber)
+		}
+
+		t.AcceptRun(numberChars)
+	}
+
+	return tk.Return(TokenNumberLiteral, b.main)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
