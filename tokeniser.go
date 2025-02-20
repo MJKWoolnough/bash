@@ -14,6 +14,8 @@ const (
 	doubleStops = "\\\n`$\""
 	singleStops = "\n'"
 	word        = "\\\"'`(){}- \t\n"
+	hexDigit    = "0123456789ABCDEFabcdef"
+	octalDigit  = "012345678"
 )
 
 const (
@@ -277,6 +279,19 @@ func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.T
 }
 
 func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Next()
+
+	if t.Accept("xX") {
+		if !t.Accept(hexDigit) {
+			return t.ReturnError(ErrInvalidNumber)
+		}
+
+		t.AcceptRun(hexDigit)
+	} else {
+		t.AcceptRun(t.AcceptRun(octalDigit))
+	}
+
+	return t.Return(TokenNumberLiteral, b.main)
 }
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -288,4 +303,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 }
 
-var ErrInvalidCharacter = errors.New("invalid character")
+var (
+	ErrInvalidCharacter = errors.New("invalid character")
+	ErrInvalidNumber    = errors.New("invalid number")
+)
