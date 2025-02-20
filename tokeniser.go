@@ -263,6 +263,17 @@ func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.Toke
 }
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if rune(b.lastTokenDepth()) == t.Peek() {
+		b.popTokenDepth()
+
+		t.Next()
+
+		return t.Return(TokenString, b.main)
+	}
+
+	b.pushTokenDepth(byte(t.Next()))
+
+	return b.string(t)
 }
 
 func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
