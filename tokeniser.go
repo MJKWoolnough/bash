@@ -3,10 +3,13 @@ package bash
 import (
 	"errors"
 	"io"
+	"slices"
 	"strings"
 
 	"vimagination.zapto.org/parser"
 )
+
+var keywords = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
 
 const (
 	whitespace   = " \t"
@@ -14,6 +17,7 @@ const (
 	doubleStops  = "\\\n`$\""
 	singleStops  = "\n'"
 	word         = "\\\"'`(){}- \t\n"
+	wordBreak    = " `\\\t\n|&;<>()={}"
 	hexDigit     = "0123456789ABCDEFabcdef"
 	octalDigit   = "012345678"
 	decimalDigit = "0123456789"
@@ -26,6 +30,7 @@ const (
 	TokenComment
 	TokenIdentifier
 	TokenKeyword
+	TokenWord
 	TokenNumberLiteral
 	TokenString
 	TokenPunctuator
@@ -315,6 +320,39 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	var hasEscape bool
+
+	for {
+		switch t.ExceptRun(wordBreak) {
+		case -1:
+			if t.Len() == 0 {
+				if b.lastTokenDepth() == 0 {
+					return t.Done()
+				}
+
+				return t.ReturnError(io.ErrUnexpectedEOF)
+			}
+
+			fallthrough
+		default:
+			data := t.Get()
+
+			if slices.Contains(keywords, data) {
+				return parser.Token{Type: TokenKeyword, Data: data}, b.main
+			}
+
+			if !hasEscape && t.Peek() == '=' {
+				return parser.Token{Type: TokenIdentifier, Data: data}, b.main
+			}
+
+			return parser.Token{Type: TokenWord, Data: data}, b.main
+		case '\\':
+			t.Next()
+			t.Next()
+
+			hasEscape = true
+		}
+	}
 }
 
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
