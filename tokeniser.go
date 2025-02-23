@@ -46,6 +46,17 @@ type bashTokeniser struct {
 	tokenDepth []byte
 }
 
+// SetTokeniser sets the initial tokeniser state of a parser.Tokeniser.
+//
+// Used if you want to manually tokenise bash code.
+func SetTokeniser(t *parser.Tokeniser) *parser.Tokeniser {
+	p := new(bashTokeniser)
+
+	t.TokeniserState(p.main)
+
+	return t
+}
+
 func (b *bashTokeniser) lastTokenDepth() byte {
 	if len(b.tokenDepth) == 0 {
 		return 0
