@@ -15,18 +15,19 @@ var (
 )
 
 const (
-	whitespace   = " \t"
-	newline      = "\n"
-	doubleStops  = "\\\n`$\""
-	singleStops  = "\n'"
-	word         = "\\\"'`(){}- \t\n"
-	wordBreak    = " `\\\t\n|&;<>()={}"
-	braceBreak   = " `\\\t\n|&;<>()=},"
-	hexDigit     = "0123456789ABCDEFabcdef"
-	octalDigit   = "012345678"
-	decimalDigit = "0123456789"
-	letters      = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	numberChars  = decimalDigit + letters + "@_"
+	whitespace     = " \t"
+	newline        = "\n"
+	doubleStops    = "\\\n`$\""
+	singleStops    = "\n'"
+	word           = "\\\"'`(){}- \t\n"
+	wordBreak      = " `\\\t\n|&;<>()={}"
+	braceBreak     = " `\\\t\n|&;<>()=},"
+	braceWordBreak = " `\\\t\n|&;<>()={},"
+	hexDigit       = "0123456789ABCDEFabcdef"
+	octalDigit     = "012345678"
+	decimalDigit   = "0123456789"
+	letters        = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	numberChars    = decimalDigit + letters + "@_"
 )
 
 const (
@@ -424,6 +425,21 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 }
 
 func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	for {
+		switch t.ExceptRun(braceWordBreak) {
+		default:
+			return t.ReturnError(ErrInvalidBraceExpansion)
+		case '}':
+			t.Next()
+
+			return t.Return(TokenString, b.main)
+		case '\\':
+			t.Next()
+			t.Next()
+		case ',':
+			t.Next()
+		}
+	}
 }
 
 var (
