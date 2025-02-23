@@ -9,7 +9,10 @@ import (
 	"vimagination.zapto.org/parser"
 )
 
-var keywords = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
+var (
+	keywords = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
+	dotdot   = []string{".."}
+)
 
 const (
 	whitespace   = " \t"
@@ -18,10 +21,12 @@ const (
 	singleStops  = "\n'"
 	word         = "\\\"'`(){}- \t\n"
 	wordBreak    = " `\\\t\n|&;<>()={}"
+	braceBreak   = " `\\\t\n|&;<>()=},"
 	hexDigit     = "0123456789ABCDEFabcdef"
 	octalDigit   = "012345678"
 	decimalDigit = "0123456789"
-	numberChars  = decimalDigit + "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz@_"
+	letters      = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	numberChars  = decimalDigit + letters + "@_"
 )
 
 const (
@@ -295,7 +300,7 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		t.AcceptRun(hexDigit)
 	} else {
-		t.AcceptRun(t.AcceptRun(octalDigit))
+		t.AcceptRun(octalDigit)
 	}
 
 	return t.Return(TokenNumberLiteral, b.main)
@@ -303,7 +308,7 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !t.Accept(decimalDigit) {
-		return word(t)
+		return b.word(t)
 	}
 
 	t.AcceptRun(decimalDigit)
@@ -316,7 +321,7 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		t.AcceptRun(numberChars)
 	}
 
-	return tk.Return(TokenNumberLiteral, b.main)
+	return t.Return(TokenNumberLiteral, b.main)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -356,9 +361,73 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 }
 
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept(letters) {
+		if t.AcceptWord(dotdot, false) != "" {
+			if !t.Accept(letters) {
+				return t.ReturnError(ErrInvalidBraceExpansion)
+			}
+
+			if t.AcceptWord(dotdot, false) != "" {
+				if !t.Accept(decimalDigit) {
+					return t.ReturnError(ErrInvalidBraceExpansion)
+				}
+
+				t.AcceptRun(decimalDigit)
+			}
+
+			if !t.Accept("}") {
+				return t.ReturnError(ErrInvalidBraceExpansion)
+			}
+		}
+	} else if t.Accept(decimalDigit) {
+		switch t.AcceptRun(decimalDigit) {
+		default:
+			return t.ReturnError(ErrInvalidBraceExpansion)
+		case ',':
+			return b.braceExpansionWord(t)
+		case '.':
+			if t.AcceptWord(dotdot, false) != "" {
+				if !t.Accept(decimalDigit) {
+					return t.ReturnError(ErrInvalidBraceExpansion)
+				}
+
+				t.AcceptRun(decimalDigit)
+
+				if t.AcceptWord(dotdot, false) != "" {
+					if !t.Accept(decimalDigit) {
+						return t.ReturnError(ErrInvalidBraceExpansion)
+					}
+
+					t.AcceptRun(decimalDigit)
+				}
+
+				if !t.Accept("}") {
+					return t.ReturnError(ErrInvalidBraceExpansion)
+				}
+			}
+		}
+	} else {
+		switch t.ExceptRun(braceBreak) {
+		case '\\':
+			t.Next()
+			t.Next()
+
+			fallthrough
+		case ',':
+			return b.braceExpansionWord(t)
+		default:
+			return t.ReturnError(ErrInvalidBraceExpansion)
+		}
+	}
+
+	return t.Return(TokenString, b.main)
+}
+
+func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 }
 
 var (
-	ErrInvalidCharacter = errors.New("invalid character")
-	ErrInvalidNumber    = errors.New("invalid number")
+	ErrInvalidCharacter      = errors.New("invalid character")
+	ErrInvalidNumber         = errors.New("invalid number")
+	ErrInvalidBraceExpansion = errors.New("invalid brace expansion")
 )
