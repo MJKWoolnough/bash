@@ -10,7 +10,28 @@ func TestTokeniser(t *testing.T) {
 	for n, test := range [...]struct {
 		Input  string
 		Output []parser.Token
-	}{} {
+	}{
+		{ // 1
+			"",
+			[]parser.Token{
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 2
+			" ",
+			[]parser.Token{
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 3
+			" \t",
+			[]parser.Token{
+				{Type: TokenWhitespace, Data: " \t"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+	} {
 		p := parser.NewStringTokeniser(test.Input)
 
 		SetTokeniser(&p)
