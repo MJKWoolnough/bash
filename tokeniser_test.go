@@ -41,6 +41,15 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 5
+			"#A comment\n# B comment",
+			[]parser.Token{
+				{Type: TokenComment, Data: "#A comment"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenComment, Data: "# B comment"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
