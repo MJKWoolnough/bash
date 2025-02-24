@@ -234,6 +234,8 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		return b.braceExpansion(t)
 	case '}', ')':
+		t.Next()
+
 		if rune(b.lastTokenDepth()) != c {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
