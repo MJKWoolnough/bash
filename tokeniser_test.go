@@ -102,6 +102,21 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 8
+			"ident ${name} ab\\nc=a",
+			[]parser.Token{
+				{Type: TokenWord, Data: "ident"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenWord, Data: "name"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "ab\\nc"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenWord, Data: "a"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
