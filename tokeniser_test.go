@@ -117,6 +117,29 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 9
+			"$(( 0 1 29 0xff 0xDeAdBeEf 0755 2#5 ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "0"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "1"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "29"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "0xff"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "0xDeAdBeEf"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "0755"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "2#5"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "))"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
