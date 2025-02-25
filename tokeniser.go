@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	keywords = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
-	dotdot   = []string{".."}
+	keywords       = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
+	dotdot         = []string{".."}
+	escapedNewline = []string{"\\\n"}
 )
 
 const (
@@ -88,8 +89,12 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return b.string(t)
 	}
 
-	if t.Accept(whitespace) {
-		t.AcceptRun(whitespace)
+	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
+		for t.AcceptRun(whitespace) != -1 {
+			if t.AcceptWord(escapedNewline, false) == "" {
+				break
+			}
+		}
 
 		return t.Return(TokenWhitespace, b.main)
 	}
