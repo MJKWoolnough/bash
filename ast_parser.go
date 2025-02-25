@@ -16,7 +16,6 @@ type Token struct {
 type Tokens []Token
 
 type bashParser struct {
-	inBrackets uint
 	Tokens
 }
 
@@ -60,8 +59,7 @@ func newBashParser(t Tokeniser) (*bashParser, error) {
 
 func (b bashParser) NewGoal() *bashParser {
 	return &bashParser{
-		inBrackets: b.inBrackets,
-		Tokens:     b.Tokens[len(b.Tokens):],
+		Tokens: b.Tokens[len(b.Tokens):],
 	}
 }
 
@@ -143,10 +141,6 @@ func (b *bashParser) GetLastToken() *Token {
 }
 
 func (b *bashParser) AcceptRunWhitespace() parser.TokenType {
-	if b.inBrackets > 0 {
-		return b.AcceptRunAllWhitespace()
-	}
-
 	return b.AcceptRun(TokenWhitespace, TokenComment)
 }
 
