@@ -150,7 +150,7 @@ func (b *bashParser) GetLastToken() *Token {
 }
 
 func (b *bashParser) AcceptRunWhitespace() parser.TokenType {
-	return b.AcceptRun(TokenWhitespace, TokenComment)
+	return b.AcceptRun(TokenWhitespace)
 }
 
 func (b *bashParser) AcceptRunWhitespaceNoComment() parser.TokenType {
