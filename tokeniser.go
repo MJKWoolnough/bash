@@ -3,7 +3,6 @@ package bash
 import (
 	"errors"
 	"io"
-	"slices"
 	"strings"
 
 	"vimagination.zapto.org/parser"
@@ -17,19 +16,24 @@ var (
 )
 
 const (
-	whitespace     = " \t"
-	newline        = "\n"
-	doubleStops    = "\\\n`$\""
-	singleStops    = "\n'"
-	word           = "\\\"'`(){}- \t\n"
-	wordBreak      = " `\\\t\n|&;<>()=+-/{}"
-	braceBreak     = " `\\\t\n|&;<>()=},"
-	braceWordBreak = " `\\\t\n|&;<>()={},"
-	hexDigit       = "0123456789ABCDEFabcdef"
-	octalDigit     = "012345678"
-	decimalDigit   = "0123456789"
-	letters        = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	numberChars    = decimalDigit + letters + "@_"
+	whitespace         = " \t"
+	newline            = "\n"
+	doubleStops        = "\\\n`$\""
+	singleStops        = "\n'"
+	word               = "\\\"'`(){}- \t\n"
+	wordNoBracket      = "\\\"'`(){}- \t\n]"
+	wordBreak          = " `\\\t\n|&;<>()"
+	wordBreakNoBracket = wordBreak + "]"
+	wordBreakNoBrace   = wordBreak + "}"
+	braceBreak         = " `\\\t\n|&;<>()=},"
+	braceWordBreak     = " `\\\t\n|&;<>()={},"
+	hexDigit           = "0123456789ABCDEFabcdef"
+	octalDigit         = "012345678"
+	decimalDigit       = "0123456789"
+	letters            = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	identStart         = letters + "_"
+	identCont          = decimalDigit + identStart
+	numberChars        = identCont + "@"
 )
 
 const (
@@ -245,7 +249,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		return b.braceExpansion(t)
-	case '}', ')':
+	case '}', ')', ']':
 		t.Next()
 
 		if rune(b.lastTokenDepth()) != c {
@@ -296,7 +300,16 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 		return t.Return(TokenPunctuator, b.word)
 	}
 
-	t.ExceptRun(word)
+	var wb string
+
+	switch b.lastTokenDepth() {
+	case ']':
+		wb = wordNoBracket
+	default:
+		wb = word
+	}
+
+	t.ExceptRun(wb)
 
 	return t.Return(TokenIdentifier, b.main)
 }
@@ -357,10 +370,45 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	var hasEscape bool
+	if t.AcceptWord(keywords, false) != "" {
+		return t.Return(TokenKeyword, b.main)
+	}
+
+	if t.Accept(identStart) {
+		t.AcceptRun(identCont)
+
+		state := t.State()
+
+		if t.AcceptWord(assignment, false) != "" {
+			state.Reset()
+
+			return t.Return(TokenIdentifierAssign, b.main)
+		} else if t.Peek() == rune(b.lastTokenDepth()) {
+			return t.Return(TokenWord, b.main)
+		} else if t.Peek() == '[' {
+			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
+		}
+	}
+
+	var wb string
+
+	switch b.lastTokenDepth() {
+	case '}':
+		wb = wordBreakNoBrace
+	case ']':
+		wb = wordBreakNoBracket
+	default:
+		wb = wordBreak
+	}
+
+	if t.Accept("\\") {
+		t.Next()
+	} else if t.Len() == 0 && t.Accept(wb) {
+		return t.ReturnError(ErrInvalidCharacter)
+	}
 
 	for {
-		switch t.ExceptRun(wordBreak) {
+		switch t.ExceptRun(wb) {
 		case -1:
 			if t.Len() == 0 {
 				if b.lastTokenDepth() == 0 {
@@ -372,28 +420,20 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 			fallthrough
 		default:
-			data := t.Get()
-
-			if slices.Contains(keywords, data) {
-				return parser.Token{Type: TokenKeyword, Data: data}, b.main
-			}
-
-			if !hasEscape {
-				if t.AcceptWord(assignment, false) != "" {
-					t.Reset()
-
-					return parser.Token{Type: TokenIdentifierAssign, Data: data}, b.main
-				}
-			}
-
-			return parser.Token{Type: TokenWord, Data: data}, b.main
+			return t.Return(TokenWord, b.main)
 		case '\\':
 			t.Next()
 			t.Next()
-
-			hasEscape = true
 		}
 	}
+}
+
+func (b *bashTokeniser) startArrayAssign(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Accept("[")
+
+	b.pushTokenDepth(']')
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
