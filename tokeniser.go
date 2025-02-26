@@ -13,6 +13,7 @@ var (
 	keywords       = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
 	dotdot         = []string{".."}
 	escapedNewline = []string{"\\\n"}
+	assignment     = []string{"=", "+="}
 )
 
 const (
@@ -21,7 +22,7 @@ const (
 	doubleStops    = "\\\n`$\""
 	singleStops    = "\n'"
 	word           = "\\\"'`(){}- \t\n"
-	wordBreak      = " `\\\t\n|&;<>()={}"
+	wordBreak      = " `\\\t\n|&;<>()=+-/{}"
 	braceBreak     = " `\\\t\n|&;<>()=},"
 	braceWordBreak = " `\\\t\n|&;<>()={},"
 	hexDigit       = "0123456789ABCDEFabcdef"
@@ -252,6 +253,12 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		b.popTokenDepth()
+	case '+':
+		t.Next()
+
+		if !t.Accept("=") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
 	case '=':
 		t.Next()
 	case '$':
@@ -371,8 +378,12 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 				return parser.Token{Type: TokenKeyword, Data: data}, b.main
 			}
 
-			if !hasEscape && t.Peek() == '=' {
-				return parser.Token{Type: TokenIdentifierAssign, Data: data}, b.main
+			if !hasEscape {
+				if t.AcceptWord(assignment, false) != "" {
+					t.Reset()
+
+					return parser.Token{Type: TokenIdentifierAssign, Data: data}, b.main
+				}
 			}
 
 			return parser.Token{Type: TokenWord, Data: data}, b.main

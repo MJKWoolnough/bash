@@ -71,7 +71,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 8
-			"abc=a def[0]=b ghi[$i]=c",
+			"abc=a def[0]=b ghi[$i]=c jkl+=d",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "abc"},
 				{Type: TokenPunctuator, Data: "="},
@@ -84,6 +84,10 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenIdentifierAssign, Data: "ghi[$i]"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenWord, Data: "c"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifierAssign, Data: "jkl"},
+				{Type: TokenPunctuator, Data: "+="},
+				{Type: TokenWord, Data: "d"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
