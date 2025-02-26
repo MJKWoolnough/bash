@@ -36,6 +36,7 @@ const (
 	TokenLineTerminator
 	TokenComment
 	TokenIdentifier
+	TokenIdentifierAssign
 	TokenKeyword
 	TokenWord
 	TokenNumberLiteral
@@ -371,7 +372,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			}
 
 			if !hasEscape && t.Peek() == '=' {
-				return parser.Token{Type: TokenIdentifier, Data: data}, b.main
+				return parser.Token{Type: TokenIdentifierAssign, Data: data}, b.main
 			}
 
 			return parser.Token{Type: TokenWord, Data: data}, b.main
