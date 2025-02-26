@@ -209,7 +209,12 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		return b.word(t)
 	case '<':
 		t.Next()
-		t.Accept("<&>")
+
+		if t.Accept("<") {
+			t.Accept("<")
+		} else {
+			t.Accept("&>")
+		}
 	case '>':
 		t.Next()
 		t.Accept(">&|")
