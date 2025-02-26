@@ -55,8 +55,47 @@ func (l *LogicalExpression) parse(b *bashParser) error {
 	return nil
 }
 
-type Pipeline struct{}
+type Pipeline struct {
+	Statement Statement
+	Pipeline  *Pipeline
+	Tokens    Tokens
+}
 
 func (p *Pipeline) parse(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := p.Statement.parse(c); err != nil {
+		return b.Error("Pipeline", err)
+	}
+
+	b.Score(c)
+
+	c = b.NewGoal()
+
+	c.AcceptRunWhitespace()
+
+	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "|"}) {
+		c.AcceptRunWhitespace()
+
+		b.Score(c)
+
+		c = b.NewGoal()
+		p.Pipeline = new(Pipeline)
+
+		if err := p.Pipeline.parse(c); err != nil {
+			return b.Error("Pipeline", err)
+		}
+
+		b.Score(c)
+	}
+
+	p.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Statement struct{}
+
+func (s *Statement) parse(b *bashParser) error {
 	return nil
 }
