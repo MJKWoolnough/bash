@@ -242,13 +242,11 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '{':
 		t.Next()
 
-		if strings.ContainsRune(word, t.Peek()) {
-			b.pushTokenDepth('}')
-
-			return t.Return(TokenPunctuator, b.main)
+		if !strings.ContainsRune(word, t.Peek()) {
+			return b.braceExpansion(t)
 		}
 
-		return b.braceExpansion(t)
+		b.pushTokenDepth('}')
 	case '}', ')', ']':
 		t.Next()
 
