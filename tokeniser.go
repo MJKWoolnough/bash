@@ -1,7 +1,6 @@
 package bash
 
 import (
-	"errors"
 	"io"
 	"strings"
 
@@ -514,9 +513,3 @@ func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, p
 		}
 	}
 }
-
-var (
-	ErrInvalidCharacter      = errors.New("invalid character")
-	ErrInvalidNumber         = errors.New("invalid number")
-	ErrInvalidBraceExpansion = errors.New("invalid brace expansion")
-)
