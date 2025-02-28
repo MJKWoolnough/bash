@@ -55,16 +55,42 @@ func (l *LogicalExpression) parse(b *bashParser) error {
 	return nil
 }
 
+type PipelineTime uint8
+
+const (
+	PipelineTimeNone PipelineTime = iota
+	PipelineTimeBash
+	PipelineTimePosix
+)
+
 type Pipeline struct {
-	Statement Statement
-	Pipeline  *Pipeline
-	Tokens    Tokens
+	PipelineTime
+	Not          bool
+	Redirections Redirections
+	Pipeline     *Pipeline
+	Tokens       Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser) error {
+	if b.AcceptToken(parser.Token{Type: TokenWord, Data: "time"}) {
+		b.AcceptRunWhitespace()
+
+		if b.AcceptToken(parser.Token{Type: TokenWord, Data: "-p"}) {
+			p.PipelineTime = PipelineTimePosix
+		} else {
+			p.PipelineTime = PipelineTimeBash
+		}
+
+		b.AcceptRunWhitespace()
+	}
+
+	if p.Not = b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"}); p.Not {
+		b.AcceptRunWhitespace()
+	}
+
 	c := b.NewGoal()
 
-	if err := p.Statement.parse(c); err != nil {
+	if err := p.Redirections.parse(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -91,6 +117,29 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	p.Tokens = b.ToTokens()
 
+	return nil
+}
+
+type Redirections struct {
+	RedirectionsOrVars []RedirectionOrVar
+	Statement          Statement
+	Redirections       []Redirection
+	Tokens             Tokens
+}
+
+func (r *Redirections) parse(b *bashParser) error {
+	return nil
+}
+
+type RedirectionOrVar struct{}
+
+func (r *RedirectionOrVar) parse(b *bashParser) error {
+	return nil
+}
+
+type Redirection struct{}
+
+func (r *Redirection) parse(b *bashParser) error {
 	return nil
 }
 
