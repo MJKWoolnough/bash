@@ -202,11 +202,9 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 13
-			"< << <<< <<- <& <> > >> >& &>> >| | |& || & && () {} = `` $() $(())",
+			"< <<< <<- <& <> > >> >& &>> >| | |& || & && () {} = `` $() $(())",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<"},
-				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenPunctuator, Data: "<<"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenPunctuator, Data: "<<<"},
 				{Type: TokenWhitespace, Data: " "},
@@ -355,6 +353,50 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$("},
 				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 20
+			"<<abc\n123\n456\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "123\n456\nabc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 21
+			"<<a'b 'c\n123\n456\nab c\n",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "a'b 'c"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "123\n456\nab c\n"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 22
+			"<<def\n123\n456\ndef\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "123\n456\ndef\n"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 23
+			"<<def cat\n123\n456\ndef\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "cat"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "123\n456\ndef\n"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 	} {
