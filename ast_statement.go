@@ -239,15 +239,65 @@ func (r *RedirectionOrAssignment) parse(b *bashParser) error {
 	return nil
 }
 
-type Redirection struct{}
+type AssignmentType uint8
 
-func (r *Redirection) parse(b *bashParser) error {
+const (
+	AssignmentAssign AssignmentType = iota
+	AssignmentAppend
+)
+
+type Assignment struct {
+	Identifier Identifier
+	Assignment AssignmentType
+	Word       Word
+	Tokens     Tokens
+}
+
+func (a *Assignment) parse(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := a.Identifier.parse(c); err != nil {
+		return b.Error("Assignment", err)
+	}
+
+	b.Score(c)
+
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "="}) {
+		a.Assignment = AssignmentAssign
+	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+="}) {
+		a.Assignment = AssignmentAppend
+	} else {
+		return b.Error("Assignment", ErrInvalidAssignment)
+	}
+
+	c = b.NewGoal()
+
+	if err := a.Word.parse(c); err != nil {
+		return b.Error("Assignment", err)
+	}
+
+	b.Score(c)
+
+	a.Tokens = b.ToTokens()
+
 	return nil
 }
 
-type Assignment struct{}
+type Identifier struct{}
 
-func (a *Assignment) parse(b *bashParser) error {
+func (i *Identifier) parse(b *bashParser) error {
+	return nil
+}
+
+type Word struct{}
+
+func (w *Word) parse(b *bashParser) error {
+	return nil
+}
+
+type Redirection struct{}
+
+func (r *Redirection) parse(b *bashParser) error {
 	return nil
 }
 
