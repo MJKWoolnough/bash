@@ -399,6 +399,28 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 24
+			"2>1 word",
+			[]parser.Token{
+				{Type: TokenWord, Data: "2"},
+				{Type: TokenPunctuator, Data: ">"},
+				{Type: TokenWord, Data: "1"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "word"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 25
+			"time -p cmd",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "time"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "-p"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "cmd"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
