@@ -1,6 +1,10 @@
 package bash
 
-import "vimagination.zapto.org/parser"
+import (
+	"strings"
+
+	"vimagination.zapto.org/parser"
+)
 
 type LogicalOperator uint8
 
@@ -180,6 +184,28 @@ func (r *Redirections) parse(b *bashParser) error {
 }
 
 func isRedirection(b *bashParser) bool {
+	c := b.NewGoal()
+
+	if c.Accept(TokenWord) {
+		for _, r := range c.GetLastToken().Data {
+			if !strings.ContainsRune(decimalDigit, r) {
+				return false
+			}
+		}
+
+		if c.Accept(TokenPunctuator) {
+			switch c.GetLastToken().Data {
+			case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>":
+				return true
+			}
+		}
+	} else if c.Accept(TokenPunctuator) {
+		switch c.GetLastToken().Data {
+		case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>", "&>", "&>>":
+			return true
+		}
+	}
+
 	return false
 }
 
