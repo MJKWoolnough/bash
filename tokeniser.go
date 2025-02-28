@@ -17,6 +17,8 @@ var (
 const (
 	whitespace         = " \t"
 	newline            = "\n"
+	metachars          = whitespace + newline + "|&;()<>"
+	heredocsBreak      = metachars + "\\\"'"
 	doubleStops        = "\\\n`$\""
 	singleStops        = "\n'"
 	word               = "\\\"'`(){}- \t\n"
@@ -46,10 +48,12 @@ const (
 	TokenNumberLiteral
 	TokenString
 	TokenPunctuator
+	TokenHeredoc
 )
 
 type bashTokeniser struct {
 	tokenDepth []byte
+	heredoc    string
 }
 
 // SetTokeniser sets the initial tokeniser state of a parser.Tokeniser.
@@ -105,6 +109,10 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	}
 
 	if t.Accept(newline) {
+		if b.heredoc != "" {
+			return t.Return(TokenLineTerminator, b.heredocString)
+		}
+
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.main)
@@ -216,7 +224,11 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		t.Next()
 
 		if t.Accept("<") {
-			t.Accept("<-")
+			if !t.Accept("<-") {
+				t.Accept("-")
+
+				return t.Return(TokenPunctuator, b.startHeredoc)
+			}
 		} else {
 			t.Accept("&>")
 		}
@@ -279,6 +291,114 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	}
 
 	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) startHeredoc(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Peek() == -1 || t.Accept(newline) || t.Accept("#") {
+		return t.ReturnError(io.ErrUnexpectedEOF)
+	}
+
+	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
+		for t.AcceptRun(whitespace) != -1 {
+			if t.AcceptWord(escapedNewline, false) == "" {
+				break
+			}
+		}
+
+		return t.Return(TokenWhitespace, b.startHeredoc)
+	}
+
+	chars := heredocsBreak
+
+Loop:
+	for {
+		switch t.ExceptRun(chars) {
+		case -1:
+			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '\\':
+			t.Next()
+			t.Next()
+		case '\'':
+			t.Next()
+
+			if chars == heredocsBreak {
+				chars = "'"
+			} else {
+				chars = heredocsBreak
+			}
+		case '"':
+			if chars == heredocsBreak {
+				chars = "\\\""
+			} else {
+				chars = heredocsBreak
+			}
+		default:
+			break Loop
+		}
+	}
+
+	tk := parser.Token{
+		Type: TokenWord,
+		Data: t.Get(),
+	}
+
+	b.heredoc = unstring(tk.Data)
+
+	return tk, b.main
+}
+
+func unstring(str string) string {
+	var sb strings.Builder
+
+	nextEscaped := false
+
+	for _, c := range str {
+		if nextEscaped {
+			switch c {
+			case 'n':
+				c = '\n'
+			case 't':
+				c = '\t'
+			}
+
+			nextEscaped = false
+		} else {
+			switch c {
+			case '"', '\'':
+				continue
+			case '\\':
+				nextEscaped = true
+
+				continue
+			}
+		}
+
+		sb.WriteRune(c)
+	}
+
+	return sb.String()
+}
+
+func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	for {
+		if t.ExceptRun(newline) == -1 {
+			return t.ReturnError(io.ErrUnexpectedEOF)
+		}
+
+		t.Next()
+
+		state := t.State()
+
+		if t.AcceptString(b.heredoc, false) == len(b.heredoc) && (t.Accept("\n") || t.Peek() == -1) {
+			break
+		}
+
+		state.Reset()
+	}
+
+	b.heredoc = ""
+
+	return t.Return(TokenHeredoc, b.main)
 }
 
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
