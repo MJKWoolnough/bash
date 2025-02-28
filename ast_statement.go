@@ -128,7 +128,59 @@ type Redirections struct {
 }
 
 func (r *Redirections) parse(b *bashParser) error {
+	for b.Peek().Type == TokenIdentifierAssign || isRedirection(b) {
+		var rv RedirectionOrVar
+
+		c := b.NewGoal()
+
+		if err := r.parse(c); err != nil {
+			return b.Error("Redirections", err)
+		}
+
+		b.Score(c)
+		b.AcceptRunWhitespace()
+
+		r.RedirectionsOrVars = append(r.RedirectionsOrVars, rv)
+
+	}
+
+	c := b.NewGoal()
+
+	if err := r.Statement.parse(c); err != nil {
+		return b.Error("Redirections", err)
+	}
+
+	b.Score(c)
+
+	c = b.NewGoal()
+
+	c.AcceptRunWhitespace()
+
+	for isRedirection(c) {
+		b.Score(c)
+
+		c = b.NewGoal()
+		var rv Redirection
+
+		if err := r.parse(c); err != nil {
+			return b.Error("Redirections", err)
+		}
+
+		b.Score(c)
+
+		r.Redirections = append(r.Redirections, rv)
+		c = b.NewGoal()
+
+		c.AcceptRunWhitespace()
+	}
+
+	r.Tokens = b.ToTokens()
+
 	return nil
+}
+
+func isRedirection(b *bashParser) bool {
+	return false
 }
 
 type RedirectionOrVar struct{}
