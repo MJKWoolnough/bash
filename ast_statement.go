@@ -125,7 +125,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 }
 
 type Redirections struct {
-	RedirectionsOrVars []RedirectionOrVar
+	RedirectionsOrVars []RedirectionOrAssignment
 	Statement          Statement
 	Redirections       []Redirection
 	Tokens             Tokens
@@ -133,7 +133,7 @@ type Redirections struct {
 
 func (r *Redirections) parse(b *bashParser) error {
 	for b.Peek().Type == TokenIdentifierAssign || isRedirection(b) {
-		var rv RedirectionOrVar
+		var rv RedirectionOrAssignment
 
 		c := b.NewGoal()
 
@@ -209,15 +209,45 @@ func isRedirection(b *bashParser) bool {
 	return false
 }
 
-type RedirectionOrVar struct{}
+type RedirectionOrAssignment struct {
+	Redirection *Redirection
+	Assignment  *Assignment
+	Tokens      Tokens
+}
 
-func (r *RedirectionOrVar) parse(b *bashParser) error {
+func (r *RedirectionOrAssignment) parse(b *bashParser) error {
+	c := b.NewGoal()
+
+	var err error
+
+	if b.Peek().Type == TokenIdentifierAssign {
+		r.Assignment = new(Assignment)
+		err = r.Assignment.parse(c)
+	} else {
+		r.Redirection = new(Redirection)
+		err = r.Redirection.parse(c)
+	}
+
+	if err != nil {
+		return b.Error("RedirectionOrAssignment", err)
+	}
+
+	b.Score(c)
+
+	r.Tokens = b.ToTokens()
+
 	return nil
 }
 
 type Redirection struct{}
 
 func (r *Redirection) parse(b *bashParser) error {
+	return nil
+}
+
+type Assignment struct{}
+
+func (a *Assignment) parse(b *bashParser) error {
 	return nil
 }
 
