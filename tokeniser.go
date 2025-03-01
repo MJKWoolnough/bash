@@ -47,6 +47,9 @@ const (
 	TokenWord
 	TokenNumberLiteral
 	TokenString
+	TokenStringStart
+	TokenStringMid
+	TokenStringEnd
 	TokenPunctuator
 	TokenHeredoc
 )
@@ -95,7 +98,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	}
 
 	if td == '"' || td == '\'' {
-		return b.string(t)
+		return b.string(t, false)
 	}
 
 	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
@@ -131,11 +134,17 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	return b.operatorOrWord(t)
 }
 
-func (b *bashTokeniser) string(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, parser.TokenFunc) {
 	stops := singleStops
 
 	if b.lastTokenDepth() == '"' {
 		stops = doubleStops
+	}
+
+	tk := TokenStringMid
+
+	if start {
+		tk = TokenStringStart
 	}
 
 	for {
@@ -145,14 +154,20 @@ func (b *bashTokeniser) string(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		case '\n':
 			return t.ReturnError(ErrInvalidCharacter)
 		case '`':
-			return t.Return(TokenString, b.backtick)
+			return t.Return(tk, b.backtick)
 		case '$':
-			return t.Return(TokenString, b.identifier)
+			return t.Return(tk, b.identifier)
 		case '"', '\'':
 			t.Next()
 			b.popTokenDepth()
 
-			return t.Return(TokenString, b.main)
+			tk = TokenStringEnd
+
+			if start {
+				tk = TokenString
+			}
+
+			return t.Return(tk, b.main)
 		case '\\':
 			t.Next()
 			t.Next()
@@ -466,7 +481,7 @@ func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.T
 
 	b.pushTokenDepth(byte(t.Next()))
 
-	return b.string(t)
+	return b.string(t, true)
 }
 
 func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
