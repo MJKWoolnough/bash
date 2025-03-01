@@ -24,7 +24,7 @@ const (
 	singleStops        = "\n'"
 	word               = "\\\"'`(){}- \t\n"
 	wordNoBracket      = "\\\"'`(){}- \t\n]"
-	wordBreak          = " `\\\t\n|&;<>()"
+	wordBreak          = " `\\\t\n$|&;<>()"
 	wordBreakNoBracket = wordBreak + "]"
 	wordBreakNoBrace   = wordBreak + "}"
 	braceBreak         = " `\\\t\n|&;<>()=},"
@@ -607,6 +607,16 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		case '\\':
 			t.Next()
 			t.Next()
+		case '$':
+			state := t.State()
+
+			t.Next()
+
+			if t.Accept(decimalDigit) || t.Accept(identStart) || t.Accept("({") {
+				state.Reset()
+
+				return t.Return(TokenWord, b.main)
+			}
 		}
 	}
 }
