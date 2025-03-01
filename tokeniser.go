@@ -53,7 +53,7 @@ const (
 
 type bashTokeniser struct {
 	tokenDepth []byte
-	heredoc    string
+	heredoc    [][]string
 }
 
 // SetTokeniser sets the initial tokeniser state of a parser.Tokeniser.
@@ -109,7 +109,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	}
 
 	if t.Accept(newline) {
-		if b.heredoc != "" {
+		if td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
 		}
 
@@ -342,7 +342,12 @@ Loop:
 		Data: t.Get(),
 	}
 
-	b.heredoc = unstring(tk.Data)
+	if b.lastTokenDepth() == 'H' {
+		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], unstring(tk.Data))
+	} else {
+		b.pushTokenDepth('H')
+		b.heredoc = append(b.heredoc, []string{unstring(tk.Data)})
+	}
 
 	return tk, b.main
 }
@@ -380,6 +385,15 @@ func unstring(str string) string {
 }
 
 func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	last := len(b.heredoc) - 1
+	heredoc := b.heredoc[last][0]
+	b.heredoc[last] = b.heredoc[last][1:]
+
+	if len(b.heredoc[last]) == 0 {
+		b.heredoc = b.heredoc[:last]
+		b.popTokenDepth()
+	}
+
 	for {
 		if t.ExceptRun(newline) == -1 {
 			return t.ReturnError(io.ErrUnexpectedEOF)
@@ -389,14 +403,12 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 
 		state := t.State()
 
-		if t.AcceptString(b.heredoc, false) == len(b.heredoc) && (t.Accept("\n") || t.Peek() == -1) {
+		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
 			break
 		}
 
 		state.Reset()
 	}
-
-	b.heredoc = ""
 
 	return t.Return(TokenHeredoc, b.main)
 }
