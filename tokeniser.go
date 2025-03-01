@@ -19,6 +19,7 @@ const (
 	newline            = "\n"
 	metachars          = whitespace + newline + "|&;()<>"
 	heredocsBreak      = metachars + "\\\"'"
+	heredocStringBreak = newline + "$"
 	doubleStops        = "\\\n`$\""
 	singleStops        = "\n'"
 	word               = "\\\"'`(){}- \t\n"
@@ -52,6 +53,7 @@ const (
 	TokenStringEnd
 	TokenPunctuator
 	TokenHeredoc
+	TokenHeredocEnd
 )
 
 type bashTokeniser struct {
@@ -95,6 +97,12 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		}
 
 		return t.ReturnError(io.ErrUnexpectedEOF)
+	}
+
+	if td == 'h' {
+		b.popTokenDepth()
+
+		return b.heredocString(t)
 	}
 
 	if td == '"' || td == '\'' {
@@ -402,16 +410,25 @@ func unstring(str string) string {
 func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	last := len(b.heredoc) - 1
 	heredoc := b.heredoc[last][0]
-	b.heredoc[last] = b.heredoc[last][1:]
-
-	if len(b.heredoc[last]) == 0 {
-		b.heredoc = b.heredoc[:last]
-		b.popTokenDepth()
-	}
 
 	for {
-		if t.ExceptRun(newline) == -1 {
+		switch t.ExceptRun(heredocStringBreak) {
+		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '$':
+			state := t.State()
+
+			t.Next()
+
+			if t.Accept(decimalDigit) || t.Accept(identStart) || t.Accept("({") {
+				state.Reset()
+
+				b.pushTokenDepth('h')
+
+				return t.Return(TokenHeredoc, b.identifier)
+			}
+
+			continue
 		}
 
 		t.Next()
@@ -419,13 +436,26 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 		state := t.State()
 
 		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
-			break
+			state.Reset()
+
+			return t.Return(TokenHeredoc, b.heredocEnd)
 		}
 
-		state.Reset()
+	}
+}
+
+func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.ExceptRun(newline)
+
+	last := len(b.heredoc) - 1
+	b.heredoc[last] = b.heredoc[last][1:]
+
+	if len(b.heredoc[last]) == 0 {
+		b.heredoc = b.heredoc[:last]
+		b.popTokenDepth()
 	}
 
-	return t.Return(TokenHeredoc, b.main)
+	return t.Return(TokenHeredocEnd, b.main)
 }
 
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
