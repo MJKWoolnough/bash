@@ -461,6 +461,10 @@ func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.To
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	t.Next()
 
+	if t.Accept(decimalDigit) {
+		return t.Return(TokenIdentifier, b.main)
+	}
+
 	if t.Accept("(") {
 		if t.Accept("(") {
 			b.pushTokenDepth('>')
