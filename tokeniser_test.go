@@ -58,7 +58,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 7
-			"$ident $name a\\nbc=a $0 $12",
+			"$ident $name a\\nbc=a $0 $12 a$b a${b}c",
 			[]parser.Token{
 				{Type: TokenIdentifier, Data: "$ident"},
 				{Type: TokenWhitespace, Data: " "},
@@ -70,6 +70,15 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenIdentifier, Data: "$1"},
 				{Type: TokenWord, Data: "2"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "$b"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWord, Data: "c"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
@@ -140,7 +149,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 10
-			"ident ${name} ab\\nc=a ${6}",
+			"ident ${name} ab\\nc=a ${6} a$ ",
 			[]parser.Token{
 				{Type: TokenWord, Data: "ident"},
 				{Type: TokenWhitespace, Data: " "},
@@ -153,6 +162,9 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: "${"},
 				{Type: TokenWord, Data: "6"},
 				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a$"},
+				{Type: TokenWhitespace, Data: " "},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
