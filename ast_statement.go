@@ -164,6 +164,7 @@ func (r *Redirections) parse(b *bashParser) error {
 		b.Score(c)
 
 		c = b.NewGoal()
+
 		var rv Redirection
 
 		if err := r.parse(c); err != nil {
