@@ -567,6 +567,19 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 32
+			"word{ word{a} word{\nword{",
+			[]parser.Token{
+				{Type: TokenWord, Data: "word{"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "word{a}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "word{"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenWord, Data: "word{"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 33
 			"{ echo 123; echo 456; }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -585,7 +598,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 33
+		{ // 34
 			"(echo 123; echo 456)",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "("},
