@@ -566,6 +566,41 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 32
+			"{ echo 123; echo 456; }",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "{"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "123"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "456"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 33
+			"(echo 123; echo 456)",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "123"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "456"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
