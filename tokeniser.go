@@ -243,7 +243,7 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	switch c := t.Peek(); c {
 	default:
-		return b.word(t)
+		return b.keywordIdentOrWord(t)
 	case '<':
 		t.Next()
 
@@ -481,7 +481,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 	if t.Accept("{") {
 		b.pushTokenDepth('}')
 
-		return t.Return(TokenPunctuator, b.word)
+		return t.Return(TokenPunctuator, b.keywordIdentOrWord)
 	}
 
 	var wb string
@@ -537,7 +537,7 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !t.Accept(decimalDigit) {
-		return b.word(t)
+		return b.keywordIdentOrWord(t)
 	}
 
 	t.AcceptRun(decimalDigit)
@@ -553,7 +553,7 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 	return t.Return(TokenNumberLiteral, b.main)
 }
 
-func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if t.AcceptWord(keywords, false) != "" {
 		return t.Return(TokenKeyword, b.main)
 	}
@@ -574,6 +574,10 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		}
 	}
 
+	return b.word(t)
+}
+
+func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	var wb string
 
 	switch b.lastTokenDepth() {
@@ -642,7 +646,6 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 func (b *bashTokeniser) startArrayAssign(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	t.Accept("[")
-
 	b.pushTokenDepth(']')
 
 	return t.Return(TokenPunctuator, b.main)
