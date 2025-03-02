@@ -546,6 +546,26 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 31
+			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5}",
+			[]parser.Token{
+				{Type: TokenBraceExpansion, Data: "{a..b..2}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenBraceExpansion, Data: "{a,b,d}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenBraceExpansion, Data: "{b,c,d}"},
+				{Type: TokenWord, Data: "e"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenBraceExpansion, Data: "{1..4}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenBraceExpansion, Data: "{2..10..-1}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenBraceExpansion, Data: "{-1..-100..5}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
