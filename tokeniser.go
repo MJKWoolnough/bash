@@ -605,6 +605,24 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			fallthrough
 		default:
 			return t.Return(TokenWord, b.main)
+		case '{':
+			state := t.State()
+
+			t.Next()
+
+			if t.Accept(whitespace) || t.Accept(newline) || t.Peek() == -1 {
+				state.Reset()
+			} else {
+				tk, _ := b.braceExpansion(t.SubTokeniser())
+
+				state.Reset()
+
+				if tk.Type == TokenBraceExpansion {
+					return t.Return(TokenWord, b.main)
+				}
+			}
+
+			t.Next()
 		case '\\':
 			t.Next()
 			t.Next()
@@ -695,19 +713,27 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 }
 
 func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	var hasComma bool
+
 	for {
 		switch t.ExceptRun(braceWordBreak) {
+		case '}':
+			if hasComma {
+				t.Next()
+
+				return t.Return(TokenBraceExpansion, b.main)
+			}
+
+			fallthrough
 		default:
 			return t.ReturnError(ErrInvalidBraceExpansion)
-		case '}':
-			t.Next()
-
-			return t.Return(TokenBraceExpansion, b.main)
 		case '\\':
 			t.Next()
 			t.Next()
 		case ',':
 			t.Next()
+
+			hasComma = true
 		}
 	}
 }
