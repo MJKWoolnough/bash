@@ -24,7 +24,7 @@ const (
 	singleStops        = "\n'"
 	word               = "\\\"'`(){}- \t\n"
 	wordNoBracket      = "\\\"'`(){}- \t\n]"
-	wordBreak          = " `\\\t\n$|&;<>()"
+	wordBreak          = " `\\\t\n$|&;<>(){"
 	wordBreakNoBracket = wordBreak + "]"
 	wordBreakNoBrace   = wordBreak + "}"
 	braceBreak         = " `\\\t\n|&;<>()=},"
@@ -51,6 +51,7 @@ const (
 	TokenStringStart
 	TokenStringMid
 	TokenStringEnd
+	TokenBraceExpansion
 	TokenPunctuator
 	TokenHeredoc
 	TokenHeredocEnd
@@ -281,7 +282,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '{':
 		t.Next()
 
-		if !strings.ContainsRune(word, t.Peek()) {
+		if !strings.ContainsRune(word, t.Peek()) || t.Peek() == '-' {
 			return b.braceExpansion(t)
 		}
 
@@ -647,49 +648,50 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 			if !t.Accept("}") {
 				return t.ReturnError(ErrInvalidBraceExpansion)
 			}
+
+			return t.Return(TokenBraceExpansion, b.main)
 		}
-	} else if t.Accept(decimalDigit) {
-		switch t.AcceptRun(decimalDigit) {
-		default:
-			return t.ReturnError(ErrInvalidBraceExpansion)
-		case ',':
-			return b.braceExpansionWord(t)
-		case '.':
-			if t.AcceptWord(dotdot, false) != "" {
-				if !t.Accept(decimalDigit) {
-					return t.ReturnError(ErrInvalidBraceExpansion)
-				}
+	} else {
+		t.Accept("-")
 
-				t.AcceptRun(decimalDigit)
-
+		if t.Accept(decimalDigit) {
+			switch t.AcceptRun(decimalDigit) {
+			default:
+				return t.ReturnError(ErrInvalidBraceExpansion)
+			case ',':
+				return b.braceExpansionWord(t)
+			case '.':
 				if t.AcceptWord(dotdot, false) != "" {
+					t.Accept("-")
+
 					if !t.Accept(decimalDigit) {
 						return t.ReturnError(ErrInvalidBraceExpansion)
 					}
 
 					t.AcceptRun(decimalDigit)
+
+					if t.AcceptWord(dotdot, false) != "" {
+						t.Accept("-")
+
+						if !t.Accept(decimalDigit) {
+							return t.ReturnError(ErrInvalidBraceExpansion)
+						}
+
+						t.AcceptRun(decimalDigit)
+					}
+
+					if !t.Accept("}") {
+						return t.ReturnError(ErrInvalidBraceExpansion)
+					}
+
+					return t.Return(TokenBraceExpansion, b.main)
 				}
 
-				if !t.Accept("}") {
-					return t.ReturnError(ErrInvalidBraceExpansion)
-				}
 			}
-		}
-	} else {
-		switch t.ExceptRun(braceBreak) {
-		case '\\':
-			t.Next()
-			t.Next()
-
-			fallthrough
-		case ',':
-			return b.braceExpansionWord(t)
-		default:
-			return t.ReturnError(ErrInvalidBraceExpansion)
 		}
 	}
 
-	return t.Return(TokenString, b.main)
+	return b.braceExpansionWord(t)
 }
 
 func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -700,7 +702,7 @@ func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, p
 		case '}':
 			t.Next()
 
-			return t.Return(TokenString, b.main)
+			return t.Return(TokenBraceExpansion, b.main)
 		case '\\':
 			t.Next()
 			t.Next()
