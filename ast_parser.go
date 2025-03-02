@@ -47,7 +47,7 @@ func newBashParser(t Tokeniser) (*bashParser, error) {
 		case TokenLineTerminator:
 			line += uint64(len(tk.Data))
 			linePos = 0
-		case TokenWhitespace, TokenHeredoc:
+		case TokenWhitespace, TokenHeredoc, TokenHeredocEnd:
 			for _, c := range tk.Data {
 				if c == '\n' {
 					line++
