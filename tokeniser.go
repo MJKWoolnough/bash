@@ -273,7 +273,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case ';':
 		t.Next()
 		t.Accept(";")
-		t.Accept(";&")
+		t.Accept("&")
 	case '"', '\'':
 		return b.stringStart(t)
 	case '(':
