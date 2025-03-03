@@ -525,6 +525,80 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 29
+			"<<abc\na$(<<def) 1\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "a"},
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 30
+			"<<abc\na$(<<def cat) 1\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "a"},
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "cat"},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 31
+			"<<abc;$(<<def cat)\nabc\ndef\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "cat"},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 32
+			"<<abc;<<def;$(<<ghi;<<jkl\nghi\njkl\n)\nabc\ndef",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "def"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "ghi"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "jkl"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: ""},
+				{Type: TokenHeredocEnd, Data: "ghi"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: ""},
+				{Type: TokenHeredocEnd, Data: "jkl"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: ""},
+				{Type: TokenHeredocEnd, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: ""},
+				{Type: TokenHeredocEnd, Data: "def"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 33
 			"2>1 word",
 			[]parser.Token{
 				{Type: TokenWord, Data: "2"},
@@ -535,7 +609,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 30
+		{ // 34
 			"time -p cmd",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "time"},
@@ -546,7 +620,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 31
+		{ // 35
 			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5}",
 			[]parser.Token{
 				{Type: TokenBraceExpansion, Data: "{a..b..2}"},
@@ -566,7 +640,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 32
+		{ // 36
 			"word{ word{a} word{\nword{",
 			[]parser.Token{
 				{Type: TokenWord, Data: "word{"},
@@ -579,7 +653,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 33
+		{ // 37
 			"{ echo 123; echo 456; }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -598,7 +672,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 34
+		{ // 38
 			"(echo 123; echo 456)",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "("},
