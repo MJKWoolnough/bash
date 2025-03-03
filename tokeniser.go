@@ -413,6 +413,14 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 	heredoc := b.heredoc[last][0]
 
 	for {
+		state := t.State()
+
+		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
+			state.Reset()
+
+			return t.Return(TokenHeredoc, b.heredocEnd)
+		}
+
 		switch t.ExceptRun(heredocStringBreak) {
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
@@ -433,15 +441,6 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 		}
 
 		t.Next()
-
-		state := t.State()
-
-		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
-			state.Reset()
-
-			return t.Return(TokenHeredoc, b.heredocEnd)
-		}
-
 	}
 }
 
