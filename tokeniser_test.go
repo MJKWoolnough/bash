@@ -632,7 +632,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 36
-			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5}",
+			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5} {a..z..-1}",
 			[]parser.Token{
 				{Type: TokenBraceExpansion, Data: "{a..b..2}"},
 				{Type: TokenWhitespace, Data: " "},
@@ -648,6 +648,8 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenBraceExpansion, Data: "{2..10..-1}"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenBraceExpansion, Data: "{-1..-100..5}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenBraceExpansion, Data: "{a..z..-1}"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
