@@ -599,6 +599,17 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 33
+			"<<a\\\nbc\nabc\ndef\na\nbc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "a\\\nbc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "abc\ndef\n"},
+				{Type: TokenHeredocEnd, Data: "a\nbc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 34
 			"2>1 word",
 			[]parser.Token{
 				{Type: TokenWord, Data: "2"},
@@ -609,7 +620,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 34
+		{ // 35
 			"time -p cmd",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "time"},
@@ -620,7 +631,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 35
+		{ // 36
 			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5}",
 			[]parser.Token{
 				{Type: TokenBraceExpansion, Data: "{a..b..2}"},
@@ -640,7 +651,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 36
+		{ // 37
 			"word{ word{a} word{\nword{",
 			[]parser.Token{
 				{Type: TokenWord, Data: "word{"},
@@ -653,7 +664,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 37
+		{ // 38
 			"{ echo 123; echo 456; }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -672,7 +683,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 38
+		{ // 39
 			"(echo 123; echo 456)",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "("},
