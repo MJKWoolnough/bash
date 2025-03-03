@@ -658,6 +658,8 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 			}
 
 			if t.AcceptWord(dotdot, false) != "" {
+				t.Accept("-")
+
 				if !t.Accept(decimalDigit) {
 					return t.ReturnError(ErrInvalidBraceExpansion)
 				}
