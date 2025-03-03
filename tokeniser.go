@@ -508,7 +508,6 @@ func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.Toke
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if rune(b.lastTokenDepth()) == t.Peek() {
 		b.popTokenDepth()
-
 		t.Next()
 
 		return t.Return(TokenString, b.main)
