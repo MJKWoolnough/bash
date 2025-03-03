@@ -445,10 +445,11 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 }
 
 func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	t.ExceptRun(newline)
-
 	last := len(b.heredoc) - 1
+	heredoc := b.heredoc[last][0]
 	b.heredoc[last] = b.heredoc[last][1:]
+
+	t.AcceptString(heredoc, false)
 
 	if len(b.heredoc[last]) == 0 {
 		b.heredoc = b.heredoc[:last]
