@@ -27,7 +27,6 @@ const (
 	wordBreak          = " `\\\t\n$|&;<>(){"
 	wordBreakNoBracket = wordBreak + "]"
 	wordBreakNoBrace   = wordBreak + "}"
-	braceBreak         = " `\\\t\n|&;<>()=},"
 	braceWordBreak     = " `\\\t\n|&;<>()={},"
 	hexDigit           = "0123456789ABCDEFabcdef"
 	octalDigit         = "012345678"
