@@ -270,7 +270,7 @@ const (
 )
 
 type Assignment struct {
-	Identifier Identifier
+	Identifier Paramater
 	Assignment AssignmentType
 	Word       Word
 	Tokens     Tokens
@@ -306,9 +306,37 @@ func (a *Assignment) parse(b *bashParser) error {
 	return nil
 }
 
-type Identifier struct{}
+type Paramater struct {
+	Identifier *Token
+	Subscript  *Word
+	Tokens     Tokens
+}
 
-func (i *Identifier) parse(b *bashParser) error {
+func (p *Paramater) parse(b *bashParser) error {
+	b.Next()
+
+	p.Identifier = b.GetLastToken()
+
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "["}) {
+		b.AcceptRunAllWhitespace()
+
+		c := b.NewGoal()
+		p.Subscript = new(Word)
+
+		if err := p.Subscript.parse(c); err != nil {
+			return b.Error("Parameter", err)
+		}
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+
+		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
+			return b.Error("Parameter", ErrMissingClosingBracket)
+		}
+	}
+
+	p.Tokens = b.ToTokens()
+
 	return nil
 }
 
