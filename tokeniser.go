@@ -653,21 +653,21 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 	if t.Accept(letters) {
 		if t.AcceptWord(dotdot, false) != "" {
 			if !t.Accept(letters) {
-				return t.ReturnError(ErrInvalidBraceExpansion)
+				return b.word(t)
 			}
 
 			if t.AcceptWord(dotdot, false) != "" {
 				t.Accept("-")
 
 				if !t.Accept(decimalDigit) {
-					return t.ReturnError(ErrInvalidBraceExpansion)
+					return b.word(t)
 				}
 
 				t.AcceptRun(decimalDigit)
 			}
 
 			if !t.Accept("}") {
-				return t.ReturnError(ErrInvalidBraceExpansion)
+				return b.word(t)
 			}
 
 			return t.Return(TokenBraceExpansion, b.main)
@@ -678,7 +678,7 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 		if t.Accept(decimalDigit) {
 			switch t.AcceptRun(decimalDigit) {
 			default:
-				return t.ReturnError(ErrInvalidBraceExpansion)
+				return b.word(t)
 			case ',':
 				return b.braceExpansionWord(t)
 			case '.':
@@ -686,7 +686,7 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 					t.Accept("-")
 
 					if !t.Accept(decimalDigit) {
-						return t.ReturnError(ErrInvalidBraceExpansion)
+						return b.word(t)
 					}
 
 					t.AcceptRun(decimalDigit)
@@ -695,14 +695,14 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 						t.Accept("-")
 
 						if !t.Accept(decimalDigit) {
-							return t.ReturnError(ErrInvalidBraceExpansion)
+							return b.word(t)
 						}
 
 						t.AcceptRun(decimalDigit)
 					}
 
 					if !t.Accept("}") {
-						return t.ReturnError(ErrInvalidBraceExpansion)
+						return b.word(t)
 					}
 
 					return t.Return(TokenBraceExpansion, b.main)
@@ -729,7 +729,7 @@ func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, p
 
 			fallthrough
 		default:
-			return t.ReturnError(ErrInvalidBraceExpansion)
+			return b.word(t)
 		case '\\':
 			t.Next()
 			t.Next()
