@@ -20,7 +20,7 @@ func Parse(t Tokeniser) (*File, error) {
 
 // Parse parses Bash input into AST.
 type File struct {
-	Statements []LogicalExpression
+	Statements []Statement
 	Tokens     Tokens
 }
 
@@ -30,7 +30,7 @@ func (f *File) parse(p *bashParser) error {
 	for q.AcceptRunAllWhitespace() != parser.TokenDone {
 		p.AcceptRunAllWhitespace()
 
-		var s LogicalExpression
+		var s Statement
 
 		q = p.NewGoal()
 

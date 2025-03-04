@@ -21,19 +21,19 @@ const (
 	JobControlBackground
 )
 
-type LogicalExpression struct {
+type Statement struct {
 	Pipeline          Pipeline
 	LogicalOperator   LogicalOperator
-	LogicalExpression *LogicalExpression
+	LogicalExpression *Statement
 	JobControl        JobControl
 	Tokens
 }
 
-func (l *LogicalExpression) parse(b *bashParser, first bool) error {
+func (s *Statement) parse(b *bashParser, first bool) error {
 	c := b.NewGoal()
 
-	if err := l.Pipeline.parse(c); err != nil {
-		return b.Error("LogicalExpression", err)
+	if err := s.Pipeline.parse(c); err != nil {
+		return b.Error("Statement", err)
 	}
 
 	b.Score(c)
@@ -43,20 +43,20 @@ func (l *LogicalExpression) parse(b *bashParser, first bool) error {
 	c.AcceptRunWhitespace()
 
 	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&&"}) {
-		l.LogicalOperator = LogicalOperatorAnd
+		s.LogicalOperator = LogicalOperatorAnd
 	} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "||"}) {
-		l.LogicalOperator = LogicalOperatorOr
+		s.LogicalOperator = LogicalOperatorOr
 	}
 
-	if l.LogicalOperator != LogicalOperatorNone {
+	if s.LogicalOperator != LogicalOperatorNone {
 		c.AcceptRunWhitespace()
 		b.Score(c)
 
 		c = b.NewGoal()
-		l.LogicalExpression = new(LogicalExpression)
+		s.LogicalExpression = new(Statement)
 
-		if err := l.LogicalExpression.parse(c, false); err != nil {
-			return b.Error("LogicalExpression", err)
+		if err := s.LogicalExpression.parse(c, false); err != nil {
+			return b.Error("Statement", err)
 		}
 
 		b.Score(c)
@@ -68,17 +68,17 @@ func (l *LogicalExpression) parse(b *bashParser, first bool) error {
 		c.AcceptRunWhitespace()
 
 		if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&"}) {
-			l.JobControl = JobControlBackground
+			s.JobControl = JobControlBackground
 
 			b.Score(c)
 		} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
 			b.Score(c)
 		} else if tk := c.Peek().Type; tk != TokenLineTerminator && tk != parser.TokenDone {
-			return c.Error("LogicalExpression", ErrInvalidEndOfStatement)
+			return c.Error("Statement", ErrInvalidEndOfStatement)
 		}
 	}
 
-	l.Tokens = b.ToTokens()
+	s.Tokens = b.ToTokens()
 
 	return nil
 }
@@ -150,7 +150,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 type Redirections struct {
 	RedirectionsOrVars []RedirectionOrAssignment
-	Statement          Statement
+	Command            Command
 	Redirections       []Redirection
 	Tokens             Tokens
 }
@@ -174,7 +174,7 @@ func (r *Redirections) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := r.Statement.parse(c); err != nil {
+	if err := r.Command.parse(c); err != nil {
 		return b.Error("Redirections", err)
 	}
 
@@ -393,8 +393,8 @@ func (r *Redirection) parse(b *bashParser) error {
 	return nil
 }
 
-type Statement struct{}
+type Command struct{}
 
-func (s *Statement) parse(b *bashParser) error {
+func (s *Command) parse(b *bashParser) error {
 	return nil
 }
