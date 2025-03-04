@@ -14,14 +14,22 @@ const (
 	LogicalOperatorOr
 )
 
+type JobControl uint8
+
+const (
+	JobControlForeground JobControl = iota
+	JobControlBackground
+)
+
 type LogicalExpression struct {
 	Pipeline          Pipeline
 	LogicalOperator   LogicalOperator
 	LogicalExpression *LogicalExpression
+	JobControl        JobControl
 	Tokens
 }
 
-func (l *LogicalExpression) parse(b *bashParser) error {
+func (l *LogicalExpression) parse(b *bashParser, first bool) error {
 	c := b.NewGoal()
 
 	if err := l.Pipeline.parse(c); err != nil {
@@ -47,11 +55,25 @@ func (l *LogicalExpression) parse(b *bashParser) error {
 		c = b.NewGoal()
 		l.LogicalExpression = new(LogicalExpression)
 
-		if err := l.LogicalExpression.parse(c); err != nil {
+		if err := l.LogicalExpression.parse(c, false); err != nil {
 			return b.Error("LogicalExpression", err)
 		}
 
 		b.Score(c)
+	}
+
+	if first {
+		c = b.NewGoal()
+
+		c.AcceptRunWhitespace()
+
+		if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&"}) {
+			l.JobControl = JobControlBackground
+
+			b.Score(c)
+		} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
+			b.Score(c)
+		}
 	}
 
 	l.Tokens = b.ToTokens()

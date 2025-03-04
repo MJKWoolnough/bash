@@ -34,7 +34,7 @@ func (f *File) parse(p *bashParser) error {
 
 		q = p.NewGoal()
 
-		if err := s.parse(q); err != nil {
+		if err := s.parse(q, true); err != nil {
 			return p.Error("File", err)
 		}
 
