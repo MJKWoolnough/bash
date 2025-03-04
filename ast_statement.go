@@ -272,7 +272,7 @@ const (
 type Assignment struct {
 	Identifier Paramater
 	Assignment AssignmentType
-	Word       Word
+	Value      Value
 	Tokens     Tokens
 }
 
@@ -295,7 +295,7 @@ func (a *Assignment) parse(b *bashParser) error {
 
 	c = b.NewGoal()
 
-	if err := a.Word.parse(c); err != nil {
+	if err := a.Value.parse(c); err != nil {
 		return b.Error("Assignment", err)
 	}
 
@@ -336,6 +336,45 @@ func (p *Paramater) parse(b *bashParser) error {
 	}
 
 	p.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Value struct {
+	Word   *Word
+	Array  []Word
+	Tokens Tokens
+}
+
+func (v *Value) parse(b *bashParser) error {
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
+		b.AcceptRunAllWhitespace()
+
+		for b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+			c := b.NewGoal()
+
+			var w Word
+
+			if err := w.parse(c); err != nil {
+				return b.Error("Value", err)
+			}
+
+			b.Score(c)
+
+			b.AcceptRunAllWhitespace()
+		}
+	} else {
+		c := b.NewGoal()
+		v.Word = new(Word)
+
+		if err := v.Word.parse(c); err != nil {
+			return b.Error("Value", err)
+		}
+
+		b.Score(c)
+	}
+
+	v.Tokens = b.ToTokens()
 
 	return nil
 }
