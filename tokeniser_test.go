@@ -654,6 +654,15 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 37
+			"a={123",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenWord, Data: "{123"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 37
 			"word{ word{a} word{\nword{",
 			[]parser.Token{
 				{Type: TokenWord, Data: "word{"},
