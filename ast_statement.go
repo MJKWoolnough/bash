@@ -381,9 +381,48 @@ func (v *Value) parse(b *bashParser) error {
 	return nil
 }
 
-type Word struct{}
+type Word struct {
+	Parts  []WordPart
+	Tokens Tokens
+}
 
 func (w *Word) parse(b *bashParser) error {
+	for nextIsWordPart(b) {
+		c := b.NewGoal()
+
+		var wp WordPart
+
+		if err := wp.parse(c); err != nil {
+			return b.Error("Word", err)
+		}
+
+		w.Parts = append(w.Parts, wp)
+	}
+
+	w.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func nextIsWordPart(b *bashParser) bool {
+	switch tk := b.Peek(); tk.Type {
+	case TokenWhitespace, TokenLineTerminator, TokenComment:
+		return false
+	case TokenPunctuator:
+		switch tk.Data {
+		case "$(", "${", "`":
+			return true
+		}
+
+		return false
+	}
+
+	return true
+}
+
+type WordPart struct{}
+
+func (w *WordPart) parse(b *bashParser) error {
 	return nil
 }
 
