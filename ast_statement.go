@@ -420,9 +420,51 @@ func nextIsWordPart(b *bashParser) bool {
 	return true
 }
 
-type WordPart struct{}
+type WordPart struct {
+	Part                *Token
+	Parameter           *Parameter
+	CommandSubstitution *CommandSubstitution
+	Tokens              Tokens
+}
 
 func (w *WordPart) parse(b *bashParser) error {
+	c := b.NewGoal()
+	switch b.Peek() {
+	case parser.Token{Type: TokenPunctuator, Data: "${"}:
+		w.Parameter = new(Parameter)
+
+		if err := w.Parameter.parse(c); err != nil {
+			return b.Error("WordPart", err)
+		}
+	case parser.Token{Type: TokenPunctuator, Data: "$("}, parser.Token{Type: TokenPunctuator, Data: "`"}:
+		w.CommandSubstitution = new(CommandSubstitution)
+
+		if err := w.CommandSubstitution.parse(c); err != nil {
+			return b.Error("WordPart", err)
+		}
+	default:
+		b.Next()
+
+		w.Part = b.GetLastToken()
+
+	}
+
+	b.Score(c)
+
+	w.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Parameter struct{}
+
+func (p *Parameter) parse(b *bashParser) error {
+	return nil
+}
+
+type CommandSubstitution struct{}
+
+func (c *CommandSubstitution) parse(b *bashParser) error {
 	return nil
 }
 
