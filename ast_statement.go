@@ -462,9 +462,40 @@ func (p *Parameter) parse(b *bashParser) error {
 	return nil
 }
 
-type CommandSubstitution struct{}
+type SubstitutionType uint8
 
-func (c *CommandSubstitution) parse(b *bashParser) error {
+const (
+	SubstitutionBacktick SubstitutionType = iota
+	SubstitutionNew
+)
+
+type CommandSubstitution struct {
+	SubstitutionType SubstitutionType
+	Command          File
+	Tokens           Tokens
+}
+
+func (cs *CommandSubstitution) parse(b *bashParser) error {
+	end := "`"
+
+	if b.Next().Data != "`" {
+		cs.SubstitutionType = SubstitutionNew
+		end = ")"
+	}
+
+	b.AcceptRunWhitespace()
+
+	c := b.NewGoal()
+	c.StopAt = &parser.Token{Type: TokenPunctuator, Data: end}
+
+	if err := cs.Command.parse(c); err != nil {
+		return err
+	}
+
+	b.Score(c)
+
+	cs.Tokens = b.ToTokens()
+
 	return nil
 }
 
