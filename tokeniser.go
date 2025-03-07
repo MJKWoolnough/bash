@@ -347,9 +347,9 @@ const (
 )
 
 func (b *bashTokeniser) isBacktick(t *parser.Tokeniser, reset bool) backtick {
-	s := t.State()
-
 	if reset {
+		s := t.State()
+
 		defer s.Reset()
 	}
 
