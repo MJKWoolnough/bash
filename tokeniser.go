@@ -100,19 +100,13 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		}
 
 		return t.ReturnError(io.ErrUnexpectedEOF)
-	}
-
-	if td == 'h' {
+	} else if td == 'h' {
 		b.popTokenDepth()
 
 		return b.heredocString(t)
-	}
-
-	if td == '"' || td == '\'' {
+	} else if td == '"' || td == '\'' {
 		return b.string(t, false)
-	}
-
-	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
+	} else if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
 		for t.AcceptRun(whitespace) != -1 {
 			if t.AcceptWord(escapedNewline, false) == "" {
 				break
@@ -120,9 +114,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		}
 
 		return t.Return(TokenWhitespace, b.main)
-	}
-
-	if t.Accept(newline) {
+	} else if t.Accept(newline) {
 		if td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
 		}
@@ -130,15 +122,11 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.main)
-	}
-
-	if t.Accept("#") {
+	} else if t.Accept("#") {
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	}
-
-	if td == '>' || td == '/' {
+	} else if td == '>' || td == '/' {
 		return b.arithmeticExpansion(t)
 	}
 
@@ -365,13 +353,9 @@ func (b *bashTokeniser) isBacktick(t *parser.Tokeniser, reset bool) backtick {
 		} else if b.backticks == 1 && b.lastTokenDepth() == '`' && t.Accept("`") {
 			return backtickClose
 		}
-	}
-
-	if (b.backticks<<1)-1 == slashes && t.Accept("`") {
+	} else if (b.backticks<<1)-1 == slashes && t.Accept("`") {
 		return backtickOpen
-	}
-
-	if ((b.backticks-1)<<1)-1 == slashes && t.Accept("`") {
+	} else if ((b.backticks-1)<<1)-1 == slashes && t.Accept("`") {
 		return backtickClose
 	}
 
@@ -385,9 +369,7 @@ func (b *bashTokeniser) isBacktick(t *parser.Tokeniser, reset bool) backtick {
 func (b *bashTokeniser) startHeredoc(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if t.Peek() == -1 || t.Accept(newline) || t.Accept("#") {
 		return t.ReturnError(io.ErrUnexpectedEOF)
-	}
-
-	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
+	} else if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
 		for t.AcceptRun(whitespace) != -1 {
 			if t.AcceptWord(escapedNewline, false) == "" {
 				break
@@ -529,9 +511,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 
 	if t.Accept(decimalDigit) {
 		return t.Return(TokenIdentifier, b.main)
-	}
-
-	if t.Accept("(") {
+	} else if t.Accept("(") {
 		if t.Accept("(") {
 			b.pushTokenDepth('>')
 
@@ -541,9 +521,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 		b.pushTokenDepth(')')
 
 		return t.Return(TokenPunctuator, b.main)
-	}
-
-	if t.Accept("{") {
+	} else if t.Accept("{") {
 		b.pushTokenDepth('}')
 
 		return t.Return(TokenPunctuator, b.keywordIdentOrWord)
@@ -618,9 +596,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 	if t.Accept(identStart) {
 		t.AcceptRun(identCont)
 
-		state := t.State()
-
-		if t.AcceptWord(assignment, false) != "" {
+		if state := t.State(); t.AcceptWord(assignment, false) != "" {
 			state.Reset()
 
 			return t.Return(TokenIdentifierAssign, b.main)
