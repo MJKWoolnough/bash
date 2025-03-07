@@ -429,14 +429,15 @@ type WordPart struct {
 
 func (w *WordPart) parse(b *bashParser) error {
 	c := b.NewGoal()
-	switch b.Peek() {
-	case parser.Token{Type: TokenPunctuator, Data: "${"}:
+
+	switch tk := b.Peek(); {
+	case tk == parser.Token{Type: TokenPunctuator, Data: "${"}:
 		w.Parameter = new(Parameter)
 
 		if err := w.Parameter.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
-	case parser.Token{Type: TokenPunctuator, Data: "$("}, parser.Token{Type: TokenPunctuator, Data: "`"}:
+	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}, tk.Type == TokenOpenBacktick:
 		w.CommandSubstitution = new(CommandSubstitution)
 
 		if err := w.CommandSubstitution.parse(c); err != nil {
@@ -465,8 +466,8 @@ func (p *Parameter) parse(b *bashParser) error {
 type SubstitutionType uint8
 
 const (
-	SubstitutionBacktick SubstitutionType = iota
-	SubstitutionNew
+	SubstitutionNew SubstitutionType = iota
+	SubstitutionBacktick
 )
 
 type CommandSubstitution struct {
@@ -476,17 +477,17 @@ type CommandSubstitution struct {
 }
 
 func (cs *CommandSubstitution) parse(b *bashParser) error {
-	end := "`"
+	end := parser.Token{Type: TokenPunctuator, Data: ")"}
 
-	if b.Next().Data != "`" {
-		cs.SubstitutionType = SubstitutionNew
-		end = ")"
+	if tk := b.Next(); tk.Type != TokenOpenBacktick {
+		cs.SubstitutionType = SubstitutionBacktick
+		end = parser.Token{Type: TokenCloseBacktick, Data: tk.Data}
 	}
 
 	b.AcceptRunWhitespace()
 
 	c := b.NewGoal()
-	c.StopAt = &parser.Token{Type: TokenPunctuator, Data: end}
+	c.StopAt = &end
 
 	if err := cs.Command.parse(c); err != nil {
 		return err
