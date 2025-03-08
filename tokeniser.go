@@ -22,6 +22,7 @@ const (
 	heredocStringBreak = newline + "$"
 	doubleStops        = "\\`$\""
 	singleStops        = "'"
+	ansiStops          = "'\\"
 	word               = "\\\"'`(){}- \t\n"
 	wordNoBracket      = "\\\"'`(){}- \t\n]"
 	wordBreak          = " `\\\t\n$|&;<>(){"
@@ -136,8 +137,11 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, parser.TokenFunc) {
 	stops := singleStops
 
-	if b.lastTokenDepth() == '"' {
+	td := b.lastTokenDepth()
+	if td == '"' {
 		stops = doubleStops
+	} else if td == '$' {
+		stops = ansiStops
 	}
 
 	tk := TokenStringMid
@@ -168,7 +172,7 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 
 			return t.Return(tk, b.main)
 		case '\\':
-			if b.isBacktick(t, true) != backtickNone {
+			if td == '"' && b.isBacktick(t, true) != backtickNone {
 				return t.Return(tk, b.backtickOrIdentOrWord)
 			}
 
@@ -525,6 +529,10 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 		b.pushTokenDepth('}')
 
 		return t.Return(TokenPunctuator, b.keywordIdentOrWord)
+	} else if td := b.lastTokenDepth(); td != '"' && td != 'h' && t.Accept("'\"") {
+		t.Reset()
+
+		return b.stringStart(t)
 	}
 
 	var wb string
@@ -547,9 +555,11 @@ func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.T
 		t.Next()
 
 		return t.Return(TokenString, b.main)
+	} else if t.Accept("$") && t.Accept("'") {
+		b.pushTokenDepth('$')
+	} else {
+		b.pushTokenDepth(byte(t.Next()))
 	}
-
-	b.pushTokenDepth(byte(t.Next()))
 
 	return b.string(t, true)
 }
