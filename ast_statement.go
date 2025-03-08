@@ -93,10 +93,10 @@ const (
 
 type Pipeline struct {
 	PipelineTime
-	Not          bool
-	Redirections Redirections
-	Pipeline     *Pipeline
-	Tokens       Tokens
+	Not      bool
+	Command  Command
+	Pipeline *Pipeline
+	Tokens   Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser) error {
@@ -118,7 +118,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := p.Redirections.parse(c); err != nil {
+	if err := p.Command.parse(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -148,62 +148,76 @@ func (p *Pipeline) parse(b *bashParser) error {
 	return nil
 }
 
-type Redirections struct {
-	RedirectionsOrVars []RedirectionOrAssignment
-	Command            Command
-	Redirections       []Redirection
-	Tokens             Tokens
+type Command struct {
+	Vars         []Assignment
+	Redirections []Redirection
+	Words        []Word
+	Tokens       Tokens
 }
 
-func (r *Redirections) parse(b *bashParser) error {
-	for b.Peek().Type == TokenIdentifierAssign || isRedirection(b) {
-		var rv RedirectionOrAssignment
+func (c *Command) parse(b *bashParser) error {
+	for {
+		if b.Peek().Type == TokenIdentifierAssign {
+			var a Assignment
 
-		c := b.NewGoal()
+			d := b.NewGoal()
 
-		if err := r.parse(c); err != nil {
-			return b.Error("Redirections", err)
+			if err := a.parse(d); err != nil {
+				return b.Error("Command", err)
+			}
+
+			b.Score(d)
+
+			c.Vars = append(c.Vars, a)
+
+		} else if isRedirection(b) {
+			var r Redirection
+
+			d := b.NewGoal()
+
+			if err := r.parse(d); err != nil {
+				return b.Error("Command", err)
+			}
+
+			b.Score(d)
+
+			c.Redirections = append(c.Redirections, r)
+		} else {
+			break
 		}
 
-		b.Score(c)
 		b.AcceptRunWhitespace()
-
-		r.RedirectionsOrVars = append(r.RedirectionsOrVars, rv)
-
 	}
 
-	c := b.NewGoal()
+	for nextIsWordPart(b) {
+		if isRedirection(b) {
+			var r Redirection
 
-	if err := r.Command.parse(c); err != nil {
-		return b.Error("Redirections", err)
-	}
+			d := b.NewGoal()
 
-	b.Score(c)
+			if err := r.parse(d); err != nil {
+				return b.Error("Command", err)
+			}
 
-	c = b.NewGoal()
+			b.Score(d)
 
-	c.AcceptRunWhitespace()
+			c.Redirections = append(c.Redirections, r)
+		} else {
+			d := b.NewGoal()
 
-	for isRedirection(c) {
-		b.Score(c)
+			var w Word
 
-		c = b.NewGoal()
+			if err := w.parse(d); err != nil {
+				return b.Error("Command", err)
+			}
 
-		var rv Redirection
+			b.Score(d)
 
-		if err := r.parse(c); err != nil {
-			return b.Error("Redirections", err)
+			c.Words = append(c.Words, w)
 		}
-
-		b.Score(c)
-
-		r.Redirections = append(r.Redirections, rv)
-		c = b.NewGoal()
-
-		c.AcceptRunWhitespace()
 	}
 
-	r.Tokens = b.ToTokens()
+	c.Tokens = b.ToTokens()
 
 	return nil
 }
@@ -232,36 +246,6 @@ func isRedirection(b *bashParser) bool {
 	}
 
 	return false
-}
-
-type RedirectionOrAssignment struct {
-	Redirection *Redirection
-	Assignment  *Assignment
-	Tokens      Tokens
-}
-
-func (r *RedirectionOrAssignment) parse(b *bashParser) error {
-	c := b.NewGoal()
-
-	var err error
-
-	if b.Peek().Type == TokenIdentifierAssign {
-		r.Assignment = new(Assignment)
-		err = r.Assignment.parse(c)
-	} else {
-		r.Redirection = new(Redirection)
-		err = r.Redirection.parse(c)
-	}
-
-	if err != nil {
-		return b.Error("RedirectionOrAssignment", err)
-	}
-
-	b.Score(c)
-
-	r.Tokens = b.ToTokens()
-
-	return nil
 }
 
 type AssignmentType uint8
@@ -503,11 +487,5 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 type Redirection struct{}
 
 func (r *Redirection) parse(b *bashParser) error {
-	return nil
-}
-
-type Command struct{}
-
-func (s *Command) parse(b *bashParser) error {
 	return nil
 }
