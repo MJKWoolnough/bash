@@ -192,7 +192,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 12
-			"\"abc\" \"de\\nf\" \"stuff`command`more stuff\" \"text $ident $another end\" \"text $(command) end - text ${ident} end\"",
+			"\"abc\" \"de\\nf\" \"stuff`command`more stuff\" \"text $ident $another end\" \"text $(command) end - text ${ident} end\" \"with\nnewline\" 'with\nnewline'",
 			[]parser.Token{
 				{Type: TokenString, Data: "\"abc\""},
 				{Type: TokenWhitespace, Data: " "},
@@ -219,6 +219,10 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenWord, Data: "ident"},
 				{Type: TokenPunctuator, Data: "}"},
 				{Type: TokenStringEnd, Data: " end\""},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenString, Data: "\"with\nnewline\""},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenString, Data: "'with\nnewline'"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
