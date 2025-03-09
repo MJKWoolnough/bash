@@ -34,9 +34,9 @@ func (f *File) parse(p *bashParser) error {
 	for q.AcceptRunAllWhitespace() != parser.TokenDone {
 		p.AcceptRunAllWhitespace()
 
-		var s Statement
-
 		q = p.NewGoal()
+
+		var s Statement
 
 		if err := s.parse(q, true); err != nil {
 			return p.Error("File", err)
@@ -178,7 +178,6 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "|"}) {
 		c.AcceptRunWhitespace()
-
 		b.Score(c)
 
 		c = b.NewGoal()
@@ -205,64 +204,54 @@ type Command struct {
 
 func (c *Command) parse(b *bashParser) error {
 	for {
+		d := b.NewGoal()
+
 		if b.Peek().Type == TokenIdentifierAssign {
 			var a Assignment
-
-			d := b.NewGoal()
 
 			if err := a.parse(d); err != nil {
 				return b.Error("Command", err)
 			}
 
-			b.Score(d)
-
 			c.Vars = append(c.Vars, a)
-
 		} else if isRedirection(b) {
 			var r Redirection
-
-			d := b.NewGoal()
 
 			if err := r.parse(d); err != nil {
 				return b.Error("Command", err)
 			}
-
-			b.Score(d)
 
 			c.Redirections = append(c.Redirections, r)
 		} else {
 			break
 		}
 
+		b.Score(d)
 		b.AcceptRunWhitespace()
 	}
 
 	for nextIsWordPart(b) {
+		d := b.NewGoal()
+
 		if isRedirection(b) {
 			var r Redirection
-
-			d := b.NewGoal()
 
 			if err := r.parse(d); err != nil {
 				return b.Error("Command", err)
 			}
 
-			b.Score(d)
-
 			c.Redirections = append(c.Redirections, r)
 		} else {
-			d := b.NewGoal()
-
 			var w Word
 
 			if err := w.parse(d); err != nil {
 				return b.Error("Command", err)
 			}
 
-			b.Score(d)
-
 			c.Words = append(c.Words, w)
 		}
+
+		b.Score(d)
 	}
 
 	c.Tokens = b.ToTokens()
@@ -394,7 +383,6 @@ func (v *Value) parse(b *bashParser) error {
 			}
 
 			b.Score(c)
-
 			b.AcceptRunAllWhitespace()
 		}
 	} else {
@@ -429,6 +417,8 @@ func (w *Word) parse(b *bashParser) error {
 		}
 
 		w.Parts = append(w.Parts, wp)
+
+		b.Score(b)
 	}
 
 	w.Tokens = b.ToTokens()
@@ -486,7 +476,6 @@ func (w *WordPart) parse(b *bashParser) error {
 		b.Next()
 
 		w.Part = b.GetLastToken()
-
 	}
 
 	b.Score(c)
