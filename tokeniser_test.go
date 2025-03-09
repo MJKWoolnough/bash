@@ -793,8 +793,7 @@ func TestTokeniser(t *testing.T) {
 		SetTokeniser(&p)
 
 		for m, tkn := range test.Output {
-			tk, _ := p.GetToken()
-			if tk.Type != tkn.Type {
+			if tk, _ := p.GetToken(); tk.Type != tkn.Type {
 				if tk.Type == parser.TokenError {
 					t.Errorf("test %d.%d: unexpected error: %s", n+1, m+1, tk.Data)
 				} else {
