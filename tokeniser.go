@@ -482,7 +482,6 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 
 			if t.Accept(decimalDigit) || t.Accept(identStart) || t.Accept("({") {
 				state.Reset()
-
 				b.pushTokenDepth('h')
 
 				return t.Return(TokenHeredoc, b.identifier)
