@@ -316,11 +316,13 @@ func (b *bashTokeniser) backtickOrIdentOrWord(t *parser.Tokeniser) (parser.Token
 		return b.keywordIdentOrWord(t)
 	case backtickOpen:
 		b.pushTokenDepth('`')
+
 		b.backticks++
 
 		return t.Return(TokenOpenBacktick, b.main)
 	case backtickClose:
 		b.popTokenDepth()
+
 		b.backticks--
 
 		return t.Return(TokenCloseBacktick, b.main)
