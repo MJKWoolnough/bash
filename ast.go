@@ -456,6 +456,7 @@ type WordPart struct {
 	Part                *Token
 	Parameter           *Parameter
 	CommandSubstitution *CommandSubstitution
+	ArithmeticExpansion *ArithmeticExpansion
 	Tokens              Tokens
 }
 
@@ -467,6 +468,12 @@ func (w *WordPart) parse(b *bashParser) error {
 		w.Parameter = new(Parameter)
 
 		if err := w.Parameter.parse(c); err != nil {
+			return b.Error("WordPart", err)
+		}
+	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}:
+		w.ArithmeticExpansion = new(ArithmeticExpansion)
+
+		if err := w.ArithmeticExpansion.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
 	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}, tk.Type == TokenOpenBacktick:
@@ -535,5 +542,11 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 type Redirection struct{}
 
 func (r *Redirection) parse(b *bashParser) error {
+	return nil
+}
+
+type ArithmeticExpansion struct{}
+
+func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	return nil
 }
