@@ -503,6 +503,7 @@ func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.To
 
 	if len(b.heredoc[last]) == 0 {
 		b.heredoc = b.heredoc[:last]
+
 		b.popTokenDepth()
 	}
 
