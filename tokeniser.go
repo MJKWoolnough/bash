@@ -342,9 +342,7 @@ const (
 
 func (b *bashTokeniser) isBacktick(t *parser.Tokeniser, reset bool) backtick {
 	if reset {
-		s := t.State()
-
-		defer s.Reset()
+		defer t.State().Reset()
 	}
 
 	pos := t.Len()
