@@ -548,6 +548,10 @@ func (r *Redirection) parse(b *bashParser) error {
 	return nil
 }
 
+func (r *Redirection) isHeredoc() bool {
+	return r.Redirector != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-")
+}
+
 type ArithmeticExpansion struct{}
 
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
