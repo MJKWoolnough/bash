@@ -535,6 +535,9 @@ func (r *Redirection) parse(b *bashParser) error {
 	b.Accept(TokenPunctuator)
 
 	r.Redirector = b.GetLastToken()
+
+	b.AcceptRunWhitespace()
+
 	c := b.NewGoal()
 
 	if err := r.Output.parse(c); err != nil {
