@@ -520,9 +520,31 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	return nil
 }
 
-type Redirection struct{}
+type Redirection struct {
+	Input      *Token
+	Redirector *Token
+	Output     Word
+	Tokens     Tokens
+}
 
 func (r *Redirection) parse(b *bashParser) error {
+	if b.Accept(TokenNumberLiteral, TokenBraceWord) {
+		r.Input = b.GetLastToken()
+	}
+
+	b.Accept(TokenPunctuator)
+
+	r.Redirector = b.GetLastToken()
+	c := b.NewGoal()
+
+	if err := r.Output.parse(c); err != nil {
+		return b.Error("Redirection", err)
+	}
+
+	b.Score(c)
+
+	r.Tokens = b.ToTokens()
+
 	return nil
 }
 
