@@ -52,6 +52,7 @@ const (
 	TokenStringMid
 	TokenStringEnd
 	TokenBraceExpansion
+	TokenBraceWord
 	TokenPunctuator
 	TokenHeredoc
 	TokenHeredocEnd
@@ -719,6 +720,10 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 
 			return t.Return(TokenBraceExpansion, b.main)
 		}
+
+		return b.braceWord(t)
+	} else if t.Accept("_") {
+		return b.braceWord(t)
 	} else {
 		t.Accept("-")
 
@@ -760,6 +765,16 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 	}
 
 	return b.braceExpansionWord(t)
+}
+
+func (b *bashTokeniser) braceWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.AcceptRun(identCont)
+
+	if !t.Accept("}") {
+		return b.braceExpansionWord(t)
+	}
+
+	return t.Return(TokenBraceWord, b.main)
 }
 
 func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
