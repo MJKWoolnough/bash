@@ -262,20 +262,23 @@ func (c *Command) parse(b *bashParser) error {
 func isRedirection(b *bashParser) bool {
 	c := b.NewGoal()
 
-	if c.Accept(TokenWord) {
+	switch {
+	case c.Accept(TokenWord):
 		for _, r := range c.GetLastToken().Data {
 			if !strings.ContainsRune(decimalDigit, r) {
 				return false
 			}
 		}
 
+		fallthrough
+	case c.Accept(TokenBraceWord):
 		if c.Accept(TokenPunctuator) {
 			switch c.GetLastToken().Data {
 			case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>":
 				return true
 			}
 		}
-	} else if c.Accept(TokenPunctuator) {
+	case c.Accept(TokenPunctuator):
 		switch c.GetLastToken().Data {
 		case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>", "&>", "&>>":
 			return true
