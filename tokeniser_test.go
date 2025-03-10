@@ -787,6 +787,15 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "incorrect backtick depth"},
 			},
 		},
+		{ // 45
+			"{abc}>2",
+			[]parser.Token{
+				{Type: TokenBraceWord, Data: "{abc}"},
+				{Type: TokenPunctuator, Data: ">"},
+				{Type: TokenWord, Data: "2"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
