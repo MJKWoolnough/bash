@@ -796,6 +796,14 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 46
+			"<&1-",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<&"},
+				{Type: TokenWord, Data: "1-"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
