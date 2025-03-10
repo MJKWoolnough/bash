@@ -616,6 +616,13 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 		} else if t.Peek() == '[' {
 			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
 		}
+	} else if t.Accept(decimalDigit) {
+		t.AcceptRun(decimalDigit)
+
+		switch t.Peek() {
+		case '<', '>':
+			return t.Return(TokenNumberLiteral, b.main)
+		}
 	}
 
 	return b.word(t)

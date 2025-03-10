@@ -624,7 +624,7 @@ func TestTokeniser(t *testing.T) {
 		{ // 34
 			"2>1 word",
 			[]parser.Token{
-				{Type: TokenWord, Data: "2"},
+				{Type: TokenNumberLiteral, Data: "2"},
 				{Type: TokenPunctuator, Data: ">"},
 				{Type: TokenWord, Data: "1"},
 				{Type: TokenWhitespace, Data: " "},
