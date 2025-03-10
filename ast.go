@@ -2,8 +2,6 @@
 package bash // import "vimagination.zapto.org/bash"
 
 import (
-	"strings"
-
 	"vimagination.zapto.org/parser"
 )
 
@@ -262,23 +260,14 @@ func (c *Command) parse(b *bashParser) error {
 func isRedirection(b *bashParser) bool {
 	c := b.NewGoal()
 
-	switch {
-	case c.Accept(TokenWord):
-		for _, r := range c.GetLastToken().Data {
-			if !strings.ContainsRune(decimalDigit, r) {
-				return false
-			}
-		}
-
-		fallthrough
-	case c.Accept(TokenBraceWord):
+	if c.Accept(TokenNumberLiteral, TokenBraceWord) {
 		if c.Accept(TokenPunctuator) {
 			switch c.GetLastToken().Data {
 			case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>":
 				return true
 			}
 		}
-	case c.Accept(TokenPunctuator):
+	} else if c.Accept(TokenPunctuator) {
 		switch c.GetLastToken().Data {
 		case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>", "&>", "&>>":
 			return true
