@@ -77,16 +77,16 @@ func SetTokeniser(t *parser.Tokeniser) *parser.Tokeniser {
 	return t
 }
 
-func (b *bashTokeniser) lastTokenDepth() byte {
+func (b *bashTokeniser) lastTokenDepth() rune {
 	if len(b.tokenDepth) == 0 {
 		return 0
 	}
 
-	return b.tokenDepth[len(b.tokenDepth)-1]
+	return rune(b.tokenDepth[len(b.tokenDepth)-1])
 }
 
-func (b *bashTokeniser) pushTokenDepth(c byte) {
-	b.tokenDepth = append(b.tokenDepth, c)
+func (b *bashTokeniser) pushTokenDepth(c rune) {
+	b.tokenDepth = append(b.tokenDepth, byte(c))
 }
 
 func (b *bashTokeniser) popTokenDepth() {
@@ -291,7 +291,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '}', ')', ']':
 		t.Next()
 
-		if rune(b.lastTokenDepth()) != c {
+		if b.lastTokenDepth() != c {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
@@ -553,7 +553,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 }
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if rune(b.lastTokenDepth()) == t.Peek() {
+	if b.lastTokenDepth() == t.Peek() {
 		b.popTokenDepth()
 		t.Next()
 
@@ -561,7 +561,7 @@ func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.T
 	} else if t.Accept("$") && t.Accept("'") {
 		b.pushTokenDepth('$')
 	} else {
-		b.pushTokenDepth(byte(t.Next()))
+		b.pushTokenDepth(t.Next())
 	}
 
 	return b.string(t, true)
@@ -613,7 +613,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			state.Reset()
 
 			return t.Return(TokenIdentifierAssign, b.main)
-		} else if t.Peek() == rune(b.lastTokenDepth()) {
+		} else if t.Peek() == b.lastTokenDepth() {
 			return t.Return(TokenWord, b.main)
 		} else if t.Peek() == '[' {
 			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
