@@ -184,8 +184,6 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 }
 
 func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	var early bool
-
 	switch c := t.Peek(); c {
 	case -1:
 		return t.ReturnError(io.ErrUnexpectedEOF)
@@ -194,20 +192,15 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case '$':
 		return b.identifier(t)
 	case '+', '-', '&', '|':
-		early = true
-
-		fallthrough
-	case '<', '>':
 		t.Next()
 
 		if t.Peek() == c {
 			t.Next()
-
-			if early {
-				break
-			}
+		} else {
+			t.Accept("=")
 		}
-
+	case '<', '>':
+		t.Next()
 		t.Accept("=")
 	case '=', '!', '/', '%', '^':
 		t.Next()
