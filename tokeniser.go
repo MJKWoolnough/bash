@@ -128,7 +128,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	} else if td == '>' || td == '/' {
+	} else if td == '>' || td == '/' || td == ':' {
 		return b.arithmeticExpansion(t)
 	}
 
@@ -215,8 +215,19 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case '*':
 		t.Next()
 		t.Accept("*=")
-	case '~', '?', ':', ',':
+	case '~', ',':
 		t.Next()
+	case '?':
+		t.Next()
+		b.pushTokenDepth(':')
+	case ':':
+		t.Next()
+
+		if b.lastTokenDepth() != ':' {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		b.popTokenDepth()
 	case ')':
 		t.Next()
 
@@ -227,7 +238,6 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		b.popTokenDepth()
 	case '(':
 		t.Next()
-
 		b.pushTokenDepth('/')
 	case '0':
 		return b.zero(t)
