@@ -209,9 +209,12 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		}
 
 		t.Accept("=")
-	case '=', '!', '*', '/', '%', '^':
+	case '=', '!', '/', '%', '^':
 		t.Next()
 		t.Accept("=")
+	case '*':
+		t.Next()
+		t.Accept("*=")
 	case '~', '?', ':', ',':
 		t.Next()
 	case ')':
