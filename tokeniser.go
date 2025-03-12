@@ -137,15 +137,14 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, parser.TokenFunc) {
 	stops := singleStops
-
 	td := b.lastTokenDepth()
+	tk := TokenStringMid
+
 	if td == '"' {
 		stops = doubleStops
 	} else if td == '$' {
 		stops = ansiStops
 	}
-
-	tk := TokenStringMid
 
 	if start {
 		tk = TokenStringStart
