@@ -331,8 +331,11 @@ func (s subTokeniser) ReadRune() (rune, int, error) {
 	if c == -1 {
 		return -1, 0, io.ErrUnexpectedEOF
 	} else if c == '\\' {
-		if c = s.Next(); c == -1 {
+		switch s.Peek() {
+		case -1:
 			return -1, 0, io.ErrUnexpectedEOF
+		case '\\', '`', '$':
+			c = s.Next()
 		}
 	}
 
