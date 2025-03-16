@@ -630,6 +630,10 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		wb = wordBreak
 	}
 
+	if t.Accept("\\") && t.Next() == -1 {
+		return t.ReturnError(io.ErrUnexpectedEOF)
+	}
+
 	if t.Len() == 0 && t.Accept(wb) {
 		return t.ReturnError(ErrInvalidCharacter)
 	}
