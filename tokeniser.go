@@ -63,7 +63,7 @@ const (
 type bashTokeniser struct {
 	tokenDepth []byte
 	heredoc    [][]string
-	backticks  int
+	child      *parser.Tokeniser
 }
 
 // SetTokeniser sets the initial tokeniser state of a parser.Tokeniser.
@@ -157,7 +157,7 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 		case '\n':
 			return t.ReturnError(ErrInvalidCharacter)
 		case '`':
-			return t.Return(tk, b.backtickOrIdentOrWord)
+			return t.Return(tk, b.startBacktick)
 		case '$':
 			return t.Return(tk, b.identifier)
 		case '"', '\'':
@@ -172,10 +172,6 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 
 			return t.Return(tk, b.main)
 		case '\\':
-			if td == '"' && b.isBacktick(t, true) != backtickNone {
-				return t.Return(tk, b.backtickOrIdentOrWord)
-			}
-
 			t.Next()
 			t.Next()
 		}
@@ -305,71 +301,61 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		t.Next()
 	case '$':
 		return b.identifier(t)
-	case '`', '\\':
-		return b.backtickOrIdentOrWord(t)
+	case '`':
+		return b.startBacktick(t)
 	}
 
 	return t.Return(TokenPunctuator, b.main)
 }
 
-func (b *bashTokeniser) backtickOrIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	switch b.isBacktick(t, false) {
-	case backtickNone:
-		return b.keywordIdentOrWord(t)
-	case backtickOpen:
-		b.pushTokenDepth('`')
+func (b *bashTokeniser) startBacktick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Next()
 
-		b.backticks++
+	sub := parser.NewRuneReaderTokeniser(subTokeniser{t})
+	b.child = SetTokeniser(&sub)
 
-		return t.Return(TokenOpenBacktick, b.main)
-	case backtickClose:
-		b.popTokenDepth()
-
-		b.backticks--
-
-		return t.Return(TokenCloseBacktick, b.main)
-	default:
-		return t.ReturnError(ErrIncorrectBacktick)
-	}
+	return t.Return(TokenOpenBacktick, b.backtick)
 }
 
-type backtick uint8
+type subTokeniser struct {
+	*parser.Tokeniser
+}
 
-const (
-	backtickNone backtick = iota
-	backtickOpen
-	backtickClose
-	backtickInvalid
-)
-
-func (b *bashTokeniser) isBacktick(t *parser.Tokeniser, reset bool) backtick {
-	if reset {
-		defer t.State().Reset()
+func (s subTokeniser) ReadRune() (rune, int, error) {
+	if s.Peek() == '`' {
+		return -1, 0, io.EOF
 	}
 
-	pos := t.Len()
+	c := s.Next()
 
-	t.AcceptRun("\\")
-
-	slashes := t.Len() - pos
-
-	if slashes == 0 {
-		if b.backticks == 0 && t.Accept("`") {
-			return backtickOpen
-		} else if b.backticks == 1 && b.lastTokenDepth() == '`' && t.Accept("`") {
-			return backtickClose
+	if c == -1 {
+		return -1, 0, io.ErrUnexpectedEOF
+	} else if c == '\\' {
+		if c = s.Next(); c == -1 {
+			return -1, 0, io.ErrUnexpectedEOF
 		}
-	} else if (b.backticks<<1)-1 == slashes && t.Accept("`") {
-		return backtickOpen
-	} else if ((b.backticks-1)<<1)-1 == slashes && t.Accept("`") {
-		return backtickClose
 	}
 
-	if (b.backticks<<1)-1 > slashes && t.Accept("`") {
-		return backtickInvalid
+	return c, 1, nil
+}
+
+func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	tk, err := b.child.GetToken()
+
+	switch tk.Type {
+	case parser.TokenDone:
+		t.Get()
+
+		if !t.Accept("`") {
+			return t.ReturnError(ErrIncorrectBacktick)
+		}
+
+		return t.Return(TokenCloseBacktick, b.main)
+	case parser.TokenError:
+		return t.ReturnError(err)
 	}
 
-	return backtickNone
+	return tk, b.backtick
 }
 
 func (b *bashTokeniser) startHeredoc(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -678,10 +664,6 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 			t.Next()
 		case '\\':
-			if b.isBacktick(t, true) != backtickNone {
-				return t.Return(TokenWord, b.backtickOrIdentOrWord)
-			}
-
 			t.Next()
 			t.Next()
 		case '$':
