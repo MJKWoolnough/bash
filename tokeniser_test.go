@@ -811,6 +811,15 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 47
+			"`\\$abc`",
+			[]parser.Token{
+				{Type: TokenOpenBacktick, Data: "`"},
+				{Type: TokenIdentifier, Data: "$abc"},
+				{Type: TokenCloseBacktick, Data: "`"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 48
 			"{abc}>2",
 			[]parser.Token{
 				{Type: TokenBraceWord, Data: "{abc}"},
@@ -819,7 +828,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 48
+		{ // 49
 			"<&1-",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<&"},
