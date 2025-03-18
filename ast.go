@@ -374,6 +374,8 @@ func (v *Value) parse(b *bashParser) error {
 				return b.Error("Value", err)
 			}
 
+			v.Array = append(v.Array, w)
+
 			b.Score(c)
 			b.AcceptRunAllWhitespace()
 		}
