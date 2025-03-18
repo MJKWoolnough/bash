@@ -17,8 +17,7 @@ var (
 const (
 	whitespace         = " \t"
 	newline            = "\n"
-	metachars          = whitespace + newline + "|&;()<>"
-	heredocsBreak      = metachars + "\\\"'"
+	heredocsBreak      = whitespace + newline + "|&;()<>\\\"'"
 	heredocStringBreak = newline + "$"
 	doubleStops        = "\\`$\""
 	singleStops        = "'"
