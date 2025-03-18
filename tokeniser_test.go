@@ -820,6 +820,32 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 48
+			"echo `echo \\\"abc\\\"`",
+			[]parser.Token{
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenOpenBacktick, Data: "`"},
+				{Type: TokenWord, Data: "echo"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "\\\"abc\\\""},
+				{Type: TokenCloseBacktick, Data: "`"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 49
+			"\\\"abc\\\"",
+			[]parser.Token{
+				{Type: TokenWord, Data: "\\\"abc\\\""},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 50
+			"\\",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 51
 			"{abc}>2",
 			[]parser.Token{
 				{Type: TokenBraceWord, Data: "{abc}"},
@@ -828,7 +854,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 49
+		{ // 52
 			"<&1-",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<&"},
