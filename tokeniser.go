@@ -69,9 +69,7 @@ type bashTokeniser struct {
 //
 // Used if you want to manually tokenise bash code.
 func SetTokeniser(t *parser.Tokeniser) *parser.Tokeniser {
-	p := new(bashTokeniser)
-
-	t.TokeniserState(p.main)
+	t.TokeniserState(new(bashTokeniser).main)
 
 	return t
 }
