@@ -555,8 +555,32 @@ func (r *Redirection) isHeredoc() bool {
 	return r.Redirector != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-")
 }
 
-type ArithmeticExpansion struct{}
+type ArithmeticExpansion struct {
+	Words  []Word
+	Tokens Tokens
+}
 
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "$(("})
+	b.AcceptRunAllWhitespace()
+
+	for b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "))"}) {
+		c := b.NewGoal()
+
+		var w Word
+
+		if err := w.parse(c); err != nil {
+			return b.Error("Value", err)
+		}
+
+		a.Words = append(a.Words, w)
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+
+	}
+
+	a.Tokens = b.ToTokens()
+
 	return nil
 }
