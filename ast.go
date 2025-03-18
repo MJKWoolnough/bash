@@ -228,8 +228,11 @@ func (c *Command) parse(b *bashParser) error {
 		b.AcceptRunWhitespace()
 	}
 
-	for nextIsWordPart(b) {
-		d := b.NewGoal()
+	d := b.NewGoal()
+
+	for nextIsWordPart(d) {
+		b.Score(d)
+		d = b.NewGoal()
 
 		if isRedirection(b) {
 			var r Redirection
@@ -250,6 +253,10 @@ func (c *Command) parse(b *bashParser) error {
 		}
 
 		b.Score(d)
+
+		d = b.NewGoal()
+
+		d.AcceptRunWhitespace()
 	}
 
 	c.Tokens = b.ToTokens()
