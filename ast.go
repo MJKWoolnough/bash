@@ -452,7 +452,7 @@ func (w *WordPart) parse(b *bashParser) error {
 		if err := w.Parameter.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
-	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}:
+	case tk == parser.Token{Type: TokenPunctuator, Data: "$(("}:
 		w.ArithmeticExpansion = new(ArithmeticExpansion)
 
 		if err := w.ArithmeticExpansion.parse(c); err != nil {
