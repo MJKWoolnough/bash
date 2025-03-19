@@ -280,7 +280,16 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		b.pushTokenDepth('}')
-	case '}', ')', ']':
+	case ']':
+		if b.lastTokenDepth() == '[' {
+			t.Next()
+			b.popTokenDepth()
+
+			return t.Return(TokenPunctuator, b.parameterExpansionOperation)
+		}
+
+		fallthrough
+	case '}', ')':
 		t.Next()
 
 		if b.lastTokenDepth() != c {
@@ -570,7 +579,13 @@ func (b *bashTokeniser) parameterExpansionIdentifier(t *parser.Tokeniser) (parse
 }
 
 func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return t.ReturnError(nil)
+	if !t.Accept("[") {
+		return b.parameterExpansionOperation(t)
+	}
+
+	b.pushTokenDepth('[')
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
