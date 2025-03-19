@@ -8,10 +8,11 @@ import (
 )
 
 var (
-	keywords       = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
-	dotdot         = []string{".."}
-	escapedNewline = []string{"\\\n"}
-	assignment     = []string{"=", "+="}
+	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
+	dotdot             = []string{".."}
+	escapedNewline     = []string{"\\\n"}
+	assignment         = []string{"=", "+="}
+	expansionOperators = [...]string{"#", "%", "^", ","}
 )
 
 const (
@@ -589,6 +590,40 @@ func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) 
 }
 
 func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept(":") {
+		if t.Accept("-#?+") {
+			return t.Return(TokenPunctuator, b.main)
+		}
+
+		return t.Return(TokenPunctuator, b.parameterExpansionSubstringStart)
+	} else if t.Accept("/") {
+		t.Accept("/#%")
+
+		return t.Return(TokenPunctuator, b.parameterExpansionPattern)
+	} else if t.Accept("@") {
+		return t.Return(TokenPunctuator, b.parameterExpansionOperator)
+	}
+
+	for _, c := range expansionOperators {
+		if t.Accept(c) {
+			t.Accept(c)
+
+			return t.Return(TokenPunctuator, b.main)
+		}
+	}
+
+	return t.ReturnError(ErrInvalidParameterExpansion)
+}
+
+func (b *bashTokeniser) parameterExpansionSubstringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return t.ReturnError(nil)
+}
+
+func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return t.ReturnError(nil)
+}
+
+func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return t.ReturnError(nil)
 }
 
