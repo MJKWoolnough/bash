@@ -550,6 +550,30 @@ func (b *bashTokeniser) parameterExpansionIdentifierOrBang(t *parser.Tokeniser) 
 }
 
 func (b *bashTokeniser) parameterExpansionIdentifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept("@*") {
+		return t.Return(TokenKeyword, b.parameterExpansionOperation)
+	}
+
+	if t.Accept(decimalDigit) {
+		t.AcceptRun(decimalDigit)
+
+		return t.Return(TokenNumberLiteral, b.parameterExpansionOperation)
+	}
+
+	if !t.Accept(identStart) {
+		return t.ReturnError(ErrInvalidParameterExpansion)
+	}
+
+	t.AcceptRun(identCont)
+
+	return t.Return(TokenIdentifier, b.parameterExpansionOperation)
+}
+
+func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return t.ReturnError(nil)
+}
+
+func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return t.ReturnError(nil)
 }
 
