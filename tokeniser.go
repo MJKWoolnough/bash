@@ -598,10 +598,10 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			state.Reset()
 
 			return t.Return(TokenIdentifierAssign, b.main)
-		} else if t.Peek() == b.lastTokenDepth() {
-			return t.Return(TokenWord, b.main)
 		} else if t.Peek() == '[' {
 			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
+		} else if td := b.lastTokenDepth(); t.Peek() == td || td == '}' {
+			return t.Return(TokenWord, b.main)
 		}
 	} else if t.Accept(decimalDigit) {
 		t.AcceptRun(decimalDigit)
