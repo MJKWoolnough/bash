@@ -648,7 +648,21 @@ func (b *bashTokeniser) parameterExpansionSubstringMid(t *parser.Tokeniser) (par
 }
 
 func (b *bashTokeniser) parameterExpansionSubstringEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return t.ReturnError(nil)
+	if t.Accept(whitespace) {
+		t.AcceptRun(whitespace)
+
+		return t.Return(TokenWhitespace, b.parameterExpansionSubstringStart)
+	}
+
+	t.Accept("-")
+
+	if !t.Accept(decimalDigit) {
+		return t.ReturnError(ErrInvalidParameterExpansion)
+	}
+
+	t.AcceptRun(decimalDigit)
+
+	return t.Return(TokenNumberLiteral, b.main)
 }
 
 func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
