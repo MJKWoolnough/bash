@@ -643,11 +643,11 @@ func (b *bashTokeniser) parameterExpansionSubstringMid(t *parser.Tokeniser) (par
 	if t.Accept(whitespace) {
 		t.AcceptRun(whitespace)
 
-		return t.Return(TokenWhitespace, b.parameterExpansionSubstringStart)
+		return t.Return(TokenWhitespace, b.parameterExpansionSubstringMid)
 	}
 
 	if t.Accept(":") {
-		t.Return(TokenPunctuator, b.parameterExpansionSubstringEnd)
+		return t.Return(TokenPunctuator, b.parameterExpansionSubstringEnd)
 	}
 
 	return b.main(t)
@@ -657,7 +657,7 @@ func (b *bashTokeniser) parameterExpansionSubstringEnd(t *parser.Tokeniser) (par
 	if t.Accept(whitespace) {
 		t.AcceptRun(whitespace)
 
-		return t.Return(TokenWhitespace, b.parameterExpansionSubstringStart)
+		return t.Return(TokenWhitespace, b.parameterExpansionSubstringEnd)
 	}
 
 	t.Accept("-")
