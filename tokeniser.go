@@ -591,7 +591,7 @@ func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) 
 
 func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if t.Accept(":") {
-		if t.Accept("-#?+") {
+		if t.Accept("-=#?+") {
 			return t.Return(TokenPunctuator, b.main)
 		}
 
