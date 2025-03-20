@@ -576,7 +576,7 @@ func (b *bashTokeniser) parameterExpansionIdentifier(t *parser.Tokeniser) (parse
 
 	t.AcceptRun(identCont)
 
-	return t.Return(TokenIdentifier, b.parameterExpansionOperation)
+	return t.Return(TokenIdentifier, b.parameterExpansionArrayOrOperation)
 }
 
 func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -600,6 +600,8 @@ func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser
 		t.Accept("/#%")
 
 		return t.Return(TokenPunctuator, b.parameterExpansionPattern)
+	} else if t.Accept("*") {
+		return t.Return(TokenPunctuator, b.main)
 	} else if t.Accept("@") {
 		return t.Return(TokenPunctuator, b.parameterExpansionOperator)
 	} else if t.Accept("}") {
@@ -674,6 +676,12 @@ func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.T
 }
 
 func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept("}") {
+		b.popTokenDepth()
+
+		return t.Return(TokenPunctuator, b.main)
+	}
+
 	return t.ReturnError(nil)
 }
 
@@ -761,7 +769,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	switch b.lastTokenDepth() {
 	case '}':
 		wb = wordBreakNoBrace
-	case ']':
+	case ']', '[':
 		wb = wordBreakNoBracket
 	default:
 		wb = wordBreak
