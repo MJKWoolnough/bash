@@ -863,7 +863,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 53
-			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set}",
+			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set} ${#a}",
 			[]parser.Token{
 				{Type: TokenWord, Data: ":"},
 				{Type: TokenWhitespace, Data: " "},
@@ -955,6 +955,11 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenWord, Data: "is"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenWord, Data: "set"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenPunctuator, Data: "#"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenPunctuator, Data: "}"},
 				{Type: parser.TokenDone, Data: ""},
 			},
