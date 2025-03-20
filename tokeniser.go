@@ -526,7 +526,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 	} else if t.Accept("{") {
 		b.pushTokenDepth('}')
 
-		return t.Return(TokenPunctuator, b.parameterExpansionIdentifierOrBang)
+		return t.Return(TokenPunctuator, b.parameterExpansionIdentifierOrPreOperator)
 	} else if td := b.lastTokenDepth(); td != '"' && td != 'h' && t.Accept("'\"") {
 		t.Reset()
 
@@ -547,8 +547,8 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 	return t.Return(TokenIdentifier, b.main)
 }
 
-func (b *bashTokeniser) parameterExpansionIdentifierOrBang(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept("!") {
+func (b *bashTokeniser) parameterExpansionIdentifierOrPreOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept("!#") {
 		if t.Peek() != '}' {
 			return t.Return(TokenPunctuator, b.parameterExpansionIdentifier)
 		}
