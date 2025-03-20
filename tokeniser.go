@@ -602,6 +602,10 @@ func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser
 		return t.Return(TokenPunctuator, b.parameterExpansionPattern)
 	} else if t.Accept("@") {
 		return t.Return(TokenPunctuator, b.parameterExpansionOperator)
+	} else if t.Accept("}") {
+		b.popTokenDepth()
+
+		return t.Return(TokenPunctuator, b.main)
 	}
 
 	for _, c := range expansionOperators {
