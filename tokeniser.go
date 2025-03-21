@@ -58,6 +58,7 @@ const (
 	TokenHeredocEnd
 	TokenOpenBacktick
 	TokenCloseBacktick
+	TokenPattern
 )
 
 type bashTokeniser struct {
@@ -672,7 +673,47 @@ func (b *bashTokeniser) parameterExpansionSubstringEnd(t *parser.Tokeniser) (par
 }
 
 func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return t.ReturnError(nil)
+	parens := 0
+
+	for {
+		switch t.ExceptRun("\\()[/") {
+		case '/':
+			if parens == 0 {
+				return t.Return(TokenPattern, b.parameterExpansionPatternEnd)
+			}
+
+			fallthrough
+		case -1:
+			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '\\':
+			t.Next()
+			t.Next()
+		case '(':
+			parens++
+		case ')':
+			if parens == 0 {
+				return t.ReturnError(ErrInvalidParameterExpansion)
+			}
+
+			parens--
+		case '[':
+			for !t.Accept("]") {
+				switch t.ExceptRun("\\]") {
+				case -1:
+					return t.ReturnError(io.ErrUnexpectedEOF)
+				case '\\':
+					t.Next()
+					t.Next()
+				}
+			}
+		}
+	}
+}
+
+func (b *bashTokeniser) parameterExpansionPatternEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Accept("/")
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
