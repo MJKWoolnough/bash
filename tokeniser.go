@@ -729,7 +729,11 @@ func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.
 		return t.Return(TokenPunctuator, b.main)
 	}
 
-	return t.ReturnError(nil)
+	if !t.Accept("UuLQEPAKak") {
+		t.ReturnError(ErrInvalidParameterExpansion)
+	}
+
+	return t.Return(TokenBraceWord, b.main)
 }
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
