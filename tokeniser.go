@@ -615,7 +615,7 @@ func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser
 		if t.Accept(c) {
 			t.Accept(c)
 
-			return t.Return(TokenPunctuator, b.main)
+			return t.Return(TokenPunctuator, b.parameterExpansionPattern)
 		}
 	}
 
@@ -676,7 +676,13 @@ func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.T
 	parens := 0
 
 	for {
-		switch t.ExceptRun("\\()[/") {
+		switch t.ExceptRun("\\()[/}") {
+		case '}':
+			if parens == 0 {
+				return t.Return(TokenPattern, b.main)
+			}
+
+			return t.ReturnError(io.ErrUnexpectedEOF)
 		case '/':
 			if parens == 0 {
 				return t.Return(TokenPattern, b.parameterExpansionPatternEnd)
