@@ -695,8 +695,12 @@ func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.T
 			t.Next()
 			t.Next()
 		case '(':
+			t.Next()
+
 			parens++
 		case ')':
+			t.Next()
+
 			if parens == 0 {
 				return t.ReturnError(ErrInvalidParameterExpansion)
 			}
