@@ -420,6 +420,7 @@ Loop:
 		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], unstring(tk.Data))
 	} else {
 		b.pushTokenDepth('H')
+
 		b.heredoc = append(b.heredoc, []string{unstring(tk.Data)})
 	}
 
