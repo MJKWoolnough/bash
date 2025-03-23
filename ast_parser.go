@@ -78,7 +78,7 @@ func (b *bashParser) Score(k *bashParser) {
 	b.Tokens = b.Tokens[:len(b.Tokens)+len(k.Tokens)]
 }
 
-func (b *bashParser) next() Token {
+func (b *bashParser) Next() Token {
 	l := len(b.Tokens)
 	b.Tokens = b.Tokens[:l+1]
 	tk := b.Tokens[l]
@@ -95,7 +95,7 @@ func (b *bashParser) backup() {
 }
 
 func (b *bashParser) Peek() parser.Token {
-	tk := b.next().Token
+	tk := b.Next().Token
 
 	b.backup()
 
@@ -103,7 +103,7 @@ func (b *bashParser) Peek() parser.Token {
 }
 
 func (b *bashParser) Accept(ts ...parser.TokenType) bool {
-	tt := b.next().Type
+	tt := b.Next().Type
 
 	for _, pt := range ts {
 		if pt == tt {
@@ -119,7 +119,7 @@ func (b *bashParser) Accept(ts ...parser.TokenType) bool {
 func (b *bashParser) AcceptRun(ts ...parser.TokenType) parser.TokenType {
 Loop:
 	for {
-		tt := b.next().Type
+		tt := b.Next().Type
 
 		for _, pt := range ts {
 			if pt == tt {
@@ -133,12 +133,8 @@ Loop:
 	}
 }
 
-func (b *bashParser) Next() Token {
-	return b.next()
-}
-
 func (b *bashParser) AcceptToken(tk parser.Token) bool {
-	if b.next().Token == tk {
+	if b.Next().Token == tk {
 		return true
 	}
 
@@ -181,7 +177,7 @@ func (e Error) Unwrap() error {
 }
 
 func (b *bashParser) Error(parsingFunc string, err error) error {
-	tk := b.next()
+	tk := b.Next()
 
 	b.backup()
 
