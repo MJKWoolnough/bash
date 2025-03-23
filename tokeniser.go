@@ -734,7 +734,7 @@ func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.
 	}
 
 	if !t.Accept("UuLQEPAKak") {
-		t.ReturnError(ErrInvalidParameterExpansion)
+		return t.ReturnError(ErrInvalidParameterExpansion)
 	}
 
 	return t.Return(TokenBraceWord, b.main)
