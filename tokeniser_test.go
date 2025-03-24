@@ -1145,6 +1145,19 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
+		{ // 61
+			"${@} ${*}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenKeyword, Data: "@"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenKeyword, Data: "*"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
