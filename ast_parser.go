@@ -155,8 +155,8 @@ func (b *bashParser) AcceptRunWhitespace() parser.TokenType {
 	return b.AcceptRun(TokenWhitespace)
 }
 
-func (p *bashParser) AcceptRunAllWhitespace() parser.TokenType {
-	return p.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
+func (b *bashParser) AcceptRunAllWhitespace() parser.TokenType {
+	return b.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
 }
 
 // Error represents a Bash parsing error.
