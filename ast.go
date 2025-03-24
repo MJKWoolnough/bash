@@ -445,7 +445,7 @@ func nextIsWordPart(b *bashParser) bool {
 
 type WordPart struct {
 	Part                *Token
-	Parameter           *Parameter
+	Parameter           *ParameterExpansion
 	CommandSubstitution *CommandSubstitution
 	ArithmeticExpansion *ArithmeticExpansion
 	Tokens              Tokens
@@ -456,7 +456,7 @@ func (w *WordPart) parse(b *bashParser) error {
 
 	switch tk := b.Peek(); {
 	case tk == parser.Token{Type: TokenPunctuator, Data: "${"}:
-		w.Parameter = new(Parameter)
+		w.Parameter = new(ParameterExpansion)
 
 		if err := w.Parameter.parse(c); err != nil {
 			return b.Error("WordPart", err)
@@ -486,9 +486,181 @@ func (w *WordPart) parse(b *bashParser) error {
 	return nil
 }
 
+type ParameterType uint8
+
+const (
+	ParameterValue ParameterType = iota
+	ParameterLength
+	ParameterSubstitution
+	ParameterAssign
+	ParameterMessage
+	ParameterSetAssign
+	ParameterSubstring
+	ParameterPrefix
+	ParameterPrefixSeperate
+	ParameterRemoveStartShortest
+	ParameterRemoveStartLongest
+	ParameterRemoveEndShortest
+	ParameterRemoveEndLongest
+	ParameterReplace
+	ParameterReplaceAll
+	ParameterReplaceStart
+	ParameterReplaceEnd
+	ParameterLowercaseFirstMatch
+	ParameterLowercaseAllMatches
+	ParameterUppercaseFirstMatch
+	ParameterUppercaseAllMatches
+	ParameterUppercase
+	ParameterUppercaseFirst
+	ParameterLowercase
+	ParameterQuoted
+	ParameterEscaped
+	ParameterPrompt
+	ParameterAssignment
+	ParameterQuotedArrays
+	ParameterQuotedArraysSeperate
+	ParameterAttributes
+)
+
+type ParameterExpansion struct {
+	Indirect       bool
+	Parameter      Parameter
+	Index          *Word
+	Type           ParameterType
+	SubstringStart *Token
+	SubstringEnd   *Token
+	Word           *Word
+	Operator       *Token
+	Pattern        *Token
+	String         *String
+	Tokens         Tokens
+}
+
+func (p *ParameterExpansion) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "${"})
+
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "#"}) {
+		p.Type = ParameterLength
+	} else {
+		p.Indirect = b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"})
+	}
+
+	c := b.NewGoal()
+
+	if err := p.Parameter.parse(b); err != nil {
+		return err
+	}
+
+	b.Score(c)
+
+	if p.Type != ParameterLength {
+		var parseWord, parseReplace, parsePattern bool
+
+		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":="}) {
+			p.Type = ParameterSubstitution
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":?"}) {
+			p.Type = ParameterAssign
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":+"}) {
+			p.Type = ParameterMessage
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
+			p.Type = ParameterSubstring
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "#"}) {
+			p.Type = ParameterRemoveStartShortest
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "##"}) {
+			p.Type = ParameterRemoveStartLongest
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "%"}) {
+			p.Type = ParameterRemoveEndShortest
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "%%"}) {
+			p.Type = ParameterRemoveEndLongest
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/"}) {
+			p.Type = ParameterReplace
+			parseReplace = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "//"}) {
+			p.Type = ParameterReplaceAll
+			parseReplace = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/#"}) {
+			p.Type = ParameterReplaceStart
+			parseReplace = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/%"}) {
+			p.Type = ParameterReplaceEnd
+			parseReplace = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^"}) {
+			p.Type = ParameterUppercase
+			parsePattern = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^^"}) {
+			p.Type = ParameterUppercaseAllMatches
+			parsePattern = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","}) {
+			p.Type = ParameterLowercase
+			parsePattern = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ",,"}) {
+			p.Type = ParameterLowercaseAllMatches
+			parsePattern = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "@"}) {
+			if p.Indirect && b.Peek() == (parser.Token{Type: TokenPunctuator, Data: "}"}) {
+				p.Indirect = false
+				p.Type = ParameterPrefixSeperate
+			} else {
+				b.Accept(TokenBraceWord)
+
+				p.Operator = b.GetLastToken()
+			}
+		} else if p.Indirect && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*"}) {
+			p.Indirect = false
+			p.Type = ParameterPrefix
+		}
+
+		if parseWord {
+			c := b.NewGoal()
+			p.Word = new(Word)
+
+			if err := p.Word.parse(c); err != nil {
+				return b.Error("ParameterExpasion", err)
+			}
+
+			b.Score(c)
+		} else if parsePattern || parseReplace {
+			b.Accept(TokenPattern)
+
+			p.Pattern = b.GetLastToken()
+
+			if parseReplace && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/"}) {
+				c := b.NewGoal()
+				p.String = new(String)
+
+				if err := p.String.parse(c); err != nil {
+					return b.Error("ParameterExpasion", err)
+				}
+
+				b.Score(b)
+			}
+		}
+	}
+
+	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "}"}) {
+		return b.Error("ParameterExpasion", ErrMissingClosingBrace)
+	}
+
+	p.Tokens = b.ToTokens()
+
+	return nil
+}
+
 type Parameter struct{}
 
 func (p *Parameter) parse(b *bashParser) error {
+}
+
+type String struct{}
+
+func (s *String) parse(b *bashParser) error {
 	return nil
 }
 
