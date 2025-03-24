@@ -567,6 +567,24 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
 			p.Type = ParameterSubstring
+
+			b.AcceptRunWhitespace()
+
+			if !b.Accept(TokenNumberLiteral) {
+				return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
+			}
+
+			p.SubstringStart = b.GetLastToken()
+
+			if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
+				b.AcceptRunWhitespace()
+
+				if !b.Accept(TokenNumberLiteral) {
+					return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
+				}
+
+				p.SubstringEnd = b.GetLastToken()
+			}
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "#"}) {
 			p.Type = ParameterRemoveStartShortest
 			parseWord = true
