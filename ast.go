@@ -292,7 +292,7 @@ const (
 )
 
 type Assignment struct {
-	Identifier Paramater
+	Identifier ParameterAssign
 	Assignment AssignmentType
 	Value      Value
 	Tokens     Tokens
@@ -328,13 +328,13 @@ func (a *Assignment) parse(b *bashParser) error {
 	return nil
 }
 
-type Paramater struct {
+type ParameterAssign struct {
 	Identifier *Token
 	Subscript  *Word
 	Tokens     Tokens
 }
 
-func (p *Paramater) parse(b *bashParser) error {
+func (p *ParameterAssign) parse(b *bashParser) error {
 	b.Next()
 
 	p.Identifier = b.GetLastToken()
@@ -346,14 +346,14 @@ func (p *Paramater) parse(b *bashParser) error {
 		p.Subscript = new(Word)
 
 		if err := p.Subscript.parse(c); err != nil {
-			return b.Error("Parameter", err)
+			return b.Error("ParameterAssign", err)
 		}
 
 		b.Score(c)
 		b.AcceptRunAllWhitespace()
 
 		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
-			return b.Error("Parameter", ErrMissingClosingBracket)
+			return b.Error("ParameterAssign", ErrMissingClosingBracket)
 		}
 	}
 
@@ -445,7 +445,7 @@ func nextIsWordPart(b *bashParser) bool {
 
 type WordPart struct {
 	Part                *Token
-	Parameter           *ParameterExpansion
+	ParameterExpansion  *ParameterExpansion
 	CommandSubstitution *CommandSubstitution
 	ArithmeticExpansion *ArithmeticExpansion
 	Tokens              Tokens
@@ -456,9 +456,9 @@ func (w *WordPart) parse(b *bashParser) error {
 
 	switch tk := b.Peek(); {
 	case tk == parser.Token{Type: TokenPunctuator, Data: "${"}:
-		w.Parameter = new(ParameterExpansion)
+		w.ParameterExpansion = new(ParameterExpansion)
 
-		if err := w.Parameter.parse(c); err != nil {
+		if err := w.ParameterExpansion.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
 	case tk == parser.Token{Type: TokenPunctuator, Data: "$(("}:
@@ -492,7 +492,7 @@ const (
 	ParameterValue ParameterType = iota
 	ParameterLength
 	ParameterSubstitution
-	ParameterAssign
+	ParameterAssignment
 	ParameterMessage
 	ParameterSetAssign
 	ParameterSubstring
@@ -516,7 +516,7 @@ const (
 	ParameterQuoted
 	ParameterEscaped
 	ParameterPrompt
-	ParameterAssignment
+	ParameterDeclare
 	ParameterQuotedArrays
 	ParameterQuotedArraysSeperate
 	ParameterAttributes
@@ -530,7 +530,6 @@ type ParameterExpansion struct {
 	SubstringStart *Token
 	SubstringEnd   *Token
 	Word           *Word
-	Operator       *Token
 	Pattern        *Token
 	String         *String
 	Tokens         Tokens
@@ -560,7 +559,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			p.Type = ParameterSubstitution
 			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":?"}) {
-			p.Type = ParameterAssign
+			p.Type = ParameterAssignment
 			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":+"}) {
 			p.Type = ParameterMessage
@@ -610,13 +609,13 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			p.Type = ParameterReplaceEnd
 			parseReplace = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^"}) {
-			p.Type = ParameterUppercase
+			p.Type = ParameterUppercaseFirstMatch
 			parsePattern = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^^"}) {
 			p.Type = ParameterUppercaseAllMatches
 			parsePattern = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","}) {
-			p.Type = ParameterLowercase
+			p.Type = ParameterLowercaseFirstMatch
 			parsePattern = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ",,"}) {
 			p.Type = ParameterLowercaseAllMatches
@@ -628,7 +627,28 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			} else {
 				b.Accept(TokenBraceWord)
 
-				p.Operator = b.GetLastToken()
+				switch b.GetLastToken().Data {
+				case "U":
+					p.Type = ParameterUppercase
+				case "u":
+					p.Type = ParameterUppercaseFirst
+				case "L":
+					p.Type = ParameterLowercase
+				case "Q":
+					p.Type = ParameterQuoted
+				case "E":
+					p.Type = ParameterEscaped
+				case "P":
+					p.Type = ParameterPrompt
+				case "A":
+					p.Type = ParameterDeclare
+				case "K":
+					p.Type = ParameterQuotedArrays
+				case "a":
+					p.Type = ParameterAttributes
+				case "k":
+					p.Type = ParameterQuotedArraysSeperate
+				}
 			}
 		} else if p.Indirect && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*"}) {
 			p.Indirect = false
