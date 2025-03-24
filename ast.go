@@ -706,9 +706,20 @@ func (p *Parameter) parse(b *bashParser) error {
 	return nil
 }
 
-type String struct{}
+type String struct {
+	Parts  []Token
+	Tokens Tokens
+}
 
 func (s *String) parse(b *bashParser) error {
+	b.ExceptRunToken(parser.Token{Type: TokenPunctuator, Data: "}"})
+
+	s.Parts = b.ToTokens()
+
+	b.Next()
+
+	s.Tokens = b.ToTokens()
+
 	return nil
 }
 
