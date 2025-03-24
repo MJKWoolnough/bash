@@ -653,9 +653,39 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 	return nil
 }
 
-type Parameter struct{}
+type Parameter struct {
+	Parameter *Token
+	Array     *Word
+	Tokens    Tokens
+}
 
 func (p *Parameter) parse(b *bashParser) error {
+	if b.Accept(TokenIdentifier) {
+		p.Parameter = b.GetLastToken()
+
+		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "["}) {
+			c := b.NewGoal()
+			p.Array = new(Word)
+
+			if err := p.Array.parse(c); err != nil {
+				return b.Error("Parameter", err)
+			}
+
+			b.Score(c)
+
+			if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
+				return b.Error("Parameter", ErrMissingClosingBracket)
+			}
+		}
+	} else if !b.Accept(TokenNumberLiteral) && !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "@"}) && !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "*"}) {
+		return b.Error("Parameter", ErrInvalidParameterExpansion)
+	} else {
+		p.Parameter = b.GetLastToken()
+	}
+
+	p.Tokens = b.ToTokens()
+
+	return nil
 }
 
 type String struct{}
