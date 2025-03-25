@@ -163,7 +163,21 @@ func (l LogicalOperator) printType(w io.Writer, v bool) {
 	io.WriteString(w, l.String())
 }
 
-func (JobControl) printType(w io.Writer, v bool)    {}
+func (j JobControl) String() string {
+	switch j {
+	case JobControlForeground:
+		return "JobControlForeground"
+	case JobControlBackground:
+		return "JobControlBackground"
+	default:
+		return "Unknown"
+	}
+}
+
+func (j JobControl) printType(w io.Writer, v bool) {
+	io.WriteString(w, j.String())
+}
+
 func (ParameterType) printType(w io.Writer, v bool) {}
 
 type formatter interface {
