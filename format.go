@@ -99,6 +99,13 @@ func (t Tokens) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n]")
 }
 
+func (AssignmentType) printType(w io.Writer, v bool)   {}
+func (SubstitutionType) printType(w io.Writer, v bool) {}
+func (PipelineTime) printType(w io.Writer, v bool)     {}
+func (LogicalOperator) printType(w io.Writer, v bool)  {}
+func (JobControl) printType(w io.Writer, v bool)       {}
+func (ParameterType) printType(w io.Writer, v bool)    {}
+
 type formatter interface {
 	printType(io.Writer, bool)
 	printSource(io.Writer, bool)
