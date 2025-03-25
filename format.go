@@ -146,9 +146,25 @@ func (p PipelineTime) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
 
-func (LogicalOperator) printType(w io.Writer, v bool) {}
-func (JobControl) printType(w io.Writer, v bool)      {}
-func (ParameterType) printType(w io.Writer, v bool)   {}
+func (l LogicalOperator) String() string {
+	switch l {
+	case LogicalOperatorNone:
+		return "LogicalOperatorNone"
+	case LogicalOperatorAnd:
+		return "LogicalOperatorAnd"
+	case LogicalOperatorOr:
+		return "LogicalOperatorOr"
+	default:
+		return "Unknown"
+	}
+}
+
+func (l LogicalOperator) printType(w io.Writer, v bool) {
+	io.WriteString(w, l.String())
+}
+
+func (JobControl) printType(w io.Writer, v bool)    {}
+func (ParameterType) printType(w io.Writer, v bool) {}
 
 type formatter interface {
 	printType(io.Writer, bool)
