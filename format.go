@@ -114,11 +114,25 @@ func (a AssignmentType) printType(w io.Writer, v bool) {
 	io.WriteString(w, a.String())
 }
 
-func (SubstitutionType) printType(w io.Writer, v bool) {}
-func (PipelineTime) printType(w io.Writer, v bool)     {}
-func (LogicalOperator) printType(w io.Writer, v bool)  {}
-func (JobControl) printType(w io.Writer, v bool)       {}
-func (ParameterType) printType(w io.Writer, v bool)    {}
+func (s SubstitutionType) String() string {
+	switch s {
+	case SubstitutionNew:
+		return "SubstitutionNew"
+	case SubstitutionBacktick:
+		return "SubstitutionBacktick"
+	default:
+		return "Unknown"
+	}
+}
+
+func (s SubstitutionType) printType(w io.Writer, v bool) {
+	io.WriteString(w, s.String())
+}
+
+func (PipelineTime) printType(w io.Writer, v bool)    {}
+func (LogicalOperator) printType(w io.Writer, v bool) {}
+func (JobControl) printType(w io.Writer, v bool)      {}
+func (ParameterType) printType(w io.Writer, v bool)   {}
 
 type formatter interface {
 	printType(io.Writer, bool)
