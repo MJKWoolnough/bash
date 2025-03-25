@@ -178,7 +178,78 @@ func (j JobControl) printType(w io.Writer, v bool) {
 	io.WriteString(w, j.String())
 }
 
-func (ParameterType) printType(w io.Writer, v bool) {}
+func (p ParameterType) String() string {
+	switch p {
+	case ParameterValue:
+		return "ParameterValue"
+	case ParameterLength:
+		return "ParameterLength"
+	case ParameterSubstitution:
+		return "ParameterSubstitution"
+	case ParameterAssignment:
+		return "ParameterAssignment"
+	case ParameterMessage:
+		return "ParameterMessage"
+	case ParameterSetAssign:
+		return "ParameterSetAssign"
+	case ParameterSubstring:
+		return "ParameterSubstring"
+	case ParameterPrefix:
+		return "ParameterPrefix"
+	case ParameterPrefixSeperate:
+		return "ParameterPrefixSeperate"
+	case ParameterRemoveStartShortest:
+		return "ParameterRemoveStartShortest"
+	case ParameterRemoveStartLongest:
+		return "ParameterRemoveStartLongest"
+	case ParameterRemoveEndShortest:
+		return "ParameterRemoveEndShortest"
+	case ParameterRemoveEndLongest:
+		return "ParameterRemoveEndLongest"
+	case ParameterReplace:
+		return "ParameterReplace"
+	case ParameterReplaceAll:
+		return "ParameterReplaceAll"
+	case ParameterReplaceStart:
+		return "ParameterReplaceStart"
+	case ParameterReplaceEnd:
+		return "ParameterReplaceEnd"
+	case ParameterLowercaseFirstMatch:
+		return "ParameterLowercaseFirstMatch"
+	case ParameterLowercaseAllMatches:
+		return "ParameterLowercaseAllMatches"
+	case ParameterUppercaseFirstMatch:
+		return "ParameterUppercaseFirstMatch"
+	case ParameterUppercaseAllMatches:
+		return "ParameterUppercaseAllMatches"
+	case ParameterUppercase:
+		return "ParameterUppercase"
+	case ParameterUppercaseFirst:
+		return "ParameterUppercaseFirst"
+	case ParameterLowercase:
+		return "ParameterLowercase"
+	case ParameterQuoted:
+		return "ParameterQuoted"
+	case ParameterEscaped:
+		return "ParameterEscaped"
+	case ParameterPrompt:
+		return "ParameterPrompt"
+	case ParameterDeclare:
+		return "ParameterDeclare"
+	case ParameterQuotedArrays:
+		return "ParameterQuotedArrays"
+	case ParameterQuotedArraysSeperate:
+		return ""
+	case ParameterAttributes:
+		return "ParameterAttributes"
+	default:
+		return ""
+	}
+}
+
+func (p ParameterType) printType(w io.Writer, v bool) {
+	io.WriteString(w, p.String())
+}
 
 type formatter interface {
 	printType(io.Writer, bool)
