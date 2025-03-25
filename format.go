@@ -129,7 +129,23 @@ func (s SubstitutionType) printType(w io.Writer, v bool) {
 	io.WriteString(w, s.String())
 }
 
-func (PipelineTime) printType(w io.Writer, v bool)    {}
+func (p PipelineTime) String() string {
+	switch p {
+	case PipelineTimeNone:
+		return "PipelineTimeNone"
+	case PipelineTimeBash:
+		return "PipelineTimeBash"
+	case PipelineTimePosix:
+		return "PipelineTimePosix"
+	default:
+		return "Unknown"
+	}
+}
+
+func (p PipelineTime) printType(w io.Writer, v bool) {
+	io.WriteString(w, p.String())
+}
+
 func (LogicalOperator) printType(w io.Writer, v bool) {}
 func (JobControl) printType(w io.Writer, v bool)      {}
 func (ParameterType) printType(w io.Writer, v bool)   {}
