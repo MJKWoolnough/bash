@@ -99,7 +99,21 @@ func (t Tokens) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n]")
 }
 
-func (AssignmentType) printType(w io.Writer, v bool)   {}
+func (a AssignmentType) String() string {
+	switch a {
+	case AssignmentAssign:
+		return "AssignmentAssign"
+	case AssignmentAppend:
+		return "AssignmentAppend"
+	default:
+		return "Unknown"
+	}
+}
+
+func (a AssignmentType) printType(w io.Writer, v bool) {
+	io.WriteString(w, a.String())
+}
+
 func (SubstitutionType) printType(w io.Writer, v bool) {}
 func (PipelineTime) printType(w io.Writer, v bool)     {}
 func (LogicalOperator) printType(w io.Writer, v bool)  {}
