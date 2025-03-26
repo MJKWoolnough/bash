@@ -57,8 +57,6 @@ func newBashParser(t Tokeniser) (*bashParser, error) {
 					linePos++
 				}
 			}
-
-			linePos += uint64(len(tk.Data))
 		}
 
 		pos += uint64(len(tk.Data))
