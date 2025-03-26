@@ -46,3 +46,63 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 		}
 	}
 }
+
+func TestWordPart(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = WordPart{
+				Part:   &tk[0],
+				Tokens: tk[:1],
+			}
+		}},
+		{"${a}", func(t *test, tk Tokens) { // 2
+			t.Output = WordPart{
+				ParameterExpansion: &ParameterExpansion{
+					Parameter: Parameter{
+						Parameter: &tk[1],
+						Tokens:    tk[1:2],
+					},
+					Tokens: tk[:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"$()", func(t *test, tk Tokens) { // 3
+			t.Output = WordPart{
+				CommandSubstitution: &CommandSubstitution{
+					Command: File{
+						Tokens: tk[1:1],
+					},
+					Tokens: tk[:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"``", func(t *test, tk Tokens) { // 4
+			t.Output = WordPart{
+				CommandSubstitution: &CommandSubstitution{
+					SubstitutionType: SubstitutionBacktick,
+					Command: File{
+						Tokens: tk[1:1],
+					},
+					Tokens: tk[:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"$(())", func(t *test, tk Tokens) { // 5
+			t.Output = WordPart{
+				ArithmeticExpansion: &ArithmeticExpansion{
+					Tokens: tk[:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var wp WordPart
+
+		err := wp.parse(t.Parser)
+
+		return wp, err
+	})
+}
