@@ -757,7 +757,7 @@ type CommandSubstitution struct {
 func (cs *CommandSubstitution) parse(b *bashParser) error {
 	end := parser.Token{Type: TokenPunctuator, Data: ")"}
 
-	if tk := b.Next(); tk.Type != TokenOpenBacktick {
+	if tk := b.Next(); tk.Type == TokenOpenBacktick {
 		cs.SubstitutionType = SubstitutionBacktick
 		end = parser.Token{Type: TokenCloseBacktick, Data: tk.Data}
 	}
@@ -768,10 +768,14 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	c.StopAt = &end
 
 	if err := cs.Command.parse(c); err != nil {
-		return err
+		return b.Error("CommandSubstitution", err)
 	}
 
 	b.Score(c)
+
+	if !b.AcceptToken(end) {
+		return b.Error("CommandSubstitution", ErrMissingCloser)
+	}
 
 	cs.Tokens = b.ToTokens()
 
