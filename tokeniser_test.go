@@ -1158,6 +1158,22 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 62
+			"$() $(()) `` ${}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenPunctuator, Data: "))"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenOpenBacktick, Data: "`"},
+				{Type: TokenCloseBacktick, Data: "`"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: parser.TokenError, Data: "invalid parameter expansion"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
