@@ -417,7 +417,7 @@ func (w *Word) parse(b *bashParser) error {
 
 		w.Parts = append(w.Parts, wp)
 
-		b.Score(b)
+		b.Score(c)
 	}
 
 	w.Tokens = b.ToTokens()
