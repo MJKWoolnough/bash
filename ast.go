@@ -826,7 +826,7 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "$(("})
 	b.AcceptRunAllWhitespace()
 
-	for b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "))"}) {
+	for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "))"}) {
 		c := b.NewGoal()
 
 		var w Word
