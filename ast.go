@@ -545,7 +545,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	if err := p.Parameter.parse(c); err != nil {
-		return err
+		return b.Error("ParameterExpansion", err)
 	}
 
 	b.Score(c)
