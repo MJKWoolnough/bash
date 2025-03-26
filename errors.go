@@ -10,6 +10,7 @@ var (
 	ErrInvalidAssignment         = errors.New("invalid assignment")
 	ErrMissingClosingBracket     = errors.New("missing closing bracket")
 	ErrMissingClosingBrace       = errors.New("missing closing brace")
+	ErrMissingCloser             = errors.New("missing closer")
 	ErrInvalidEndOfStatement     = errors.New("invalid end of statement")
 	ErrIncorrectBacktick         = errors.New("incorrect backtick depth")
 )
