@@ -162,7 +162,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := p.Command.parse(c); err != nil {
+	if err := p.Command.parse(c, true); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -198,7 +198,7 @@ type Command struct {
 	Tokens       Tokens
 }
 
-func (c *Command) parse(b *bashParser) error {
+func (c *Command) parse(b *bashParser, required bool) error {
 	for {
 		d := b.NewGoal()
 
@@ -255,6 +255,10 @@ func (c *Command) parse(b *bashParser) error {
 		d = b.NewGoal()
 
 		d.AcceptRunWhitespace()
+	}
+
+	if required && len(c.Words) == 0 {
+		return b.Error("Command", ErrMissingWord)
 	}
 
 	c.Tokens = b.ToTokens()
