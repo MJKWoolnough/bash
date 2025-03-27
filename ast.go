@@ -24,28 +24,28 @@ type File struct {
 	Tokens     Tokens
 }
 
-func (f *File) parse(p *bashParser) error {
-	q := p.NewGoal()
+func (f *File) parse(b *bashParser) error {
+	c := b.NewGoal()
 
-	for q.AcceptRunAllWhitespace() != parser.TokenDone {
-		p.AcceptRunAllWhitespace()
+	for c.AcceptRunAllWhitespace() != parser.TokenDone {
+		b.AcceptRunAllWhitespace()
 
-		q = p.NewGoal()
+		c = b.NewGoal()
 
 		var s Statement
 
-		if err := s.parse(q, true); err != nil {
-			return p.Error("File", err)
+		if err := s.parse(c, true); err != nil {
+			return b.Error("File", err)
 		}
 
 		f.Statements = append(f.Statements, s)
 
-		p.Score(q)
+		b.Score(c)
 
-		q = p.NewGoal()
+		c = b.NewGoal()
 	}
 
-	f.Tokens = p.ToTokens()
+	f.Tokens = b.ToTokens()
 
 	return nil
 }
