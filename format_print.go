@@ -40,4 +40,8 @@ func (wp WordPart) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (wd Word) printSource(w io.Writer, v bool) {}
+func (wd Word) printSource(w io.Writer, v bool) {
+	for _, word := range wd.Parts {
+		word.printSource(w, v)
+	}
+}
