@@ -427,7 +427,7 @@ func (w *Word) parse(b *bashParser) error {
 
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, parser.TokenDone:
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
