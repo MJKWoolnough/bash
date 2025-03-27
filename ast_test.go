@@ -47,6 +47,134 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 	}
 }
 
+func TestWord(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a b", func(t *test, tk Tokens) { // 2
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a\nb", func(t *test, tk Tokens) { // 3
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a|b", func(t *test, tk Tokens) { // 4
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a$b", func(t *test, tk Tokens) { // 5
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+					{
+						Part:   &tk[1],
+						Tokens: tk[1:2],
+					},
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"a$()", func(t *test, tk Tokens) { // 6
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+					{
+						CommandSubstitution: &CommandSubstitution{
+							Command: File{
+								Tokens: tk[2:2],
+							},
+							Tokens: tk[1:3],
+						},
+						Tokens: tk[1:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${a}b", func(t *test, tk Tokens) { // 7
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						ParameterExpansion: &ParameterExpansion{
+							Parameter: Parameter{
+								Parameter: &tk[1],
+								Tokens:    tk[1:2],
+							},
+							Tokens: tk[:3],
+						},
+						Tokens: tk[:3],
+					},
+					{
+						Part:   &tk[3],
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{"a$(())", func(t *test, tk Tokens) { // 8
+			t.Output = Word{
+				Parts: []WordPart{
+					{
+						Part:   &tk[0],
+						Tokens: tk[:1],
+					},
+					{
+						ArithmeticExpansion: &ArithmeticExpansion{
+							Tokens: tk[1:3],
+						},
+						Tokens: tk[1:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var w Word
+
+		err := w.parse(t.Parser)
+
+		return w, err
+	})
+}
+
 func TestWordPart(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
