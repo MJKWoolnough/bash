@@ -832,7 +832,7 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 		var w Word
 
 		if err := w.parse(c); err != nil {
-			return b.Error("Value", err)
+			return b.Error("ArithmeticExpansion", err)
 		}
 
 		a.Words = append(a.Words, w)
