@@ -16,26 +16,27 @@ var (
 )
 
 const (
-	whitespace         = " \t"
-	newline            = "\n"
-	heredocsBreak      = whitespace + newline + "|&;()<>\\\"'"
-	heredocStringBreak = newline + "$"
-	doubleStops        = "\\`$\""
-	singleStops        = "'"
-	ansiStops          = "'\\"
-	word               = "\\\"'`(){}- \t\n"
-	wordNoBracket      = "\\\"'`(){}- \t\n]"
-	wordBreak          = " `\\\t\n$|&;<>(){"
-	wordBreakNoBracket = wordBreak + "]"
-	wordBreakNoBrace   = wordBreak + "}"
-	braceWordBreak     = " `\\\t\n|&;<>()={},"
-	hexDigit           = "0123456789ABCDEFabcdef"
-	octalDigit         = "012345678"
-	decimalDigit       = "0123456789"
-	letters            = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	identStart         = letters + "_"
-	identCont          = decimalDigit + identStart
-	numberChars        = identCont + "@"
+	whitespace          = " \t"
+	newline             = "\n"
+	heredocsBreak       = whitespace + newline + "|&;()<>\\\"'"
+	heredocStringBreak  = newline + "$"
+	doubleStops         = "\\`$\""
+	singleStops         = "'"
+	ansiStops           = "'\\"
+	word                = "\\\"'`(){}- \t\n"
+	wordNoBracket       = "\\\"'`(){}- \t\n]"
+	wordBreak           = " `\\\t\n$|&;<>(){"
+	wordBreakNoBracket  = wordBreak + "]"
+	wordBreakNoBrace    = wordBreak + "}"
+	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
+	braceWordBreak      = " `\\\t\n|&;<>()={},"
+	hexDigit            = "0123456789ABCDEFabcdef"
+	octalDigit          = "012345678"
+	decimalDigit        = "0123456789"
+	letters             = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	identStart          = letters + "_"
+	identCont           = decimalDigit + identStart
+	numberChars         = identCont + "@"
 )
 
 const (
@@ -540,6 +541,8 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 	switch b.lastTokenDepth() {
 	case ']':
 		wb = wordNoBracket
+	case '>':
+		wb = wordBreakArithmetic
 	default:
 		wb = word
 	}
@@ -827,6 +830,8 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		wb = wordBreakNoBrace
 	case ']', '[':
 		wb = wordBreakNoBracket
+	case '>':
+		wb = wordBreakArithmetic
 	default:
 		wb = wordBreak
 	}
