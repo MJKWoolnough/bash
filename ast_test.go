@@ -378,3 +378,110 @@ func TestWordPart(t *testing.T) {
 		return wp, err
 	})
 }
+
+func TestArithmeticExpansion(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"$((a))", func(t *test, tk Tokens) { // 1
+			t.Output = ArithmeticExpansion{
+				WordsAndOperators: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[1],
+									Tokens: tk[1:2],
+								},
+							},
+							Tokens: tk[1:2],
+						},
+						Tokens: tk[1:2],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"$(( a ))", func(t *test, tk Tokens) { // 2
+			t.Output = ArithmeticExpansion{
+				WordsAndOperators: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"$(( a$b ))", func(t *test, tk Tokens) { // 3
+			t.Output = ArithmeticExpansion{
+				WordsAndOperators: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
+							Tokens: tk[2:4],
+						},
+						Tokens: tk[2:4],
+					},
+				},
+				Tokens: tk[:6],
+			}
+		}},
+		{"$((a+b))", func(t *test, tk Tokens) { // 4
+			t.Output = ArithmeticExpansion{
+				WordsAndOperators: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[1],
+									Tokens: tk[1:2],
+								},
+							},
+							Tokens: tk[1:2],
+						},
+						Tokens: tk[1:2],
+					},
+					{
+						Operator: &tk[2],
+						Tokens:   tk[2:3],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
+							Tokens: tk[3:4],
+						},
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var ae ArithmeticExpansion
+
+		err := ae.parse(t.Parser)
+
+		return ae, err
+	})
+}
