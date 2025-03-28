@@ -822,8 +822,8 @@ func (r *Redirection) isHeredoc() bool {
 }
 
 type ArithmeticExpansion struct {
-	Words  []Word
-	Tokens Tokens
+	WordAndOperators []WordOrOperator
+	Tokens           Tokens
 }
 
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
@@ -833,13 +833,13 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "))"}) {
 		c := b.NewGoal()
 
-		var w Word
+		var w WordOrOperator
 
 		if err := w.parse(c); err != nil {
 			return b.Error("ArithmeticExpansion", err)
 		}
 
-		a.Words = append(a.Words, w)
+		a.WordAndOperators = append(a.WordAndOperators, w)
 
 		b.Score(c)
 		b.AcceptRunAllWhitespace()
@@ -847,6 +847,31 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	}
 
 	a.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type WordOrOperator struct {
+	Word     *Word
+	Operator *Token
+	Tokens   Tokens
+}
+
+func (w *WordOrOperator) parse(b *bashParser) error {
+	if b.Accept(TokenPunctuator) {
+		w.Operator = b.GetLastToken()
+	} else {
+		c := b.NewGoal()
+		w.Word = new(Word)
+
+		if err := w.Word.parse(c); err != nil {
+			return b.Error("WordOrOperator", err)
+		}
+
+		b.Score(c)
+	}
+
+	w.Tokens = b.ToTokens()
 
 	return nil
 }
