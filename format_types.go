@@ -9,21 +9,21 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 
 	pp.Print("ArithmeticExpansion {")
 
-	if f.WordAndOperators == nil {
-		pp.Print("\nWordAndOperators: nil")
-	} else if len(f.WordAndOperators) > 0 {
-		pp.Print("\nWordAndOperators: [")
+	if f.WordsAndOperators == nil {
+		pp.Print("\nWordsAndOperators: nil")
+	} else if len(f.WordsAndOperators) > 0 {
+		pp.Print("\nWordsAndOperators: [")
 
 		ipp := indentPrinter{&pp}
 
-		for n, e := range f.WordAndOperators {
+		for n, e := range f.WordsAndOperators {
 			ipp.Printf("\n%d: ", n)
 			e.printType(&ipp, v)
 		}
 
 		pp.Print("\n]")
 	} else if v {
-		pp.Print("\nWordAndOperators: []")
+		pp.Print("\nWordsAndOperators: []")
 	}
 
 	pp.Print("\nTokens: ")

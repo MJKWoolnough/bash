@@ -822,8 +822,8 @@ func (r *Redirection) isHeredoc() bool {
 }
 
 type ArithmeticExpansion struct {
-	WordAndOperators []WordOrOperator
-	Tokens           Tokens
+	WordsAndOperators []WordOrOperator
+	Tokens            Tokens
 }
 
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
@@ -839,7 +839,7 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 			return b.Error("ArithmeticExpansion", err)
 		}
 
-		a.WordAndOperators = append(a.WordAndOperators, w)
+		a.WordsAndOperators = append(a.WordsAndOperators, w)
 
 		b.Score(c)
 		b.AcceptRunAllWhitespace()
@@ -858,7 +858,41 @@ type WordOrOperator struct {
 }
 
 func (w *WordOrOperator) parse(b *bashParser) error {
-	if b.Accept(TokenPunctuator) {
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "++"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "--"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "-"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "~"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "**"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "%"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "<<"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ">>"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "<="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "=>"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "<"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "?"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "|"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&&"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "||"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "?"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "/="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "%="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "-="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "<<="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ">>="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "^="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!="}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","}) {
 		w.Operator = b.GetLastToken()
 	} else {
 		c := b.NewGoal()
