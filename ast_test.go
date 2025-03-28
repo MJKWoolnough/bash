@@ -477,6 +477,45 @@ func TestArithmeticExpansion(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
+		{"$(($(||)))", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[2],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[2],
+										},
+										Parsing: "Statement",
+										Token:   tk[2],
+									},
+									Parsing: "File",
+									Token:   tk[2],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[2],
+							},
+							Parsing: "WordPart",
+							Token:   tk[1],
+						},
+						Parsing: "Word",
+						Token:   tk[1],
+					},
+					Parsing: "WordOrOperator",
+					Token:   tk[1],
+				},
+				Parsing: "ArithmeticExpansion",
+				Token:   tk[1],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var ae ArithmeticExpansion
 
