@@ -9,21 +9,21 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 
 	pp.Print("ArithmeticExpansion {")
 
-	if f.Words == nil {
-		pp.Print("\nWords: nil")
-	} else if len(f.Words) > 0 {
-		pp.Print("\nWords: [")
+	if f.WordAndOperators == nil {
+		pp.Print("\nWordAndOperators: nil")
+	} else if len(f.WordAndOperators) > 0 {
+		pp.Print("\nWordAndOperators: [")
 
 		ipp := indentPrinter{&pp}
 
-		for n, e := range f.Words {
+		for n, e := range f.WordAndOperators {
 			ipp.Printf("\n%d: ", n)
 			e.printType(&ipp, v)
 		}
 
 		pp.Print("\n]")
 	} else if v {
-		pp.Print("\nWords: []")
+		pp.Print("\nWordAndOperators: []")
 	}
 
 	pp.Print("\nTokens: ")
@@ -438,6 +438,31 @@ func (f *Word) printType(w io.Writer, v bool) {
 		pp.Print("\n]")
 	} else if v {
 		pp.Print("\nParts: []")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *WordOrOperator) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("WordOrOperator {")
+
+	if f.Word != nil {
+		pp.Print("\nWord: ")
+		f.Word.printType(&pp, v)
+	} else if v {
+		pp.Print("\nWord: nil")
+	}
+
+	if f.Operator != nil {
+		pp.Print("\nOperator: ")
+		f.Operator.printType(&pp, v)
+	} else if v {
+		pp.Print("\nOperator: nil")
 	}
 
 	pp.Print("\nTokens: ")
