@@ -28,6 +28,8 @@ func (s String) printSource(w io.Writer, v bool) {}
 
 func (ve Value) printSource(w io.Writer, v bool) {}
 
+func (wo WordOrOperator) printSource(w io.Writer, v bool) {}
+
 func (wp WordPart) printSource(w io.Writer, v bool) {
 	if wp.Part != nil {
 		io.WriteString(w, wp.Part.Data)
