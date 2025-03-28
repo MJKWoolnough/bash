@@ -2,7 +2,31 @@ package bash
 
 import "io"
 
-func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {}
+func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "$((")
+
+	if len(a.WordsAndOperators) > 0 {
+		if v {
+			io.WriteString(w, " ")
+		}
+
+		a.WordsAndOperators[0].printSource(w, v)
+
+		for _, wo := range a.WordsAndOperators[1:] {
+			if v {
+				io.WriteString(w, " ")
+			}
+
+			wo.printSource(w, v)
+		}
+
+		if v {
+			io.WriteString(w, " ")
+		}
+	}
+
+	io.WriteString(w, "))")
+}
 
 func (a Assignment) printSource(w io.Writer, v bool) {}
 
