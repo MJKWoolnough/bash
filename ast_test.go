@@ -379,6 +379,309 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestRedirection(t *testing.T) {
+	doTests(t, []sourceFn{
+		{">a", func(t *test, tk Tokens) { // 1
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"> a", func(t *test, tk Tokens) { // 2
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"2>&1", func(t *test, tk Tokens) { // 3
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"<a", func(t *test, tk Tokens) { // 4
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"2< a", func(t *test, tk Tokens) { // 5
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{">|a", func(t *test, tk Tokens) { // 6
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"3>|a", func(t *test, tk Tokens) { // 7
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{">>a", func(t *test, tk Tokens) { // 8
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"1>>a", func(t *test, tk Tokens) { // 9
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"&>a", func(t *test, tk Tokens) { // 10
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{">&a", func(t *test, tk Tokens) { // 11
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"&>>a", func(t *test, tk Tokens) { // 12
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"<<abc\nabc", func(t *test, tk Tokens) { // 13
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"2<<-abc\nabc", func(t *test, tk Tokens) { // 14
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"2<&3", func(t *test, tk Tokens) { // 15
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"<<<abc", func(t *test, tk Tokens) { // 16
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"2<&3-", func(t *test, tk Tokens) { // 17
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{">&2-", func(t *test, tk Tokens) { // 18
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"<>abc", func(t *test, tk Tokens) { // 19
+			t.Output = Redirection{
+				Redirector: &tk[0],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[1],
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var r Redirection
+
+		err := r.parse(t.Parser)
+
+		return r, err
+	})
+}
+
 func TestArithmeticExpansion(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"$((a))", func(t *test, tk Tokens) { // 1
