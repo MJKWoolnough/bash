@@ -59,6 +59,7 @@ const (
 	TokenHeredocEnd
 	TokenOpenBacktick
 	TokenCloseBacktick
+	TokenCloseParen
 	TokenPattern
 )
 
@@ -300,6 +301,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		b.popTokenDepth()
+
+		if c == ')' {
+			return t.Return(TokenCloseParen, b.main)
+		}
 	case '+':
 		t.Next()
 

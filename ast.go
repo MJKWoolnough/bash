@@ -27,7 +27,11 @@ type File struct {
 func (f *File) parse(b *bashParser) error {
 	c := b.NewGoal()
 
-	for c.AcceptRunAllWhitespace() != parser.TokenDone {
+	for {
+		if tk := c.AcceptRunAllWhitespace(); tk == parser.TokenDone || tk == TokenCloseBacktick || tk == TokenCloseParen {
+			break
+		}
+
 		b.AcceptRunAllWhitespace()
 
 		c = b.NewGoal()
@@ -117,7 +121,7 @@ func (s *Statement) parse(b *bashParser, first bool) error {
 			b.Score(c)
 		} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
 			b.Score(c)
-		} else if tk := c.Peek().Type; tk != TokenLineTerminator && tk != parser.TokenDone {
+		} else if tk := c.Peek().Type; tk != TokenLineTerminator && tk != parser.TokenDone && tk != TokenCloseBacktick && tk != TokenCloseParen {
 			return c.Error("Statement", ErrInvalidEndOfStatement)
 		}
 	}
@@ -374,7 +378,7 @@ func (v *Value) parse(b *bashParser) error {
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
 		b.AcceptRunAllWhitespace()
 
-		for b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+		for b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
 			c := b.NewGoal()
 
 			var w Word
@@ -429,13 +433,17 @@ func (w *Word) parse(b *bashParser) error {
 	return nil
 }
 
+func (w *Word) isDigit() bool {
+	return len(w.Parts) == 1 && w.Parts[0].isDigit()
+}
+
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment, parser.TokenDone:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenCloseParen, parser.TokenDone:
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
-		case "$((", "$(", "${", "`":
+		case "$((", "$(", "${":
 			return true
 		}
 
@@ -486,6 +494,10 @@ func (w *WordPart) parse(b *bashParser) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (w *WordPart) isDigit() bool {
+	return w.Part != nil && len(w.Part.Data) == 1 && w.Part.Data[0] >= '0' && w.Part.Data[0] <= '9'
 }
 
 type ParameterType uint8
@@ -759,7 +771,7 @@ type CommandSubstitution struct {
 }
 
 func (cs *CommandSubstitution) parse(b *bashParser) error {
-	end := parser.Token{Type: TokenPunctuator, Data: ")"}
+	end := parser.Token{Type: TokenCloseParen, Data: ")"}
 
 	if tk := b.Next(); tk.Type == TokenOpenBacktick {
 		cs.SubstitutionType = SubstitutionBacktick
@@ -769,7 +781,6 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	b.AcceptRunWhitespace()
 
 	c := b.NewGoal()
-	c.StopAt = &end
 
 	if err := cs.Command.parse(c); err != nil {
 		return b.Error("CommandSubstitution", err)
@@ -790,6 +801,7 @@ type Redirection struct {
 	Input      *Token
 	Redirector *Token
 	Output     Word
+	Close      bool
 	Tokens     Tokens
 }
 
@@ -809,6 +821,8 @@ func (r *Redirection) parse(b *bashParser) error {
 	if err := r.Output.parse(c); err != nil {
 		return b.Error("Redirection", err)
 	}
+
+	r.Close = (r.Redirector.Data == "<&" || r.Redirector.Data == ">&") && r.Output.isDigit() && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "-"})
 
 	b.Score(c)
 
