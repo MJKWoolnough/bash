@@ -379,6 +379,109 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestCommandSubstitution(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"$()", func(t *test, tk Tokens) { // 1
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionNew,
+				Command: File{
+					Tokens: tk[1:1],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"``", func(t *test, tk Tokens) { // 2
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionBacktick,
+				Command: File{
+					Tokens: tk[1:1],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"$(``)", func(t *test, tk Tokens) { // 3
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionNew,
+				Command: File{
+					Statements: []Statement{
+						{
+							Pipeline: Pipeline{
+								Command: Command{
+									Words: []Word{
+										{
+											Parts: []WordPart{
+												{
+													CommandSubstitution: &CommandSubstitution{
+														SubstitutionType: SubstitutionBacktick,
+														Command: File{
+															Tokens: tk[2:2],
+														},
+														Tokens: tk[1:3],
+													},
+													Tokens: tk[1:3],
+												},
+											},
+											Tokens: tk[1:3],
+										},
+									},
+									Tokens: tk[1:3],
+								},
+								Tokens: tk[1:3],
+							},
+							Tokens: tk[1:3],
+						},
+					},
+					Tokens: tk[1:3],
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{"`\\`\\``", func(t *test, tk Tokens) { // 4
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionBacktick,
+				Command: File{
+					Statements: []Statement{
+						{
+							Pipeline: Pipeline{
+								Command: Command{
+									Words: []Word{
+										{
+											Parts: []WordPart{
+												{
+													CommandSubstitution: &CommandSubstitution{
+														SubstitutionType: SubstitutionBacktick,
+														Command: File{
+															Tokens: tk[2:2],
+														},
+														Tokens: tk[1:3],
+													},
+													Tokens: tk[1:3],
+												},
+											},
+											Tokens: tk[1:3],
+										},
+									},
+									Tokens: tk[1:3],
+								},
+								Tokens: tk[1:3],
+							},
+							Tokens: tk[1:3],
+						},
+					},
+					Tokens: tk[1:3],
+				},
+				Tokens: tk[:4],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var c CommandSubstitution
+
+		err := c.parse(t.Parser)
+
+		return c, err
+	})
+}
+
 func TestRedirection(t *testing.T) {
 	doTests(t, []sourceFn{
 		{">a", func(t *test, tk Tokens) { // 1
