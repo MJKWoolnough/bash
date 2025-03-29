@@ -44,7 +44,18 @@ func (p Parameter) printSource(w io.Writer, v bool) {}
 
 func (p Pipeline) printSource(w io.Writer, v bool) {}
 
-func (r Redirection) printSource(w io.Writer, v bool) {}
+func (r Redirection) printSource(w io.Writer, v bool) {
+	if r.Redirector == nil {
+		return
+	}
+
+	if r.Input != nil {
+		io.WriteString(w, r.Input.Data)
+	}
+
+	io.WriteString(w, r.Redirector.Data)
+	r.Output.printSource(w, v)
+}
 
 func (s Statement) printSource(w io.Writer, v bool) {}
 
