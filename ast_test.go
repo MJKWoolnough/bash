@@ -673,6 +673,37 @@ func TestRedirection(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
+		{">$(||)", func(t *test, tk Tokens) { // 20
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[2],
+									},
+									Parsing: "Pipeline",
+									Token:   tk[2],
+								},
+								Parsing: "Statement",
+								Token:   tk[2],
+							},
+							Parsing: "File",
+							Token:   tk[2],
+						},
+						Parsing: "CommandSubstitution",
+						Token:   tk[2],
+					},
+					Parsing: "WordPart",
+					Token:   tk[1],
+				},
+				Parsing: "Word",
+				Token:   tk[1],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var r Redirection
 
