@@ -778,7 +778,7 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 		end = parser.Token{Type: TokenCloseBacktick, Data: tk.Data}
 	}
 
-	b.AcceptRunWhitespace()
+	b.AcceptRunAllWhitespace()
 
 	c := b.NewGoal()
 
@@ -787,10 +787,8 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
-
-	if !b.AcceptToken(end) {
-		return b.Error("CommandSubstitution", ErrMissingCloser)
-	}
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(end)
 
 	cs.Tokens = b.ToTokens()
 
