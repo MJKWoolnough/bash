@@ -473,6 +473,29 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:4],
 			}
 		}},
+		{"$(||)", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err:     ErrMissingWord,
+								Parsing: "Command",
+								Token:   tk[1],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[1],
+						},
+						Parsing: "Statement",
+						Token:   tk[1],
+					},
+					Parsing: "File",
+					Token:   tk[1],
+				},
+				Parsing: "CommandSubstitution",
+				Token:   tk[1],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c CommandSubstitution
 
