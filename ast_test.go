@@ -524,3 +524,54 @@ func TestArithmeticExpansion(t *testing.T) {
 		return ae, err
 	})
 }
+
+func TestWordOrOperator(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = WordOrOperator{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"$a", func(t *test, tk Tokens) { // 2
+			t.Output = WordOrOperator{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{">", func(t *test, tk Tokens) { // 3
+			t.Output = WordOrOperator{
+				Operator: &tk[0],
+				Tokens:   tk[:1],
+			}
+		}},
+		{"&", func(t *test, tk Tokens) { // 4
+			t.Output = WordOrOperator{
+				Operator: &tk[0],
+				Tokens:   tk[:1],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var wo WordOrOperator
+
+		err := wo.parse(t.Parser)
+
+		return wo, err
+	})
+}
