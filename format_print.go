@@ -32,7 +32,11 @@ func (a Assignment) printSource(w io.Writer, v bool) {}
 
 func (c Command) printSource(w io.Writer, v bool) {}
 
-func (c CommandSubstitution) printSource(w io.Writer, v bool) {}
+func (c CommandSubstitution) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "$(")
+	c.Command.printSource(w, v)
+	io.WriteString(w, ")")
+}
 
 func (f File) printSource(w io.Writer, v bool) {}
 
