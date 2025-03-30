@@ -361,8 +361,6 @@ func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.Toke
 
 	switch tk.Type {
 	case parser.TokenDone:
-		t.Get()
-
 		if !t.Accept("`") {
 			return t.ReturnError(ErrIncorrectBacktick)
 		}
@@ -370,6 +368,22 @@ func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.Toke
 		return t.Return(TokenCloseBacktick, b.main)
 	case parser.TokenError:
 		return t.ReturnError(err)
+	}
+
+	pos := t.Len()
+
+	t.Reset()
+
+	for _, c := range tk.Data {
+		t.AcceptRun("\\")
+		t.AcceptRune(c)
+	}
+
+	pos -= t.Len()
+	tk.Data = t.Get()
+
+	for t.Len() != pos {
+		t.Next()
 	}
 
 	return tk, b.backtick
