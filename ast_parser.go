@@ -17,7 +17,6 @@ type Tokens []Token
 
 type bashParser struct {
 	Tokens
-	StopAt *parser.Token
 }
 
 // Tokeniser represents the methods required by the bash tokeniser.
@@ -68,7 +67,6 @@ func newBashParser(t Tokeniser) (*bashParser, error) {
 func (b bashParser) NewGoal() *bashParser {
 	return &bashParser{
 		Tokens: b.Tokens[len(b.Tokens):],
-		StopAt: b.StopAt,
 	}
 }
 
@@ -80,10 +78,6 @@ func (b *bashParser) Next() Token {
 	l := len(b.Tokens)
 	b.Tokens = b.Tokens[:l+1]
 	tk := b.Tokens[l]
-
-	if b.StopAt != nil && *b.StopAt == tk.Token {
-		return Token{Token: parser.Token{Type: parser.TokenDone}}
-	}
 
 	return tk
 }
