@@ -63,6 +63,48 @@ func (t Token) printType(w io.Writer, v bool) {
 	var typ string
 
 	switch t.Type {
+	case TokenWhitespace:
+		typ = "TokenWhitespace"
+	case TokenLineTerminator:
+		typ = "TokenLineTerminator"
+	case TokenComment:
+		typ = "TokenComment"
+	case TokenIdentifier:
+		typ = "TokenIdentifier"
+	case TokenIdentifierAssign:
+		typ = "TokenIdentifierAssign"
+	case TokenKeyword:
+		typ = "TokenKeyword"
+	case TokenWord:
+		typ = "TokenWord"
+	case TokenNumberLiteral:
+		typ = "TokenNumberLiteral"
+	case TokenString:
+		typ = "TokenString"
+	case TokenStringStart:
+		typ = "TokenStringStart"
+	case TokenStringMid:
+		typ = "TokenStringMid"
+	case TokenStringEnd:
+		typ = "TokenStringEnd"
+	case TokenBraceExpansion:
+		typ = "TokenBraceExpansion"
+	case TokenBraceWord:
+		typ = "TokenBraceWord"
+	case TokenPunctuator:
+		typ = "TokenPunctuator"
+	case TokenHeredoc:
+		typ = "TokenHeredoc"
+	case TokenHeredocEnd:
+		typ = "TokenHeredocEnd"
+	case TokenOpenBacktick:
+		typ = "TokenOpenBacktick"
+	case TokenCloseBacktick:
+		typ = "TokenCloseBacktick"
+	case TokenCloseParen:
+		typ = "TokenCloseParen"
+	case TokenPattern:
+		typ = "TokenPattern"
 	default:
 		typ = "Unknown"
 	}
