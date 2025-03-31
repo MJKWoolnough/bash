@@ -379,6 +379,37 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestWordOrToken(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = WordOrToken{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{" ", func(t *test, tk Tokens) { // 2
+			t.Output = WordOrToken{
+				Token:  &tk[0],
+				Tokens: tk[:1],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var w WordOrToken
+
+		err := w.parse(t.Parser)
+
+		return w, err
+	})
+}
+
 func TestCommandSubstitution(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"$()", func(t *test, tk Tokens) { // 1
