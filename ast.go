@@ -433,10 +433,6 @@ func (w *Word) parse(b *bashParser) error {
 	return nil
 }
 
-func (w *Word) isDigit() bool {
-	return len(w.Parts) == 1 && w.Parts[0].isDigit()
-}
-
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
 	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenCloseParen, parser.TokenDone:
@@ -494,10 +490,6 @@ func (w *WordPart) parse(b *bashParser) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
-}
-
-func (w *WordPart) isDigit() bool {
-	return w.Part != nil && len(w.Part.Data) == 1 && w.Part.Data[0] >= '0' && w.Part.Data[0] <= '9'
 }
 
 type ParameterType uint8
@@ -799,7 +791,6 @@ type Redirection struct {
 	Input      *Token
 	Redirector *Token
 	Output     Word
-	Close      bool
 	Tokens     Tokens
 }
 
@@ -819,8 +810,6 @@ func (r *Redirection) parse(b *bashParser) error {
 	if err := r.Output.parse(c); err != nil {
 		return b.Error("Redirection", err)
 	}
-
-	r.Close = (r.Redirector.Data == "<&" || r.Redirector.Data == ">&") && r.Output.isDigit() && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "-"})
 
 	b.Score(c)
 
