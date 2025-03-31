@@ -185,6 +185,18 @@ func (f WordOrOperator) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f WordOrToken) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = WordOrToken
+		type WordOrToken X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f WordPart) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = WordPart

@@ -360,21 +360,21 @@ func (f *String) printType(w io.Writer, v bool) {
 
 	pp.Print("String {")
 
-	if f.Parts == nil {
-		pp.Print("\nParts: nil")
-	} else if len(f.Parts) > 0 {
-		pp.Print("\nParts: [")
+	if f.WordsOrTokens == nil {
+		pp.Print("\nWordsOrTokens: nil")
+	} else if len(f.WordsOrTokens) > 0 {
+		pp.Print("\nWordsOrTokens: [")
 
 		ipp := indentPrinter{&pp}
 
-		for n, e := range f.Parts {
+		for n, e := range f.WordsOrTokens {
 			ipp.Printf("\n%d: ", n)
 			e.printType(&ipp, v)
 		}
 
 		pp.Print("\n]")
 	} else if v {
-		pp.Print("\nParts: []")
+		pp.Print("\nWordsOrTokens: []")
 	}
 
 	pp.Print("\nTokens: ")
@@ -463,6 +463,31 @@ func (f *WordOrOperator) printType(w io.Writer, v bool) {
 		f.Operator.printType(&pp, v)
 	} else if v {
 		pp.Print("\nOperator: nil")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *WordOrToken) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("WordOrToken {")
+
+	if f.Token != nil {
+		pp.Print("\nToken: ")
+		f.Token.printType(&pp, v)
+	} else if v {
+		pp.Print("\nToken: nil")
+	}
+
+	if f.Word != nil {
+		pp.Print("\nWord: ")
+		f.Word.printType(&pp, v)
+	} else if v {
+		pp.Print("\nWord: nil")
 	}
 
 	pp.Print("\nTokens: ")

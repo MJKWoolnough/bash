@@ -733,18 +733,51 @@ func (p *Parameter) parse(b *bashParser) error {
 }
 
 type String struct {
-	Parts  []Token
-	Tokens Tokens
+	WordsOrTokens []WordOrToken
+	Tokens        Tokens
 }
 
 func (s *String) parse(b *bashParser) error {
-	b.ExceptRunToken(parser.Token{Type: TokenPunctuator, Data: "}"})
+	for b.Peek().Type != parser.TokenDone && !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "}"}) {
+		c := b.NewGoal()
 
-	s.Parts = b.ToTokens()
+		var wp WordOrToken
 
-	b.Next()
+		if err := wp.parse(c); err != nil {
+			return b.Error("String", err)
+		}
+
+		s.WordsOrTokens = append(s.WordsOrTokens, wp)
+	}
 
 	s.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type WordOrToken struct {
+	Token  *Token
+	Word   *Word
+	Tokens Tokens
+}
+
+func (w *WordOrToken) parse(b *bashParser) error {
+	if nextIsWordPart(b) {
+		c := b.NewGoal()
+		w.Word = new(Word)
+
+		if err := w.Word.parse(c); err != nil {
+			return b.Error("WordOrToken", err)
+		}
+
+		b.Score(c)
+	} else {
+		b.Next()
+
+		w.Token = b.GetLastToken()
+	}
+
+	w.Tokens = b.ToTokens()
 
 	return nil
 }

@@ -42,4 +42,6 @@ func (Word) bashType() {}
 
 func (WordOrOperator) bashType() {}
 
+func (WordOrToken) bashType() {}
+
 func (WordPart) bashType() {}
