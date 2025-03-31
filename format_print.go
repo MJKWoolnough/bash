@@ -75,6 +75,14 @@ func (wo WordOrOperator) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (wt WordOrToken) printSource(w io.Writer, v bool) {
+	if wt.Word != nil {
+		wt.Word.printSource(w, v)
+	} else if wt.Token != nil {
+		io.WriteString(w, wt.Token.Data)
+	}
+}
+
 func (wp WordPart) printSource(w io.Writer, v bool) {
 	if wp.Part != nil {
 		io.WriteString(w, wp.Part.Data)
