@@ -126,6 +126,10 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return t.Return(TokenLineTerminator, b.main)
 	} else if t.Accept("#") {
+		if td == '}' {
+			return b.word(t)
+		}
+
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
