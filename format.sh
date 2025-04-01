@@ -18,6 +18,7 @@ HEREDOC
 		echo "	pp := indentPrinter{w}";
 		echo;
 		echo "	pp.Print(\"$type {\")";
+
 		while read fieldName fieldType; do
 			if [ "$fieldType" = "bool" ]; then
 				echo;
