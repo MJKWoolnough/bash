@@ -379,6 +379,106 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestString(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = String{
+				WordsOrTokens: []WordOrToken{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a\t or  b", func(t *test, tk Tokens) { // 2
+			t.Output = String{
+				WordsOrTokens: []WordOrToken{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Token:  &tk[1],
+						Tokens: tk[1:2],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					{
+						Token:  &tk[3],
+						Tokens: tk[3:4],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+						Tokens: tk[4:5],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"$a", func(t *test, tk Tokens) { // 3
+			t.Output = String{
+				WordsOrTokens: []WordOrToken{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var s String
+
+		err := s.parse(t.Parser)
+
+		return s, err
+	})
+}
+
 func TestWordOrToken(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
