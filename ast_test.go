@@ -85,6 +85,48 @@ func TestParameterAssign(t *testing.T) {
 				Tokens: tk[:4],
 			}
 		}},
+		{"a[$(||)]=", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[3],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[3],
+									},
+									Parsing: "Statement",
+									Token:   tk[3],
+								},
+								Parsing: "File",
+								Token:   tk[3],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[3],
+						},
+						Parsing: "WordPart",
+						Token:   tk[2],
+					},
+					Parsing: "Word",
+					Token:   tk[2],
+				},
+				Parsing: "ParameterAssign",
+				Token:   tk[2],
+			}
+		}},
+		{"a[0 1]=", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err:     ErrMissingClosingBracket,
+				Parsing: "ParameterAssign",
+				Token:   tk[4],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var pa ParameterAssign
 
