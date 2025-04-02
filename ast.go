@@ -358,7 +358,7 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 		b.Score(c)
 		b.AcceptRunAllWhitespace()
 
-		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
+		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
 			return b.Error("ParameterAssign", ErrMissingClosingBracket)
 		}
 	}
