@@ -747,6 +747,8 @@ func (s *String) parse(b *bashParser) error {
 			return b.Error("String", err)
 		}
 
+		b.Score(c)
+
 		s.WordsOrTokens = append(s.WordsOrTokens, wp)
 	}
 
