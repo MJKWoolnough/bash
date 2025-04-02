@@ -40,7 +40,17 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 
 func (f File) printSource(w io.Writer, v bool) {}
 
-func (p ParameterAssign) printSource(w io.Writer, v bool) {}
+func (p ParameterAssign) printSource(w io.Writer, v bool) {
+	if p.Identifier != nil {
+		io.WriteString(w, p.Identifier.Data)
+
+		if p.Subscript != nil {
+			io.WriteString(w, "[")
+			p.Subscript.printSource(w, v)
+			io.WriteString(w, "]")
+		}
+	}
+}
 
 func (p ParameterExpansion) printSource(w io.Writer, v bool) {}
 
