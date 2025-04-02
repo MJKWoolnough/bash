@@ -63,7 +63,11 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 
 func (s Statement) printSource(w io.Writer, v bool) {}
 
-func (s String) printSource(w io.Writer, v bool) {}
+func (s String) printSource(w io.Writer, v bool) {
+	for _, p := range s.WordsOrTokens {
+		p.printSource(w, v)
+	}
+}
 
 func (ve Value) printSource(w io.Writer, v bool) {}
 
