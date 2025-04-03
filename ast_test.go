@@ -47,6 +47,54 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 	}
 }
 
+func TestAssignment(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a=", func(t *test, tk Tokens) { // 1
+			t.Output = Assignment{
+				Identifier: ParameterAssign{
+					Identifier: &tk[0],
+					Tokens:     tk[:1],
+				},
+				Value: Value{
+					Word: &Word{
+						Tokens: tk[2:2],
+					},
+					Tokens: tk[2:2],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"a+=b", func(t *test, tk Tokens) { // 2
+			t.Output = Assignment{
+				Identifier: ParameterAssign{
+					Identifier: &tk[0],
+					Tokens:     tk[:1],
+				},
+				Assignment: AssignmentAppend,
+				Value: Value{
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[2],
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var a Assignment
+
+		err := a.parse(t.Parser)
+
+		return a, err
+	})
+}
+
 func TestParameterAssign(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a=", func(t *test, tk Tokens) { // 1
