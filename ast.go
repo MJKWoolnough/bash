@@ -721,9 +721,9 @@ func (p *Parameter) parse(b *bashParser) error {
 				return b.Error("Parameter", ErrMissingClosingBracket)
 			}
 		}
-	} else if !b.Accept(TokenNumberLiteral) && !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "@"}) && !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "*"}) {
-		return b.Error("Parameter", ErrInvalidParameterExpansion)
 	} else {
+		b.Next()
+
 		p.Parameter = b.GetLastToken()
 	}
 
