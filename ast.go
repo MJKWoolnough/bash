@@ -378,7 +378,9 @@ func (v *Value) parse(b *bashParser) error {
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
 		b.AcceptRunAllWhitespace()
 
-		for b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
+		v.Array = []Word{}
+
+		for !b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
 			c := b.NewGoal()
 
 			var w Word
