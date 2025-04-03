@@ -86,6 +86,84 @@ func TestAssignment(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
+		{"a[$(||)]=", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[3],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[3],
+										},
+										Parsing: "Statement",
+										Token:   tk[3],
+									},
+									Parsing: "File",
+									Token:   tk[3],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[3],
+							},
+							Parsing: "WordPart",
+							Token:   tk[2],
+						},
+						Parsing: "Word",
+						Token:   tk[2],
+					},
+					Parsing: "ParameterAssign",
+					Token:   tk[2],
+				},
+				Parsing: "Assignment",
+				Token:   tk[0],
+			}
+		}},
+		{"a=$(||)", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[3],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[3],
+										},
+										Parsing: "Statement",
+										Token:   tk[3],
+									},
+									Parsing: "File",
+									Token:   tk[3],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[3],
+							},
+							Parsing: "WordPart",
+							Token:   tk[2],
+						},
+						Parsing: "Word",
+						Token:   tk[2],
+					},
+					Parsing: "Value",
+					Token:   tk[2],
+				},
+				Parsing: "Assignment",
+				Token:   tk[2],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var a Assignment
 
