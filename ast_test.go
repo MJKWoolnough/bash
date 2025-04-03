@@ -468,6 +468,94 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestParameter(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"${a}", func(t *test, tk Tokens) { // 1
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Tokens:    tk[1:2],
+			}
+		}},
+		{"${0}", func(t *test, tk Tokens) { // 2
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Tokens:    tk[1:2],
+			}
+		}},
+		{"${9}", func(t *test, tk Tokens) { // 3
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Tokens:    tk[1:2],
+			}
+		}},
+		{"${@}", func(t *test, tk Tokens) { // 4
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Tokens:    tk[1:2],
+			}
+		}},
+		{"${*}", func(t *test, tk Tokens) { // 5
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Tokens:    tk[1:2],
+			}
+		}},
+		{"${a[0]}", func(t *test, tk Tokens) { // 6
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Array: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[1:5],
+			}
+		}},
+		{"${a[@]}", func(t *test, tk Tokens) { // 7
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Array: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[1:5],
+			}
+		}},
+		{"${a[*]}", func(t *test, tk Tokens) { // 8
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Array: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[1:5],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var p Parameter
+
+		t.Parser.Tokens = t.Parser.Tokens[1:1]
+
+		err := p.parse(t.Parser)
+
+		return p, err
+	})
+}
+
 func TestString(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
@@ -767,7 +855,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:4],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 8
+		{"$(||)", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
