@@ -89,7 +89,35 @@ func (s String) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (ve Value) printSource(w io.Writer, v bool) {}
+func (ve Value) printSource(w io.Writer, v bool) {
+	if ve.Word != nil {
+		ve.printSource(w, v)
+	} else if ve.Array != nil {
+		if len(ve.Array) == 0 {
+			io.WriteString(w, "()")
+		} else {
+
+			if v {
+				io.WriteString(w, "( ")
+			} else {
+				io.WriteString(w, "(")
+			}
+
+			ve.Array[0].printSource(w, v)
+
+			for _, word := range ve.Array[1:] {
+				io.WriteString(w, " ")
+				word.printSource(w, v)
+			}
+
+			if v {
+				io.WriteString(w, " )")
+			} else {
+				io.WriteString(w, ")")
+			}
+		}
+	}
+}
 
 func (wo WordOrOperator) printSource(w io.Writer, v bool) {
 	if wo.Operator != nil {
