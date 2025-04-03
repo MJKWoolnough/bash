@@ -136,6 +136,96 @@ func TestParameterAssign(t *testing.T) {
 	})
 }
 
+func TestValue(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a=b", func(t *test, tk Tokens) { // 1
+			t.Output = Value{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[2:3],
+			}
+		}},
+		{"a=()", func(t *test, tk Tokens) { // 2
+			t.Output = Value{
+				Array:  []Word{},
+				Tokens: tk[2:4],
+			}
+		}},
+		{"a=(b)", func(t *test, tk Tokens) { // 3
+			t.Output = Value{
+				Array: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"a=( b )", func(t *test, tk Tokens) { // 4
+			t.Output = Value{
+				Array: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[4],
+								Tokens: tk[4:5],
+							},
+						},
+						Tokens: tk[4:5],
+					},
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"a=( b c )", func(t *test, tk Tokens) { // 5
+			t.Output = Value{
+				Array: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[4],
+								Tokens: tk[4:5],
+							},
+						},
+						Tokens: tk[4:5],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Tokens: tk[2:9],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var v Value
+
+		t.Parser.Tokens = t.Parser.Tokens[2:2]
+
+		err := v.parse(t.Parser)
+
+		return v, err
+	})
+}
+
 func TestWord(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
