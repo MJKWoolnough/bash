@@ -54,7 +54,17 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 
 func (p ParameterExpansion) printSource(w io.Writer, v bool) {}
 
-func (p Parameter) printSource(w io.Writer, v bool) {}
+func (p Parameter) printSource(w io.Writer, v bool) {
+	if p.Parameter != nil {
+		io.WriteString(w, p.Parameter.Data)
+
+		if p.Array != nil {
+			io.WriteString(w, "[")
+			p.Array.printSource(w, v)
+			io.WriteString(w, "]")
+		}
+	}
+}
 
 func (p Pipeline) printSource(w io.Writer, v bool) {}
 
