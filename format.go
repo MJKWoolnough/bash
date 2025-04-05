@@ -152,6 +152,15 @@ func (a AssignmentType) String() string {
 	}
 }
 
+func (a AssignmentType) printSource(w io.Writer, v bool) {
+	switch a {
+	case AssignmentAssign:
+		io.WriteString(w, "=")
+	case AssignmentAppend:
+		io.WriteString(w, "+=")
+	}
+}
+
 func (a AssignmentType) printType(w io.Writer, v bool) {
 	io.WriteString(w, a.String())
 }
