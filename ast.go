@@ -317,8 +317,6 @@ func (a *Assignment) parse(b *bashParser) error {
 		a.Assignment = AssignmentAssign
 	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+="}) {
 		a.Assignment = AssignmentAppend
-	} else {
-		return b.Error("Assignment", ErrInvalidAssignment)
 	}
 
 	c = b.NewGoal()
