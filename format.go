@@ -210,6 +210,15 @@ func (l LogicalOperator) String() string {
 	}
 }
 
+func (l LogicalOperator) printSource(w io.Writer, v bool) {
+	switch l {
+	case LogicalOperatorAnd:
+		io.WriteString(w, "&&")
+	case LogicalOperator:
+		io.WriteString(w, "||")
+	}
+}
+
 func (l LogicalOperator) printType(w io.Writer, v bool) {
 	io.WriteString(w, l.String())
 }
