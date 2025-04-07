@@ -682,8 +682,6 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 				if err := p.String.parse(c); err != nil {
 					return b.Error("ParameterExpasion", err)
 				}
-
-				b.Score(b)
 			}
 		}
 	}
@@ -738,7 +736,7 @@ type String struct {
 }
 
 func (s *String) parse(b *bashParser) error {
-	for b.Peek().Type != parser.TokenDone && !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "}"}) {
+	for b.Peek().Type != parser.TokenDone && b.Peek() != (parser.Token{Type: TokenPunctuator, Data: "}"}) {
 		c := b.NewGoal()
 
 		var wp WordOrToken
