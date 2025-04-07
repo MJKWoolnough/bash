@@ -682,6 +682,8 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 				if err := p.String.parse(c); err != nil {
 					return b.Error("ParameterExpasion", err)
 				}
+
+				b.Score(c)
 			}
 		}
 	}
