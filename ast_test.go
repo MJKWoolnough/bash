@@ -754,6 +754,631 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestParameterExpansion(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"${a}", func(t *test, tk Tokens) { // 1
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${a[0]}", func(t *test, tk Tokens) { // 2
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Array: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+					Tokens: tk[1:5],
+				},
+				Tokens: tk[:6],
+			}
+		}},
+		{"${@}", func(t *test, tk Tokens) { // 3
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${*}", func(t *test, tk Tokens) { // 4
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${!}", func(t *test, tk Tokens) { // 5
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${0}", func(t *test, tk Tokens) { // 6
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${99}", func(t *test, tk Tokens) { // 7
+			t.Output = ParameterExpansion{
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"${#a}", func(t *test, tk Tokens) { // 8
+			t.Output = ParameterExpansion{
+				Type: ParameterLength,
+				Parameter: Parameter{
+					Parameter: &tk[2],
+					Tokens:    tk[2:3],
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{"${!a}", func(t *test, tk Tokens) { // 9
+			t.Output = ParameterExpansion{
+				Indirect: true,
+				Parameter: Parameter{
+					Parameter: &tk[2],
+					Tokens:    tk[2:3],
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{"${a:=b}", func(t *test, tk Tokens) { // 10
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstitution,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a:?b}", func(t *test, tk Tokens) { // 11
+			t.Output = ParameterExpansion{
+				Type: ParameterAssignment,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a:+b}", func(t *test, tk Tokens) { // 12
+			t.Output = ParameterExpansion{
+				Type: ParameterMessage,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a:1}", func(t *test, tk Tokens) { // 13
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[3],
+				Tokens:         tk[:5],
+			}
+		}},
+		{"${a: 1}", func(t *test, tk Tokens) { // 14
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[4],
+				Tokens:         tk[:6],
+			}
+		}},
+		{"${a: -1}", func(t *test, tk Tokens) { // 15
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[4],
+				Tokens:         tk[:6],
+			}
+		}},
+		{"${a:1:2}", func(t *test, tk Tokens) { // 16
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[3],
+				SubstringEnd:   &tk[5],
+				Tokens:         tk[:7],
+			}
+		}},
+		{"${a:1:-2}", func(t *test, tk Tokens) { // 17
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[3],
+				SubstringEnd:   &tk[5],
+				Tokens:         tk[:7],
+			}
+		}},
+		{"${a:1: -2}", func(t *test, tk Tokens) { // 18
+			t.Output = ParameterExpansion{
+				Type: ParameterSubstring,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				SubstringStart: &tk[3],
+				SubstringEnd:   &tk[6],
+				Tokens:         tk[:8],
+			}
+		}},
+		{"${a#b}", func(t *test, tk Tokens) { // 19
+			t.Output = ParameterExpansion{
+				Type: ParameterRemoveStartShortest,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a##b}", func(t *test, tk Tokens) { // 20
+			t.Output = ParameterExpansion{
+				Type: ParameterRemoveStartLongest,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a%b}", func(t *test, tk Tokens) { // 21
+			t.Output = ParameterExpansion{
+				Type: ParameterRemoveEndShortest,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a%%b}", func(t *test, tk Tokens) { // 22
+			t.Output = ParameterExpansion{
+				Type: ParameterRemoveEndLongest,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a/b}", func(t *test, tk Tokens) { // 23
+			t.Output = ParameterExpansion{
+				Type: ParameterReplace,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a/b/c}", func(t *test, tk Tokens) { // 24
+			t.Output = ParameterExpansion{
+				Type: ParameterReplace,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				String: &String{
+					WordsOrTokens: []WordOrToken{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[5],
+										Tokens: tk[5:6],
+									},
+								},
+								Tokens: tk[5:6],
+							},
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"${a//b}", func(t *test, tk Tokens) { // 25
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceAll,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a//b/c}", func(t *test, tk Tokens) { // 26
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceAll,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				String: &String{
+					WordsOrTokens: []WordOrToken{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[5],
+										Tokens: tk[5:6],
+									},
+								},
+								Tokens: tk[5:6],
+							},
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"${a/#b}", func(t *test, tk Tokens) { // 27
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceStart,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a/#b/c}", func(t *test, tk Tokens) { // 28
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceStart,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				String: &String{
+					WordsOrTokens: []WordOrToken{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[5],
+										Tokens: tk[5:6],
+									},
+								},
+								Tokens: tk[5:6],
+							},
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"${a/%b}", func(t *test, tk Tokens) { // 29
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceEnd,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a/%b/c}", func(t *test, tk Tokens) { // 30
+			t.Output = ParameterExpansion{
+				Type: ParameterReplaceEnd,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				String: &String{
+					WordsOrTokens: []WordOrToken{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[5],
+										Tokens: tk[5:6],
+									},
+								},
+								Tokens: tk[5:6],
+							},
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"${a^b}", func(t *test, tk Tokens) { // 31
+			t.Output = ParameterExpansion{
+				Type: ParameterUppercaseFirstMatch,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a^^b}", func(t *test, tk Tokens) { // 32
+			t.Output = ParameterExpansion{
+				Type: ParameterUppercaseAllMatches,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a,b}", func(t *test, tk Tokens) { // 33
+			t.Output = ParameterExpansion{
+				Type: ParameterLowercaseFirstMatch,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${a,,b}", func(t *test, tk Tokens) { // 34
+			t.Output = ParameterExpansion{
+				Type: ParameterLowercaseAllMatches,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Pattern: &tk[3],
+				Tokens:  tk[:5],
+			}
+		}},
+		{"${!a@}", func(t *test, tk Tokens) { // 35
+			t.Output = ParameterExpansion{
+				Type: ParameterPrefixSeperate,
+				Parameter: Parameter{
+					Parameter: &tk[2],
+					Tokens:    tk[2:3],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${!a*}", func(t *test, tk Tokens) { // 36
+			t.Output = ParameterExpansion{
+				Type: ParameterPrefix,
+				Parameter: Parameter{
+					Parameter: &tk[2],
+					Tokens:    tk[2:3],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@U}", func(t *test, tk Tokens) { // 37
+			t.Output = ParameterExpansion{
+				Type: ParameterUppercase,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@u}", func(t *test, tk Tokens) { // 38
+			t.Output = ParameterExpansion{
+				Type: ParameterUppercaseFirst,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@L}", func(t *test, tk Tokens) { // 39
+			t.Output = ParameterExpansion{
+				Type: ParameterLowercase,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@Q}", func(t *test, tk Tokens) { // 40
+			t.Output = ParameterExpansion{
+				Type: ParameterQuoted,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@E}", func(t *test, tk Tokens) { // 41
+			t.Output = ParameterExpansion{
+				Type: ParameterEscaped,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@P}", func(t *test, tk Tokens) { // 42
+			t.Output = ParameterExpansion{
+				Type: ParameterPrompt,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@A}", func(t *test, tk Tokens) { // 43
+			t.Output = ParameterExpansion{
+				Type: ParameterDeclare,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@K}", func(t *test, tk Tokens) { // 44
+			t.Output = ParameterExpansion{
+				Type: ParameterQuotedArrays,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@a}", func(t *test, tk Tokens) { // 45
+			t.Output = ParameterExpansion{
+				Type: ParameterAttributes,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a@k}", func(t *test, tk Tokens) { // 46
+			t.Output = ParameterExpansion{
+				Type: ParameterQuotedArraysSeperate,
+				Parameter: Parameter{
+					Parameter: &tk[1],
+					Tokens:    tk[1:2],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var pe ParameterExpansion
+
+		err := pe.parse(t.Parser)
+
+		return pe, err
+	})
+}
+
 func TestParameter(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"${a}", func(t *test, tk Tokens) { // 1

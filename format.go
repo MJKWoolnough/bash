@@ -214,7 +214,7 @@ func (l LogicalOperator) printSource(w io.Writer, v bool) {
 	switch l {
 	case LogicalOperatorAnd:
 		io.WriteString(w, "&&")
-	case LogicalOperator:
+	case LogicalOperatorOr:
 		io.WriteString(w, "||")
 	}
 }
