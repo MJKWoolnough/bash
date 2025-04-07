@@ -660,7 +660,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			p.Word = new(Word)
 
 			if err := p.Word.parse(c); err != nil {
-				return b.Error("ParameterExpasion", err)
+				return b.Error("ParameterExpansion", err)
 			}
 
 			b.Score(c)
@@ -674,7 +674,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 				p.String = new(String)
 
 				if err := p.String.parse(c); err != nil {
-					return b.Error("ParameterExpasion", err)
+					return b.Error("ParameterExpansion", err)
 				}
 
 				b.Score(c)
@@ -683,7 +683,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 	}
 
 	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "}"}) {
-		return b.Error("ParameterExpasion", ErrMissingClosingBrace)
+		return b.Error("ParameterExpansion", ErrMissingClosingBrace)
 	}
 
 	p.Tokens = b.ToTokens()
