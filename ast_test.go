@@ -1370,6 +1370,87 @@ func TestParameterExpansion(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
+		{"${a[$(||)]}", func(t *test, tk Tokens) { // 47
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[4],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[4],
+										},
+										Parsing: "Statement",
+										Token:   tk[4],
+									},
+									Parsing: "File",
+									Token:   tk[4],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[4],
+							},
+							Parsing: "WordPart",
+							Token:   tk[3],
+						},
+						Parsing: "Word",
+						Token:   tk[3],
+					},
+					Parsing: "Parameter",
+					Token:   tk[3],
+				},
+				Parsing: "ParameterExpansion",
+				Token:   tk[1],
+			}
+		}},
+		{"${a:=$(||)}", func(t *test, tk Tokens) { // 48
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[4],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[4],
+									},
+									Parsing: "Statement",
+									Token:   tk[4],
+								},
+								Parsing: "File",
+								Token:   tk[4],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[4],
+						},
+						Parsing: "WordPart",
+						Token:   tk[3],
+					},
+					Parsing: "Word",
+					Token:   tk[3],
+				},
+				Parsing: "ParameterExpansion",
+				Token:   tk[3],
+			}
+		}},
+		{"${a:1:2b}", func(t *test, tk Tokens) { // 49
+			t.Err = Error{
+				Err:     ErrMissingClosingBrace,
+				Parsing: "ParameterExpansion",
+				Token:   tk[6],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var pe ParameterExpansion
 
