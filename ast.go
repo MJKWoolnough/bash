@@ -654,6 +654,8 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 					p.Type = ParameterAttributes
 				case "k":
 					p.Type = ParameterQuotedArraysSeperate
+				default:
+					return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
 				}
 			}
 		} else if p.Indirect && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*"}) {
