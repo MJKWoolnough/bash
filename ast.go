@@ -570,6 +570,9 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":+"}) {
 			p.Type = ParameterMessage
 			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":-"}) {
+			p.Type = ParameterSetAssign
+			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
 			p.Type = ParameterSubstring
 
