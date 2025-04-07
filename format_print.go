@@ -60,7 +60,130 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p ParameterExpansion) printSource(w io.Writer, v bool) {}
+func (p ParameterExpansion) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "${")
+
+	if p.Indirect {
+		io.WriteString(w, "!")
+	} else if p.Type == ParameterLength {
+		io.WriteString(w, "#")
+	}
+
+	p.Parameter.printSource(w, v)
+
+	if p.Word != nil {
+		switch p.Type {
+		case ParameterSubstitution:
+			io.WriteString(w, ":=")
+			p.Word.printSource(w, v)
+		case ParameterAssignment:
+			io.WriteString(w, ":?")
+			p.Word.printSource(w, v)
+		case ParameterMessage:
+			io.WriteString(w, ":+")
+			p.Word.printSource(w, v)
+		case ParameterSetAssign:
+			io.WriteString(w, ":-")
+			p.Word.printSource(w, v)
+		case ParameterRemoveStartShortest:
+			io.WriteString(w, "#")
+			p.Word.printSource(w, v)
+		case ParameterRemoveStartLongest:
+			io.WriteString(w, "##")
+			p.Word.printSource(w, v)
+		case ParameterRemoveEndShortest:
+			io.WriteString(w, "%")
+			p.Word.printSource(w, v)
+		case ParameterRemoveEndLongest:
+			io.WriteString(w, "%%")
+			p.Word.printSource(w, v)
+		}
+	} else if p.Pattern != nil {
+		isReplacement := false
+
+		switch p.Type {
+		case ParameterReplace:
+			isReplacement = true
+
+			io.WriteString(w, "/")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterReplaceAll:
+			isReplacement = true
+
+			io.WriteString(w, "//")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterReplaceStart:
+			isReplacement = true
+
+			io.WriteString(w, "/#")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterReplaceEnd:
+			isReplacement = true
+
+			io.WriteString(w, "/%")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterLowercaseFirstMatch:
+			io.WriteString(w, "^")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterLowercaseAllMatches:
+			io.WriteString(w, "^^")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterUppercaseFirstMatch:
+			io.WriteString(w, ",")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterUppercaseAllMatches:
+			io.WriteString(w, ",,")
+			io.WriteString(w, p.Pattern.Data)
+		}
+
+		if isReplacement && p.String != nil {
+			io.WriteString(w, "/")
+			p.String.printSource(w, v)
+		}
+	} else if !p.Indirect {
+		switch p.Type {
+		case ParameterPrefix:
+			io.WriteString(w, "*")
+		case ParameterPrefixSeperate:
+			io.WriteString(w, "@")
+		}
+	} else {
+		switch p.Type {
+		case ParameterSubstring:
+			if p.SubstringStart != nil {
+				io.WriteString(w, ":")
+				io.WriteString(w, p.SubstringStart.Data)
+
+				if p.SubstringEnd != nil {
+					io.WriteString(w, ":")
+					io.WriteString(w, p.SubstringEnd.Data)
+				}
+			}
+		case ParameterUppercase:
+			io.WriteString(w, "@U")
+		case ParameterUppercaseFirst:
+			io.WriteString(w, "@u")
+		case ParameterLowercase:
+			io.WriteString(w, "@L")
+		case ParameterQuoted:
+			io.WriteString(w, "@Q")
+		case ParameterEscaped:
+			io.WriteString(w, "@E")
+		case ParameterPrompt:
+			io.WriteString(w, "@P")
+		case ParameterDeclare:
+			io.WriteString(w, "@A")
+		case ParameterQuotedArrays:
+			io.WriteString(w, "@K")
+		case ParameterQuotedArraysSeperate:
+			io.WriteString(w, "@a")
+		case ParameterAttributes:
+			io.WriteString(w, "@k")
+		}
+	}
+
+	io.WriteString(w, "}")
+}
 
 func (p Parameter) printSource(w io.Writer, v bool) {
 	if p.Parameter != nil {
