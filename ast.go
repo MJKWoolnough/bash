@@ -574,19 +574,13 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			p.Type = ParameterSubstring
 
 			b.AcceptRunWhitespace()
-
-			if !b.Accept(TokenNumberLiteral) {
-				return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
-			}
+			b.Accept(TokenNumberLiteral)
 
 			p.SubstringStart = b.GetLastToken()
 
 			if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
 				b.AcceptRunWhitespace()
-
-				if !b.Accept(TokenNumberLiteral) {
-					return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
-				}
+				b.Accept(TokenNumberLiteral)
 
 				p.SubstringEnd = b.GetLastToken()
 			}
@@ -654,8 +648,6 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 					p.Type = ParameterAttributes
 				case "k":
 					p.Type = ParameterQuotedArraysSeperate
-				default:
-					return b.Error("ParameterExpansion", ErrInvalidParameterExpansion)
 				}
 			}
 		} else if p.Indirect && b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "*"}) {
