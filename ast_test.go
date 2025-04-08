@@ -47,6 +47,244 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 	}
 }
 
+func TestCommand(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = Command{
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[0],
+								Tokens: tk[:1],
+							},
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a=", func(t *test, tk Tokens) { // 2
+			t.Output = Command{
+				Vars: []Assignment{
+					{
+						Identifier: ParameterAssign{
+							Identifier: &tk[0],
+							Tokens:     tk[:1],
+						},
+						Value: Value{
+							Word: &Word{
+								Tokens: tk[2:2],
+							},
+							Tokens: tk[2:2],
+						},
+						Tokens: tk[:2],
+					},
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{"a=b c", func(t *test, tk Tokens) { // 3
+			t.Output = Command{
+				Vars: []Assignment{
+					{
+						Identifier: ParameterAssign{
+							Identifier: &tk[0],
+							Tokens:     tk[:1],
+						},
+						Value: Value{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[2],
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[:3],
+					},
+				},
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[4],
+								Tokens: tk[4:5],
+							},
+						},
+						Tokens: tk[4:5],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"a=b >c d", func(t *test, tk Tokens) { // 4
+			t.Output = Command{
+				Vars: []Assignment{
+					{
+						Identifier: ParameterAssign{
+							Identifier: &tk[0],
+							Tokens:     tk[:1],
+						},
+						Value: Value{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[2],
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[:3],
+					},
+				},
+				Redirections: []Redirection{
+					{
+						Redirector: &tk[4],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[5],
+									Tokens: tk[5:6],
+								},
+							},
+							Tokens: tk[5:6],
+						},
+						Tokens: tk[4:6],
+					},
+				},
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[7],
+								Tokens: tk[7:8],
+							},
+						},
+						Tokens: tk[7:8],
+					},
+				},
+				Tokens: tk[:8],
+			}
+		}},
+		{"a=b c=d >e f g=h 2>i", func(t *test, tk Tokens) { // 5
+			t.Output = Command{
+				Vars: []Assignment{
+					{
+						Identifier: ParameterAssign{
+							Identifier: &tk[0],
+							Tokens:     tk[:1],
+						},
+						Value: Value{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[2],
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[:3],
+					},
+					{
+						Identifier: ParameterAssign{
+							Identifier: &tk[4],
+							Tokens:     tk[4:5],
+						},
+						Value: Value{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[6],
+										Tokens: tk[6:7],
+									},
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[6:7],
+						},
+						Tokens: tk[4:7],
+					},
+				},
+				Redirections: []Redirection{
+					{
+						Redirector: &tk[8],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[9],
+									Tokens: tk[9:10],
+								},
+							},
+							Tokens: tk[9:10],
+						},
+						Tokens: tk[8:10],
+					},
+					{
+						Input:      &tk[17],
+						Redirector: &tk[18],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[19],
+									Tokens: tk[19:20],
+								},
+							},
+							Tokens: tk[19:20],
+						},
+						Tokens: tk[17:20],
+					},
+				},
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[11],
+								Tokens: tk[11:12],
+							},
+						},
+						Tokens: tk[11:12],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[13],
+								Tokens: tk[13:14],
+							},
+							{
+								Part:   &tk[14],
+								Tokens: tk[14:15],
+							},
+							{
+								Part:   &tk[15],
+								Tokens: tk[15:16],
+							},
+						},
+						Tokens: tk[13:16],
+					},
+				},
+				Tokens: tk[:20],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var c Command
+
+		err := c.parse(t.Parser, false)
+
+		return c, err
+	})
+}
+
 func TestAssignment(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a=", func(t *test, tk Tokens) { // 1
