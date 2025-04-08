@@ -439,7 +439,7 @@ func nextIsWordPart(b *bashParser) bool {
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
-		case "$((", "$(", "${":
+		case "$((", "$(", "${", "=":
 			return true
 		}
 
