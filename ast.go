@@ -232,7 +232,7 @@ func (c *Command) parse(b *bashParser, required bool) error {
 
 	d := b.NewGoal()
 
-	for nextIsWordPart(d) {
+	for nextIsWordPart(d) || isRedirection(d) {
 		b.Score(d)
 		d = b.NewGoal()
 
