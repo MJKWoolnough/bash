@@ -221,13 +221,6 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	pp.Print("\nParameter: ")
 	f.Parameter.printType(&pp, v)
 
-	if f.Index != nil {
-		pp.Print("\nIndex: ")
-		f.Index.printType(&pp, v)
-	} else if v {
-		pp.Print("\nIndex: nil")
-	}
-
 	pp.Print("\nType: ")
 	f.Type.printType(&pp, v)
 

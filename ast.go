@@ -531,7 +531,6 @@ const (
 type ParameterExpansion struct {
 	Indirect       bool
 	Parameter      Parameter
-	Index          *Word
 	Type           ParameterType
 	SubstringStart *Token
 	SubstringEnd   *Token
