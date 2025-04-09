@@ -46,6 +46,168 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 	}
 }
 
+func TestPipeline(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = Pipeline{
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"time a", func(t *test, tk Tokens) { // 2
+			t.Output = Pipeline{
+				PipelineTime: PipelineTimeBash,
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"time -p a", func(t *test, tk Tokens) { // 3
+			t.Output = Pipeline{
+				PipelineTime: PipelineTimePosix,
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"! a", func(t *test, tk Tokens) { // 4
+			t.Output = Pipeline{
+				Not: true,
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"a|b", func(t *test, tk Tokens) { // 5
+			t.Output = Pipeline{
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Pipeline: &Pipeline{
+					Command: Command{
+						Words: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[2],
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"a | b", func(t *test, tk Tokens) { // 6
+			t.Output = Pipeline{
+				Command: Command{
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Pipeline: &Pipeline{
+					Command: Command{
+						Words: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[4],
+										Tokens: tk[4:5],
+									},
+								},
+								Tokens: tk[4:5],
+							},
+						},
+						Tokens: tk[4:5],
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var p Pipeline
+
+		err := p.parse(t.Parser)
+
+		return p, err
+	})
+}
+
 func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
