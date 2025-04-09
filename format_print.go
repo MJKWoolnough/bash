@@ -38,7 +38,41 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	a.Value.printSource(w, v)
 }
 
-func (c Command) printSource(w io.Writer, v bool) {}
+func (c Command) printSource(w io.Writer, v bool) {
+	if len(c.Vars) > 0 {
+		c.Vars[0].printSource(w, v)
+
+		for _, vr := range c.Vars[1:] {
+			io.WriteString(w, " ")
+			vr.printSource(w, v)
+		}
+	}
+
+	if len(c.Words) > 0 {
+		if len(c.Vars) > 0 {
+			io.WriteString(w, " ")
+		}
+
+		c.Words[0].printSource(w, v)
+
+		for _, wd := range c.Words[1:] {
+			io.WriteString(w, " ")
+			wd.printSource(w, v)
+		}
+	}
+
+	if len(c.Redirections) > 0 {
+		if len(c.Vars) > 0 || len(c.Words) > 0 {
+			io.WriteString(w, " ")
+		}
+
+		c.Redirections[0].printSource(w, v)
+
+		for _, r := range c.Redirections[1:] {
+			r.printSource(w, v)
+		}
+	}
+}
 
 func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
