@@ -74,10 +74,16 @@ func (c Command) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (c CommandOrControl) printSource(w io.Writer, v bool) {
+}
+
 func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
 	c.Command.printSource(w, v)
 	io.WriteString(w, ")")
+}
+
+func (c Control) printSource(w io.Writer, v bool) {
 }
 
 func (f File) printSource(w io.Writer, v bool) {}
@@ -238,7 +244,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 		io.WriteString(w, "! ")
 	}
 
-	p.Command.printSource(w, v)
+	p.CommandOrControl.printSource(w, v)
 
 	if p.Pipeline != nil {
 		io.WriteString(w, " | ")
@@ -259,7 +265,24 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 	r.Output.printSource(w, v)
 }
 
-func (s Statement) printSource(w io.Writer, v bool) {}
+func (s Statement) printSource(w io.Writer, v bool) {
+	s.Pipeline.printSource(w, v)
+
+	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.LogicalExpression != nil {
+		s.LogicalOperator.printSource(w, v)
+		s.LogicalExpression.printSource(w, v)
+	}
+
+	if s.JobControl == JobControlBackground {
+		if v {
+			io.WriteString(w, " &")
+		} else {
+			io.WriteString(w, "&")
+		}
+	} else {
+		io.WriteString(w, ";")
+	}
+}
 
 func (s String) printSource(w io.Writer, v bool) {
 	for _, p := range s.WordsOrTokens {

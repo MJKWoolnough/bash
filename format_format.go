@@ -41,10 +41,34 @@ func (f Command) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f CommandOrControl) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = CommandOrControl
+		type CommandOrControl X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f CommandSubstitution) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CommandSubstitution
 		type CommandSubstitution X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
+func (f Control) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = Control
+		type Control X
 
 		fmt.Fprintf(s, "%#v", (f))
 	} else {

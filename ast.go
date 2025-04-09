@@ -141,10 +141,10 @@ const (
 
 type Pipeline struct {
 	PipelineTime
-	Not      bool
-	Command  Command
-	Pipeline *Pipeline
-	Tokens   Tokens
+	Not              bool
+	CommandOrControl CommandOrControl
+	Pipeline         *Pipeline
+	Tokens           Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser) error {
@@ -166,7 +166,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := p.Command.parse(c, true); err != nil {
+	if err := p.CommandOrControl.parse(c, true); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -192,6 +192,48 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	p.Tokens = b.ToTokens()
 
+	return nil
+}
+
+type CommandOrControl struct {
+	Command *Command
+	Control *Control
+	Tokens  Tokens
+}
+
+func (cc *CommandOrControl) parse(b *bashParser, required bool) error {
+	var err error
+
+	c := b.NewGoal()
+
+	if isControlNext(b) {
+		cc.Control = new(Control)
+		err = cc.Control.parse(c, required)
+	} else {
+		cc.Command = new(Command)
+		err = cc.Command.parse(c, required)
+	}
+
+	if err != nil {
+		return b.Error("CommandOrControl", err)
+	}
+
+	b.Score(c)
+
+	cc.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func isControlNext(b *bashParser) bool {
+	return false
+}
+
+type Control struct {
+	Tokens Tokens
+}
+
+func (c *Control) parse(b *bashParser, required bool) error {
 	return nil
 }
 

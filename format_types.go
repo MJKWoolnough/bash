@@ -114,6 +114,31 @@ func (f *Command) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *CommandOrControl) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("CommandOrControl {")
+
+	if f.Command != nil {
+		pp.Print("\nCommand: ")
+		f.Command.printType(&pp, v)
+	} else if v {
+		pp.Print("\nCommand: nil")
+	}
+
+	if f.Control != nil {
+		pp.Print("\nControl: ")
+		f.Control.printType(&pp, v)
+	} else if v {
+		pp.Print("\nControl: nil")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *CommandSubstitution) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -124,6 +149,17 @@ func (f *CommandSubstitution) printType(w io.Writer, v bool) {
 
 	pp.Print("\nCommand: ")
 	f.Command.printType(&pp, v)
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *Control) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Control {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
@@ -277,8 +313,8 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 		pp.Printf("\nNot: %v", f.Not)
 	}
 
-	pp.Print("\nCommand: ")
-	f.Command.printType(&pp, v)
+	pp.Print("\nCommandOrControl: ")
+	f.CommandOrControl.printType(&pp, v)
 
 	if f.Pipeline != nil {
 		pp.Print("\nPipeline: ")

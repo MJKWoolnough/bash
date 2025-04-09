@@ -18,7 +18,11 @@ func (Assignment) bashType() {}
 
 func (Command) bashType() {}
 
+func (CommandOrControl) bashType() {}
+
 func (CommandSubstitution) bashType() {}
+
+func (Control) bashType() {}
 
 func (File) bashType() {}
 
