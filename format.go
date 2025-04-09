@@ -222,9 +222,9 @@ func (l LogicalOperator) String() string {
 func (l LogicalOperator) printSource(w io.Writer, v bool) {
 	switch l {
 	case LogicalOperatorAnd:
-		io.WriteString(w, "&&")
+		io.WriteString(w, " && ")
 	case LogicalOperatorOr:
-		io.WriteString(w, "||")
+		io.WriteString(w, " || ")
 	}
 }
 
