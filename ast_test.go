@@ -275,6 +275,162 @@ func TestCommand(t *testing.T) {
 				Tokens: tk[:20],
 			}
 		}},
+		{"a[$(||)]=", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[3],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[3],
+											},
+											Parsing: "Statement",
+											Token:   tk[3],
+										},
+										Parsing: "File",
+										Token:   tk[3],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[3],
+								},
+								Parsing: "WordPart",
+								Token:   tk[2],
+							},
+							Parsing: "Word",
+							Token:   tk[2],
+						},
+						Parsing: "ParameterAssign",
+						Token:   tk[2],
+					},
+					Parsing: "Assignment",
+					Token:   tk[0],
+				},
+				Parsing: "Command",
+				Token:   tk[0],
+			}
+		}},
+		{">$(||)", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[2],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[2],
+										},
+										Parsing: "Statement",
+										Token:   tk[2],
+									},
+									Parsing: "File",
+									Token:   tk[2],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[2],
+							},
+							Parsing: "WordPart",
+							Token:   tk[1],
+						},
+						Parsing: "Word",
+						Token:   tk[1],
+					},
+					Parsing: "Redirection",
+					Token:   tk[1],
+				},
+				Parsing: "Command",
+				Token:   tk[0],
+			}
+		}},
+		{"$(||)", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[1],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[1],
+									},
+									Parsing: "Statement",
+									Token:   tk[1],
+								},
+								Parsing: "File",
+								Token:   tk[1],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[1],
+						},
+						Parsing: "WordPart",
+						Token:   tk[0],
+					},
+					Parsing: "Word",
+					Token:   tk[0],
+				},
+				Parsing: "Command",
+				Token:   tk[0],
+			}
+		}},
+		{"a >$(||)", func(t *test, tk Tokens) { // 9
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[4],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[4],
+										},
+										Parsing: "Statement",
+										Token:   tk[4],
+									},
+									Parsing: "File",
+									Token:   tk[4],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[4],
+							},
+							Parsing: "WordPart",
+							Token:   tk[3],
+						},
+						Parsing: "Word",
+						Token:   tk[3],
+					},
+					Parsing: "Redirection",
+					Token:   tk[3],
+				},
+				Parsing: "Command",
+				Token:   tk[2],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c Command
 
