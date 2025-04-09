@@ -148,7 +148,7 @@ type Pipeline struct {
 }
 
 func (p *Pipeline) parse(b *bashParser) error {
-	if b.AcceptToken(parser.Token{Type: TokenWord, Data: "time"}) {
+	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "time"}) {
 		b.AcceptRunWhitespace()
 
 		if b.AcceptToken(parser.Token{Type: TokenWord, Data: "-p"}) {
@@ -160,7 +160,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 		b.AcceptRunWhitespace()
 	}
 
-	if p.Not = b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"}); p.Not {
+	if p.Not = b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "!"}); p.Not {
 		b.AcceptRunWhitespace()
 	}
 
