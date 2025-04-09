@@ -193,6 +193,15 @@ func (p PipelineTime) String() string {
 	}
 }
 
+func (p PipelineTime) printSource(w io.Writer, v bool) {
+	switch p {
+	case PipelineTimeBash:
+		io.WriteString(w, "time ")
+	case PipelineTimePosix:
+		io.WriteString(w, "time -p ")
+	}
+}
+
 func (p PipelineTime) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
