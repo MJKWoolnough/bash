@@ -231,7 +231,20 @@ func (p Parameter) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p Pipeline) printSource(w io.Writer, v bool) {}
+func (p Pipeline) printSource(w io.Writer, v bool) {
+	p.PipelineTime.printSource(w, v)
+
+	if p.Not {
+		io.WriteString(w, "! ")
+	}
+
+	p.Command.printSource(w, v)
+
+	if p.Pipeline != nil {
+		io.WriteString(w, " | ")
+		p.Pipeline.printSource(w, v)
+	}
+}
 
 func (r Redirection) printSource(w io.Writer, v bool) {
 	if r.Redirector == nil {
