@@ -74,7 +74,21 @@ func (c Command) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (c Command) printHeredoc(w io.Writer, v bool) {
+	for _, r := range c.Redirections {
+		r.printHeredoc(w, v)
+	}
+}
+
 func (c CommandOrControl) printSource(w io.Writer, v bool) {}
+
+func (c CommandOrControl) printHeredoc(w io.Writer, v bool) {
+	if c.Command != nil {
+		c.Command.printHeredoc(w, v)
+	} else if c.Control != nil {
+		c.Control.printHeredoc(w, v)
+	}
+}
 
 func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
@@ -82,8 +96,9 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, ")")
 }
 
-func (c Control) printSource(w io.Writer, v bool) {
-}
+func (c Control) printSource(w io.Writer, v bool) {}
+
+func (c Control) printHeredoc(w io.Writer, v bool) {}
 
 func (f File) printSource(w io.Writer, v bool) {}
 
@@ -94,6 +109,10 @@ func (l Line) printSource(w io.Writer, v bool) {
 		for _, s := range l.Statements[1:] {
 			io.WriteString(w, " ")
 			s.printSource(w, v)
+		}
+
+		for _, s := range l.Statements {
+			s.printHeredoc(w, v)
 		}
 	}
 }
@@ -262,6 +281,14 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (p Pipeline) printHeredoc(w io.Writer, v bool) {
+	p.CommandOrControl.printHeredoc(w, v)
+
+	if p.Pipeline != nil {
+		p.printHeredoc(w, v)
+	}
+}
+
 func (r Redirection) printSource(w io.Writer, v bool) {
 	if r.Redirector == nil {
 		return
@@ -274,6 +301,8 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 	io.WriteString(w, r.Redirector.Data)
 	r.Output.printSource(w, v)
 }
+
+func (r Redirection) printHeredoc(w io.Writer, v bool) {}
 
 func (s Statement) printSource(w io.Writer, v bool) {
 	s.Pipeline.printSource(w, v)
@@ -291,6 +320,14 @@ func (s Statement) printSource(w io.Writer, v bool) {
 		}
 	} else {
 		io.WriteString(w, ";")
+	}
+}
+
+func (s Statement) printHeredoc(w io.Writer, v bool) {
+	s.Pipeline.printHeredoc(w, v)
+
+	if s.Statement != nil {
+		s.Statement.printHeredoc(w, v)
 	}
 }
 
