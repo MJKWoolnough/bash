@@ -223,7 +223,7 @@ func TestPipeline(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 8
+		{"$(||)", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{

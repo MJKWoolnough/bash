@@ -268,9 +268,9 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 func (s Statement) printSource(w io.Writer, v bool) {
 	s.Pipeline.printSource(w, v)
 
-	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.LogicalExpression != nil {
+	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.Statement != nil {
 		s.LogicalOperator.printSource(w, v)
-		s.LogicalExpression.printSource(w, v)
+		s.Statement.printSource(w, v)
 	}
 
 	if s.JobControl == JobControlBackground {

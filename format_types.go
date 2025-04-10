@@ -368,9 +368,9 @@ func (f *Statement) printType(w io.Writer, v bool) {
 	pp.Print("\nLogicalOperator: ")
 	f.LogicalOperator.printType(&pp, v)
 
-	if f.LogicalExpression != nil {
+	if f.Statement != nil {
 		pp.Print("\nLogicalExpression: ")
-		f.LogicalExpression.printType(&pp, v)
+		f.Statement.printType(&pp, v)
 	} else if v {
 		pp.Print("\nLogicalExpression: nil")
 	}

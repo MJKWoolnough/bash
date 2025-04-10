@@ -70,10 +70,10 @@ const (
 )
 
 type Statement struct {
-	Pipeline          Pipeline
-	LogicalOperator   LogicalOperator
-	LogicalExpression *Statement
-	JobControl        JobControl
+	Pipeline        Pipeline
+	LogicalOperator LogicalOperator
+	Statement       *Statement
+	JobControl      JobControl
 	Tokens
 }
 
@@ -101,9 +101,9 @@ func (s *Statement) parse(b *bashParser, first bool) error {
 		b.Score(c)
 
 		c = b.NewGoal()
-		s.LogicalExpression = new(Statement)
+		s.Statement = new(Statement)
 
-		if err := s.LogicalExpression.parse(c, false); err != nil {
+		if err := s.Statement.parse(c, false); err != nil {
 			return b.Error("Statement", err)
 		}
 
