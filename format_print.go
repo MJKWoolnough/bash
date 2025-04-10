@@ -87,7 +87,16 @@ func (c Control) printSource(w io.Writer, v bool) {
 
 func (f File) printSource(w io.Writer, v bool) {}
 
-func (l Line) printSource(w io.Writer, v bool) {}
+func (l Line) printSource(w io.Writer, v bool) {
+	if len(l.Statements) > 0 {
+		l.Statements[0].printSource(w, v)
+
+		for _, s := range l.Statements[1:] {
+			io.WriteString(w, " ")
+			s.printSource(w, v)
+		}
+	}
+}
 
 func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	if p.Identifier != nil {
