@@ -121,8 +121,6 @@ func (s *Statement) parse(b *bashParser, first bool) error {
 			b.Score(c)
 		} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
 			b.Score(c)
-		} else if tk := c.Peek().Type; tk != TokenLineTerminator && tk != parser.TokenDone && tk != TokenCloseBacktick && tk != TokenCloseParen {
-			return c.Error("Statement", ErrInvalidEndOfStatement)
 		}
 	}
 
