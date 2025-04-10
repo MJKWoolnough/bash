@@ -79,6 +79,16 @@ func (l *Line) parse(b *bashParser) error {
 		c = b.NewGoal()
 	}
 
+	for _, s := range l.Statements {
+		c := b.NewGoal()
+
+		if err := s.parseHeredocs(b); err != nil {
+			return b.Error("Line", err)
+		}
+
+		b.Score(c)
+	}
+
 	l.Tokens = b.ToTokens()
 
 	return nil
@@ -159,6 +169,28 @@ func (s *Statement) parse(b *bashParser, first bool) error {
 	return nil
 }
 
+func (s *Statement) parseHeredocs(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := s.Pipeline.parseHeredocs(c); err != nil {
+		return b.Error("Statement", err)
+	}
+
+	b.Score(c)
+
+	if s.Statement != nil {
+		c = b.NewGoal()
+
+		if err := s.Statement.parseHeredocs(c); err != nil {
+			return b.Error("Statement", err)
+		}
+
+		b.Score(c)
+	}
+
+	return nil
+}
+
 type PipelineTime uint8
 
 const (
@@ -223,6 +255,28 @@ func (p *Pipeline) parse(b *bashParser) error {
 	return nil
 }
 
+func (p *Pipeline) parseHeredocs(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := p.CommandOrControl.parseHeredoc(c); err != nil {
+		return b.Error("Pipeline", err)
+	}
+
+	b.Score(c)
+
+	if p.Pipeline != nil {
+		c = b.NewGoal()
+
+		if err := p.Pipeline.parseHeredocs(c); err != nil {
+			return b.Error("Pipeline", err)
+		}
+
+		b.Score(c)
+	}
+
+	return nil
+}
+
 type CommandOrControl struct {
 	Command *Command
 	Control *Control
@@ -253,6 +307,26 @@ func (cc *CommandOrControl) parse(b *bashParser, required bool) error {
 	return nil
 }
 
+func (cc *CommandOrControl) parseHeredocs(b *bashParser) error {
+	var err error
+
+	c := b.NewGoal()
+
+	if cc.Command != nil {
+		err = cc.Command.parseHeredocs(c)
+	} else {
+		err = cc.Control.parseHeredocs(c)
+	}
+
+	if err != nil {
+		return b.Error("CommandOrControl", err)
+	}
+
+	b.Score(c)
+
+	return nil
+}
+
 func isControlNext(b *bashParser) bool {
 	return false
 }
@@ -261,7 +335,11 @@ type Control struct {
 	Tokens Tokens
 }
 
-func (c *Control) parse(b *bashParser, required bool) error {
+func (cc *Control) parse(b *bashParser, required bool) error {
+	return nil
+}
+
+func (cc *Control) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
@@ -272,70 +350,84 @@ type Command struct {
 	Tokens       Tokens
 }
 
-func (c *Command) parse(b *bashParser, required bool) error {
+func (cc *Command) parse(b *bashParser, required bool) error {
 	for {
-		d := b.NewGoal()
+		c := b.NewGoal()
 
 		if b.Peek().Type == TokenIdentifierAssign {
 			var a Assignment
 
-			if err := a.parse(d); err != nil {
+			if err := a.parse(c); err != nil {
 				return b.Error("Command", err)
 			}
 
-			c.Vars = append(c.Vars, a)
+			cc.Vars = append(cc.Vars, a)
 		} else if isRedirection(b) {
 			var r Redirection
 
-			if err := r.parse(d); err != nil {
+			if err := r.parse(c); err != nil {
 				return b.Error("Command", err)
 			}
 
-			c.Redirections = append(c.Redirections, r)
+			cc.Redirections = append(cc.Redirections, r)
 		} else {
 			break
 		}
 
-		b.Score(d)
+		b.Score(c)
 		b.AcceptRunWhitespace()
 	}
 
-	d := b.NewGoal()
+	c := b.NewGoal()
 
-	for nextIsWordPart(d) || isRedirection(d) {
-		b.Score(d)
-		d = b.NewGoal()
+	for nextIsWordPart(c) || isRedirection(c) {
+		b.Score(c)
+		c = b.NewGoal()
 
 		if isRedirection(b) {
 			var r Redirection
 
-			if err := r.parse(d); err != nil {
+			if err := r.parse(c); err != nil {
 				return b.Error("Command", err)
 			}
 
-			c.Redirections = append(c.Redirections, r)
+			cc.Redirections = append(cc.Redirections, r)
 		} else {
 			var w Word
 
-			if err := w.parse(d); err != nil {
+			if err := w.parse(c); err != nil {
 				return b.Error("Command", err)
 			}
 
-			c.Words = append(c.Words, w)
+			cc.Words = append(cc.Words, w)
 		}
 
-		b.Score(d)
+		b.Score(c)
 
-		d = b.NewGoal()
+		c = b.NewGoal()
 
-		d.AcceptRunWhitespace()
+		c.AcceptRunWhitespace()
 	}
 
-	if required && len(c.Words) == 0 {
+	if required && len(cc.Words) == 0 {
 		return b.Error("Command", ErrMissingWord)
 	}
 
-	c.Tokens = b.ToTokens()
+	cc.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func (cc *Command) parseHeredocs(b *bashParser) error {
+	for _, r := range cc.Redirections {
+		c := b.NewGoal()
+
+		if err := r.parseHeredocs(c); err != nil {
+			return b.Error("Command", err)
+		}
+
+		b.Score(c)
+	}
 
 	return nil
 }
@@ -921,6 +1013,10 @@ func (r *Redirection) parse(b *bashParser) error {
 
 func (r *Redirection) isHeredoc() bool {
 	return r.Redirector != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-")
+}
+
+func (r *Redirection) parseHeredocs(b *bashParser) error {
+	return nil
 }
 
 type ArithmeticExpansion struct {
