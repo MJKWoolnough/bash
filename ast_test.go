@@ -270,6 +270,111 @@ func TestStatement(t *testing.T) {
 				Tokens:     tk[:5],
 			}
 		}},
+		{"$(||)", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[1],
+														},
+														Parsing: "CommandOrControl",
+														Token:   tk[1],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[1],
+												},
+												Parsing: "Statement",
+												Token:   tk[1],
+											},
+											Parsing: "File",
+											Token:   tk[1],
+										},
+										Parsing: "CommandSubstitution",
+										Token:   tk[1],
+									},
+									Parsing: "WordPart",
+									Token:   tk[0],
+								},
+								Parsing: "Word",
+								Token:   tk[0],
+							},
+							Parsing: "Command",
+							Token:   tk[0],
+						}, Parsing: "CommandOrControl",
+						Token: tk[0],
+					},
+					Parsing: "Pipeline",
+					Token:   tk[0],
+				},
+				Parsing: "Statement",
+				Token:   tk[0],
+			}
+		}},
+		{"a || $(||)", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[5],
+															},
+															Parsing: "CommandOrControl",
+															Token:   tk[5],
+														},
+														Parsing: "Pipeline",
+														Token:   tk[5],
+													},
+													Parsing: "Statement",
+													Token:   tk[5],
+												},
+												Parsing: "File",
+												Token:   tk[5],
+											},
+											Parsing: "CommandSubstitution",
+											Token:   tk[5],
+										},
+										Parsing: "WordPart",
+										Token:   tk[4],
+									},
+									Parsing: "Word",
+									Token:   tk[4],
+								},
+								Parsing: "Command",
+								Token:   tk[4],
+							},
+							Parsing: "CommandOrControl",
+							Token:   tk[4],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[4],
+					},
+					Parsing: "Statement",
+					Token:   tk[4],
+				},
+				Parsing: "Statement",
+				Token:   tk[4],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var s Statement
 
