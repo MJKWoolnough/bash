@@ -74,8 +74,7 @@ func (c Command) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandOrControl) printSource(w io.Writer, v bool) {
-}
+func (c CommandOrControl) printSource(w io.Writer, v bool) {}
 
 func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
@@ -87,6 +86,8 @@ func (c Control) printSource(w io.Writer, v bool) {
 }
 
 func (f File) printSource(w io.Writer, v bool) {}
+
+func (l Line) printSource(w io.Writer, v bool) {}
 
 func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	if p.Identifier != nil {

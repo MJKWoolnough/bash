@@ -89,6 +89,18 @@ func (f File) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f Line) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = Line
+		type Line X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Parameter) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Parameter

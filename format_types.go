@@ -172,6 +172,34 @@ func (f *File) printType(w io.Writer, v bool) {
 
 	pp.Print("File {")
 
+	if f.Lines == nil {
+		pp.Print("\nLines: nil")
+	} else if len(f.Lines) > 0 {
+		pp.Print("\nLines: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Lines {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nLines: []")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *Line) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Line {")
+
 	if f.Statements == nil {
 		pp.Print("\nStatements: nil")
 	} else if len(f.Statements) > 0 {
@@ -369,10 +397,10 @@ func (f *Statement) printType(w io.Writer, v bool) {
 	f.LogicalOperator.printType(&pp, v)
 
 	if f.Statement != nil {
-		pp.Print("\nLogicalExpression: ")
+		pp.Print("\nStatement: ")
 		f.Statement.printType(&pp, v)
 	} else if v {
-		pp.Print("\nLogicalExpression: nil")
+		pp.Print("\nStatement: nil")
 	}
 
 	pp.Print("\nJobControl: ")

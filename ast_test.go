@@ -283,17 +283,21 @@ func TestStatement(t *testing.T) {
 												Err: Error{
 													Err: Error{
 														Err: Error{
-															Err:     ErrMissingWord,
-															Parsing: "Command",
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[1],
+															},
+															Parsing: "CommandOrControl",
 															Token:   tk[1],
 														},
-														Parsing: "CommandOrControl",
+														Parsing: "Pipeline",
 														Token:   tk[1],
 													},
-													Parsing: "Pipeline",
+													Parsing: "Statement",
 													Token:   tk[1],
 												},
-												Parsing: "Statement",
+												Parsing: "Line",
 												Token:   tk[1],
 											},
 											Parsing: "File",
@@ -334,17 +338,21 @@ func TestStatement(t *testing.T) {
 													Err: Error{
 														Err: Error{
 															Err: Error{
-																Err:     ErrMissingWord,
-																Parsing: "Command",
+																Err: Error{
+																	Err:     ErrMissingWord,
+																	Parsing: "Command",
+																	Token:   tk[5],
+																},
+																Parsing: "CommandOrControl",
 																Token:   tk[5],
 															},
-															Parsing: "CommandOrControl",
+															Parsing: "Pipeline",
 															Token:   tk[5],
 														},
-														Parsing: "Pipeline",
+														Parsing: "Statement",
 														Token:   tk[5],
 													},
-													Parsing: "Statement",
+													Parsing: "Line",
 													Token:   tk[5],
 												},
 												Parsing: "File",
@@ -573,17 +581,21 @@ func TestPipeline(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[1],
+														},
+														Parsing: "CommandOrControl",
 														Token:   tk[1],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "Pipeline",
 													Token:   tk[1],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[1],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[1],
 										},
 										Parsing: "File",
@@ -620,17 +632,21 @@ func TestPipeline(t *testing.T) {
 												Err: Error{
 													Err: Error{
 														Err: Error{
-															Err:     ErrMissingWord,
-															Parsing: "Command",
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[5],
+															},
+															Parsing: "CommandOrControl",
 															Token:   tk[5],
 														},
-														Parsing: "CommandOrControl",
+														Parsing: "Pipeline",
 														Token:   tk[5],
 													},
-													Parsing: "Pipeline",
+													Parsing: "Statement",
 													Token:   tk[5],
 												},
-												Parsing: "Statement",
+												Parsing: "Line",
 												Token:   tk[5],
 											},
 											Parsing: "File",
@@ -908,17 +924,21 @@ func TestCommand(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[3],
+														},
+														Parsing: "CommandOrControl",
 														Token:   tk[3],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "Pipeline",
 													Token:   tk[3],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[3],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[3],
 										},
 										Parsing: "File",
@@ -954,17 +974,21 @@ func TestCommand(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[2],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[2],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[2],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[2],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[2],
 									},
 									Parsing: "File",
@@ -996,17 +1020,21 @@ func TestCommand(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[1],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[1],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[1],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[1],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[1],
 								},
 								Parsing: "File",
@@ -1036,17 +1064,21 @@ func TestCommand(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[4],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[4],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[4],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[4],
 									},
 									Parsing: "File",
@@ -1127,17 +1159,21 @@ func TestAssignment(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[3],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[3],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[3],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[3],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[3],
 									},
 									Parsing: "File",
@@ -1170,17 +1206,21 @@ func TestAssignment(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[3],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[3],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[3],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[3],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[3],
 									},
 									Parsing: "File",
@@ -1259,17 +1299,21 @@ func TestParameterAssign(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[3],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[3],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[3],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[3],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[3],
 								},
 								Parsing: "File",
@@ -1393,17 +1437,21 @@ func TestValue(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[3],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[3],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[3],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[3],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[3],
 								},
 								Parsing: "File",
@@ -1432,17 +1480,21 @@ func TestValue(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[4],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[4],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[4],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[4],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[4],
 								},
 								Parsing: "File",
@@ -1600,17 +1652,21 @@ func TestWord(t *testing.T) {
 								Err: Error{
 									Err: Error{
 										Err: Error{
-											Err:     ErrMissingWord,
-											Parsing: "Command",
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[1],
+											},
+											Parsing: "CommandOrControl",
 											Token:   tk[1],
 										},
-										Parsing: "CommandOrControl",
+										Parsing: "Pipeline",
 										Token:   tk[1],
 									},
-									Parsing: "Pipeline",
+									Parsing: "Statement",
 									Token:   tk[1],
 								},
-								Parsing: "Statement",
+								Parsing: "Line",
 								Token:   tk[1],
 							},
 							Parsing: "File",
@@ -1698,17 +1754,21 @@ func TestWordPart(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[4],
+														},
+														Parsing: "CommandOrControl",
 														Token:   tk[4],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "Pipeline",
 													Token:   tk[4],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[4],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[4],
 										},
 										Parsing: "File",
@@ -1745,17 +1805,21 @@ func TestWordPart(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[2],
+														},
+														Parsing: "CommandOrControl",
 														Token:   tk[2],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "Pipeline",
 													Token:   tk[2],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[2],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[2],
 										},
 										Parsing: "File",
@@ -1788,17 +1852,21 @@ func TestWordPart(t *testing.T) {
 							Err: Error{
 								Err: Error{
 									Err: Error{
-										Err:     ErrMissingWord,
-										Parsing: "Command",
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[1],
+										},
+										Parsing: "CommandOrControl",
 										Token:   tk[1],
 									},
-									Parsing: "CommandOrControl",
+									Parsing: "Pipeline",
 									Token:   tk[1],
 								},
-								Parsing: "Pipeline",
+								Parsing: "Statement",
 								Token:   tk[1],
 							},
-							Parsing: "Statement",
+							Parsing: "Line",
 							Token:   tk[1],
 						},
 						Parsing: "File",
@@ -2466,17 +2534,21 @@ func TestParameterExpansion(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[4],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[4],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[4],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[4],
 									},
 									Parsing: "File",
@@ -2508,17 +2580,21 @@ func TestParameterExpansion(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[4],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[4],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[4],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[4],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[4],
 								},
 								Parsing: "File",
@@ -2640,17 +2716,21 @@ func TestParameter(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[4],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[4],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[4],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[4],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[4],
 								},
 								Parsing: "File",
@@ -2782,17 +2862,21 @@ func TestString(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[1],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[1],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[1],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[1],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[1],
 									},
 									Parsing: "File",
@@ -2855,17 +2939,21 @@ func TestWordOrToken(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[1],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[1],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[1],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[1],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[1],
 								},
 								Parsing: "File",
@@ -2917,33 +3005,38 @@ func TestCommandSubstitution(t *testing.T) {
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionNew,
 				Command: File{
-					Statements: []Statement{
+					Lines: []Line{
 						{
-							Pipeline: Pipeline{
-								CommandOrControl: CommandOrControl{
-									Command: &Command{
-										Words: []Word{
-											{
-												Parts: []WordPart{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrControl: CommandOrControl{
+											Command: &Command{
+												Words: []Word{
 													{
-														CommandSubstitution: &CommandSubstitution{
-															SubstitutionType: SubstitutionBacktick,
-															Command: File{
-																Tokens: tk[2:2],
+														Parts: []WordPart{
+															{
+																CommandSubstitution: &CommandSubstitution{
+																	SubstitutionType: SubstitutionBacktick,
+																	Command: File{
+																		Tokens: tk[2:2],
+																	},
+																	Tokens: tk[1:3],
+																},
+																Tokens: tk[1:3],
 															},
-															Tokens: tk[1:3],
 														},
 														Tokens: tk[1:3],
 													},
 												},
 												Tokens: tk[1:3],
 											},
+											Tokens: tk[1:3],
 										},
 										Tokens: tk[1:3],
 									},
 									Tokens: tk[1:3],
 								},
-								Tokens: tk[1:3],
 							},
 							Tokens: tk[1:3],
 						},
@@ -2957,33 +3050,38 @@ func TestCommandSubstitution(t *testing.T) {
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionBacktick,
 				Command: File{
-					Statements: []Statement{
+					Lines: []Line{
 						{
-							Pipeline: Pipeline{
-								CommandOrControl: CommandOrControl{
-									Command: &Command{
-										Words: []Word{
-											{
-												Parts: []WordPart{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrControl: CommandOrControl{
+											Command: &Command{
+												Words: []Word{
 													{
-														CommandSubstitution: &CommandSubstitution{
-															SubstitutionType: SubstitutionBacktick,
-															Command: File{
-																Tokens: tk[2:2],
+														Parts: []WordPart{
+															{
+																CommandSubstitution: &CommandSubstitution{
+																	SubstitutionType: SubstitutionBacktick,
+																	Command: File{
+																		Tokens: tk[2:2],
+																	},
+																	Tokens: tk[1:3],
+																},
+																Tokens: tk[1:3],
 															},
-															Tokens: tk[1:3],
 														},
 														Tokens: tk[1:3],
 													},
 												},
 												Tokens: tk[1:3],
 											},
+											Tokens: tk[1:3],
 										},
 										Tokens: tk[1:3],
 									},
 									Tokens: tk[1:3],
 								},
-								Tokens: tk[1:3],
 							},
 							Tokens: tk[1:3],
 						},
@@ -3000,17 +3098,21 @@ func TestCommandSubstitution(t *testing.T) {
 						Err: Error{
 							Err: Error{
 								Err: Error{
-									Err:     ErrMissingWord,
-									Parsing: "Command",
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[1],
+									},
+									Parsing: "CommandOrControl",
 									Token:   tk[1],
 								},
-								Parsing: "CommandOrControl",
+								Parsing: "Pipeline",
 								Token:   tk[1],
 							},
-							Parsing: "Pipeline",
+							Parsing: "Statement",
 							Token:   tk[1],
 						},
-						Parsing: "Statement",
+						Parsing: "Line",
 						Token:   tk[1],
 					},
 					Parsing: "File",
@@ -3333,17 +3435,21 @@ func TestRedirection(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[2],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[2],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[2],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[2],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[2],
 								},
 								Parsing: "File",
@@ -3480,17 +3586,21 @@ func TestArithmeticExpansion(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[2],
+													},
+													Parsing: "CommandOrControl",
 													Token:   tk[2],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "Pipeline",
 												Token:   tk[2],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[2],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[2],
 									},
 									Parsing: "File",
@@ -3573,17 +3683,21 @@ func TestWordOrOperator(t *testing.T) {
 									Err: Error{
 										Err: Error{
 											Err: Error{
-												Err:     ErrMissingWord,
-												Parsing: "Command",
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[1],
+												},
+												Parsing: "CommandOrControl",
 												Token:   tk[1],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "Pipeline",
 											Token:   tk[1],
 										},
-										Parsing: "Pipeline",
+										Parsing: "Statement",
 										Token:   tk[1],
 									},
-									Parsing: "Statement",
+									Parsing: "Line",
 									Token:   tk[1],
 								},
 								Parsing: "File",

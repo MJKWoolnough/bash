@@ -20,8 +20,8 @@ func Parse(t Tokeniser) (*File, error) {
 
 // Parse parses Bash input into AST.
 type File struct {
-	Statements []Statement
-	Tokens     Tokens
+	Lines  []Line
+	Tokens Tokens
 }
 
 func (f *File) parse(b *bashParser) error {
@@ -36,13 +36,13 @@ func (f *File) parse(b *bashParser) error {
 
 		c = b.NewGoal()
 
-		var s Statement
+		var l Line
 
-		if err := s.parse(c, true); err != nil {
+		if err := l.parse(c); err != nil {
 			return b.Error("File", err)
 		}
 
-		f.Statements = append(f.Statements, s)
+		f.Lines = append(f.Lines, l)
 
 		b.Score(c)
 
@@ -50,6 +50,36 @@ func (f *File) parse(b *bashParser) error {
 	}
 
 	f.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Line struct {
+	Statements []Statement
+	Tokens     Tokens
+}
+
+func (l *Line) parse(b *bashParser) error {
+	c := b.NewGoal()
+
+	for !c.Accept(TokenComment, TokenLineTerminator, TokenCloseBacktick, TokenCloseParen) && c.Peek().Type != parser.TokenDone {
+		c = b.NewGoal()
+
+		var s Statement
+
+		if err := s.parse(c, true); err != nil {
+			return b.Error("Line", err)
+		}
+
+		l.Statements = append(l.Statements, s)
+
+		c.AcceptRunWhitespace()
+		b.Score(c)
+
+		c = b.NewGoal()
+	}
+
+	l.Tokens = b.ToTokens()
 
 	return nil
 }
