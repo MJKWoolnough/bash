@@ -1063,10 +1063,28 @@ func (h *Heredoc) parse(b *bashParser) error {
 }
 
 type HeredocPartOrWord struct {
-	Tokens Tokens
+	HeredocPart *Token
+	Word        *Word
+	Tokens      Tokens
 }
 
 func (h *HeredocPartOrWord) parse(b *bashParser) error {
+	if b.Accept(TokenHeredoc) {
+		h.HeredocPart = b.GetLastToken()
+	} else {
+		c := b.NewGoal()
+
+		h.Word = new(Word)
+
+		if err := h.Word.parse(c); err != nil {
+			return b.Error("HeredocPartOrWord", err)
+		}
+
+		b.Score(c)
+	}
+
+	h.Tokens = b.ToTokens()
+
 	return nil
 }
 
