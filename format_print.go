@@ -100,7 +100,12 @@ func (c Control) printSource(w io.Writer, v bool) {}
 
 func (c Control) printHeredoc(w io.Writer, v bool) {}
 
-func (f File) printSource(w io.Writer, v bool) {}
+func (f File) printSource(w io.Writer, v bool) {
+	for _, l := range f.Lines {
+		l.printSource(w, v)
+		io.WriteString(w, "\n")
+	}
+}
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
