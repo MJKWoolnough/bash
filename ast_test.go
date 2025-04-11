@@ -46,6 +46,178 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 	}
 }
 
+func TestFile(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Words: []Word{
+												{
+													Parts: []WordPart{
+														{
+															Part:   &tk[0],
+															Tokens: tk[:1],
+														},
+													},
+													Tokens: tk[:1],
+												},
+											},
+											Tokens: tk[:1],
+										},
+										Tokens: tk[:1],
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"a\nb", func(t *test, tk Tokens) { // 2
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Words: []Word{
+												{
+													Parts: []WordPart{
+														{
+															Part:   &tk[0],
+															Tokens: tk[:1],
+														},
+													},
+													Tokens: tk[:1],
+												},
+											},
+											Tokens: tk[:1],
+										},
+										Tokens: tk[:1],
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Words: []Word{
+												{
+													Parts: []WordPart{
+														{
+															Part:   &tk[2],
+															Tokens: tk[2:3],
+														},
+													},
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:3],
+								},
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"a\n\nb\n", func(t *test, tk Tokens) { // 3
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Words: []Word{
+												{
+													Parts: []WordPart{
+														{
+															Part:   &tk[0],
+															Tokens: tk[:1],
+														},
+													},
+													Tokens: tk[:1],
+												},
+											},
+											Tokens: tk[:1],
+										},
+										Tokens: tk[:1],
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Words: []Word{
+												{
+													Parts: []WordPart{
+														{
+															Part:   &tk[2],
+															Tokens: tk[2:3],
+														},
+													},
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:3],
+								},
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var f File
+
+		err := f.parse(t.Parser)
+
+		return f, err
+	})
+}
+
 func TestLine(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
