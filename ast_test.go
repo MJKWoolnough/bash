@@ -209,6 +209,33 @@ func TestFile(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
+		{"||", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err:     ErrMissingWord,
+									Parsing: "Command",
+									Token:   tk[0],
+								},
+								Parsing: "CommandOrControl",
+								Token:   tk[0],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[0],
+						},
+						Parsing: "Statement",
+						Token:   tk[0],
+					},
+					Parsing: "Line",
+					Token:   tk[0],
+				},
+				Parsing: "File",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f File
 
