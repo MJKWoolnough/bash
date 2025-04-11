@@ -26,6 +26,8 @@ func (Control) bashType() {}
 
 func (File) bashType() {}
 
+func (Heredoc) bashType() {}
+
 func (Line) bashType() {}
 
 func (Parameter) bashType() {}

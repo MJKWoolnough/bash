@@ -107,6 +107,8 @@ func (f File) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (h Heredoc) printSource(w io.Writer, v bool) {}
+
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
 		l.Statements[0].printSource(w, v)

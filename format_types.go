@@ -195,6 +195,17 @@ func (f *File) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *Heredoc) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Heredoc {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Line) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -378,6 +389,13 @@ func (f *Redirection) printType(w io.Writer, v bool) {
 
 	pp.Print("\nOutput: ")
 	f.Output.printType(&pp, v)
+
+	if f.Heredoc != nil {
+		pp.Print("\nHeredoc: ")
+		f.Heredoc.printType(&pp, v)
+	} else if v {
+		pp.Print("\nHeredoc: nil")
+	}
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

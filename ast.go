@@ -986,6 +986,7 @@ type Redirection struct {
 	Input      *Token
 	Redirector *Token
 	Output     Word
+	Heredoc    *Heredoc
 	Tokens     Tokens
 }
 
@@ -1019,6 +1020,10 @@ func (r *Redirection) isHeredoc() bool {
 
 func (r *Redirection) parseHeredocs(b *bashParser) error {
 	return nil
+}
+
+type Heredoc struct {
+	Tokens Tokens
 }
 
 type ArithmeticExpansion struct {
