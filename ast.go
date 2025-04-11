@@ -1019,11 +1019,30 @@ func (r *Redirection) isHeredoc() bool {
 }
 
 func (r *Redirection) parseHeredocs(b *bashParser) error {
+	if !r.isHeredoc() {
+		return nil
+	}
+
+	b.AcceptRunWhitespace()
+
+	c := b.NewGoal()
+	r.Heredoc = new(Heredoc)
+
+	if err := r.Heredoc.parse(c); err != nil {
+		return b.Error("Redirection", err)
+	}
+
+	b.Score(c)
+
 	return nil
 }
 
 type Heredoc struct {
 	Tokens Tokens
+}
+
+func (h *Heredoc) parse(b *bashParser) error {
+	return nil
 }
 
 type ArithmeticExpansion struct {
