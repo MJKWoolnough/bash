@@ -200,6 +200,34 @@ func (f *Heredoc) printType(w io.Writer, v bool) {
 
 	pp.Print("Heredoc {")
 
+	if f.HeredocPartsOrWords == nil {
+		pp.Print("\nHeredocPartsOrWords: nil")
+	} else if len(f.HeredocPartsOrWords) > 0 {
+		pp.Print("\nHeredocPartsOrWords: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.HeredocPartsOrWords {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nHeredocPartsOrWords: []")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("HeredocPartOrWord {")
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 

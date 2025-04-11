@@ -1038,10 +1038,35 @@ func (r *Redirection) parseHeredocs(b *bashParser) error {
 }
 
 type Heredoc struct {
-	Tokens Tokens
+	HeredocPartsOrWords []HeredocPartOrWord
+	Tokens              Tokens
 }
 
 func (h *Heredoc) parse(b *bashParser) error {
+	for !b.Accept(TokenHeredocEnd) {
+		c := b.NewGoal()
+
+		var hw HeredocPartOrWord
+
+		if err := hw.parse(c); err != nil {
+			return b.Error("Heredoc", err)
+		}
+
+		h.HeredocPartsOrWords = append(h.HeredocPartsOrWords, hw)
+
+		b.Score(c)
+	}
+
+	h.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type HeredocPartOrWord struct {
+	Tokens Tokens
+}
+
+func (h *HeredocPartOrWord) parse(b *bashParser) error {
 	return nil
 }
 

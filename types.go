@@ -28,6 +28,8 @@ func (File) bashType() {}
 
 func (Heredoc) bashType() {}
 
+func (HeredocPartOrWord) bashType() {}
+
 func (Line) bashType() {}
 
 func (Parameter) bashType() {}
