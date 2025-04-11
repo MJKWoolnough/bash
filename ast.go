@@ -49,6 +49,8 @@ func (f *File) parse(b *bashParser) error {
 		c = b.NewGoal()
 	}
 
+	b.AcceptRunWhitespace()
+
 	f.Tokens = b.ToTokens()
 
 	return nil
