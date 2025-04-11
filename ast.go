@@ -307,7 +307,7 @@ func (cc *CommandOrControl) parse(b *bashParser, required bool) error {
 	return nil
 }
 
-func (cc *CommandOrControl) parseHeredocs(b *bashParser) error {
+func (cc *CommandOrControl) parseHeredoc(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
