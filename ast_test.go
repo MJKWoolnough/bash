@@ -3705,6 +3705,39 @@ func TestRedirection(t *testing.T) {
 	})
 }
 
+func TestHeredocPartOrWord(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"<<a\nb\na", func(t *test, tk Tokens) { // 1
+			t.Output = HeredocPartOrWord{
+				HeredocPart: &tk[3],
+				Tokens:      tk[3:4],
+			}
+		}},
+		{"<<a\n$b\na", func(t *test, tk Tokens) { // 2
+			t.Output = HeredocPartOrWord{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[3:4],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var h HeredocPartOrWord
+
+		t.Parser.Tokens = t.Parser.Tokens[3:3]
+
+		err := h.parse(t.Parser)
+
+		return h, err
+	})
+}
+
 func TestArithmeticExpansion(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"$((a))", func(t *test, tk Tokens) { // 1
