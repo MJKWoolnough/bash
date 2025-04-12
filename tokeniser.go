@@ -493,7 +493,13 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
 			state.Reset()
 
-			return t.Return(TokenHeredoc, b.heredocEnd)
+			str := t.Get()
+
+			if len(str) == 0 {
+				return b.heredocEnd(t)
+			}
+
+			return parser.Token{Type: TokenHeredoc, Data: str}, b.heredocEnd
 		}
 
 		switch t.ExceptRun(heredocStringBreak) {
@@ -508,7 +514,13 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 				state.Reset()
 				b.pushTokenDepth('h')
 
-				return t.Return(TokenHeredoc, b.identifier)
+				str := t.Get()
+
+				if len(str) == 0 {
+					return b.identifier(t)
+				}
+
+				return parser.Token{Type: TokenHeredoc, Data: str}, b.identifier
 			}
 
 			continue
