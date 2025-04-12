@@ -599,7 +599,7 @@ func (w *Word) parse(b *bashParser) error {
 
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenCloseParen, parser.TokenDone:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenCloseParen, TokenHeredoc, TokenHeredocEnd, parser.TokenDone:
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
