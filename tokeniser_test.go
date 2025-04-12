@@ -58,7 +58,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 7
-			"$ident $name a\\nbc=a $0 $12 a$b a${b}c",
+			"$ident $name a\\nbc=a $0 $12 a$b a${b}c $$ $! $?",
 			[]parser.Token{
 				{Type: TokenIdentifier, Data: "$ident"},
 				{Type: TokenWhitespace, Data: " "},
@@ -79,6 +79,12 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenIdentifier, Data: "b"},
 				{Type: TokenPunctuator, Data: "}"},
 				{Type: TokenWord, Data: "c"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifier, Data: "$$"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifier, Data: "$!"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifier, Data: "$?"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
