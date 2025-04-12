@@ -594,6 +594,42 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 33
+			"<<abc\n$$\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenIdentifier, Data: "$$"},
+				{Type: TokenHeredoc, Data: "\n"},
+				{Type: TokenHeredocEnd, Data: "abc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 34
+			"<<abc\n$!\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenIdentifier, Data: "$!"},
+				{Type: TokenHeredoc, Data: "\n"},
+				{Type: TokenHeredocEnd, Data: "abc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 35
+			"<<abc\n$?\nabc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "abc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenIdentifier, Data: "$?"},
+				{Type: TokenHeredoc, Data: "\n"},
+				{Type: TokenHeredocEnd, Data: "abc"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 36
 			"<<abc\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -603,7 +639,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 34
+		{ // 37
 			"<<abc\na$(<<def) 1\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -616,7 +652,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 35
+		{ // 38
 			"<<abc\na$(<<def cat) 1\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -631,7 +667,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 36
+		{ // 39
 			"<<abc;$(<<def cat)\nabc\ndef\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -645,7 +681,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 37
+		{ // 40
 			"<<abc;<<def;$(<<ghi;<<jkl\nghi\njkl\n)\nabc\ndef",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -673,7 +709,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 38
+		{ // 41
 			"<<a\\\nbc\nabc\ndef\na\nbc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -684,7 +720,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 39
+		{ // 42
 			"<<a;echo ${a/b/\n$c #not-a-comment $d}\n123\na",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -710,7 +746,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 40
+		{ // 43
 			"2>1 word",
 			[]parser.Token{
 				{Type: TokenNumberLiteral, Data: "2"},
@@ -721,7 +757,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 41
+		{ // 44
 			"time -p cmd",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "time"},
@@ -732,7 +768,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 42
+		{ // 45
 			"{a..b..2} {a,b,d} a{b,c,d}e a{1..4} {2..10..-1} {-1..-100..5} {a..z..-1}",
 			[]parser.Token{
 				{Type: TokenBraceExpansion, Data: "{a..b..2}"},
@@ -754,7 +790,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 43
+		{ // 46
 			"a={123",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -763,7 +799,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 44
+		{ // 47
 			"word{ word{a} word{\nword{",
 			[]parser.Token{
 				{Type: TokenWord, Data: "word{"},
@@ -776,7 +812,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 45
+		{ // 48
 			"{ echo 123; echo 456; }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -795,7 +831,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 46
+		{ // 49
 			"(echo 123; echo 456)",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "("},
@@ -811,7 +847,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 47
+		{ // 50
 			"`a` `echo \\`abc\\`` echo \"a`echo \"1\\`echo u\\\\\\`echo 123\\\\\\`v\\`3\"`c\"",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
@@ -850,7 +886,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 48
+		{ // 51
 			"`\\``",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
@@ -858,7 +894,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "incorrect backtick depth"},
 			},
 		},
-		{ // 49
+		{ // 52
 			"`\\`\\\\\\``",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
@@ -867,7 +903,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "incorrect backtick depth"},
 			},
 		},
-		{ // 50
+		{ // 53
 			"`\\`\\\\\\`\\`",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
@@ -876,7 +912,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "incorrect backtick depth"},
 			},
 		},
-		{ // 51
+		{ // 54
 			"`\\$abc`",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
@@ -885,7 +921,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 52
+		{ // 55
 			"echo `echo \\\"abc\\\"`",
 			[]parser.Token{
 				{Type: TokenWord, Data: "echo"},
@@ -898,20 +934,20 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 53
+		{ // 56
 			"\\\"abc\\\"",
 			[]parser.Token{
 				{Type: TokenWord, Data: "\\\"abc\\\""},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 54
+		{ // 57
 			"\\",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 55
+		{ // 58
 			"{abc}>2",
 			[]parser.Token{
 				{Type: TokenBraceWord, Data: "{abc}"},
@@ -920,7 +956,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 56
+		{ // 59
 			"<&1-",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<&"},
@@ -928,7 +964,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 57
+		{ // 60
 			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set} ${#a} ${#} ${a#b} ${a##b} ${a%b} ${a%%b} ${a/b/c} ${a//b/c} ${a/#b/c} ${a/%b/c} ${a^b} ${a^^b} ${a,b} ${a,,b} ${a@Q} ${a@a} ${a@P}",
 			[]parser.Token{
 				{Type: TokenWord, Data: ":"},
@@ -1132,7 +1168,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 58
+		{ // 61
 			"${a/[/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1141,7 +1177,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 59
+		{ // 62
 			"${a/\\[/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1154,7 +1190,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 60
+		{ // 63
 			"${a/[b]/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1167,7 +1203,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 61
+		{ // 64
 			"${a/(/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1176,7 +1212,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 62
+		{ // 65
 			"${a/\\(/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1189,7 +1225,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 63
+		{ // 66
 			"${a/(b)/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1202,7 +1238,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 64
+		{ // 67
 			"${a@Z}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1211,7 +1247,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 65
+		{ // 68
 			"${@} ${*}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1224,7 +1260,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 66
+		{ // 69
 			"$() $(()) `` ${}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$("},
