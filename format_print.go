@@ -109,7 +109,13 @@ func (f File) printSource(w io.Writer, v bool) {
 
 func (h Heredoc) printSource(w io.Writer, v bool) {}
 
-func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {}
+func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
+	if h.HeredocPart != nil {
+		io.WriteString(w, h.HeredocPart.Data)
+	} else if h.Word != nil {
+		h.Word.printSource(w, v)
+	}
+}
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
