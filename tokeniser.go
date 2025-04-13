@@ -249,7 +249,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		t.Next()
 
 		if t.Accept("<") {
-			if !t.Accept("<-") {
+			if !t.Accept("<") {
 				t.Accept("-")
 
 				return t.Return(TokenPunctuator, b.startHeredoc)
