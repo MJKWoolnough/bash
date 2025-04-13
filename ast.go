@@ -1045,6 +1045,8 @@ type Heredoc struct {
 }
 
 func (h *Heredoc) parse(b *bashParser) error {
+	b.Accept(TokenHeredocIndent)
+
 	for !b.Accept(TokenHeredocEnd) {
 		c := b.NewGoal()
 
@@ -1057,6 +1059,7 @@ func (h *Heredoc) parse(b *bashParser) error {
 		h.HeredocPartsOrWords = append(h.HeredocPartsOrWords, hw)
 
 		b.Score(c)
+		b.Accept(TokenHeredocIndent)
 	}
 
 	h.Tokens = b.ToTokens()
