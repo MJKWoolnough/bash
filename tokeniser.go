@@ -56,6 +56,7 @@ const (
 	TokenBraceWord
 	TokenPunctuator
 	TokenHeredoc
+	TokenHeredocIndent
 	TokenHeredocEnd
 	TokenOpenBacktick
 	TokenCloseBacktick
@@ -63,10 +64,16 @@ const (
 	TokenPattern
 )
 
+type heredocType struct {
+	stripped bool
+	delim    string
+}
+
 type bashTokeniser struct {
-	tokenDepth []byte
-	heredoc    [][]string
-	child      *parser.Tokeniser
+	tokenDepth            []byte
+	heredoc               [][]heredocType
+	nextHeredocIsStripped bool
+	child                 *parser.Tokeniser
 }
 
 // SetTokeniser sets the initial tokeniser state of a parser.Tokeniser.
@@ -250,7 +257,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if t.Accept("<") {
 			if !t.Accept("<") {
-				t.Accept("-")
+				b.nextHeredocIsStripped = t.Accept("-")
 
 				return t.Return(TokenPunctuator, b.startHeredoc)
 			}
@@ -440,12 +447,17 @@ Loop:
 		Data: t.Get(),
 	}
 
+	hdt := heredocType{
+		stripped: b.nextHeredocIsStripped,
+		delim:    unstring(tk.Data),
+	}
+
 	if b.lastTokenDepth() == 'H' {
-		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], unstring(tk.Data))
+		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], hdt)
 	} else {
 		b.pushTokenDepth('H')
 
-		b.heredoc = append(b.heredoc, []string{unstring(tk.Data)})
+		b.heredoc = append(b.heredoc, []heredocType{hdt})
 	}
 
 	return tk, b.main
@@ -487,10 +499,16 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 	last := len(b.heredoc) - 1
 	heredoc := b.heredoc[last][0]
 
+	if heredoc.stripped && t.Accept("\t") {
+		t.AcceptRun("\t")
+
+		return t.Return(TokenHeredocIndent, b.heredocString)
+	}
+
 	for {
 		state := t.State()
 
-		if t.AcceptString(heredoc, false) == len(heredoc) && (t.Peek() == '\n' || t.Peek() == -1) {
+		if t.AcceptString(heredoc.delim, false) == len(heredoc.delim) && (t.Peek() == '\n' || t.Peek() == -1) {
 			state.Reset()
 
 			str := t.Get()
@@ -524,9 +542,14 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 			}
 
 			continue
+		case '\n':
+			t.Next()
+
+			if heredoc.stripped && t.Peek() == '\t' {
+				return t.Return(TokenHeredoc, b.heredocString)
+			}
 		}
 
-		t.Next()
 	}
 }
 
@@ -535,7 +558,7 @@ func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.To
 	heredoc := b.heredoc[last][0]
 	b.heredoc[last] = b.heredoc[last][1:]
 
-	t.AcceptString(heredoc, false)
+	t.AcceptString(heredoc.delim, false)
 
 	if len(b.heredoc[last]) == 0 {
 		b.heredoc = b.heredoc[:last]
