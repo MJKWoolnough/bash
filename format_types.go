@@ -228,6 +228,20 @@ func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
 
 	pp.Print("HeredocPartOrWord {")
 
+	if f.HeredocPart != nil {
+		pp.Print("\nHeredocPart: ")
+		f.HeredocPart.printType(&pp, v)
+	} else if v {
+		pp.Print("\nHeredocPart: nil")
+	}
+
+	if f.Word != nil {
+		pp.Print("\nWord: ")
+		f.Word.printType(&pp, v)
+	} else if v {
+		pp.Print("\nWord: nil")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
