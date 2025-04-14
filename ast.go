@@ -84,10 +84,19 @@ func (l *Line) parse(b *bashParser) error {
 	for _, s := range l.Statements {
 		c := b.NewGoal()
 
-		if err := s.parseHeredocs(b); err != nil {
-			return b.Error("Line", err)
+		c.Accept(TokenLineTerminator)
+
+		if tk := c.Peek(); tk.Type != TokenHeredoc && tk.Type != TokenHeredocIndent && tk.Type != TokenHeredocEnd {
+			break
 		}
 
+		d := c.NewGoal()
+
+		if err := s.parseHeredocs(d); err != nil {
+			return c.Error("Line", err)
+		}
+
+		c.Score(d)
 		b.Score(c)
 	}
 
