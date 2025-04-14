@@ -321,7 +321,12 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 	r.Output.printSource(w, v)
 }
 
-func (r Redirection) printHeredoc(w io.Writer, v bool) {}
+func (r Redirection) printHeredoc(w io.Writer, v bool) {
+	if r.Redirector != nil && r.Heredoc != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-") {
+		r.Heredoc.printSource(w, v)
+		r.Output.printSource(w, v)
+	}
+}
 
 func (s Statement) printSource(w io.Writer, v bool) {
 	s.Pipeline.printSource(w, v)
