@@ -86,14 +86,14 @@ func (l *Line) parse(b *bashParser) error {
 
 		c.Accept(TokenLineTerminator)
 
-		if tk := c.Peek(); tk.Type != TokenHeredoc && tk.Type != TokenHeredocIndent && tk.Type != TokenHeredocEnd {
-			break
-		}
-
 		d := c.NewGoal()
 
 		if err := l.Statements[n].parseHeredocs(d); err != nil {
 			return c.Error("Line", err)
+		}
+
+		if len(d.Tokens) == 0 {
+			continue
 		}
 
 		c.Score(d)
