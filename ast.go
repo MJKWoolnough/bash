@@ -81,7 +81,7 @@ func (l *Line) parse(b *bashParser) error {
 		c = b.NewGoal()
 	}
 
-	for _, s := range l.Statements {
+	for n := range l.Statements {
 		c := b.NewGoal()
 
 		c.Accept(TokenLineTerminator)
@@ -92,7 +92,7 @@ func (l *Line) parse(b *bashParser) error {
 
 		d := c.NewGoal()
 
-		if err := s.parseHeredocs(d); err != nil {
+		if err := l.Statements[n].parseHeredocs(d); err != nil {
 			return c.Error("Line", err)
 		}
 
@@ -432,10 +432,10 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 }
 
 func (cc *Command) parseHeredocs(b *bashParser) error {
-	for _, r := range cc.Redirections {
+	for n := range cc.Redirections {
 		c := b.NewGoal()
 
-		if err := r.parseHeredocs(c); err != nil {
+		if err := cc.Redirections[n].parseHeredocs(c); err != nil {
 			return b.Error("Command", err)
 		}
 
