@@ -122,7 +122,7 @@ type Statement struct {
 func (s *Statement) parse(b *bashParser, first bool) error {
 	c := b.NewGoal()
 
-	if err := s.Pipeline.parse(c); err != nil {
+	if err := s.Pipeline.parse(c, !first); err != nil {
 		return b.Error("Statement", err)
 	}
 
@@ -209,7 +209,7 @@ type Pipeline struct {
 	Tokens           Tokens
 }
 
-func (p *Pipeline) parse(b *bashParser) error {
+func (p *Pipeline) parse(b *bashParser, required bool) error {
 	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "time"}) {
 		b.AcceptRunWhitespace()
 
@@ -228,7 +228,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := p.CommandOrControl.parse(c, true); err != nil {
+	if err := p.CommandOrControl.parse(c, required); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -245,7 +245,7 @@ func (p *Pipeline) parse(b *bashParser) error {
 		c = b.NewGoal()
 		p.Pipeline = new(Pipeline)
 
-		if err := p.Pipeline.parse(c); err != nil {
+		if err := p.Pipeline.parse(c, true); err != nil {
 			return b.Error("Pipeline", err)
 		}
 
@@ -413,7 +413,7 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 		c.AcceptRunWhitespace()
 	}
 
-	if required && len(cc.Words) == 0 {
+	if len(cc.Words) == 0 && (required || len(cc.Redirections) == 0 && len(cc.Vars) == 0) {
 		return b.Error("Command", ErrMissingWord)
 	}
 
