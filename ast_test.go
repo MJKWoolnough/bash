@@ -284,6 +284,90 @@ func TestFile(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
+		{"<<a;<<b\nc\na\nd\nb", func(t *test, tk Tokens) { // 6
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Redirections: []Redirection{
+												{
+													Redirector: &tk[0],
+													Output: Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[1],
+																Tokens: tk[1:2],
+															},
+														},
+														Tokens: tk[1:2],
+													},
+													Heredoc: &Heredoc{
+														HeredocPartsOrWords: []HeredocPartOrWord{
+															{
+																HeredocPart: &tk[6],
+																Tokens:      tk[6:7],
+															},
+														},
+														Tokens: tk[6:8],
+													},
+													Tokens: tk[:2],
+												},
+											},
+											Tokens: tk[:2],
+										},
+										Tokens: tk[:2],
+									},
+									Tokens: tk[:2],
+								},
+								Tokens: tk[:3],
+							},
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Redirections: []Redirection{
+												{
+													Redirector: &tk[3],
+													Output: Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[4],
+																Tokens: tk[4:5],
+															},
+														},
+														Tokens: tk[4:5],
+													},
+													Heredoc: &Heredoc{
+														HeredocPartsOrWords: []HeredocPartOrWord{
+															{
+																HeredocPart: &tk[9],
+																Tokens:      tk[9:10],
+															},
+														},
+														Tokens: tk[9:11],
+													},
+													Tokens: tk[3:5],
+												},
+											},
+											Tokens: tk[3:5],
+										},
+										Tokens: tk[3:5],
+									},
+									Tokens: tk[3:5],
+								},
+								Tokens: tk[3:5],
+							},
+						},
+						Tokens: tk[:11],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f File
 
