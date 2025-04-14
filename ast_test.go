@@ -3705,6 +3705,102 @@ func TestRedirection(t *testing.T) {
 	})
 }
 
+func TestHeredoc(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"<<a\nb\na", func(t *test, tk Tokens) { // 1
+			t.Output = Heredoc{
+				HeredocPartsOrWords: []HeredocPartOrWord{
+					{
+						HeredocPart: &tk[3],
+						Tokens:      tk[3:4],
+					},
+				},
+				Tokens: tk[3:5],
+			}
+		}},
+		{"<<a\n\tb\na", func(t *test, tk Tokens) { // 2
+			t.Output = Heredoc{
+				HeredocPartsOrWords: []HeredocPartOrWord{
+					{
+						HeredocPart: &tk[3],
+						Tokens:      tk[3:4],
+					},
+				},
+				Tokens: tk[3:5],
+			}
+		}},
+		{"<<-a\n\tb\na", func(t *test, tk Tokens) { // 3
+			t.Output = Heredoc{
+				HeredocPartsOrWords: []HeredocPartOrWord{
+					{
+						HeredocPart: &tk[4],
+						Tokens:      tk[4:5],
+					},
+				},
+				Tokens: tk[3:6],
+			}
+		}},
+		{"<<a\n$a\na", func(t *test, tk Tokens) { // 4
+			t.Output = Heredoc{
+				HeredocPartsOrWords: []HeredocPartOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
+							Tokens: tk[3:4],
+						},
+						Tokens: tk[3:4],
+					},
+					{
+						HeredocPart: &tk[4],
+						Tokens:      tk[4:5],
+					},
+				},
+				Tokens: tk[3:6],
+			}
+		}},
+		{"<<a\na$b\na", func(t *test, tk Tokens) { // 5
+			t.Output = Heredoc{
+				HeredocPartsOrWords: []HeredocPartOrWord{
+					{
+						HeredocPart: &tk[3],
+						Tokens:      tk[3:4],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+						Tokens: tk[4:5],
+					},
+					{
+						HeredocPart: &tk[5],
+						Tokens:      tk[5:6],
+					},
+				},
+				Tokens: tk[3:7],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var h Heredoc
+
+		t.Parser.Tokens = t.Parser.Tokens[3:3]
+
+		err := h.parse(t.Parser)
+
+		return h, err
+	})
+}
+
 func TestHeredocPartOrWord(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"<<a\nb\na", func(t *test, tk Tokens) { // 1
