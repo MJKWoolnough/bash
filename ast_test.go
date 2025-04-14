@@ -3790,6 +3790,53 @@ func TestHeredoc(t *testing.T) {
 				Tokens: tk[3:7],
 			}
 		}},
+		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[4],
+													},
+													Parsing: "CommandOrControl",
+													Token:   tk[4],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[4],
+											},
+											Parsing: "Statement",
+											Token:   tk[4],
+										},
+										Parsing: "Line",
+										Token:   tk[4],
+									},
+									Parsing: "File",
+									Token:   tk[4],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[4],
+							},
+							Parsing: "WordPart",
+							Token:   tk[3],
+						},
+						Parsing: "Word",
+						Token:   tk[3],
+					},
+					Parsing: "HeredocPartOrWord",
+					Token:   tk[3],
+				},
+				Parsing: "Heredoc",
+				Token:   tk[3],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var h Heredoc
 
