@@ -107,7 +107,11 @@ func (f File) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (h Heredoc) printSource(w io.Writer, v bool) {}
+func (h Heredoc) printSource(w io.Writer, v bool) {
+	for _, p := range h.HeredocPartsOrWords {
+		p.printSource(w, v)
+	}
+}
 
 func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
 	if h.HeredocPart != nil {
