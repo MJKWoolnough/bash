@@ -236,6 +236,54 @@ func TestFile(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
+		{"<<a\nb\na", func(t *test, tk Tokens) { // 5
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrControl: CommandOrControl{
+										Command: &Command{
+											Redirections: []Redirection{
+												{
+													Redirector: &tk[0],
+													Output: Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[1],
+																Tokens: tk[1:2],
+															},
+														},
+														Tokens: tk[1:2],
+													},
+													Heredoc: &Heredoc{
+														HeredocPartsOrWords: []HeredocPartOrWord{
+															{
+																HeredocPart: &tk[3],
+																Tokens:      tk[3:4],
+															},
+														},
+														Tokens: tk[3:5],
+													},
+													Tokens: tk[:2],
+												},
+											},
+											Tokens: tk[:2],
+										},
+										Tokens: tk[:2],
+									},
+									Tokens: tk[:2],
+								},
+								Tokens: tk[:2],
+							},
+						},
+						Tokens: tk[:5],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f File
 
@@ -905,7 +953,7 @@ func TestPipeline(t *testing.T) {
 	}, func(t *test) (Type, error) {
 		var p Pipeline
 
-		err := p.parse(t.Parser)
+		err := p.parse(t.Parser, true)
 
 		return p, err
 	})
