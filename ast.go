@@ -301,7 +301,7 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 
 	if isCompoundNext(b) {
 		cc.Compound = new(Compound)
-		err = cc.Compound.parse(c, required)
+		err = cc.Compound.parse(c)
 	} else {
 		cc.Command = new(Command)
 		err = cc.Command.parse(c, required)
@@ -345,14 +345,125 @@ func isCompoundNext(b *bashParser) bool {
 }
 
 type Compound struct {
-	Tokens Tokens
+	IfCompound         *IfCompound
+	CaseCompound       *CaseCompound
+	LoopCompound       *LoopCompound
+	ForCompound        *ForCompound
+	SelectCompound     *SelectCompound
+	GroupingCompound   *GroupingCompound
+	TestCompound       *TestCompound
+	ArthimeticCompound *ArithmeticExpansion
+	Tokens             Tokens
 }
 
-func (cc *Compound) parse(b *bashParser, required bool) error {
+func (cc *Compound) parse(b *bashParser) error {
+	var err error
+
+	c := b.NewGoal()
+
+	switch c.Peek() {
+	case parser.Token{Type: TokenKeyword, Data: "if"}:
+		cc.IfCompound = new(IfCompound)
+
+		err = cc.IfCompound.parse(c)
+	case parser.Token{Type: TokenKeyword, Data: "case"}:
+		cc.CaseCompound = new(CaseCompound)
+
+		err = cc.CaseCompound.parse(c)
+	case parser.Token{Type: TokenKeyword, Data: "while"}, parser.Token{Type: TokenKeyword, Data: "until"}:
+		cc.LoopCompound = new(LoopCompound)
+
+		err = cc.LoopCompound.parse(c)
+	case parser.Token{Type: TokenKeyword, Data: "for"}:
+		cc.ForCompound = new(ForCompound)
+
+		err = cc.ForCompound.parse(c)
+	case parser.Token{Type: TokenKeyword, Data: "select"}:
+		cc.SelectCompound = new(SelectCompound)
+
+		err = cc.SelectCompound.parse(c)
+	case parser.Token{Type: TokenKeyword, Data: "[["}:
+		cc.TestCompound = new(TestCompound)
+
+		err = cc.TestCompound.parse(c)
+	case parser.Token{Type: TokenPunctuator, Data: "(("}:
+		cc.ArthimeticCompound = new(ArithmeticExpansion)
+
+		err = cc.ArthimeticCompound.parse(c)
+	case parser.Token{Type: TokenPunctuator, Data: "("}, parser.Token{Type: TokenPunctuator, Data: "{"}:
+		cc.GroupingCompound = new(GroupingCompound)
+
+		err = cc.GroupingCompound.parse(c)
+	}
+
+	if err != nil {
+		return b.Error("Compound", err)
+	}
+
+	b.Score(c)
+
+	cc.Tokens = b.ToTokens()
+
 	return nil
 }
 
 func (cc *Compound) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
+type IfCompound struct {
+	Tokens Tokens
+}
+
+func (i *IfCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type CaseCompound struct {
+	Tokens Tokens
+}
+
+func (cc *CaseCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type LoopCompound struct {
+	Tokens Tokens
+}
+
+func (l *LoopCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type ForCompound struct {
+	Tokens Tokens
+}
+
+func (f *ForCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type SelectCompound struct {
+	Tokens Tokens
+}
+
+func (s *SelectCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type TestCompound struct {
+	Tokens Tokens
+}
+
+func (t *TestCompound) parse(b *bashParser) error {
+	return nil
+}
+
+type GroupingCompound struct {
+	Tokens Tokens
+}
+
+func (g *GroupingCompound) parse(b *bashParser) error {
 	return nil
 }
 
