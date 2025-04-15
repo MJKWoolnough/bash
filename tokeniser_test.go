@@ -237,7 +237,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 13
-			"< <<< <& <> > >> >& &>> >| | |& || & && () {} = `` $() $(())",
+			"< <<< <& <> > >> >& &>> >| | |& || & && () {} = `` $() $(()) (())",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<"},
 				{Type: TokenWhitespace, Data: " "},
@@ -282,6 +282,9 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenCloseParen, Data: ")"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenPunctuator, Data: "))"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "(("},
 				{Type: TokenPunctuator, Data: "))"},
 				{Type: parser.TokenDone, Data: ""},
 			},
@@ -361,6 +364,22 @@ func TestTokeniser(t *testing.T) {
 			"$(( a+b 1+2))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: "+"},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenNumberLiteral, Data: "1"},
+				{Type: TokenPunctuator, Data: "+"},
+				{Type: TokenNumberLiteral, Data: "2"},
+				{Type: TokenPunctuator, Data: "))"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 15
+			"(( a+b 1+2))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "(("},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenWord, Data: "a"},
 				{Type: TokenPunctuator, Data: "+"},
