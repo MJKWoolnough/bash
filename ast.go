@@ -212,10 +212,10 @@ const (
 
 type Pipeline struct {
 	PipelineTime
-	Not              bool
-	CommandOrControl CommandOrControl
-	Pipeline         *Pipeline
-	Tokens           Tokens
+	Not               bool
+	CommandOrCompound CommandOrCompound
+	Pipeline          *Pipeline
+	Tokens            Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser, required bool) error {
@@ -237,7 +237,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 
 	c := b.NewGoal()
 
-	if err := p.CommandOrControl.parse(c, required); err != nil {
+	if err := p.CommandOrCompound.parse(c, required); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -269,7 +269,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	c := b.NewGoal()
 
-	if err := p.CommandOrControl.parseHeredoc(c); err != nil {
+	if err := p.CommandOrCompound.parseHeredoc(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -288,27 +288,27 @@ func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
-type CommandOrControl struct {
-	Command *Command
-	Control *Control
-	Tokens  Tokens
+type CommandOrCompound struct {
+	Command  *Command
+	Compound *Compound
+	Tokens   Tokens
 }
 
-func (cc *CommandOrControl) parse(b *bashParser, required bool) error {
+func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 	var err error
 
 	c := b.NewGoal()
 
-	if isControlNext(b) {
-		cc.Control = new(Control)
-		err = cc.Control.parse(c, required)
+	if isCompoundNext(b) {
+		cc.Compound = new(Compound)
+		err = cc.Compound.parse(c, required)
 	} else {
 		cc.Command = new(Command)
 		err = cc.Command.parse(c, required)
 	}
 
 	if err != nil {
-		return b.Error("CommandOrControl", err)
+		return b.Error("CommandOrCompound", err)
 	}
 
 	b.Score(c)
@@ -318,7 +318,7 @@ func (cc *CommandOrControl) parse(b *bashParser, required bool) error {
 	return nil
 }
 
-func (cc *CommandOrControl) parseHeredoc(b *bashParser) error {
+func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
@@ -326,11 +326,11 @@ func (cc *CommandOrControl) parseHeredoc(b *bashParser) error {
 	if cc.Command != nil {
 		err = cc.Command.parseHeredocs(c)
 	} else {
-		err = cc.Control.parseHeredocs(c)
+		err = cc.Compound.parseHeredocs(c)
 	}
 
 	if err != nil {
-		return b.Error("CommandOrControl", err)
+		return b.Error("CommandOrCompound", err)
 	}
 
 	b.Score(c)
@@ -338,21 +338,21 @@ func (cc *CommandOrControl) parseHeredoc(b *bashParser) error {
 	return nil
 }
 
-func isControlNext(b *bashParser) bool {
+func isCompoundNext(b *bashParser) bool {
 	tk := b.Peek()
 
 	return tk.Type == TokenKeyword && (tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "coproc" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "(" || tk.Data == "{")
 }
 
-type Control struct {
+type Compound struct {
 	Tokens Tokens
 }
 
-func (cc *Control) parse(b *bashParser, required bool) error {
+func (cc *Compound) parse(b *bashParser, required bool) error {
 	return nil
 }
 
-func (cc *Control) parseHeredocs(b *bashParser) error {
+func (cc *Compound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 

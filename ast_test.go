@@ -55,7 +55,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -90,7 +90,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -118,7 +118,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -153,7 +153,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -181,7 +181,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -220,7 +220,7 @@ func TestFile(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[0],
 								},
-								Parsing: "CommandOrControl",
+								Parsing: "CommandOrCompound",
 								Token:   tk[0],
 							},
 							Parsing: "Pipeline",
@@ -243,7 +243,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -291,7 +291,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -327,7 +327,7 @@ func TestFile(t *testing.T) {
 							},
 							{
 								Pipeline: Pipeline{
-									CommandOrControl: CommandOrControl{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -391,7 +391,7 @@ func TestFile(t *testing.T) {
 																					Parsing: "Command",
 																					Token:   tk[4],
 																				},
-																				Parsing: "CommandOrControl",
+																				Parsing: "CommandOrCompound",
 																				Token:   tk[4],
 																			},
 																			Parsing: "Pipeline",
@@ -427,7 +427,7 @@ func TestFile(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[3],
 								},
-								Parsing: "CommandOrControl",
+								Parsing: "CommandOrCompound",
 								Token:   tk[3],
 							},
 							Parsing: "Pipeline",
@@ -459,7 +459,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrControl: CommandOrControl{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -489,7 +489,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrControl: CommandOrControl{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -512,7 +512,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandOrControl: CommandOrControl{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -542,7 +542,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrControl: CommandOrControl{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -566,7 +566,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandOrControl: CommandOrControl{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -601,7 +601,7 @@ func TestLine(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[0],
 							},
-							Parsing: "CommandOrControl",
+							Parsing: "CommandOrCompound",
 							Token:   tk[0],
 						},
 						Parsing: "Pipeline",
@@ -628,7 +628,7 @@ func TestStatement(t *testing.T) {
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -653,7 +653,7 @@ func TestStatement(t *testing.T) {
 		{"a||b", func(t *test, tk Tokens) { // 2
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -675,7 +675,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrControl: CommandOrControl{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -702,7 +702,7 @@ func TestStatement(t *testing.T) {
 		{"a && b", func(t *test, tk Tokens) { // 3
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -724,7 +724,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorAnd,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrControl: CommandOrControl{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -751,7 +751,7 @@ func TestStatement(t *testing.T) {
 		{"a||b;", func(t *test, tk Tokens) { // 4
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -773,7 +773,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrControl: CommandOrControl{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -800,7 +800,7 @@ func TestStatement(t *testing.T) {
 		{"a||b &", func(t *test, tk Tokens) { // 5
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -822,7 +822,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrControl: CommandOrControl{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -856,7 +856,7 @@ func TestStatement(t *testing.T) {
 							Parsing: "Command",
 							Token:   tk[0],
 						},
-						Parsing: "CommandOrControl",
+						Parsing: "CommandOrCompound",
 						Token:   tk[0],
 					},
 					Parsing: "Pipeline",
@@ -876,7 +876,7 @@ func TestStatement(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[4],
 							},
-							Parsing: "CommandOrControl",
+							Parsing: "CommandOrCompound",
 							Token:   tk[4],
 						},
 						Parsing: "Pipeline",
@@ -902,7 +902,7 @@ func TestPipeline(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Pipeline{
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -925,7 +925,7 @@ func TestPipeline(t *testing.T) {
 		{"time a", func(t *test, tk Tokens) { // 2
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimeBash,
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -948,7 +948,7 @@ func TestPipeline(t *testing.T) {
 		{"time -p a", func(t *test, tk Tokens) { // 3
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimePosix,
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -971,7 +971,7 @@ func TestPipeline(t *testing.T) {
 		{"! a", func(t *test, tk Tokens) { // 4
 			t.Output = Pipeline{
 				Not: true,
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -993,7 +993,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a|b", func(t *test, tk Tokens) { // 5
 			t.Output = Pipeline{
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1011,7 +1011,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -1035,7 +1035,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a | b", func(t *test, tk Tokens) { // 6
 			t.Output = Pipeline{
-				CommandOrControl: CommandOrControl{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1053,7 +1053,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandOrControl: CommandOrControl{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -1083,7 +1083,7 @@ func TestPipeline(t *testing.T) {
 						Parsing: "Command",
 						Token:   tk[0],
 					},
-					Parsing: "CommandOrControl",
+					Parsing: "CommandOrCompound",
 					Token:   tk[0],
 				},
 				Parsing: "Pipeline",
@@ -1099,7 +1099,7 @@ func TestPipeline(t *testing.T) {
 							Parsing: "Command",
 							Token:   tk[4],
 						},
-						Parsing: "CommandOrControl",
+						Parsing: "CommandOrCompound",
 						Token:   tk[4],
 					},
 					Parsing: "Pipeline",
@@ -1364,7 +1364,7 @@ func TestCommand(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[3],
 														},
-														Parsing: "CommandOrControl",
+														Parsing: "CommandOrCompound",
 														Token:   tk[3],
 													},
 													Parsing: "Pipeline",
@@ -1414,7 +1414,7 @@ func TestCommand(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[2],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[2],
 												},
 												Parsing: "Pipeline",
@@ -1460,7 +1460,7 @@ func TestCommand(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",
@@ -1504,7 +1504,7 @@ func TestCommand(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -1599,7 +1599,7 @@ func TestAssignment(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[3],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[3],
 												},
 												Parsing: "Pipeline",
@@ -1646,7 +1646,7 @@ func TestAssignment(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[3],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[3],
 												},
 												Parsing: "Pipeline",
@@ -1739,7 +1739,7 @@ func TestParameterAssign(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -1877,7 +1877,7 @@ func TestValue(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -1920,7 +1920,7 @@ func TestValue(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -2092,7 +2092,7 @@ func TestWord(t *testing.T) {
 												Parsing: "Command",
 												Token:   tk[1],
 											},
-											Parsing: "CommandOrControl",
+											Parsing: "CommandOrCompound",
 											Token:   tk[1],
 										},
 										Parsing: "Pipeline",
@@ -2194,7 +2194,7 @@ func TestWordPart(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[4],
 														},
-														Parsing: "CommandOrControl",
+														Parsing: "CommandOrCompound",
 														Token:   tk[4],
 													},
 													Parsing: "Pipeline",
@@ -2245,7 +2245,7 @@ func TestWordPart(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[2],
 														},
-														Parsing: "CommandOrControl",
+														Parsing: "CommandOrCompound",
 														Token:   tk[2],
 													},
 													Parsing: "Pipeline",
@@ -2292,7 +2292,7 @@ func TestWordPart(t *testing.T) {
 											Parsing: "Command",
 											Token:   tk[1],
 										},
-										Parsing: "CommandOrControl",
+										Parsing: "CommandOrCompound",
 										Token:   tk[1],
 									},
 									Parsing: "Pipeline",
@@ -2974,7 +2974,7 @@ func TestParameterExpansion(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -3020,7 +3020,7 @@ func TestParameterExpansion(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -3156,7 +3156,7 @@ func TestParameter(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -3302,7 +3302,7 @@ func TestString(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[1],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[1],
 												},
 												Parsing: "Pipeline",
@@ -3379,7 +3379,7 @@ func TestWordOrToken(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",
@@ -3445,7 +3445,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrControl: CommandOrControl{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3490,7 +3490,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrControl: CommandOrControl{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3538,7 +3538,7 @@ func TestCommandSubstitution(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[1],
 									},
-									Parsing: "CommandOrControl",
+									Parsing: "CommandOrCompound",
 									Token:   tk[1],
 								},
 								Parsing: "Pipeline",
@@ -3875,7 +3875,7 @@ func TestRedirection(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[2],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[2],
 											},
 											Parsing: "Pipeline",
@@ -4013,7 +4013,7 @@ func TestHeredoc(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -4092,7 +4092,7 @@ func TestHeredocPartOrWord(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -4245,7 +4245,7 @@ func TestArithmeticExpansion(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[2],
 													},
-													Parsing: "CommandOrControl",
+													Parsing: "CommandOrCompound",
 													Token:   tk[2],
 												},
 												Parsing: "Pipeline",
@@ -4342,7 +4342,7 @@ func TestWordOrOperator(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandOrControl",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",

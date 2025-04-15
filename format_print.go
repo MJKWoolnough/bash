@@ -80,13 +80,13 @@ func (c Command) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandOrControl) printSource(w io.Writer, v bool) {}
+func (c CommandOrCompound) printSource(w io.Writer, v bool) {}
 
-func (c CommandOrControl) printHeredoc(w io.Writer, v bool) {
+func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
 	if c.Command != nil {
 		c.Command.printHeredoc(w, v)
-	} else if c.Control != nil {
-		c.Control.printHeredoc(w, v)
+	} else if c.Compound != nil {
+		c.Compound.printHeredoc(w, v)
 	}
 }
 
@@ -96,9 +96,9 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, ")")
 }
 
-func (c Control) printSource(w io.Writer, v bool) {}
+func (c Compound) printSource(w io.Writer, v bool) {}
 
-func (c Control) printHeredoc(w io.Writer, v bool) {}
+func (c Compound) printHeredoc(w io.Writer, v bool) {}
 
 func (f File) printSource(w io.Writer, v bool) {
 	for _, l := range f.Lines {
@@ -292,7 +292,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 		io.WriteString(w, "! ")
 	}
 
-	p.CommandOrControl.printSource(w, v)
+	p.CommandOrCompound.printSource(w, v)
 
 	if p.Pipeline != nil {
 		io.WriteString(w, " | ")
@@ -301,7 +301,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 }
 
 func (p Pipeline) printHeredoc(w io.Writer, v bool) {
-	p.CommandOrControl.printHeredoc(w, v)
+	p.CommandOrCompound.printHeredoc(w, v)
 
 	if p.Pipeline != nil {
 		p.printHeredoc(w, v)
