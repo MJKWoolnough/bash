@@ -408,6 +408,30 @@ func (cc *Compound) parse(b *bashParser) error {
 }
 
 func (cc *Compound) parseHeredocs(b *bashParser) error {
+	var err error
+
+	c := b.NewGoal()
+
+	if cc.IfCompound != nil {
+		err = cc.IfCompound.parseHeredocs(c)
+	} else if cc.CaseCompound != nil {
+		err = cc.CaseCompound.parseHeredocs(c)
+	} else if cc.LoopCompound != nil {
+		err = cc.LoopCompound.parseHeredocs(c)
+	} else if cc.ForCompound != nil {
+		err = cc.ForCompound.parseHeredocs(c)
+	} else if cc.SelectCompound != nil {
+		cc.SelectCompound.parseHeredocs(c)
+	} else if cc.TestCompound != nil {
+		cc.TestCompound.parseHeredocs(c)
+	}
+
+	if err != nil {
+		return b.Error("Compound", err)
+	}
+
+	b.Score(c)
+
 	return nil
 }
 
@@ -419,11 +443,19 @@ func (i *IfCompound) parse(b *bashParser) error {
 	return nil
 }
 
+func (i *IfCompound) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
 type CaseCompound struct {
 	Tokens Tokens
 }
 
 func (cc *CaseCompound) parse(b *bashParser) error {
+	return nil
+}
+
+func (cc *CaseCompound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
@@ -435,11 +467,19 @@ func (l *LoopCompound) parse(b *bashParser) error {
 	return nil
 }
 
+func (l *LoopCompound) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
 type ForCompound struct {
 	Tokens Tokens
 }
 
 func (f *ForCompound) parse(b *bashParser) error {
+	return nil
+}
+
+func (f *ForCompound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
@@ -451,11 +491,19 @@ func (s *SelectCompound) parse(b *bashParser) error {
 	return nil
 }
 
+func (s *SelectCompound) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
 type TestCompound struct {
 	Tokens Tokens
 }
 
 func (t *TestCompound) parse(b *bashParser) error {
+	return nil
+}
+
+func (t *TestCompound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
