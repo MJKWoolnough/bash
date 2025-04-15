@@ -368,6 +368,81 @@ func TestFile(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
+		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err: Error{
+																		Err: Error{
+																			Err: Error{
+																				Err: Error{
+																					Err:     ErrMissingWord,
+																					Parsing: "Command",
+																					Token:   tk[4],
+																				},
+																				Parsing: "CommandOrControl",
+																				Token:   tk[4],
+																			},
+																			Parsing: "Pipeline",
+																			Token:   tk[4],
+																		},
+																		Parsing: "Statement",
+																		Token:   tk[4],
+																	},
+																	Parsing: "Line",
+																	Token:   tk[4],
+																},
+																Parsing: "File",
+																Token:   tk[4],
+															},
+															Parsing: "CommandSubstitution",
+															Token:   tk[4],
+														},
+														Parsing: "WordPart",
+														Token:   tk[3],
+													},
+													Parsing: "Word",
+													Token:   tk[3],
+												},
+												Parsing: "HeredocPartOrWord",
+												Token:   tk[3],
+											},
+											Parsing: "Heredoc",
+											Token:   tk[3],
+										},
+										Parsing: "Redirection",
+										Token:   tk[3],
+									},
+									Parsing: "Command",
+									Token:   tk[3],
+								},
+								Parsing: "CommandOrControl",
+								Token:   tk[3],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[3],
+						},
+						Parsing: "Statement",
+						Token:   tk[3],
+					},
+					Parsing: "Line",
+					Token:   tk[3],
+				},
+				Parsing: "File",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f File
 
