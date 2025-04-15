@@ -1219,7 +1219,10 @@ type ArithmeticExpansion struct {
 }
 
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
-	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "$(("})
+	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "$(("}) {
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "(("})
+	}
+
 	b.AcceptRunAllWhitespace()
 
 	for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "))"}) {
