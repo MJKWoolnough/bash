@@ -286,7 +286,12 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		return b.stringStart(t)
 	case '(':
 		t.Next()
-		b.pushTokenDepth(')')
+
+		if t.Accept("(") {
+			b.pushTokenDepth('>')
+		} else {
+			b.pushTokenDepth(')')
+		}
 	case '{':
 		t.Next()
 
