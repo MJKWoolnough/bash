@@ -66,6 +66,7 @@ const (
 
 type heredocType struct {
 	stripped bool
+	expand   bool
 	delim    string
 }
 
@@ -457,6 +458,8 @@ Loop:
 		delim:    unstring(tk.Data),
 	}
 
+	hdt.expand = hdt.delim == tk.Data
+
 	if b.lastTokenDepth() == 'H' {
 		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], hdt)
 	} else {
@@ -510,6 +513,12 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 		return t.Return(TokenHeredocIndent, b.heredocString)
 	}
 
+	charBreak := newline
+
+	if heredoc.expand {
+		charBreak = heredocStringBreak
+	}
+
 	for {
 		state := t.State()
 
@@ -525,7 +534,7 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 			return parser.Token{Type: TokenHeredoc, Data: str}, b.heredocEnd
 		}
 
-		switch t.ExceptRun(heredocStringBreak) {
+		switch t.ExceptRun(charBreak) {
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
 		case '$':
