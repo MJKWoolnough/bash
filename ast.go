@@ -28,7 +28,9 @@ func (f *File) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.AcceptRunAllWhitespace(); tk == parser.TokenDone || tk == TokenCloseBacktick || tk == TokenCloseParen {
+		c.AcceptRunAllWhitespace()
+
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
 			break
 		}
 
@@ -436,14 +438,78 @@ func (cc *Compound) parseHeredocs(b *bashParser) error {
 }
 
 type IfCompound struct {
+	If     TestConsequence
+	ElIf   []TestConsequence
+	Else   *File
 	Tokens Tokens
 }
 
 func (i *IfCompound) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "if"})
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := i.If.parse(c); err != nil {
+		return b.Error("IfCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+
+	for b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "elif"}) {
+		b.AcceptRunAllWhitespace()
+
+		c := b.NewGoal()
+
+		var tc TestConsequence
+
+		if err := tc.parse(c); err != nil {
+			return b.Error("IfCompound", err)
+		}
+
+		i.ElIf = append(i.ElIf, tc)
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+	}
+
+	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "else"}) {
+		b.AcceptRunAllWhitespace()
+
+		c := b.NewGoal()
+		i.Else = new(File)
+
+		if err := i.Else.parse(c); err != nil {
+			return b.Error("IfCompound", err)
+		}
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+	}
+
+	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "fi"}) {
+		return b.Error("IfCompound", ErrMissingClosingIf)
+	}
+
+	i.Tokens = b.ToTokens()
+
 	return nil
 }
 
 func (i *IfCompound) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
+type TestConsequence struct {
+	Tokens
+}
+
+func (i *TestConsequence) parse(b *bashParser) error {
+	return nil
+}
+
+func (i *TestConsequence) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
