@@ -14,4 +14,5 @@ var (
 	ErrInvalidEndOfStatement     = errors.New("invalid end of statement")
 	ErrIncorrectBacktick         = errors.New("incorrect backtick depth")
 	ErrMissingWord               = errors.New("missing word")
+	ErrMissingClosingIf          = errors.New("missing if closing")
 )
