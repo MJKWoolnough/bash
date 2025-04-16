@@ -70,7 +70,13 @@ type Line struct {
 func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
-	for !c.Accept(TokenComment, TokenLineTerminator, TokenCloseBacktick, TokenCloseParen) && c.Peek().Type != parser.TokenDone {
+	for {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
+			break
+		}
+
+		b.AcceptRunWhitespace()
+
 		c = b.NewGoal()
 
 		var s Statement
@@ -81,10 +87,10 @@ func (l *Line) parse(b *bashParser) error {
 
 		l.Statements = append(l.Statements, s)
 
-		c.AcceptRunWhitespace()
 		b.Score(c)
 
 		c = b.NewGoal()
+		c.AcceptRunWhitespace()
 	}
 
 	if err := l.parseHeredocs(b); err != nil {
