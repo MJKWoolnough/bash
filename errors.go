@@ -15,4 +15,5 @@ var (
 	ErrIncorrectBacktick         = errors.New("incorrect backtick depth")
 	ErrMissingWord               = errors.New("missing word")
 	ErrMissingClosingIf          = errors.New("missing if closing")
+	ErrInvalidKeyword            = errors.New("invalid keyword")
 )
