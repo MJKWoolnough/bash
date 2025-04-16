@@ -15,6 +15,10 @@ func Parse(t Tokeniser) (*File, error) {
 		return nil, err
 	}
 
+	if p.Peek().Type != parser.TokenDone {
+		return nil, p.Error("File", ErrInvalidKeyword)
+	}
+
 	return f, nil
 }
 
