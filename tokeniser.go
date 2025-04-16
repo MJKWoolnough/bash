@@ -438,6 +438,8 @@ Loop:
 				chars = heredocsBreak
 			}
 		case '"':
+			t.Next()
+
 			if chars == heredocsBreak {
 				chars = "\\\""
 			} else {
