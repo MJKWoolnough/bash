@@ -58,6 +58,10 @@ func (f *File) parse(b *bashParser) error {
 	return nil
 }
 
+func (f *File) parseHeredocs(b *bashParser) error {
+	return nil
+}
+
 type Line struct {
 	Statements []Statement
 	Tokens     Tokens
@@ -498,6 +502,34 @@ func (i *IfCompound) parse(b *bashParser) error {
 }
 
 func (i *IfCompound) parseHeredocs(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := i.If.parseHeredocs(b); err != nil {
+		return b.Error("IfCompound", err)
+	}
+
+	b.Score(c)
+
+	for n := range i.ElIf {
+		c = b.NewGoal()
+
+		if err := i.ElIf[n].parseHeredocs(c); err != nil {
+			return b.Error("IfCompound", err)
+		}
+
+		b.Score(c)
+	}
+
+	if i.Else != nil {
+		c = b.NewGoal()
+
+		if err := i.Else.parseHeredocs(c); err != nil {
+			return b.Error("IfCompound", err)
+		}
+
+		b.Score(c)
+	}
+
 	return nil
 }
 
