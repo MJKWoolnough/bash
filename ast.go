@@ -87,6 +87,16 @@ func (l *Line) parse(b *bashParser) error {
 		c = b.NewGoal()
 	}
 
+	if err := l.parseHeredocs(b); err != nil {
+		return err
+	}
+
+	l.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func (l *Line) parseHeredocs(b *bashParser) error {
 	for n := range l.Statements {
 		c := b.NewGoal()
 
@@ -105,8 +115,6 @@ func (l *Line) parse(b *bashParser) error {
 		c.Score(d)
 		b.Score(c)
 	}
-
-	l.Tokens = b.ToTokens()
 
 	return nil
 }
