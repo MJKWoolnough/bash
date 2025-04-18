@@ -1270,6 +1270,67 @@ func TestTestConsequence(t *testing.T) {
 				Tokens: tk[:7],
 			}
 		}},
+		{"||", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err:     ErrMissingWord,
+								Parsing: "Command",
+								Token:   tk[0],
+							},
+							Parsing: "CommandOrCompound",
+							Token:   tk[0],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[0],
+					},
+					Parsing: "Statement",
+					Token:   tk[0],
+				},
+				Parsing: "TestConsequence",
+				Token:   tk[0],
+			}
+		}},
+		{"a;b", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err:     ErrMissingThen,
+				Parsing: "TestConsequence",
+				Token:   tk[2],
+			}
+		}},
+		{"a; then ||", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[5],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[5],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[5],
+							},
+							Parsing: "Statement",
+							Token:   tk[5],
+						},
+						Parsing: "Line",
+						Token:   tk[5],
+					},
+					Parsing: "File",
+					Token:   tk[5],
+				},
+				Parsing: "TestConsequence",
+				Token:   tk[5],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var tc TestConsequence
 
