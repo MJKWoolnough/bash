@@ -1118,6 +1118,167 @@ func TestPipeline(t *testing.T) {
 	})
 }
 
+func TestTestConsequence(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a; then b", func(t *test, tk Tokens) { // 1
+			t.Output = TestConsequence{
+				Test: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								Words: []Word{
+									{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
+										},
+										Tokens: tk[:1],
+									},
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					Tokens: tk[:2],
+				},
+				Consequence: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[5],
+																Tokens: tk[5:6],
+															},
+														},
+														Tokens: tk[5:6],
+													},
+												},
+												Tokens: tk[5:6],
+											},
+											Tokens: tk[5:6],
+										},
+										Tokens: tk[5:6],
+									},
+									Tokens: tk[5:6],
+								},
+							},
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:6],
+			}
+		}},
+		{"a\nthen\nb\nc", func(t *test, tk Tokens) { // 2
+			t.Output = TestConsequence{
+				Test: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								Words: []Word{
+									{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
+										},
+										Tokens: tk[:1],
+									},
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					Tokens: tk[:1],
+				},
+				Consequence: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[4],
+																Tokens: tk[4:5],
+															},
+														},
+														Tokens: tk[4:5],
+													},
+												},
+												Tokens: tk[4:5],
+											},
+											Tokens: tk[4:5],
+										},
+										Tokens: tk[4:5],
+									},
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[6],
+																Tokens: tk[6:7],
+															},
+														},
+														Tokens: tk[6:7],
+													},
+												},
+												Tokens: tk[6:7],
+											},
+											Tokens: tk[6:7],
+										},
+										Tokens: tk[6:7],
+									},
+									Tokens: tk[6:7],
+								},
+							},
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[4:7],
+				},
+				Tokens: tk[:7],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var tc TestConsequence
+
+		err := tc.parse(t.Parser)
+
+		return tc, err
+	})
+}
+
 func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
