@@ -34,7 +34,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
 			break
 		}
 
@@ -486,10 +486,37 @@ func (i *IfCompound) parse(b *bashParser) error {
 }
 
 type TestConsequence struct {
+	Test        Statement
+	Consequence File
 	Tokens
 }
 
-func (i *TestConsequence) parse(b *bashParser) error {
+func (t *TestConsequence) parse(b *bashParser) error {
+	c := b.NewGoal()
+
+	if err := t.Test.parse(c, true); err != nil {
+		return b.Error("TestConsequence", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunWhitespace()
+
+	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"}) {
+		return b.Error("TestConsequence", ErrMissingThen)
+	}
+
+	b.AcceptRunAllWhitespace()
+
+	c = b.NewGoal()
+
+	if err := t.Consequence.parse(c); err != nil {
+		return b.Error("TestConsequence", err)
+	}
+
+	b.Score(c)
+
+	t.Tokens = b.ToTokens()
+
 	return nil
 }
 
