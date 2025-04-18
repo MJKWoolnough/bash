@@ -38,6 +38,8 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	a.Value.printSource(w, v)
 }
 
+func (c CaseCompound) printSource(w io.Writer, v bool) {}
+
 func (c Command) printSource(w io.Writer, v bool) {
 	if len(c.Vars) > 0 {
 		c.Vars[0].printSource(w, v)
@@ -107,6 +109,10 @@ func (f File) printSource(w io.Writer, v bool) {
 	}
 }
 
+func (f ForCompound) printSource(w io.Writer, v bool) {}
+
+func (g GroupingCompound) printSource(w io.Writer, v bool) {}
+
 func (h Heredoc) printSource(w io.Writer, v bool) {
 	for _, p := range h.HeredocPartsOrWords {
 		p.printSource(w, v)
@@ -120,6 +126,8 @@ func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
 		h.Word.printSource(w, v)
 	}
 }
+
+func (i IfCompound) printSource(w io.Writer, v bool) {}
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
@@ -135,6 +143,8 @@ func (l Line) printSource(w io.Writer, v bool) {
 		}
 	}
 }
+
+func (l LoopCompound) printSource(w io.Writer, v bool) {}
 
 func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	if p.Identifier != nil {
@@ -328,6 +338,8 @@ func (r Redirection) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
+func (s SelectCompound) printSource(w io.Writer, v bool) {}
+
 func (s Statement) printSource(w io.Writer, v bool) {
 	s.Pipeline.printSource(w, v)
 
@@ -360,6 +372,10 @@ func (s String) printSource(w io.Writer, v bool) {
 		p.printSource(w, v)
 	}
 }
+
+func (t TestCompound) printSource(w io.Writer, v bool) {}
+
+func (t TestConsequence) printSource(w io.Writer, v bool) {}
 
 func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
