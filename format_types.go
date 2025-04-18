@@ -665,6 +665,12 @@ func (f *TestConsequence) printType(w io.Writer, v bool) {
 
 	pp.Print("TestConsequence {")
 
+	pp.Print("\nTest: ")
+	f.Test.printType(&pp, v)
+
+	pp.Print("\nConsequence: ")
+	f.Consequence.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
