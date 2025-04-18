@@ -59,6 +59,17 @@ func (i *indentPrinter) WriteString(s string) (int, error) {
 	return i.Write([]byte(s))
 }
 
+func unwrapIndentPrinter(w io.Writer) io.Writer {
+	for {
+		switch ip := w.(type) {
+		case *indentPrinter:
+			w = ip.Writer
+		default:
+			return w
+		}
+	}
+}
+
 func (t Token) printType(w io.Writer, v bool) {
 	var typ string
 
