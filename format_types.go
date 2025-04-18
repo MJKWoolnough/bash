@@ -52,6 +52,17 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *CaseCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("CaseCompound {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Command) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -161,6 +172,62 @@ func (f *Compound) printType(w io.Writer, v bool) {
 
 	pp.Print("Compound {")
 
+	if f.IfCompound != nil {
+		pp.Print("\nIfCompound: ")
+		f.IfCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nIfCompound: nil")
+	}
+
+	if f.CaseCompound != nil {
+		pp.Print("\nCaseCompound: ")
+		f.CaseCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nCaseCompound: nil")
+	}
+
+	if f.LoopCompound != nil {
+		pp.Print("\nLoopCompound: ")
+		f.LoopCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nLoopCompound: nil")
+	}
+
+	if f.ForCompound != nil {
+		pp.Print("\nForCompound: ")
+		f.ForCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nForCompound: nil")
+	}
+
+	if f.SelectCompound != nil {
+		pp.Print("\nSelectCompound: ")
+		f.SelectCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nSelectCompound: nil")
+	}
+
+	if f.GroupingCompound != nil {
+		pp.Print("\nGroupingCompound: ")
+		f.GroupingCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nGroupingCompound: nil")
+	}
+
+	if f.TestCompound != nil {
+		pp.Print("\nTestCompound: ")
+		f.TestCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nTestCompound: nil")
+	}
+
+	if f.ArthimeticCompound != nil {
+		pp.Print("\nArthimeticCompound: ")
+		f.ArthimeticCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nArthimeticCompound: nil")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
@@ -188,6 +255,28 @@ func (f *File) printType(w io.Writer, v bool) {
 	} else if v {
 		pp.Print("\nLines: []")
 	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *ForCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("ForCompound {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *GroupingCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("GroupingCompound {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
@@ -248,6 +337,44 @@ func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *IfCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("IfCompound {")
+
+	pp.Print("\nIf: ")
+	f.If.printType(&pp, v)
+
+	if f.ElIf == nil {
+		pp.Print("\nElIf: nil")
+	} else if len(f.ElIf) > 0 {
+		pp.Print("\nElIf: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.ElIf {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nElIf: []")
+	}
+
+	if f.Else != nil {
+		pp.Print("\nElse: ")
+		f.Else.printType(&pp, v)
+	} else if v {
+		pp.Print("\nElse: nil")
+	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Line) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -269,6 +396,17 @@ func (f *Line) printType(w io.Writer, v bool) {
 	} else if v {
 		pp.Print("\nStatements: []")
 	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *LoopCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("LoopCompound {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
@@ -445,6 +583,17 @@ func (f *Redirection) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *SelectCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("SelectCompound {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Statement) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -493,6 +642,28 @@ func (f *String) printType(w io.Writer, v bool) {
 	} else if v {
 		pp.Print("\nWordsOrTokens: []")
 	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *TestCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("TestCompound {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *TestConsequence) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("TestConsequence {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

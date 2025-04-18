@@ -16,6 +16,8 @@ func (ArithmeticExpansion) bashType() {}
 
 func (Assignment) bashType() {}
 
+func (CaseCompound) bashType() {}
+
 func (Command) bashType() {}
 
 func (CommandOrCompound) bashType() {}
@@ -26,11 +28,19 @@ func (Compound) bashType() {}
 
 func (File) bashType() {}
 
+func (ForCompound) bashType() {}
+
+func (GroupingCompound) bashType() {}
+
 func (Heredoc) bashType() {}
 
 func (HeredocPartOrWord) bashType() {}
 
+func (IfCompound) bashType() {}
+
 func (Line) bashType() {}
+
+func (LoopCompound) bashType() {}
 
 func (Parameter) bashType() {}
 
@@ -42,9 +52,15 @@ func (Pipeline) bashType() {}
 
 func (Redirection) bashType() {}
 
+func (SelectCompound) bashType() {}
+
 func (Statement) bashType() {}
 
 func (String) bashType() {}
+
+func (TestCompound) bashType() {}
+
+func (TestConsequence) bashType() {}
 
 func (Value) bashType() {}
 

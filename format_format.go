@@ -29,6 +29,18 @@ func (f Assignment) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f CaseCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = CaseCompound
+		type CaseCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Command) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Command
@@ -89,6 +101,30 @@ func (f File) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f ForCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = ForCompound
+		type ForCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
+func (f GroupingCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = GroupingCompound
+		type GroupingCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Heredoc) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Heredoc
@@ -113,10 +149,34 @@ func (f HeredocPartOrWord) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f IfCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = IfCompound
+		type IfCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Line) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Line
 		type Line X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
+func (f LoopCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = LoopCompound
+		type LoopCompound X
 
 		fmt.Fprintf(s, "%#v", (f))
 	} else {
@@ -185,6 +245,18 @@ func (f Redirection) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f SelectCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = SelectCompound
+		type SelectCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Statement) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Statement
@@ -201,6 +273,30 @@ func (f String) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = String
 		type String X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
+func (f TestCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = TestCompound
+		type TestCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
+func (f TestConsequence) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = TestConsequence
+		type TestConsequence X
 
 		fmt.Fprintf(s, "%#v", (f))
 	} else {
