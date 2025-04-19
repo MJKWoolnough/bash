@@ -103,9 +103,13 @@ func (c Compound) printSource(w io.Writer, v bool) {}
 func (c Compound) printHeredoc(w io.Writer, v bool) {}
 
 func (f File) printSource(w io.Writer, v bool) {
-	for _, l := range f.Lines {
-		l.printSource(w, v)
-		io.WriteString(w, "\n")
+	if len(f.Lines) > 0 {
+		f.Lines[0].printSource(w, v)
+
+		for _, l := range f.Lines[1:] {
+			io.WriteString(w, "\n")
+			l.printSource(w, v)
+		}
 	}
 }
 
