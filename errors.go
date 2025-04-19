@@ -16,5 +16,6 @@ var (
 	ErrMissingWord               = errors.New("missing word")
 	ErrMissingClosingIf          = errors.New("missing if closing")
 	ErrMissingThen               = errors.New("missing then")
+	ErrMissingClosingCase        = errors.New("missing case closing")
 	ErrInvalidKeyword            = errors.New("invalid keyword")
 )
