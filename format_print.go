@@ -333,6 +333,10 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 
 func (r Redirection) printHeredoc(w io.Writer, v bool) {
 	if r.Redirector != nil && r.Heredoc != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-") {
+		if r.Redirector.Data == "<<" {
+			w = unwrapIndentPrinter(w)
+		}
+
 		r.Heredoc.printSource(w, v)
 		r.Output.printSource(w, v)
 	}
