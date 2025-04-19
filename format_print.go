@@ -127,7 +127,24 @@ func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (i IfCompound) printSource(w io.Writer, v bool) {}
+func (i IfCompound) printSource(w io.Writer, v bool) {
+	ip := indentPrinter{Writer: w}
+
+	io.WriteString(&ip, "if ")
+	i.If.printSource(&ip, v)
+
+	for _, e := range i.ElIf {
+		io.WriteString(&ip, "elif ")
+		e.printSource(&ip, v)
+	}
+
+	if i.Else != nil {
+		io.WriteString(&ip, "else\n")
+		i.Else.printSource(&ip, v)
+	}
+
+	io.WriteString(w, "fi")
+}
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
