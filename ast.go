@@ -15,6 +15,8 @@ func Parse(t Tokeniser) (*File, error) {
 		return nil, err
 	}
 
+	p.AcceptRunAllWhitespace()
+
 	if p.Peek().Type != parser.TokenDone {
 		return nil, p.Error("File", ErrInvalidKeyword)
 	}
@@ -54,8 +56,6 @@ func (f *File) parse(b *bashParser) error {
 
 		c = b.NewGoal()
 	}
-
-	b.AcceptRunWhitespace()
 
 	f.Tokens = b.ToTokens()
 
