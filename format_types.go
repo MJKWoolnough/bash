@@ -57,6 +57,26 @@ func (f *CaseCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("CaseCompound {")
 
+	pp.Print("\nWord: ")
+	f.Word.printType(&pp, v)
+
+	if f.Matches == nil {
+		pp.Print("\nMatches: nil")
+	} else if len(f.Matches) > 0 {
+		pp.Print("\nMatches: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Matches {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nMatches: []")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
@@ -513,6 +533,17 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	} else if v {
 		pp.Print("\nString: nil")
 	}
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *PatternLines) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("PatternLines {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

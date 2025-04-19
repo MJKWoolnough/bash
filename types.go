@@ -48,6 +48,8 @@ func (ParameterAssign) bashType() {}
 
 func (ParameterExpansion) bashType() {}
 
+func (PatternLines) bashType() {}
+
 func (Pipeline) bashType() {}
 
 func (Redirection) bashType() {}
