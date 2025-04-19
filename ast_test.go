@@ -1248,6 +1248,91 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
+		{"if ||;then b;fi", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err:     ErrMissingWord,
+									Parsing: "Command",
+									Token:   tk[2],
+								},
+								Parsing: "CommandOrCompound",
+								Token:   tk[2],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[2],
+						},
+						Parsing: "Statement",
+						Token:   tk[2],
+					},
+					Parsing: "TestConsequence",
+					Token:   tk[2],
+				},
+				Parsing: "IfCompound",
+				Token:   tk[2],
+			}
+		}},
+		{"if a;then b;elif ||;then d;fi", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err:     ErrMissingWord,
+									Parsing: "Command",
+									Token:   tk[10],
+								},
+								Parsing: "CommandOrCompound",
+								Token:   tk[10],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[10],
+						},
+						Parsing: "Statement",
+						Token:   tk[10],
+					},
+					Parsing: "TestConsequence",
+					Token:   tk[10],
+				},
+				Parsing: "IfCompound",
+				Token:   tk[10],
+			}
+		}},
+		{"if a;then b;else ||;fi", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[10],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[10],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[10],
+							},
+							Parsing: "Statement",
+							Token:   tk[10],
+						},
+						Parsing: "Line",
+						Token:   tk[10],
+					},
+					Parsing: "File",
+					Token:   tk[10],
+				},
+				Parsing: "IfCompound",
+				Token:   tk[10],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var i IfCompound
 
