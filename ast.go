@@ -521,10 +521,46 @@ func (t *TestConsequence) parse(b *bashParser) error {
 }
 
 type CaseCompound struct {
-	Tokens Tokens
+	Word    Word
+	Matches []PatternLines
+	Tokens  Tokens
 }
 
 func (cc *CaseCompound) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "case"})
+
+	for {
+		b.AcceptRunAllWhitespace()
+
+		if tk := b.Peek(); tk == (parser.Token{Type: TokenKeyword, Data: "esac"}) || tk.Type == parser.TokenDone {
+			break
+		}
+
+		c := b.NewGoal()
+
+		var pl PatternLines
+
+		if err := pl.parse(c); err != nil {
+			return b.Error("CaseCompound", err)
+		}
+
+		cc.Matches = append(cc.Matches, pl)
+
+		b.Score(c)
+	}
+
+	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"}) {
+		return b.Error("CaseCompound", ErrMissingClosingCase)
+	}
+
+	return nil
+}
+
+type PatternLines struct {
+	Tokens Tokens
+}
+
+func (p *PatternLines) parse(b *bashParser) error {
 	return nil
 }
 
