@@ -540,10 +540,41 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *Pattern) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Pattern {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *PatternLines) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
 	pp.Print("PatternLines {")
+
+	if f.Patterns == nil {
+		pp.Print("\nPatterns: nil")
+	} else if len(f.Patterns) > 0 {
+		pp.Print("\nPatterns: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Patterns {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nPatterns: []")
+	}
+
+	pp.Print("\nLines: ")
+	f.Lines.printType(&pp, v)
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
