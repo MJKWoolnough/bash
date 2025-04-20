@@ -299,28 +299,33 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		if !strings.ContainsRune(word, t.Peek()) || t.Peek() == '-' {
 			return b.braceExpansion(t)
 		}
-
-		b.pushTokenDepth('}')
 	case ']':
+		t.Next()
+
 		if b.lastTokenDepth() == '[' {
-			t.Next()
 			b.popTokenDepth()
 
 			return t.Return(TokenPunctuator, b.parameterExpansionOperation)
 		}
 
-		fallthrough
-	case '}', ')':
+		if b.lastTokenDepth() == ']' {
+			b.popTokenDepth()
+		}
+	case ')':
 		t.Next()
 
-		if b.lastTokenDepth() != c {
+		if b.lastTokenDepth() != ')' {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		b.popTokenDepth()
 
-		if c == ')' {
-			return t.Return(TokenCloseParen, b.main)
+		return t.Return(TokenCloseParen, b.main)
+	case '}':
+		t.Next()
+
+		if b.lastTokenDepth() == c {
+			b.popTokenDepth()
 		}
 	case '+':
 		t.Next()
