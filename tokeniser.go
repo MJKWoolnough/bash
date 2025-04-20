@@ -324,10 +324,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 	case '+':
 		t.Next()
-
-		if !t.Accept("=") {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
+		t.Accept("=")
 	case '=':
 		t.Next()
 	case '$':
