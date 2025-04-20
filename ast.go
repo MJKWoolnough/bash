@@ -36,7 +36,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
@@ -71,7 +71,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
@@ -557,10 +557,55 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 }
 
 type PatternLines struct {
+	Patterns []Pattern
+	Lines    File
+	Tokens   Tokens
+}
+
+func (pl *PatternLines) parse(b *bashParser) error {
+	for {
+		c := b.NewGoal()
+
+		var p Pattern
+
+		if err := p.parse(c); err != nil {
+			return b.Error("PatternLines", err)
+		}
+
+		pl.Patterns = append(pl.Patterns, p)
+
+		b.Score(c)
+		b.AcceptRunWhitespace()
+
+		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "|"}) {
+			break
+		}
+	}
+
+	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+		return b.Error("PatternLines", ErrMissingClosingPattern)
+	}
+
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := pl.Lines.parse(c); err != nil {
+		return b.Error("PatternLines", err)
+	}
+
+	b.Score(c)
+
+	pl.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Pattern struct {
 	Tokens Tokens
 }
 
-func (p *PatternLines) parse(b *bashParser) error {
+func (p *Pattern) parse(b *bashParser) error {
 	return nil
 }
 
