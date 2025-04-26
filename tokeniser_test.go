@@ -116,7 +116,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 9
-			"if;then;else;elif;fi;case;esac;while;for;in;do;done;time;until;coproc;select;function",
+			"if;then;else;elif;fi;while;for;do;done;time;until;coproc;select;function;in",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
 				{Type: TokenPunctuator, Data: ";"},
@@ -128,15 +128,9 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenKeyword, Data: "fi"},
 				{Type: TokenPunctuator, Data: ";"},
-				{Type: TokenKeyword, Data: "case"},
-				{Type: TokenPunctuator, Data: ";"},
-				{Type: TokenKeyword, Data: "esac"},
-				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenKeyword, Data: "while"},
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenKeyword, Data: "for"},
-				{Type: TokenPunctuator, Data: ";"},
-				{Type: TokenKeyword, Data: "in"},
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenKeyword, Data: "do"},
 				{Type: TokenPunctuator, Data: ";"},
@@ -151,6 +145,8 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
 		{ // 10
