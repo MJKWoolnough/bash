@@ -36,7 +36,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
@@ -557,7 +557,7 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 }
 
 type PatternLines struct {
-	Patterns []Pattern
+	Patterns []Word
 	Lines    File
 	Tokens   Tokens
 }
@@ -566,13 +566,13 @@ func (pl *PatternLines) parse(b *bashParser) error {
 	for {
 		c := b.NewGoal()
 
-		var p Pattern
+		var w Word
 
-		if err := p.parse(c); err != nil {
+		if err := w.parse(c); err != nil {
 			return b.Error("PatternLines", err)
 		}
 
-		pl.Patterns = append(pl.Patterns, p)
+		pl.Patterns = append(pl.Patterns, w)
 
 		b.Score(c)
 		b.AcceptRunWhitespace()
@@ -582,7 +582,7 @@ func (pl *PatternLines) parse(b *bashParser) error {
 		}
 	}
 
-	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+	if !b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
 		return b.Error("PatternLines", ErrMissingClosingPattern)
 	}
 
@@ -598,14 +598,6 @@ func (pl *PatternLines) parse(b *bashParser) error {
 
 	pl.Tokens = b.ToTokens()
 
-	return nil
-}
-
-type Pattern struct {
-	Tokens Tokens
-}
-
-func (p *Pattern) parse(b *bashParser) error {
 	return nil
 }
 
