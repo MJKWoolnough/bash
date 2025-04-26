@@ -1368,6 +1368,23 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
+		{ // 77
+			"case a in b)c;;esac",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "case"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "in"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenCloseParen, Data: ")"},
+				{Type: TokenWord, Data: "c"},
+				{Type: TokenPunctuator, Data: ";;"},
+				{Type: TokenKeyword, Data: "esac"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
