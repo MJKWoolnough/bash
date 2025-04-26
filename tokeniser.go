@@ -914,11 +914,13 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 
 func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !b.isInCommand() {
-		switch t.AcceptWord(keywords, false) {
-		case "":
-		// case "case":
-		default:
-			return t.Return(TokenKeyword, b.main)
+		state := t.State()
+		kw := t.AcceptWord(keywords, false)
+
+		if !isKeywordSeperator(t) {
+			state.Reset()
+		} else if kw != "" {
+			return b.keyword(t, kw)
 		}
 	}
 
@@ -944,6 +946,44 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 	}
 
 	return b.word(t)
+}
+
+func isKeywordSeperator(t *parser.Tokeniser) bool {
+	switch t.Peek() {
+	case ' ', '\n', ';', -1:
+		return true
+	}
+
+	return false
+}
+
+func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, parser.TokenFunc) {
+	switch kw {
+	case "time":
+		return t.Return(TokenKeyword, b.time)
+	default:
+		b.setInCommand()
+
+		return t.Return(TokenKeyword, b.main)
+	}
+}
+
+func (b *bashTokeniser) time(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept(whitespace) {
+		t.AcceptRun(whitespace)
+
+		return t.Return(TokenWhitespace, b.time)
+	}
+
+	state := t.State()
+
+	if t.AcceptString("-p", false) == 2 && isKeywordSeperator(t) {
+		return t.Return(TokenWord, b.main)
+	}
+
+	state.Reset()
+
+	return b.main(t)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
