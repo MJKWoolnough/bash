@@ -141,13 +141,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return b.heredocString(t)
 	} else if td == '"' || td == '\'' {
 		return b.string(t, false)
-	} else if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
-		for t.AcceptRun(whitespace) != -1 {
-			if t.AcceptWord(escapedNewline, false) == "" {
-				break
-			}
-		}
-
+	} else if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.main)
 	} else if t.Accept(newline) {
 		b.endCommand()
@@ -173,6 +167,20 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	}
 
 	return b.operatorOrWord(t)
+}
+
+func parseWhitespace(t *parser.Tokeniser) bool {
+	if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
+		for t.AcceptRun(whitespace) != -1 {
+			if t.AcceptWord(escapedNewline, false) == "" {
+				break
+			}
+		}
+
+		return true
+	}
+
+	return false
 }
 
 func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, parser.TokenFunc) {
@@ -454,13 +462,7 @@ func (b *bashTokeniser) backtick(t *parser.Tokeniser) (parser.Token, parser.Toke
 func (b *bashTokeniser) startHeredoc(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if t.Peek() == -1 || t.Accept(newline) || t.Accept("#") {
 		return t.ReturnError(io.ErrUnexpectedEOF)
-	} else if t.Accept(whitespace) || t.AcceptWord(escapedNewline, false) != "" {
-		for t.AcceptRun(whitespace) != -1 {
-			if t.AcceptWord(escapedNewline, false) == "" {
-				break
-			}
-		}
-
+	} else if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.startHeredoc)
 	}
 
@@ -746,9 +748,7 @@ func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser
 }
 
 func (b *bashTokeniser) parameterExpansionSubstringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept(whitespace) {
-		t.AcceptRun(whitespace)
-
+	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.parameterExpansionSubstringStart)
 	}
 
@@ -764,9 +764,7 @@ func (b *bashTokeniser) parameterExpansionSubstringStart(t *parser.Tokeniser) (p
 }
 
 func (b *bashTokeniser) parameterExpansionSubstringMid(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept(whitespace) {
-		t.AcceptRun(whitespace)
-
+	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.parameterExpansionSubstringMid)
 	}
 
@@ -778,9 +776,7 @@ func (b *bashTokeniser) parameterExpansionSubstringMid(t *parser.Tokeniser) (par
 }
 
 func (b *bashTokeniser) parameterExpansionSubstringEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept(whitespace) {
-		t.AcceptRun(whitespace)
-
+	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.parameterExpansionSubstringEnd)
 	}
 
@@ -969,9 +965,7 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 }
 
 func (b *bashTokeniser) time(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept(whitespace) {
-		t.AcceptRun(whitespace)
-
+	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.time)
 	}
 
