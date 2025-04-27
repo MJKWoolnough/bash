@@ -958,7 +958,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 
 func isKeywordSeperator(t *parser.Tokeniser) bool {
 	switch t.Peek() {
-	case ' ', '\n', ';', -1:
+	case ' ', '\t', '\n', ';', -1:
 		return true
 	}
 
