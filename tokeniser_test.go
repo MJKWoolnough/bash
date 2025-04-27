@@ -1564,6 +1564,52 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 86
+			"while a; do break; done",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "while"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "do"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "break"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "done"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 87
+			"until a; do continue; done",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "until"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "do"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "continue"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "done"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 88
+			"break",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 89
+			"continue",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
