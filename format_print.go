@@ -317,8 +317,6 @@ func (p Parameter) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p Pattern) printSource(w io.Writer, v bool) {}
-
 func (p PatternLines) printSource(w io.Writer, v bool) {}
 
 func (p Pipeline) printSource(w io.Writer, v bool) {

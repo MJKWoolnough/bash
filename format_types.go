@@ -540,17 +540,6 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Pattern) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
-
-	pp.Print("Pattern {")
-
-	pp.Print("\nTokens: ")
-	f.Tokens.printType(&pp, v)
-
-	io.WriteString(w, "\n}")
-}
-
 func (f *PatternLines) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 

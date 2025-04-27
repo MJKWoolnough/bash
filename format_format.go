@@ -221,18 +221,6 @@ func (f ParameterExpansion) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
-func (f Pattern) Format(s fmt.State, v rune) {
-	if v == 'v' && s.Flag('#') {
-		type X = Pattern
-		type Pattern X
-
-		fmt.Fprintf(s, "%#v", (f))
-	} else {
-		format(&f, s, v)
-	}
-}
-
-// Format implements the fmt.Formatter interface
 func (f PatternLines) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = PatternLines
