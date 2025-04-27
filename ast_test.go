@@ -1344,7 +1344,7 @@ func TestIfCompound(t *testing.T) {
 
 func TestTestConsequence(t *testing.T) {
 	doTests(t, []sourceFn{
-		{"a; then b", func(t *test, tk Tokens) { // 1
+		{"if a; then b;fi", func(t *test, tk Tokens) { // 1
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
@@ -1354,20 +1354,20 @@ func TestTestConsequence(t *testing.T) {
 									{
 										Parts: []WordPart{
 											{
-												Part:   &tk[0],
-												Tokens: tk[:1],
+												Part:   &tk[2],
+												Tokens: tk[2:3],
 											},
 										},
-										Tokens: tk[:1],
+										Tokens: tk[2:3],
 									},
 								},
-								Tokens: tk[:1],
+								Tokens: tk[2:3],
 							},
-							Tokens: tk[:1],
+							Tokens: tk[2:3],
 						},
-						Tokens: tk[:1],
+						Tokens: tk[2:3],
 					},
-					Tokens: tk[:2],
+					Tokens: tk[2:4],
 				},
 				Consequence: File{
 					Lines: []Line{
@@ -1381,31 +1381,31 @@ func TestTestConsequence(t *testing.T) {
 													{
 														Parts: []WordPart{
 															{
-																Part:   &tk[5],
-																Tokens: tk[5:6],
+																Part:   &tk[7],
+																Tokens: tk[7:8],
 															},
 														},
-														Tokens: tk[5:6],
+														Tokens: tk[7:8],
 													},
 												},
-												Tokens: tk[5:6],
+												Tokens: tk[7:8],
 											},
-											Tokens: tk[5:6],
+											Tokens: tk[7:8],
 										},
-										Tokens: tk[5:6],
+										Tokens: tk[7:8],
 									},
-									Tokens: tk[5:6],
+									Tokens: tk[7:9],
 								},
 							},
-							Tokens: tk[5:6],
+							Tokens: tk[7:9],
 						},
 					},
-					Tokens: tk[5:6],
+					Tokens: tk[7:9],
 				},
-				Tokens: tk[:6],
+				Tokens: tk[2:9],
 			}
 		}},
-		{"a\nthen\nb\nc", func(t *test, tk Tokens) { // 2
+		{"if a\nthen\nb\nc\nfi", func(t *test, tk Tokens) { // 2
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
@@ -1415,51 +1415,23 @@ func TestTestConsequence(t *testing.T) {
 									{
 										Parts: []WordPart{
 											{
-												Part:   &tk[0],
-												Tokens: tk[:1],
+												Part:   &tk[2],
+												Tokens: tk[2:3],
 											},
 										},
-										Tokens: tk[:1],
+										Tokens: tk[2:3],
 									},
 								},
-								Tokens: tk[:1],
+								Tokens: tk[2:3],
 							},
-							Tokens: tk[:1],
+							Tokens: tk[2:3],
 						},
-						Tokens: tk[:1],
+						Tokens: tk[2:3],
 					},
-					Tokens: tk[:1],
+					Tokens: tk[2:3],
 				},
 				Consequence: File{
 					Lines: []Line{
-						{
-							Statements: []Statement{
-								{
-									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
-											Command: &Command{
-												Words: []Word{
-													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[4],
-																Tokens: tk[4:5],
-															},
-														},
-														Tokens: tk[4:5],
-													},
-												},
-												Tokens: tk[4:5],
-											},
-											Tokens: tk[4:5],
-										},
-										Tokens: tk[4:5],
-									},
-									Tokens: tk[4:5],
-								},
-							},
-							Tokens: tk[4:5],
-						},
 						{
 							Statements: []Statement{
 								{
@@ -1488,13 +1460,41 @@ func TestTestConsequence(t *testing.T) {
 							},
 							Tokens: tk[6:7],
 						},
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
 					},
-					Tokens: tk[4:7],
+					Tokens: tk[6:9],
 				},
-				Tokens: tk[:7],
+				Tokens: tk[2:9],
 			}
 		}},
-		{"||", func(t *test, tk Tokens) { // 3
+		{"if ||; then b;fi", func(t *test, tk Tokens) { // 3
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1502,29 +1502,22 @@ func TestTestConsequence(t *testing.T) {
 							Err: Error{
 								Err:     ErrMissingWord,
 								Parsing: "Command",
-								Token:   tk[0],
+								Token:   tk[2],
 							},
 							Parsing: "CommandOrCompound",
-							Token:   tk[0],
+							Token:   tk[2],
 						},
 						Parsing: "Pipeline",
-						Token:   tk[0],
+						Token:   tk[2],
 					},
 					Parsing: "Statement",
-					Token:   tk[0],
+					Token:   tk[2],
 				},
-				Parsing: "TestConsequence",
-				Token:   tk[0],
-			}
-		}},
-		{"a;b", func(t *test, tk Tokens) { // 4
-			t.Err = Error{
-				Err:     ErrMissingThen,
 				Parsing: "TestConsequence",
 				Token:   tk[2],
 			}
 		}},
-		{"a; then ||", func(t *test, tk Tokens) { // 5
+		{"if a; then ||;fi", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1534,30 +1527,31 @@ func TestTestConsequence(t *testing.T) {
 									Err: Error{
 										Err:     ErrMissingWord,
 										Parsing: "Command",
-										Token:   tk[5],
+										Token:   tk[7],
 									},
 									Parsing: "CommandOrCompound",
-									Token:   tk[5],
+									Token:   tk[7],
 								},
 								Parsing: "Pipeline",
-								Token:   tk[5],
+								Token:   tk[7],
 							},
 							Parsing: "Statement",
-							Token:   tk[5],
+							Token:   tk[7],
 						},
 						Parsing: "Line",
-						Token:   tk[5],
+						Token:   tk[7],
 					},
 					Parsing: "File",
-					Token:   tk[5],
+					Token:   tk[7],
 				},
 				Parsing: "TestConsequence",
-				Token:   tk[5],
+				Token:   tk[7],
 			}
 		}},
 	}, func(t *test) (Type, error) {
 		var tc TestConsequence
 
+		t.Parser.Tokens = t.Parser.Tokens[2:2]
 		err := tc.parse(t.Parser)
 
 		return tc, err
