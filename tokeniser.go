@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!"}
+	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!", "break", "continue"}
 	dotdot             = []string{".."}
 	escapedNewline     = []string{"\\\n"}
 	assignment         = []string{"=", "+="}
@@ -1036,6 +1036,12 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		b.popTokenDepth()
 
 		return t.Return(TokenKeyword, b.main)
+	case "continue", "break":
+		if td := b.lastTokenDepth(); td != 'l' && td != 'f' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
+		fallthrough
 	default:
 		b.setInCommand()
 
