@@ -165,7 +165,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.ifThen)
 		} else if td == 'L' {
 			return t.Return(TokenLineTerminator, b.loopDo)
-		} else if wasInCmd && td == 'F' {
+		} else if wasInCmd && (td == 'F' || td == 'S') {
 			return t.Return(TokenLineTerminator, b.forInDo)
 		}
 
@@ -363,7 +363,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if td := b.lastTokenDepth(); td == 'I' {
 			return t.Return(TokenPunctuator, b.ifThen)
-		} else if td == 'L' || td == 'F' {
+		} else if td == 'L' || td == 'F' || td == 'S' {
 			return t.Return(TokenPunctuator, b.loopDo)
 		}
 	case '"', '\'':
@@ -1068,6 +1068,8 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		return b.endCompound(t, 'l')
 	case "for":
 		return t.Return(TokenKeyword, b.forStart)
+	case "select":
+		return t.Return(TokenKeyword, b.selectStart)
 	case "continue", "break":
 		if td := b.lastTokenDepth(); td != 'l' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1167,6 +1169,10 @@ func (b *bashTokeniser) loopDo(t *parser.Tokeniser) (parser.Token, parser.TokenF
 
 func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return b.startCompound(t, b.forStart, 'F')
+}
+
+func (b *bashTokeniser) selectStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return b.startCompound(t, b.forStart, 'S')
 }
 
 func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
