@@ -476,9 +476,7 @@ func (i *IfCompound) parse(b *bashParser) error {
 		b.AcceptRunAllWhitespace()
 	}
 
-	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "fi"}) {
-		return b.Error("IfCompound", ErrMissingClosingIf)
-	}
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "fi"})
 
 	i.Tokens = b.ToTokens()
 
@@ -532,7 +530,7 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 	for {
 		b.AcceptRunAllWhitespace()
 
-		if tk := b.Peek(); tk == (parser.Token{Type: TokenKeyword, Data: "esac"}) || tk.Type == parser.TokenDone {
+		if tk := b.Peek(); tk == (parser.Token{Type: TokenKeyword, Data: "esac"}) {
 			break
 		}
 
@@ -549,9 +547,7 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 		b.Score(c)
 	}
 
-	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"}) {
-		return b.Error("CaseCompound", ErrMissingClosingCase)
-	}
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"})
 
 	return nil
 }
