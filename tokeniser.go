@@ -114,7 +114,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastTokenDepth() {
-	case ']', '[', 'X', 'h', '"', '>', '~', 'C':
+	case ']', '[', 'X', 'h', '"', '>', '~', 'C', 'f':
 	default:
 		b.pushTokenDepth('X')
 	}
@@ -151,10 +151,11 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.main)
 	} else if t.Accept(newline) {
-		b.endCommand()
-		td = b.lastTokenDepth()
+		wasInCmd := b.isInCommand()
 
-		if td == 'H' {
+		b.endCommand()
+
+		if td = b.lastTokenDepth(); td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
 		}
 
@@ -164,6 +165,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.ifThen)
 		} else if td == 'L' {
 			return t.Return(TokenLineTerminator, b.loopDo)
+		} else if wasInCmd && td == 'F' {
+			return t.Return(TokenLineTerminator, b.forInDo)
 		}
 
 		return t.Return(TokenLineTerminator, b.main)
@@ -175,7 +178,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	} else if td == '>' || td == '/' || td == ':' {
+	} else if td == '>' || td == '/' || td == ':' || td == 'f' {
 		return b.arithmeticExpansion(t)
 	}
 
@@ -280,7 +283,7 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case ')':
 		t.Next()
 
-		if td := b.lastTokenDepth(); (td != '>' || !t.Accept(")")) && td != '/' {
+		if td := b.lastTokenDepth(); (td != '>' && td != 'f' || !t.Accept(")")) && td != '/' {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
@@ -290,6 +293,12 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		b.pushTokenDepth('/')
 	case '0':
 		return b.zero(t)
+	case ';':
+		if b.lastTokenDepth() != 'f' {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		t.Next()
 	default:
 		return b.number(t)
 	}
@@ -354,7 +363,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if td := b.lastTokenDepth(); td == 'I' {
 			return t.Return(TokenPunctuator, b.ifThen)
-		} else if td == 'L' {
+		} else if td == 'L' || td == 'F' {
 			return t.Return(TokenPunctuator, b.loopDo)
 		}
 	case '"', '\'':
@@ -363,11 +372,18 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		return b.stringStart(t)
 	case '(':
 		t.Next()
-		b.setInCommand()
 
 		if t.Accept("(") {
-			b.pushTokenDepth('>')
+			if b.lastTokenDepth() == 'F' {
+				b.popTokenDepth()
+				b.pushTokenDepth('L')
+				b.pushTokenDepth('f')
+			} else {
+				b.setInCommand()
+				b.pushTokenDepth('>')
+			}
 		} else {
+			b.setInCommand()
 			b.pushTokenDepth(')')
 		}
 	case '{':
@@ -951,6 +967,29 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 		} else if kw != "" {
 			return b.keyword(t, kw)
 		}
+	} else {
+		b.endCommand()
+
+		if b.lastTokenDepth() == 'F' {
+			state := t.State()
+			kw := t.AcceptWord([]string{"in", "do"}, false)
+
+			if !isKeywordSeperator(t) || kw == "" {
+				state.Reset()
+			} else if kw == "in" {
+				b.popTokenDepth()
+				b.pushTokenDepth('L')
+
+				return t.Return(TokenKeyword, b.main)
+			} else if kw == "do" {
+				b.popTokenDepth()
+				b.pushTokenDepth('l')
+
+				return t.Return(TokenKeyword, b.main)
+			}
+		}
+
+		b.setInCommand()
 	}
 
 	if t.Accept(identStart) {
@@ -992,8 +1031,17 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		return t.Return(TokenKeyword, b.time)
 	case "if":
 		return t.Return(TokenKeyword, b.ifStart)
-	case "then", "in", "do":
+	case "then", "in":
 		return t.ReturnError(ErrInvalidKeyword)
+	case "do":
+		if b.lastTokenDepth() != 'L' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
+		b.popTokenDepth()
+		b.pushTokenDepth('l')
+
+		return t.Return(TokenKeyword, b.main)
 	case "elif":
 		if b.lastTokenDepth() != 'i' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1018,6 +1066,8 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		return t.Return(TokenKeyword, b.loopStart)
 	case "done":
 		return b.endCompound(t, 'l')
+	case "for":
+		return t.Return(TokenKeyword, b.forStart)
 	case "continue", "break":
 		if td := b.lastTokenDepth(); td != 'l' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1113,6 +1163,44 @@ func (b *bashTokeniser) loopStart(t *parser.Tokeniser) (parser.Token, parser.Tok
 
 func (b *bashTokeniser) loopDo(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return b.middleCompound(t, b.loopDo, "do", 'l', ErrMissingDo)
+}
+
+func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return b.startCompound(t, b.forStart, 'F')
+}
+
+func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.forInDo)
+	} else if t.Accept(newline) {
+		t.AcceptRun(newline)
+
+		return t.Return(TokenLineTerminator, b.forInDo)
+	}
+
+	state := t.State()
+
+	if t.AcceptString("in", false) == 2 && isKeywordSeperator(t) {
+		b.popTokenDepth()
+		b.pushTokenDepth('L')
+
+		return t.Return(TokenKeyword, b.main)
+	}
+
+	state.Reset()
+
+	state = t.State()
+
+	if t.AcceptString("do", false) == 2 && isKeywordSeperator(t) {
+		b.popTokenDepth()
+		b.pushTokenDepth('l')
+
+		return t.Return(TokenKeyword, b.main)
+	}
+
+	state.Reset()
+
+	return b.main(t)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
