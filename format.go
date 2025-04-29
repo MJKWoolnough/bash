@@ -176,6 +176,25 @@ func (a AssignmentType) printType(w io.Writer, v bool) {
 	io.WriteString(w, a.String())
 }
 
+func (c CaseTerminationType) String() string {
+	switch c {
+	case CaseTerminationNone:
+		return "CaseTerminationNone"
+	case CaseTerminationEnd:
+		return "CaseTerminationEnd"
+	case CaseTerminationContinue:
+		return "CaseTerminationContinue"
+	case CaseTerminationFallthrough:
+		return "CaseTerminationFallthrough"
+	default:
+		return "Unknown"
+	}
+}
+
+func (c CaseTerminationType) printType(w io.Writer, v bool) {
+	io.WriteString(w, c.String())
+}
+
 func (s SubstitutionType) String() string {
 	switch s {
 	case SubstitutionNew:
