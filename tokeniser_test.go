@@ -1857,6 +1857,58 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "missing do"},
 			},
 		},
+		{ // 102
+
+			"coproc a b",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "coproc"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 103
+			"coproc while a; do b; done",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "coproc"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "while"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "do"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "done"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 104
+			"coproc a while b; do c; done",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "coproc"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "while"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "do"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "c"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "done"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
