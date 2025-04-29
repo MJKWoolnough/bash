@@ -565,6 +565,9 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 	pp.Print("\nLines: ")
 	f.Lines.printType(&pp, v)
 
+	pp.Print("\nCaseTerminationType: ")
+	f.CaseTerminationType.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
