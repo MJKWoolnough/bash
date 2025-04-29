@@ -1876,6 +1876,87 @@ func TestPatternLines(t *testing.T) {
 				Tokens:              tk[6:14],
 			}
 		}},
+		{"case a in $(||))d;;esac", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[7],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[7],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[7],
+										},
+										Parsing: "Statement",
+										Token:   tk[7],
+									},
+									Parsing: "Line",
+									Token:   tk[7],
+								},
+								Parsing: "File",
+								Token:   tk[7],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[7],
+						},
+						Parsing: "WordPart",
+						Token:   tk[6],
+					},
+					Parsing: "Word",
+					Token:   tk[6],
+				},
+				Parsing: "PatternLines",
+				Token:   tk[6],
+			}
+		}},
+		{"case a in a|\nb)c;;esac", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err:     ErrMissingClosingPattern,
+				Parsing: "PatternLines",
+				Token:   tk[8],
+			}
+		}},
+		{"case a in a)||;;esac", func(t *test, tk Tokens) { // 9
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[8],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[8],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[8],
+							},
+							Parsing: "Statement",
+							Token:   tk[8],
+						},
+						Parsing: "Line",
+						Token:   tk[8],
+					},
+					Parsing: "File",
+					Token:   tk[8],
+				},
+				Parsing: "PatternLines",
+				Token:   tk[8],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var p PatternLines
 
