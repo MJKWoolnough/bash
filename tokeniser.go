@@ -358,8 +358,13 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		b.endCommand()
 
-		if b.lastTokenDepth() != 'c' && l {
-			return t.ReturnError(ErrInvalidCharacter)
+		if l {
+			if b.lastTokenDepth() != 'c' {
+				return t.ReturnError(ErrInvalidCharacter)
+			} else {
+				b.popTokenDepth()
+				b.pushTokenDepth('p')
+			}
 		}
 
 		if td := b.lastTokenDepth(); td == 'I' {
@@ -412,7 +417,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if td := b.lastTokenDepth(); td == ')' {
 			b.popTokenDepth()
-		} else if b.lastTokenDepth() != 'c' {
+		} else if b.lastTokenDepth() == 'p' {
+			b.popTokenDepth()
+			b.pushTokenDepth('c')
+		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
@@ -1062,7 +1070,13 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 	case "case":
 		return t.Return(TokenKeyword, b.caseStart)
 	case "esac":
-		return b.endCompound(t, 'c')
+		if td := b.lastTokenDepth(); td != 'c' && td != 'p' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
+		b.popTokenDepth()
+
+		return t.Return(TokenKeyword, b.main)
 	case "while", "until":
 		return t.Return(TokenKeyword, b.loopStart)
 	case "done":
@@ -1159,7 +1173,7 @@ func (b *bashTokeniser) caseStart(t *parser.Tokeniser) (parser.Token, parser.Tok
 }
 
 func (b *bashTokeniser) caseIn(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return b.middleCompound(t, b.caseIn, "in", 'c', ErrMissingIn)
+	return b.middleCompound(t, b.caseIn, "in", 'p', ErrMissingIn)
 }
 
 func (b *bashTokeniser) loopStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
