@@ -9,6 +9,7 @@ import (
 
 var (
 	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!", "break", "continue"}
+	compoundStart      = []string{"if", "while", "until", "for", "select", "{", "("}
 	dotdot             = []string{".."}
 	escapedNewline     = []string{"\\\n"}
 	assignment         = []string{"=", "+="}
@@ -1070,6 +1071,8 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		return t.Return(TokenKeyword, b.forStart)
 	case "select":
 		return t.Return(TokenKeyword, b.selectStart)
+	case "coproc":
+		return t.Return(TokenKeyword, b.coproc)
 	case "continue", "break":
 		if td := b.lastTokenDepth(); td != 'l' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1202,6 +1205,44 @@ func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.Token
 		b.pushTokenDepth('l')
 
 		return t.Return(TokenKeyword, b.main)
+	}
+
+	state.Reset()
+
+	return b.main(t)
+}
+
+func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.coproc)
+	}
+
+	state := t.State()
+
+	if t.AcceptWord(keywords, false) != "" {
+		if isKeywordSeperator(t) {
+			state.Reset()
+
+			return b.main(t)
+		}
+
+		state.Reset()
+	}
+
+	if t.Accept(identStart) {
+		t.AcceptRun(identCont)
+
+		nameEnd := t.State()
+
+		if t.Accept(whitespace) {
+			t.AcceptRun(whitespace)
+
+			if t.AcceptWord(compoundStart, false) != "" && isKeywordSeperator(t) {
+				nameEnd.Reset()
+
+				return t.Return(TokenIdentifier, b.main)
+			}
+		}
 	}
 
 	state.Reset()
