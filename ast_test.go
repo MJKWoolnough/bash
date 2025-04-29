@@ -1517,7 +1517,7 @@ func TestTestConsequence(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"if a; then ||;fi", func(t *test, tk Tokens) { // 5
+		{"if a; then ||;fi", func(t *test, tk Tokens) { // 4
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1555,6 +1555,334 @@ func TestTestConsequence(t *testing.T) {
 		err := tc.parse(t.Parser)
 
 		return tc, err
+	})
+}
+
+func TestPatternLines(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"case a in a)b\nesac", func(t *test, tk Tokens) { // 1
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				Tokens: tk[6:9],
+			}
+		}},
+		{"case a in a)b;esac", func(t *test, tk Tokens) { // 2
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+					},
+					Tokens: tk[8:10],
+				},
+				Tokens: tk[6:10],
+			}
+		}},
+		{"case a in a)b;;esac", func(t *test, tk Tokens) { // 3
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				CaseTerminationType: CaseTerminationEnd,
+				Tokens:              tk[6:10],
+			}
+		}},
+		{"case a in a)b;&esac", func(t *test, tk Tokens) { // 4
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				CaseTerminationType: CaseTerminationContinue,
+				Tokens:              tk[6:10],
+			}
+		}},
+		{"case a in a)b;;&esac", func(t *test, tk Tokens) { // 5
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[8],
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				CaseTerminationType: CaseTerminationFallthrough,
+				Tokens:              tk[6:10],
+			}
+		}},
+		{"case a in a|b|c)d;;esac", func(t *test, tk Tokens) { // 6
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[8],
+								Tokens: tk[8:9],
+							},
+						},
+						Tokens: tk[8:9],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[10],
+								Tokens: tk[10:11],
+							},
+						},
+						Tokens: tk[10:11],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[12],
+																Tokens: tk[12:13],
+															},
+														},
+														Tokens: tk[12:13],
+													},
+												},
+												Tokens: tk[12:13],
+											},
+											Tokens: tk[12:13],
+										},
+										Tokens: tk[12:13],
+									},
+									Tokens: tk[12:13],
+								},
+							},
+							Tokens: tk[12:13],
+						},
+					},
+					Tokens: tk[12:13],
+				},
+				CaseTerminationType: CaseTerminationEnd,
+				Tokens:              tk[6:14],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var p PatternLines
+
+		t.Parser.Tokens = t.Parser.Tokens[6:6]
+		err := p.parse(t.Parser)
+
+		return p, err
 	})
 }
 
