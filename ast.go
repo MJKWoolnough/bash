@@ -71,7 +71,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
