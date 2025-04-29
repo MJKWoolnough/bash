@@ -552,10 +552,20 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 	return nil
 }
 
+type CaseTerminationType uint8
+
+const (
+	CaseTerminationNone CaseTerminationType = iota
+	CaseTerminationEnd
+	CaseTerminationContinue
+	CaseTerminationFallthrough
+)
+
 type PatternLines struct {
 	Patterns []Word
 	Lines    File
-	Tokens   Tokens
+	CaseTerminationType
+	Tokens Tokens
 }
 
 func (pl *PatternLines) parse(b *bashParser) error {
@@ -591,6 +601,24 @@ func (pl *PatternLines) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
+
+	c = b.NewGoal()
+
+	c.AcceptRunAllWhitespace()
+
+	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";;"}) {
+		b.Score(c)
+
+		pl.CaseTerminationType = CaseTerminationEnd
+	} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";&"}) {
+		b.Score(c)
+
+		pl.CaseTerminationType = CaseTerminationContinue
+	} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";;&"}) {
+		b.Score(c)
+
+		pl.CaseTerminationType = CaseTerminationFallthrough
+	}
 
 	pl.Tokens = b.ToTokens()
 
