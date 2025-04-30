@@ -317,7 +317,25 @@ func (p Parameter) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p PatternLines) printSource(w io.Writer, v bool) {}
+func (p PatternLines) printSource(w io.Writer, v bool) {
+	if len(p.Patterns) == 0 {
+		return
+	}
+
+	p.Patterns[0].printSource(w, v)
+
+	for _, pattern := range p.Patterns[1:] {
+		io.WriteString(w, "|")
+		pattern.printSource(w, v)
+	}
+
+	ip := indentPrinter{Writer: w}
+
+	io.WriteString(w, ")")
+	p.Lines.printSource(&ip, v)
+	io.WriteString(w, "\n")
+	p.CaseTerminationType.printSource(w, v)
+}
 
 func (p Pipeline) printSource(w io.Writer, v bool) {
 	p.PipelineTime.printSource(w, v)
