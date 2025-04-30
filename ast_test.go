@@ -1871,6 +1871,84 @@ func TestCaseCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[3],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[3],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[3],
+										},
+										Parsing: "Statement",
+										Token:   tk[3],
+									},
+									Parsing: "Line",
+									Token:   tk[3],
+								},
+								Parsing: "File",
+								Token:   tk[3],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[3],
+						},
+						Parsing: "WordPart",
+						Token:   tk[2],
+					},
+					Parsing: "Word",
+					Token:   tk[2],
+				},
+				Parsing: "CaseCompound",
+				Token:   tk[2],
+			}
+		}},
+		{"case a in b)||;esac", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[8],
+										},
+										Parsing: "CommandOrCompound",
+										Token:   tk[8],
+									},
+									Parsing: "Pipeline",
+									Token:   tk[8],
+								},
+								Parsing: "Statement",
+								Token:   tk[8],
+							},
+							Parsing: "Line",
+							Token:   tk[8],
+						},
+						Parsing: "File",
+						Token:   tk[8],
+					},
+					Parsing: "PatternLines",
+					Token:   tk[8],
+				},
+				Parsing: "CaseCompound",
+				Token:   tk[6],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var cc CaseCompound
 
