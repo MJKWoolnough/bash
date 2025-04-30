@@ -526,11 +526,23 @@ type CaseCompound struct {
 
 func (cc *CaseCompound) parse(b *bashParser) error {
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "case"})
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := cc.Word.parse(c); err != nil {
+		return b.Error("CaseCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"})
+	b.AcceptRunAllWhitespace()
 
 	for {
 		b.AcceptRunAllWhitespace()
 
-		if tk := b.Peek(); tk == (parser.Token{Type: TokenKeyword, Data: "esac"}) {
+		if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"}) {
 			break
 		}
 
@@ -547,7 +559,7 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 		b.Score(c)
 	}
 
-	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"})
+	cc.Tokens = b.ToTokens()
 
 	return nil
 }
