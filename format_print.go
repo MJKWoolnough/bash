@@ -38,7 +38,18 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	a.Value.printSource(w, v)
 }
 
-func (c CaseCompound) printSource(w io.Writer, v bool) {}
+func (c CaseCompound) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "case ")
+	c.Word.printSource(w, v)
+	io.WriteString(w, " in ")
+
+	for _, m := range c.Matches {
+		io.WriteString(w, "\n")
+		m.printSource(w, v)
+	}
+
+	io.WriteString(w, "\nesac")
+}
 
 func (c Command) printSource(w io.Writer, v bool) {
 	if len(c.Vars) > 0 {
