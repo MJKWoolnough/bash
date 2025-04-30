@@ -233,6 +233,8 @@ const (
 type Pipeline struct {
 	PipelineTime
 	Not               bool
+	Coproc            bool
+	CoprocIdentifier  *Token
 	CommandOrCompound CommandOrCompound
 	Pipeline          *Pipeline
 	Tokens            Tokens
@@ -253,6 +255,18 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 
 	if p.Not = b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "!"}); p.Not {
 		b.AcceptRunWhitespace()
+	}
+
+	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "coproc"}) {
+		p.Coproc = true
+
+		b.AcceptRunWhitespace()
+
+		if b.Accept(TokenIdentifier) {
+			p.CoprocIdentifier = b.GetLastToken()
+
+			b.AcceptRunWhitespace()
+		}
 	}
 
 	c := b.NewGoal()
