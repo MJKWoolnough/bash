@@ -586,6 +586,17 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 		pp.Printf("\nNot: %v", f.Not)
 	}
 
+	if f.Coproc || v {
+		pp.Printf("\nCoproc: %v", f.Coproc)
+	}
+
+	if f.CoprocIdentifier != nil {
+		pp.Print("\nCoprocIdentifier: ")
+		f.CoprocIdentifier.printType(&pp, v)
+	} else if v {
+		pp.Print("\nCoprocIdentifier: nil")
+	}
+
 	pp.Print("\nCommandOrCompound: ")
 	f.CommandOrCompound.printType(&pp, v)
 
