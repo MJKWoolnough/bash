@@ -991,7 +991,105 @@ func TestPipeline(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
-		{"a|b", func(t *test, tk Tokens) { // 5
+		{"coproc a", func(t *test, tk Tokens) { // 5
+			t.Output = Pipeline{
+				Coproc: true,
+				CommandOrCompound: CommandOrCompound{
+					Command: &Command{
+						Words: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[2],
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"coproc a if b; then c;fi", func(t *test, tk Tokens) { // 6
+			t.Output = Pipeline{
+				Coproc:           true,
+				CoprocIdentifier: &tk[2],
+				CommandOrCompound: CommandOrCompound{
+					Compound: &Compound{
+						IfCompound: &IfCompound{
+							If: TestConsequence{
+								Test: Statement{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[6],
+																Tokens: tk[6:7],
+															},
+														},
+														Tokens: tk[6:7],
+													},
+												},
+												Tokens: tk[6:7],
+											},
+											Tokens: tk[6:7],
+										},
+										Tokens: tk[6:7],
+									},
+									Tokens: tk[6:8],
+								},
+								Consequence: File{
+									Lines: []Line{
+										{
+											Statements: []Statement{
+												{
+													Pipeline: Pipeline{
+														CommandOrCompound: CommandOrCompound{
+															Command: &Command{
+																Words: []Word{
+																	{
+																		Parts: []WordPart{
+																			{
+																				Part:   &tk[11],
+																				Tokens: tk[11:12],
+																			},
+																		},
+																		Tokens: tk[11:12],
+																	},
+																},
+																Tokens: tk[11:12],
+															},
+															Tokens: tk[11:12],
+														},
+														Tokens: tk[11:12],
+													},
+													Tokens: tk[11:13],
+												},
+											},
+											Tokens: tk[11:13],
+										},
+									},
+									Tokens: tk[11:13],
+								},
+								Tokens: tk[6:13],
+							},
+							Tokens: tk[4:14],
+						},
+						Tokens: tk[4:14],
+					},
+					Tokens: tk[4:14],
+				},
+				Tokens: tk[:14],
+			}
+		}},
+		{"a|b", func(t *test, tk Tokens) { // 7
 			t.Output = Pipeline{
 				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
@@ -1033,7 +1131,7 @@ func TestPipeline(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
-		{"a | b", func(t *test, tk Tokens) { // 6
+		{"a | b", func(t *test, tk Tokens) { // 8
 			t.Output = Pipeline{
 				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
@@ -1075,7 +1173,7 @@ func TestPipeline(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"||", func(t *test, tk Tokens) { // 7
+		{"||", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1090,7 +1188,7 @@ func TestPipeline(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"a | ||", func(t *test, tk Tokens) { // 8
+		{"a | ||", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
