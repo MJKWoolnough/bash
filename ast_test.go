@@ -2590,6 +2590,60 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
+		{"while ||; do b; done", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err:     ErrMissingWord,
+								Parsing: "Command",
+								Token:   tk[2],
+							},
+							Parsing: "CommandOrCompound",
+							Token:   tk[2],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[2],
+					},
+					Parsing: "Statement",
+					Token:   tk[2],
+				},
+				Parsing: "LoopCompound",
+				Token:   tk[2],
+			}
+		}},
+		{"until a; do ||; done", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[7],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[7],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[7],
+							},
+							Parsing: "Statement",
+							Token:   tk[7],
+						},
+						Parsing: "Line",
+						Token:   tk[7],
+					},
+					Parsing: "File",
+					Token:   tk[7],
+				},
+				Parsing: "LoopCompound",
+				Token:   tk[7],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var l LoopCompound
 
