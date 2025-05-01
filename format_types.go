@@ -428,6 +428,16 @@ func (f *LoopCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("LoopCompound {")
 
+	if f.Until || v {
+		pp.Printf("\nUntil: %v", f.Until)
+	}
+
+	pp.Print("\nStatement: ")
+	f.Statement.printType(&pp, v)
+
+	pp.Print("\nFile: ")
+	f.File.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
