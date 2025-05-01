@@ -177,7 +177,21 @@ func (l Line) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (l LoopCompound) printSource(w io.Writer, v bool) {}
+func (l LoopCompound) printSource(w io.Writer, v bool) {
+	if l.Until {
+		io.WriteString(w, "until ")
+	} else {
+		io.WriteString(w, "while ")
+	}
+
+	l.Statement.printSource(w, v)
+
+	ip := indentPrinter{Writer: w}
+
+	io.WriteString(&ip, " do\n")
+	l.File.printSource(w, v)
+	io.WriteString(w, "\ndone")
+}
 
 func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	if p.Identifier != nil {
