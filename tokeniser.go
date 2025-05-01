@@ -1189,7 +1189,7 @@ func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.Toke
 }
 
 func (b *bashTokeniser) selectStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return b.startCompound(t, b.forStart, 'S')
+	return b.startCompound(t, b.selectStart, 'S')
 }
 
 func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
