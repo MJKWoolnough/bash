@@ -2465,6 +2465,140 @@ func TestPatternLines(t *testing.T) {
 	})
 }
 
+func TestLoopCompound(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"while a\ndo\nb\ndone", func(t *test, tk Tokens) { // 1
+			t.Output = LoopCompound{
+				Statement: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								Words: []Word{
+									{
+										Parts: []WordPart{
+											{
+												Part:   &tk[2],
+												Tokens: tk[2:3],
+											},
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[6],
+																Tokens: tk[6:7],
+															},
+														},
+														Tokens: tk[6:7],
+													},
+												},
+												Tokens: tk[6:7],
+											},
+											Tokens: tk[6:7],
+										},
+										Tokens: tk[6:7],
+									},
+									Tokens: tk[6:7],
+								},
+							},
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[:9],
+			}
+		}},
+		{"until a; do b; done", func(t *test, tk Tokens) { // 2
+			t.Output = LoopCompound{
+				Until: true,
+				Statement: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								Words: []Word{
+									{
+										Parts: []WordPart{
+											{
+												Part:   &tk[2],
+												Tokens: tk[2:3],
+											},
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:4],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[7],
+																Tokens: tk[7:8],
+															},
+														},
+														Tokens: tk[7:8],
+													},
+												},
+												Tokens: tk[7:8],
+											},
+											Tokens: tk[7:8],
+										},
+										Tokens: tk[7:8],
+									},
+									Tokens: tk[7:9],
+								},
+							},
+							Tokens: tk[7:9],
+						},
+					},
+					Tokens: tk[7:9],
+				},
+				Tokens: tk[:11],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var l LoopCompound
+
+		err := l.parse(t.Parser)
+
+		return l, err
+	})
+}
+
 func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
