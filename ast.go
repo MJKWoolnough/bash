@@ -36,7 +36,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
@@ -71,7 +71,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
 			break
 		}
 
@@ -652,10 +652,44 @@ func (pl *PatternLines) parse(b *bashParser) error {
 }
 
 type LoopCompound struct {
-	Tokens Tokens
+	Until     bool
+	Statement Statement
+	File      File
+	Tokens    Tokens
 }
 
 func (l *LoopCompound) parse(b *bashParser) error {
+	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "while"}) {
+		b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "until"})
+
+		l.Until = true
+	}
+
+	b.AcceptRunWhitespace()
+
+	c := b.NewGoal()
+
+	if err := l.Statement.parse(c, true); err != nil {
+		return b.Error("LoopCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
+	b.AcceptRunAllWhitespace()
+
+	c = b.NewGoal()
+
+	if err := l.File.parse(c); err != nil {
+		return b.Error("LoopCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "done"})
+
+	l.Tokens = b.ToTokens()
+
 	return nil
 }
 
