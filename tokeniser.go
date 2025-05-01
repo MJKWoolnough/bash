@@ -329,7 +329,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '|':
 		t.Next()
 		t.Accept("&|")
-
 		b.endCommand()
 	case '&':
 		t.Next()
