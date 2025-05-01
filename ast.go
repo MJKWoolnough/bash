@@ -347,15 +347,13 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 }
 
 func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
-	var err error
+	if cc.Command == nil {
+		return nil
+	}
 
 	c := b.NewGoal()
 
-	if cc.Command != nil {
-		err = cc.Command.parseHeredocs(c)
-	}
-
-	if err != nil {
+	if err := cc.Command.parseHeredocs(c); err != nil {
 		return b.Error("CommandOrCompound", err)
 	}
 
