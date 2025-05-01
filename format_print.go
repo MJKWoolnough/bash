@@ -355,6 +355,15 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 		io.WriteString(w, "! ")
 	}
 
+	if p.Coproc {
+		io.WriteString(w, "coproc ")
+
+		if p.CoprocIdentifier != nil {
+			io.WriteString(w, p.CoprocIdentifier.Data)
+			io.WriteString(w, " ")
+		}
+	}
+
 	p.CommandOrCompound.printSource(w, v)
 
 	if p.Pipeline != nil {
