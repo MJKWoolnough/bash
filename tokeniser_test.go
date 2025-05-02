@@ -1641,7 +1641,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "do"},
@@ -1658,7 +1658,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "do"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1674,7 +1674,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenLineTerminator, Data: "\n"},
 				{Type: TokenKeyword, Data: "do"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1690,7 +1690,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "in"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1715,7 +1715,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "in"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1791,7 +1791,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenPunctuator, Data: ";"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "do"},
@@ -1808,7 +1808,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "do"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1824,7 +1824,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenLineTerminator, Data: "\n"},
 				{Type: TokenKeyword, Data: "do"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1840,7 +1840,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "in"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1865,7 +1865,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenWord, Data: "a"},
+				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenKeyword, Data: "in"},
 				{Type: TokenWhitespace, Data: " "},
