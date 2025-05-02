@@ -536,7 +536,7 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := cc.Word.parse(c); err != nil {
+	if err := cc.Word.parse(c, false); err != nil {
 		return b.Error("CaseCompound", err)
 	}
 
@@ -592,7 +592,7 @@ func (pl *PatternLines) parse(b *bashParser) error {
 
 		var w Word
 
-		if err := w.parse(c); err != nil {
+		if err := w.parse(c, false); err != nil {
 			return b.Error("PatternLines", err)
 		}
 
@@ -716,7 +716,7 @@ func (f *ForCompound) parse(b *bashParser) error {
 
 				var w Word
 
-				if err := w.parse(c); err != nil {
+				if err := w.parse(c, false); err != nil {
 					return b.Error("ForCompound", err)
 				}
 
@@ -834,7 +834,7 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 		} else {
 			var w Word
 
-			if err := w.parse(c); err != nil {
+			if err := w.parse(c, false); err != nil {
 				return b.Error("Command", err)
 			}
 
@@ -950,7 +950,7 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 		c := b.NewGoal()
 		p.Subscript = new(Word)
 
-		if err := p.Subscript.parse(c); err != nil {
+		if err := p.Subscript.parse(c, false); err != nil {
 			return b.Error("ParameterAssign", err)
 		}
 
@@ -984,7 +984,7 @@ func (v *Value) parse(b *bashParser) error {
 
 			var w Word
 
-			if err := w.parse(c); err != nil {
+			if err := w.parse(c, false); err != nil {
 				return b.Error("Value", err)
 			}
 
@@ -997,7 +997,7 @@ func (v *Value) parse(b *bashParser) error {
 		c := b.NewGoal()
 		v.Word = new(Word)
 
-		if err := v.Word.parse(c); err != nil {
+		if err := v.Word.parse(c, false); err != nil {
 			return b.Error("Value", err)
 		}
 
@@ -1014,8 +1014,9 @@ type Word struct {
 	Tokens Tokens
 }
 
-func (w *Word) parse(b *bashParser) error {
+func (w *Word) parse(b *bashParser, splitAssign bool) error {
 	for nextIsWordPart(b) {
+		nextIsAssign := b.Peek().Type == TokenIdentifierAssign
 		c := b.NewGoal()
 
 		var wp WordPart
@@ -1027,6 +1028,10 @@ func (w *Word) parse(b *bashParser) error {
 		w.Parts = append(w.Parts, wp)
 
 		b.Score(c)
+
+		if nextIsAssign && splitAssign {
+			break
+		}
 	}
 
 	w.Tokens = b.ToTokens()
@@ -1262,7 +1267,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			c := b.NewGoal()
 			p.Word = new(Word)
 
-			if err := p.Word.parse(c); err != nil {
+			if err := p.Word.parse(c, false); err != nil {
 				return b.Error("ParameterExpansion", err)
 			}
 
@@ -1308,7 +1313,7 @@ func (p *Parameter) parse(b *bashParser) error {
 			c := b.NewGoal()
 			p.Array = new(Word)
 
-			if err := p.Array.parse(c); err != nil {
+			if err := p.Array.parse(c, false); err != nil {
 				return b.Error("Parameter", err)
 			}
 
@@ -1365,7 +1370,7 @@ func (w *WordOrToken) parse(b *bashParser) error {
 		c := b.NewGoal()
 		w.Word = new(Word)
 
-		if err := w.Word.parse(c); err != nil {
+		if err := w.Word.parse(c, false); err != nil {
 			return b.Error("WordOrToken", err)
 		}
 
@@ -1440,7 +1445,7 @@ func (r *Redirection) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	if err := r.Output.parse(c); err != nil {
+	if err := r.Output.parse(c, false); err != nil {
 		return b.Error("Redirection", err)
 	}
 
@@ -1516,7 +1521,7 @@ func (h *HeredocPartOrWord) parse(b *bashParser) error {
 
 		h.Word = new(Word)
 
-		if err := h.Word.parse(c); err != nil {
+		if err := h.Word.parse(c, false); err != nil {
 			return b.Error("HeredocPartOrWord", err)
 		}
 
@@ -1612,7 +1617,7 @@ func (w *WordOrOperator) parse(b *bashParser) error {
 		c := b.NewGoal()
 		w.Word = new(Word)
 
-		if err := w.Word.parse(c); err != nil {
+		if err := w.Word.parse(c, true); err != nil {
 			return b.Error("WordOrOperator", err)
 		}
 

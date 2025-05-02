@@ -3655,7 +3655,7 @@ func TestWord(t *testing.T) {
 	}, func(t *test) (Type, error) {
 		var w Word
 
-		err := w.parse(t.Parser)
+		err := w.parse(t.Parser, false)
 
 		return w, err
 	})
