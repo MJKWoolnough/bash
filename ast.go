@@ -1534,6 +1534,7 @@ func (h *HeredocPartOrWord) parse(b *bashParser) error {
 }
 
 type ArithmeticExpansion struct {
+	Expression        bool
 	WordsAndOperators []WordOrOperator
 	Tokens            Tokens
 }
@@ -1541,6 +1542,8 @@ type ArithmeticExpansion struct {
 func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "$(("}) {
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "(("})
+
+		a.Expression = true
 	}
 
 	b.AcceptRunAllWhitespace()
