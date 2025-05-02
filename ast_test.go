@@ -3001,6 +3001,131 @@ func TestForCompound(t *testing.T) {
 				Tokens: tk[:24],
 			}
 		}},
+		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[7],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[7],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[7],
+										},
+										Parsing: "Statement",
+										Token:   tk[7],
+									},
+									Parsing: "Line",
+									Token:   tk[7],
+								},
+								Parsing: "File",
+								Token:   tk[7],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[7],
+						},
+						Parsing: "WordPart",
+						Token:   tk[6],
+					},
+					Parsing: "Word",
+					Token:   tk[6],
+				},
+				Parsing: "ForCompound",
+				Token:   tk[6],
+			}
+		}},
+		{"for (( $(||) )); do b;done", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[5],
+														},
+														Parsing: "CommandOrCompound",
+														Token:   tk[5],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[5],
+												},
+												Parsing: "Statement",
+												Token:   tk[5],
+											},
+											Parsing: "Line",
+											Token:   tk[5],
+										},
+										Parsing: "File",
+										Token:   tk[5],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[5],
+								},
+								Parsing: "WordPart",
+								Token:   tk[4],
+							},
+							Parsing: "Word",
+							Token:   tk[4],
+						},
+						Parsing: "WordOrOperator",
+						Token:   tk[4],
+					},
+					Parsing: "ArithmeticExpansion",
+					Token:   tk[4],
+				},
+				Parsing: "ForCompound",
+				Token:   tk[2],
+			}
+		}},
+		{"for a; do ||;done", func(t *test, tk Tokens) { // 9
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[7],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[7],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[7],
+							},
+							Parsing: "Statement",
+							Token:   tk[7],
+						},
+						Parsing: "Line",
+						Token:   tk[7],
+					},
+					Parsing: "File",
+					Token:   tk[7],
+				},
+				Parsing: "ForCompound",
+				Token:   tk[7],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f ForCompound
 
