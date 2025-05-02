@@ -686,10 +686,75 @@ func (l *LoopCompound) parse(b *bashParser) error {
 }
 
 type ForCompound struct {
-	Tokens Tokens
+	Identifier          *Token
+	Words               []Word
+	ArithmeticExpansion *ArithmeticExpansion
+	File                File
+	Tokens              Tokens
 }
 
 func (f *ForCompound) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "for"})
+	b.AcceptRunWhitespace()
+
+	if b.Accept(TokenIdentifier) {
+		f.Identifier = b.GetLastToken()
+
+		b.AcceptRunAllWhitespace()
+
+		if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"}) {
+			b.AcceptRunWhitespace()
+
+			f.Words = []Word{}
+
+			for {
+				if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator {
+					break
+				}
+
+				c := b.NewGoal()
+
+				var w Word
+
+				if err := w.parse(c); err != nil {
+					return b.Error("ForCompound", err)
+				}
+
+				f.Words = append(f.Words, w)
+
+				b.Score(c)
+				b.AcceptRunWhitespace()
+			}
+		}
+	} else {
+		c := b.NewGoal()
+		f.ArithmeticExpansion = new(ArithmeticExpansion)
+
+		if err := f.ArithmeticExpansion.parse(c); err != nil {
+			return b.Error("ForCompound", err)
+		}
+
+		b.Score(c)
+	}
+
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"})
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := f.File.parse(c); err != nil {
+		return b.Error("ForCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "done"})
+
+	f.Tokens = b.ToTokens()
+
 	return nil
 }
 
