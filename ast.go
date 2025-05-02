@@ -1605,6 +1605,7 @@ func (w *WordOrOperator) parse(b *bashParser) error {
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!="}) ||
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) ||
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) ||
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"}) ||
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","}) {
 		w.Operator = b.GetLastToken()
 	} else {
