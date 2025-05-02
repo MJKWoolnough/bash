@@ -124,7 +124,34 @@ func (f File) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (f ForCompound) printSource(w io.Writer, v bool) {}
+func (f ForCompound) printSource(w io.Writer, v bool) {
+	if f.ArithmeticExpansion == nil && f.Identifier == nil {
+		return
+	}
+
+	io.WriteString(w, "for ")
+
+	if f.ArithmeticExpansion != nil {
+		f.ArithmeticExpansion.printSource(w, v)
+	} else {
+		io.WriteString(w, f.Identifier.Data)
+
+		if f.Words != nil {
+			io.WriteString(w, "in")
+
+			for _, wd := range f.Words {
+				io.WriteString(w, " ")
+				wd.printSource(w, v)
+			}
+		}
+	}
+
+	ip := indentPrinter{Writer: w}
+
+	io.WriteString(&ip, "; do\n")
+	f.File.printSource(&ip, v)
+	io.WriteString(&ip, "\ndone")
+}
 
 func (g GroupingCompound) printSource(w io.Writer, v bool) {}
 
