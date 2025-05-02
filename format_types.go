@@ -9,6 +9,10 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 
 	pp.Print("ArithmeticExpansion {")
 
+	if f.Expression || v {
+		pp.Printf("\nExpression: %v", f.Expression)
+	}
+
 	if f.WordsAndOperators == nil {
 		pp.Print("\nWordsAndOperators: nil")
 	} else if len(f.WordsAndOperators) > 0 {
