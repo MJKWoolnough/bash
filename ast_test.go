@@ -2885,6 +2885,7 @@ func TestForCompound(t *testing.T) {
 		{"for (( a=1; a<2; a++ )); do b;done", func(t *test, tk Tokens) { // 6
 			t.Output = ForCompound{
 				ArithmeticExpansion: &ArithmeticExpansion{
+					Expression: true,
 					WordsAndOperators: []WordOrOperator{
 						{
 							Word: &Word{
