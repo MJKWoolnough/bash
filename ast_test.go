@@ -3365,6 +3365,80 @@ func TestSelectCompound(t *testing.T) {
 				Tokens: tk[:16],
 			}
 		}},
+		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[7],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[7],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[7],
+										},
+										Parsing: "Statement",
+										Token:   tk[7],
+									},
+									Parsing: "Line",
+									Token:   tk[7],
+								},
+								Parsing: "File",
+								Token:   tk[7],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[7],
+						},
+						Parsing: "WordPart",
+						Token:   tk[6],
+					},
+					Parsing: "Word",
+					Token:   tk[6],
+				},
+				Parsing: "SelectCompound",
+				Token:   tk[6],
+			}
+		}},
+		{"select a; do ||;done", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[7],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[7],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[7],
+							},
+							Parsing: "Statement",
+							Token:   tk[7],
+						},
+						Parsing: "Line",
+						Token:   tk[7],
+					},
+					Parsing: "File",
+					Token:   tk[7],
+				},
+				Parsing: "SelectCompound",
+				Token:   tk[7],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var s SelectCompound
 
