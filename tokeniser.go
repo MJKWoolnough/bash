@@ -548,12 +548,10 @@ Loop:
 		Type: TokenWord,
 		Data: t.Get(),
 	}
-
 	hdt := heredocType{
 		stripped: b.nextHeredocIsStripped,
 		delim:    unstring(tk.Data),
 	}
-
 	hdt.expand = hdt.delim == tk.Data
 
 	if b.lastTokenDepth() == 'H' {
