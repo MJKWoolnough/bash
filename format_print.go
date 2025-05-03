@@ -449,7 +449,29 @@ func (r Redirection) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (s SelectCompound) printSource(w io.Writer, v bool) {}
+func (s SelectCompound) printSource(w io.Writer, v bool) {
+	if s.Identifier == nil {
+		return
+	}
+
+	io.WriteString(w, "select ")
+	io.WriteString(w, s.Identifier.Data)
+
+	if s.Words != nil {
+		io.WriteString(w, "in")
+
+		for _, wd := range s.Words {
+			io.WriteString(w, " ")
+			wd.printSource(w, v)
+		}
+	}
+
+	ip := indentPrinter{Writer: w}
+
+	io.WriteString(&ip, "; do\n")
+	s.File.printSource(&ip, v)
+	io.WriteString(&ip, "\ndone")
+}
 
 func (s Statement) printSource(w io.Writer, v bool) {
 	s.Pipeline.printSource(w, v)
