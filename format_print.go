@@ -3,7 +3,11 @@ package bash
 import "io"
 
 func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
-	io.WriteString(w, "$((")
+	if a.Expression {
+		io.WriteString(w, "((")
+	} else {
+		io.WriteString(w, "$((")
+	}
 
 	if len(a.WordsAndOperators) > 0 {
 		if v {
