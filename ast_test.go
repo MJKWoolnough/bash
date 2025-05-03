@@ -6170,7 +6170,27 @@ func TestArithmeticExpansion(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
-		{"$(( a ))", func(t *test, tk Tokens) { // 2
+		{"(( a ))", func(t *test, tk Tokens) { // 2
+			t.Output = ArithmeticExpansion{
+				Expression: true,
+				WordsAndOperators: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"$(( a ))", func(t *test, tk Tokens) { // 3
 			t.Output = ArithmeticExpansion{
 				WordsAndOperators: []WordOrOperator{
 					{
@@ -6189,7 +6209,7 @@ func TestArithmeticExpansion(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"$(( a$b ))", func(t *test, tk Tokens) { // 3
+		{"$(( a$b ))", func(t *test, tk Tokens) { // 4
 			t.Output = ArithmeticExpansion{
 				WordsAndOperators: []WordOrOperator{
 					{
@@ -6212,7 +6232,7 @@ func TestArithmeticExpansion(t *testing.T) {
 				Tokens: tk[:6],
 			}
 		}},
-		{"$((a+b))", func(t *test, tk Tokens) { // 4
+		{"$((a+b))", func(t *test, tk Tokens) { // 5
 			t.Output = ArithmeticExpansion{
 				WordsAndOperators: []WordOrOperator{
 					{
@@ -6247,7 +6267,7 @@ func TestArithmeticExpansion(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"$(($(||)))", func(t *test, tk Tokens) { // 5
+		{"$(($(||)))", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
