@@ -2963,8 +2963,12 @@ func TestForCompound(t *testing.T) {
 							},
 							Tokens: tk[14:15],
 						},
+						{
+							Operator: &tk[15],
+							Tokens:   tk[15:16],
+						},
 					},
-					Tokens: tk[2:17],
+					Tokens: tk[2:18],
 				},
 				File: File{
 					Lines: []Line{
@@ -2978,28 +2982,28 @@ func TestForCompound(t *testing.T) {
 													{
 														Parts: []WordPart{
 															{
-																Part:   &tk[21],
-																Tokens: tk[21:22],
+																Part:   &tk[22],
+																Tokens: tk[22:23],
 															},
 														},
-														Tokens: tk[21:22],
+														Tokens: tk[22:23],
 													},
 												},
-												Tokens: tk[21:22],
+												Tokens: tk[22:23],
 											},
-											Tokens: tk[21:22],
+											Tokens: tk[22:23],
 										},
-										Tokens: tk[21:22],
+										Tokens: tk[22:23],
 									},
-									Tokens: tk[21:23],
+									Tokens: tk[22:24],
 								},
 							},
-							Tokens: tk[21:23],
+							Tokens: tk[22:24],
 						},
 					},
-					Tokens: tk[21:23],
+					Tokens: tk[22:24],
 				},
-				Tokens: tk[:24],
+				Tokens: tk[:25],
 			}
 		}},
 		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 7

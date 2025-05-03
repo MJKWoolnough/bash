@@ -1291,7 +1291,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		wb = wordBreakNoBrace
 	case ']', '[':
 		wb = wordBreakNoBracket
-	case '>':
+	case '>', '/', ':', 'f':
 		wb = wordBreakArithmetic
 	default:
 		wb = wordBreak
