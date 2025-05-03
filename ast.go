@@ -759,10 +759,64 @@ func (f *ForCompound) parse(b *bashParser) error {
 }
 
 type SelectCompound struct {
-	Tokens Tokens
+	Identifier *Token
+	Words      []Word
+	File       File
+	Tokens     Tokens
 }
 
 func (s *SelectCompound) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "select"})
+	b.AcceptRunWhitespace()
+	b.Accept(TokenIdentifier)
+
+	s.Identifier = b.GetLastToken()
+
+	b.AcceptRunWhitespace()
+
+	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"}) {
+		b.AcceptRunWhitespace()
+
+		s.Words = []Word{}
+
+		for {
+			if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator {
+				break
+			}
+
+			c := b.NewGoal()
+
+			var w Word
+
+			if err := w.parse(c, false); err != nil {
+				return b.Error("SelectCompound", err)
+			}
+
+			s.Words = append(s.Words, w)
+
+			b.Score(c)
+			b.AcceptRunWhitespace()
+		}
+	}
+
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"})
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := s.File.parse(c); err != nil {
+		return b.Error("SelectCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "done"})
+
+	s.Tokens = b.ToTokens()
+
 	return nil
 }
 
