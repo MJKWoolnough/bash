@@ -701,6 +701,33 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("SelectCompound {")
 
+	if f.Identifier != nil {
+		pp.Print("\nIdentifier: ")
+		f.Identifier.printType(&pp, v)
+	} else if v {
+		pp.Print("\nIdentifier: nil")
+	}
+
+	if f.Words == nil {
+		pp.Print("\nWords: nil")
+	} else if len(f.Words) > 0 {
+		pp.Print("\nWords: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Words {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nWords: []")
+	}
+
+	pp.Print("\nFile: ")
+	f.File.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
