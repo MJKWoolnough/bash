@@ -30,7 +30,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}") {
+		if tk := c.Peek(); isEnd(tk) {
 			break
 		}
 
@@ -56,6 +56,10 @@ func (f *File) parse(b *bashParser) error {
 	return nil
 }
 
+func isEnd(tk parser.Token) bool {
+	return tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}")
+}
+
 type Line struct {
 	Statements []Statement
 	Tokens     Tokens
@@ -65,7 +69,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || isEnd(tk) {
 			break
 		}
 
