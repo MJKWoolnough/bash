@@ -30,7 +30,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == "}") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}") {
 			break
 		}
 
@@ -65,7 +65,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == "}") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}") {
 			break
 		}
 
@@ -606,7 +606,7 @@ func (pl *PatternLines) parse(b *bashParser) error {
 		}
 	}
 
-	if !b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
+	if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 		return b.Error("PatternLines", ErrMissingClosingPattern)
 	}
 
@@ -1055,7 +1055,7 @@ func (v *Value) parse(b *bashParser) error {
 
 		v.Array = []Word{}
 
-		for !b.AcceptToken(parser.Token{Type: TokenCloseParen, Data: ")"}) {
+		for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 			c := b.NewGoal()
 
 			var w Word
@@ -1117,7 +1117,7 @@ func (w *Word) parse(b *bashParser, splitAssign bool) error {
 
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenCloseParen, TokenHeredoc, TokenHeredocEnd, parser.TokenDone:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenHeredoc, TokenHeredocEnd, parser.TokenDone:
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
@@ -1476,7 +1476,7 @@ type CommandSubstitution struct {
 }
 
 func (cs *CommandSubstitution) parse(b *bashParser) error {
-	end := parser.Token{Type: TokenCloseParen, Data: ")"}
+	end := parser.Token{Type: TokenPunctuator, Data: ")"}
 
 	if tk := b.Next(); tk.Type == TokenOpenBacktick {
 		cs.SubstitutionType = SubstitutionBacktick

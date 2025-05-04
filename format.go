@@ -112,8 +112,6 @@ func (t Token) printType(w io.Writer, v bool) {
 		typ = "TokenOpenBacktick"
 	case TokenCloseBacktick:
 		typ = "TokenCloseBacktick"
-	case TokenCloseParen:
-		typ = "TokenCloseParen"
 	case TokenPattern:
 		typ = "TokenPattern"
 	default:

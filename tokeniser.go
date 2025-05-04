@@ -61,7 +61,6 @@ const (
 	TokenHeredocEnd
 	TokenOpenBacktick
 	TokenCloseBacktick
-	TokenCloseParen
 	TokenPattern
 )
 
@@ -412,8 +411,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
-
-		return t.Return(TokenCloseParen, b.main)
 	case '}':
 		t.Next()
 		b.endCommand()
