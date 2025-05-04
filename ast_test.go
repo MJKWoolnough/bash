@@ -3452,6 +3452,249 @@ func TestSelectCompound(t *testing.T) {
 	})
 }
 
+func TestGroupingCompound(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"(a)", func(t *test, tk Tokens) { // 1
+			t.Output = GroupingCompound{
+				SubShell: true,
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[1],
+																Tokens: tk[1:2],
+															},
+														},
+														Tokens: tk[1:2],
+													},
+												},
+												Tokens: tk[1:2],
+											},
+											Tokens: tk[1:2],
+										},
+										Tokens: tk[1:2],
+									},
+									Tokens: tk[1:2],
+								},
+							},
+							Tokens: tk[1:2],
+						},
+					},
+					Tokens: tk[1:2],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"( a )", func(t *test, tk Tokens) { // 2
+			t.Output = GroupingCompound{
+				SubShell: true,
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"(\na\n)", func(t *test, tk Tokens) { // 3
+			t.Output = GroupingCompound{
+				SubShell: true,
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"(\na;\n)", func(t *test, tk Tokens) { // 4
+			t.Output = GroupingCompound{
+				SubShell: true,
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:4],
+								},
+							},
+							Tokens: tk[2:4],
+						},
+					},
+					Tokens: tk[2:4],
+				},
+				Tokens: tk[:6],
+			}
+		}},
+		{"{\na\n}", func(t *test, tk Tokens) { // 5
+			t.Output = GroupingCompound{
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"{ a; }", func(t *test, tk Tokens) { // 6
+			t.Output = GroupingCompound{
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												Words: []Word{
+													{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+									Tokens: tk[2:4],
+								},
+							},
+							Tokens: tk[2:4],
+						},
+					},
+					Tokens: tk[2:4],
+				},
+				Tokens: tk[:6],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var g GroupingCompound
+
+		err := g.parse(t.Parser)
+
+		return g, err
+	})
+}
+
 func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
