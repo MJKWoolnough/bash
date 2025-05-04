@@ -3686,6 +3686,37 @@ func TestGroupingCompound(t *testing.T) {
 				Tokens: tk[:6],
 			}
 		}},
+		{"(||)", func(t *test, tk Tokens) { // 7
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[1],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[1],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[1],
+							},
+							Parsing: "Statement",
+							Token:   tk[1],
+						},
+						Parsing: "Line",
+						Token:   tk[1],
+					},
+					Parsing: "File",
+					Token:   tk[1],
+				},
+				Parsing: "GroupingCompound",
+				Token:   tk[1],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var g GroupingCompound
 
