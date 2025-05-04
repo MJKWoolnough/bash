@@ -30,7 +30,7 @@ func (f *File) parse(b *bashParser) error {
 	for {
 		c.AcceptRunAllWhitespace()
 
-		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == "}") {
 			break
 		}
 
@@ -65,7 +65,7 @@ func (l *Line) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	for {
-		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&") {
+		if tk := c.Peek(); tk.Type == TokenComment || tk.Type == TokenLineTerminator || tk.Type == TokenCloseBacktick || tk.Type == TokenCloseParen || tk.Type == parser.TokenDone || tk.Type == TokenKeyword && (tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == "}") {
 			break
 		}
 
@@ -829,10 +829,32 @@ func (t *TestCompound) parse(b *bashParser) error {
 }
 
 type GroupingCompound struct {
+	SubShell bool
+	File
 	Tokens Tokens
 }
 
 func (g *GroupingCompound) parse(b *bashParser) error {
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
+		g.SubShell = true
+	} else {
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "{"})
+	}
+
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := g.File.parse(c); err != nil {
+		return b.Error("GroupingCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.Next()
+
+	g.Tokens = b.ToTokens()
+
 	return nil
 }
 
