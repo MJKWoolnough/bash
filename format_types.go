@@ -336,6 +336,13 @@ func (f *GroupingCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("GroupingCompound {")
 
+	if f.SubShell || v {
+		pp.Printf("\nSubShell: %v", f.SubShell)
+	}
+
+	pp.Print("\nFile: ")
+	f.File.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
