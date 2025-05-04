@@ -157,7 +157,23 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(&ip, "\ndone")
 }
 
-func (g GroupingCompound) printSource(w io.Writer, v bool) {}
+func (g GroupingCompound) printSource(w io.Writer, v bool) {
+	ip := indentPrinter{Writer: w}
+
+	if g.SubShell {
+		io.WriteString(&ip, "(\n")
+	} else {
+		io.WriteString(&ip, "{\n")
+	}
+
+	g.File.printSource(&ip, v)
+
+	if g.SubShell {
+		io.WriteString(&ip, "\n)")
+	} else {
+		io.WriteString(&ip, "\n}")
+	}
+}
 
 func (h Heredoc) printSource(w io.Writer, v bool) {
 	for _, p := range h.HeredocPartsOrWords {
