@@ -19,6 +19,7 @@ var (
 const (
 	whitespace          = " \t"
 	newline             = "\n"
+	whitespaceNewline   = whitespace + newline
 	heredocsBreak       = whitespace + newline + "|&;()<>\\\"'"
 	heredocStringBreak  = newline + "$"
 	doubleStops         = "\\`$\""
@@ -382,10 +383,13 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 	case '{':
 		t.Next()
-		b.setInCommand()
 
-		if !strings.ContainsRune(word, t.Peek()) || t.Peek() == '-' {
+		if tk := t.Peek(); !strings.ContainsRune(word, tk) || tk == '-' {
+			b.setInCommand()
+
 			return b.braceExpansion(t)
+		} else if strings.ContainsRune(whitespaceNewline, tk) && !b.isInCommand() {
+			b.pushTokenDepth('}')
 		}
 	case ']':
 		t.Next()
@@ -413,7 +417,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 	case '}':
 		t.Next()
-		b.endCommand()
 
 		if td := b.lastTokenDepth(); td == '}' || td == '~' {
 			b.popTokenDepth()
@@ -994,7 +997,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			return t.Return(TokenIdentifierAssign, b.main)
 		} else if t.Peek() == '[' {
 			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
-		} else if td := b.lastTokenDepth(); t.Peek() == td || td == '}' || td == '~' {
+		} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
 			return t.Return(TokenWord, b.main)
 		}
 	} else if t.Accept(decimalDigit) {
@@ -1282,7 +1285,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	var wb string
 
 	switch b.lastTokenDepth() {
-	case '}', '~':
+	case '~':
 		wb = wordBreakNoBrace
 	case ']', '[':
 		wb = wordBreakNoBracket
