@@ -343,6 +343,20 @@ func (f *FunctionCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("FunctionCompound {")
 
+	if f.HasKeyword || v {
+		pp.Printf("\nHasKeyword: %v", f.HasKeyword)
+	}
+
+	if f.Identifier != nil {
+		pp.Print("\nIdentifier: ")
+		f.Identifier.printType(&pp, v)
+	} else if v {
+		pp.Print("\nIdentifier: nil")
+	}
+
+	pp.Print("\nBody: ")
+	f.Body.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
