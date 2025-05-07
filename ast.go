@@ -369,7 +369,7 @@ func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
 func isCompoundNext(b *bashParser) bool {
 	tk := b.Peek()
 
-	return tk.Type == TokenKeyword && (tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "select" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "((" || tk.Data == "(" || tk.Data == "{")
+	return tk.Type == TokenKeyword && (tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "select" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "((" || tk.Data == "(" || tk.Data == "{") || tk.Type == TokenFunctionIdentifier
 }
 
 type Compound struct {
@@ -381,6 +381,7 @@ type Compound struct {
 	GroupingCompound   *GroupingCompound
 	TestCompound       *TestCompound
 	ArthimeticCompound *ArithmeticExpansion
+	FunctionCompound   *FunctionCompound
 	Tokens             Tokens
 }
 
@@ -389,39 +390,49 @@ func (cc *Compound) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	switch c.Peek() {
-	case parser.Token{Type: TokenKeyword, Data: "if"}:
-		cc.IfCompound = new(IfCompound)
+	if c.Peek().Type == TokenFunctionIdentifier {
+		cc.FunctionCompound = new(FunctionCompound)
 
-		err = cc.IfCompound.parse(c)
-	case parser.Token{Type: TokenKeyword, Data: "case"}:
-		cc.CaseCompound = new(CaseCompound)
+		err = cc.FunctionCompound.parse(c)
+	} else {
+		switch c.Peek() {
+		case parser.Token{Type: TokenKeyword, Data: "if"}:
+			cc.IfCompound = new(IfCompound)
 
-		err = cc.CaseCompound.parse(c)
-	case parser.Token{Type: TokenKeyword, Data: "while"}, parser.Token{Type: TokenKeyword, Data: "until"}:
-		cc.LoopCompound = new(LoopCompound)
+			err = cc.IfCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "case"}:
+			cc.CaseCompound = new(CaseCompound)
 
-		err = cc.LoopCompound.parse(c)
-	case parser.Token{Type: TokenKeyword, Data: "for"}:
-		cc.ForCompound = new(ForCompound)
+			err = cc.CaseCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "while"}, parser.Token{Type: TokenKeyword, Data: "until"}:
+			cc.LoopCompound = new(LoopCompound)
 
-		err = cc.ForCompound.parse(c)
-	case parser.Token{Type: TokenKeyword, Data: "select"}:
-		cc.SelectCompound = new(SelectCompound)
+			err = cc.LoopCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "for"}:
+			cc.ForCompound = new(ForCompound)
 
-		err = cc.SelectCompound.parse(c)
-	case parser.Token{Type: TokenKeyword, Data: "[["}:
-		cc.TestCompound = new(TestCompound)
+			err = cc.ForCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "select"}:
+			cc.SelectCompound = new(SelectCompound)
 
-		err = cc.TestCompound.parse(c)
-	case parser.Token{Type: TokenPunctuator, Data: "(("}:
-		cc.ArthimeticCompound = new(ArithmeticExpansion)
+			err = cc.SelectCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "function"}:
+			cc.FunctionCompound = new(FunctionCompound)
 
-		err = cc.ArthimeticCompound.parse(c)
-	case parser.Token{Type: TokenPunctuator, Data: "("}, parser.Token{Type: TokenPunctuator, Data: "{"}:
-		cc.GroupingCompound = new(GroupingCompound)
+			err = cc.FunctionCompound.parse(c)
+		case parser.Token{Type: TokenKeyword, Data: "[["}:
+			cc.TestCompound = new(TestCompound)
 
-		err = cc.GroupingCompound.parse(c)
+			err = cc.TestCompound.parse(c)
+		case parser.Token{Type: TokenPunctuator, Data: "(("}:
+			cc.ArthimeticCompound = new(ArithmeticExpansion)
+
+			err = cc.ArthimeticCompound.parse(c)
+		case parser.Token{Type: TokenPunctuator, Data: "("}, parser.Token{Type: TokenPunctuator, Data: "{"}:
+			cc.GroupingCompound = new(GroupingCompound)
+
+			err = cc.GroupingCompound.parse(c)
+		}
 	}
 
 	if err != nil {
@@ -859,6 +870,14 @@ func (g *GroupingCompound) parse(b *bashParser) error {
 
 	g.Tokens = b.ToTokens()
 
+	return nil
+}
+
+type FunctionCompound struct {
+	Tokens
+}
+
+func (f *FunctionCompound) parse(b *bashParser) error {
 	return nil
 }
 
