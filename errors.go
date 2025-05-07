@@ -10,6 +10,7 @@ var (
 	ErrInvalidAssignment         = errors.New("invalid assignment")
 	ErrMissingClosingBracket     = errors.New("missing closing bracket")
 	ErrMissingClosingBrace       = errors.New("missing closing brace")
+	ErrMissingClosingParen       = errors.New("missing closing paren")
 	ErrMissingCloser             = errors.New("missing closer")
 	ErrInvalidEndOfStatement     = errors.New("invalid end of statement")
 	ErrIncorrectBacktick         = errors.New("incorrect backtick depth")
@@ -21,4 +22,5 @@ var (
 	ErrMissingClosingCase        = errors.New("missing case closing")
 	ErrMissingClosingPattern     = errors.New("missing pattern closing")
 	ErrInvalidKeyword            = errors.New("invalid keyword")
+	ErrInvalidIdentifier         = errors.New("invalid identifier")
 )
