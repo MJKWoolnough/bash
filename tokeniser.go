@@ -46,6 +46,7 @@ const (
 	TokenLineTerminator
 	TokenComment
 	TokenIdentifier
+	TokenFunctionIdentifier
 	TokenIdentifierAssign
 	TokenKeyword
 	TokenWord
@@ -110,6 +111,10 @@ func (b *bashTokeniser) isInCommand() bool {
 func (b *bashTokeniser) endCommand() {
 	if b.isInCommand() {
 		b.popTokenDepth()
+
+		if b.lastTokenDepth() == 'x' {
+			b.popTokenDepth()
+		}
 	}
 }
 
@@ -134,6 +139,12 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	if t.Peek() == -1 {
 		if b.isInCommand() {
 			b.endCommand()
+
+			td = b.lastTokenDepth()
+		}
+
+		if td == 'x' {
+			b.popTokenDepth()
 
 			td = b.lastTokenDepth()
 		}
@@ -959,10 +970,16 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 		kw := t.AcceptWord(keywords, false)
 
 		if !isKeywordSeperator(t) {
+			if b.lastTokenDepth() == 'x' {
+				return t.ReturnError(ErrInvalidKeyword)
+			}
+
 			state.Reset()
 		} else if kw != "" {
 			return b.keyword(t, kw)
 		}
+	} else if b.lastTokenDepth() == 'x' {
+		return t.ReturnError(ErrInvalidKeyword)
 	} else {
 		b.endCommand()
 
@@ -1024,6 +1041,10 @@ func isKeywordSeperator(t *parser.Tokeniser) bool {
 func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, parser.TokenFunc) {
 	switch kw {
 	case "time":
+		if b.lastTokenDepth() == 'x' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
 		return t.Return(TokenKeyword, b.time)
 	case "if":
 		return t.Return(TokenKeyword, b.ifStart)
@@ -1073,7 +1094,17 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 	case "select":
 		return t.Return(TokenKeyword, b.selectStart)
 	case "coproc":
+		if b.lastTokenDepth() == 'x' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
 		return t.Return(TokenKeyword, b.coproc)
+	case "function":
+		if b.lastTokenDepth() == 'x' {
+			return t.ReturnError(ErrInvalidKeyword)
+		}
+
+		return t.Return(TokenKeyword, b.function)
 	case "continue", "break":
 		if td := b.lastTokenDepth(); td != 'l' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1279,6 +1310,46 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 	state.Reset()
 
 	return b.main(t)
+}
+
+func (b *bashTokeniser) function(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.function)
+	}
+
+	if !t.Accept(identStart) {
+		return t.ReturnError(ErrInvalidIdentifier)
+	}
+
+	t.AcceptRun(identCont)
+
+	return t.Return(TokenFunctionIdentifier, b.functionOpenParen)
+}
+
+func (b *bashTokeniser) functionOpenParen(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.functionOpenParen)
+	}
+
+	b.pushTokenDepth('x')
+
+	if t.Accept("(") {
+		return t.Return(TokenPunctuator, b.functionCloseParen)
+	}
+
+	return b.main(t)
+}
+
+func (b *bashTokeniser) functionCloseParen(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.functionCloseParen)
+	}
+
+	if !t.Accept(")") {
+		return t.ReturnError(ErrMissingClosingParen)
+	}
+
+	return t.Return(TokenPunctuator, b.main)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
