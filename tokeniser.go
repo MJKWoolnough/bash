@@ -1016,6 +1016,16 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
 		} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
 			return t.Return(TokenWord, b.main)
+		} else if !b.isInCommand() {
+			t.AcceptRun(whitespace)
+
+			isFunc := t.Accept("(")
+
+			state.Reset()
+
+			if isFunc {
+				return t.Return(TokenFunctionIdentifier, b.functionOpenParen)
+			}
 		}
 	} else if t.Accept(decimalDigit) {
 		t.AcceptRun(decimalDigit)
