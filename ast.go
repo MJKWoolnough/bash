@@ -432,6 +432,8 @@ func (cc *Compound) parse(b *bashParser) error {
 			cc.GroupingCompound = new(GroupingCompound)
 
 			err = cc.GroupingCompound.parse(c)
+		default:
+			err = ErrInvalidKeyword
 		}
 	}
 
@@ -874,10 +876,41 @@ func (g *GroupingCompound) parse(b *bashParser) error {
 }
 
 type FunctionCompound struct {
-	Tokens
+	HasKeyword bool
+	Identifier *Token
+	Body       Compound
+	Tokens     Tokens
 }
 
 func (f *FunctionCompound) parse(b *bashParser) error {
+	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "function"}) {
+		f.HasKeyword = true
+
+		b.AcceptRunWhitespace()
+	}
+
+	b.Accept(TokenFunctionIdentifier)
+
+	f.Identifier = b.GetLastToken()
+
+	b.AcceptRunWhitespace()
+
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
+		b.AcceptRunWhitespace()
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"})
+		b.AcceptRunWhitespace()
+	}
+
+	c := b.NewGoal()
+
+	if err := f.Body.parse(c); err != nil {
+		return b.Error("FunctionCompound", err)
+	}
+
+	b.Score(c)
+
+	f.Tokens = b.ToTokens()
+
 	return nil
 }
 
