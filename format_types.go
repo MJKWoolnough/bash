@@ -252,6 +252,13 @@ func (f *Compound) printType(w io.Writer, v bool) {
 		pp.Print("\nArthimeticCompound: nil")
 	}
 
+	if f.FunctionCompound != nil {
+		pp.Print("\nFunctionCompound: ")
+		f.FunctionCompound.printType(&pp, v)
+	} else if v {
+		pp.Print("\nFunctionCompound: nil")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
@@ -324,6 +331,17 @@ func (f *ForCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("\nFile: ")
 	f.File.printType(&pp, v)
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *FunctionCompound) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("FunctionCompound {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

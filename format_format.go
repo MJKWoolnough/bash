@@ -113,6 +113,18 @@ func (f ForCompound) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f FunctionCompound) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = FunctionCompound
+		type FunctionCompound X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f GroupingCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = GroupingCompound

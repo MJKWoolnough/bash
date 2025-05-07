@@ -30,6 +30,8 @@ func (File) bashType() {}
 
 func (ForCompound) bashType() {}
 
+func (FunctionCompound) bashType() {}
+
 func (GroupingCompound) bashType() {}
 
 func (Heredoc) bashType() {}
