@@ -1438,6 +1438,8 @@ func (p *Parameter) parse(b *bashParser) error {
 		p.Parameter = b.GetLastToken()
 
 		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "["}) {
+			b.AcceptRunWhitespace()
+
 			c := b.NewGoal()
 			p.Array = new(Word)
 
@@ -1446,6 +1448,7 @@ func (p *Parameter) parse(b *bashParser) error {
 			}
 
 			b.Score(c)
+			b.AcceptRunWhitespace()
 
 			if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
 				return b.Error("Parameter", ErrMissingClosingBracket)
