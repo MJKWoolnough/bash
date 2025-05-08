@@ -6117,6 +6117,57 @@ func TestParameterExpansion(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
+		{"${a/b/$(||)}", func(t *test, tk Tokens) { // 51
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[6],
+														},
+														Parsing: "CommandOrCompound",
+														Token:   tk[6],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[6],
+												},
+												Parsing: "Statement",
+												Token:   tk[6],
+											},
+											Parsing: "Line",
+											Token:   tk[6],
+										},
+										Parsing: "File",
+										Token:   tk[6],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[6],
+								},
+								Parsing: "WordPart",
+								Token:   tk[5],
+							},
+							Parsing: "Word",
+							Token:   tk[5],
+						},
+						Parsing: "WordOrToken",
+						Token:   tk[5],
+					},
+					Parsing: "String",
+					Token:   tk[5],
+				},
+				Parsing: "ParameterExpansion",
+				Token:   tk[5],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var pe ParameterExpansion
 
