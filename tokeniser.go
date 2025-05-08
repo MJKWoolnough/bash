@@ -129,11 +129,8 @@ func (b *bashTokeniser) setInCommand() {
 func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	td := b.lastTokenDepth()
 
-	if isKeywordSeperator(t) {
-		switch td {
-		case 'C':
-			return b.caseIn(t)
-		}
+	if isKeywordSeperator(t) && td == 'C' {
+		return b.caseIn(t)
 	}
 
 	if t.Peek() == -1 {
