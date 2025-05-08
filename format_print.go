@@ -157,7 +157,19 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(&ip, "\ndone")
 }
 
-func (f FunctionCompound) printSource(w io.Writer, v bool) {}
+func (f FunctionCompound) printSource(w io.Writer, v bool) {
+	if f.Identifier == nil {
+		return
+	}
+
+	if f.HasKeyword {
+		io.WriteString(w, "function ")
+	}
+
+	io.WriteString(w, f.Identifier.Data)
+	io.WriteString(w, "() ")
+	f.Body.printSource(w, v)
+}
 
 func (g GroupingCompound) printSource(w io.Writer, v bool) {
 	ip := indentPrinter{Writer: w}
