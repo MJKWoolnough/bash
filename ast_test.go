@@ -3726,6 +3726,199 @@ func TestGroupingCompound(t *testing.T) {
 	})
 }
 
+func TestFunctionCompound(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"function a() { b; }", func(t *test, tk Tokens) { // 1
+			t.Output = FunctionCompound{
+				HasKeyword: true,
+				Identifier: &tk[2],
+				Body: Compound{
+					GroupingCompound: &GroupingCompound{
+						File: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														Words: []Word{
+															{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[8],
+																		Tokens: tk[8:9],
+																	},
+																},
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+													Tokens: tk[8:9],
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:10],
+										},
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+						Tokens: tk[6:12],
+					},
+					Tokens: tk[6:12],
+				},
+				Tokens: tk[:12],
+			}
+		}},
+		{"function a ( ) { b; }", func(t *test, tk Tokens) { // 2
+			t.Output = FunctionCompound{
+				HasKeyword: true,
+				Identifier: &tk[2],
+				Body: Compound{
+					GroupingCompound: &GroupingCompound{
+						File: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														Words: []Word{
+															{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[10],
+																		Tokens: tk[10:11],
+																	},
+																},
+																Tokens: tk[10:11],
+															},
+														},
+														Tokens: tk[10:11],
+													},
+													Tokens: tk[10:11],
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:12],
+										},
+									},
+									Tokens: tk[10:12],
+								},
+							},
+							Tokens: tk[10:12],
+						},
+						Tokens: tk[8:14],
+					},
+					Tokens: tk[8:14],
+				},
+				Tokens: tk[:14],
+			}
+		}},
+		{"a() { b; }", func(t *test, tk Tokens) { // 3
+			t.Output = FunctionCompound{
+				Identifier: &tk[0],
+				Body: Compound{
+					GroupingCompound: &GroupingCompound{
+						File: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														Words: []Word{
+															{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[6],
+																		Tokens: tk[6:7],
+																	},
+																},
+																Tokens: tk[6:7],
+															},
+														},
+														Tokens: tk[6:7],
+													},
+													Tokens: tk[6:7],
+												},
+												Tokens: tk[6:7],
+											},
+											Tokens: tk[6:8],
+										},
+									},
+									Tokens: tk[6:8],
+								},
+							},
+							Tokens: tk[6:8],
+						},
+						Tokens: tk[4:10],
+					},
+					Tokens: tk[4:10],
+				},
+				Tokens: tk[:10],
+			}
+		}},
+		{"a ( ) { b; }", func(t *test, tk Tokens) { // 4
+			t.Output = FunctionCompound{
+				Identifier: &tk[0],
+				Body: Compound{
+					GroupingCompound: &GroupingCompound{
+						File: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														Words: []Word{
+															{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[8],
+																		Tokens: tk[8:9],
+																	},
+																},
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+													Tokens: tk[8:9],
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:10],
+										},
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+						Tokens: tk[6:12],
+					},
+					Tokens: tk[6:12],
+				},
+				Tokens: tk[:12],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var f FunctionCompound
+
+		err := f.parse(t.Parser)
+
+		return f, err
+	})
+}
+
 func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
