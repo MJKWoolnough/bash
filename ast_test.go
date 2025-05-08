@@ -3910,6 +3910,45 @@ func TestFunctionCompound(t *testing.T) {
 				Tokens: tk[:12],
 			}
 		}},
+		{"function a() { || }", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[8],
+											},
+											Parsing: "CommandOrCompound",
+											Token:   tk[8],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[8],
+									},
+									Parsing: "Statement",
+									Token:   tk[8],
+								},
+								Parsing: "Line",
+								Token:   tk[8],
+							},
+							Parsing: "File",
+							Token:   tk[8],
+						},
+						Parsing: "GroupingCompound",
+						Token:   tk[8],
+					},
+					Parsing: "Compound",
+					Token:   tk[6],
+				},
+				Parsing: "FunctionCompound",
+				Token:   tk[6],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var f FunctionCompound
 
