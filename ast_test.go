@@ -6173,7 +6173,22 @@ func TestParameter(t *testing.T) {
 				Tokens: tk[1:5],
 			}
 		}},
-		{"${a[@]}", func(t *test, tk Tokens) { // 7
+		{"${a[ 0 ]}", func(t *test, tk Tokens) { // 7
+			t.Output = Parameter{
+				Parameter: &tk[1],
+				Array: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[1:7],
+			}
+		}},
+		{"${a[@]}", func(t *test, tk Tokens) { // 8
 			t.Output = Parameter{
 				Parameter: &tk[1],
 				Array: &Word{
@@ -6188,7 +6203,7 @@ func TestParameter(t *testing.T) {
 				Tokens: tk[1:5],
 			}
 		}},
-		{"${a[*]}", func(t *test, tk Tokens) { // 8
+		{"${a[*]}", func(t *test, tk Tokens) { // 9
 			t.Output = Parameter{
 				Parameter: &tk[1],
 				Array: &Word{
@@ -6203,7 +6218,7 @@ func TestParameter(t *testing.T) {
 				Tokens: tk[1:5],
 			}
 		}},
-		{"${a[$(||)]}", func(t *test, tk Tokens) { // 9
+		{"${a[$(||)]}", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
