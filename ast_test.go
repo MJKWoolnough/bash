@@ -6261,6 +6261,13 @@ func TestParameter(t *testing.T) {
 				Token:   tk[3],
 			}
 		}},
+		{"${a[b c]}", func(t *test, tk Tokens) { // 11
+			t.Err = Error{
+				Err:     ErrMissingClosingBracket,
+				Parsing: "Parameter",
+				Token:   tk[5],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var p Parameter
 
