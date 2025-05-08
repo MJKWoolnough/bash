@@ -521,11 +521,7 @@ func (t *TestConsequence) parse(b *bashParser) error {
 
 	b.Score(c)
 	b.AcceptRunAllWhitespace()
-
-	if !b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"}) {
-		return b.Error("TestConsequence", ErrMissingThen)
-	}
-
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"})
 	b.AcceptRunAllWhitespace()
 
 	c = b.NewGoal()
