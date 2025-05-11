@@ -861,13 +861,13 @@ func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.T
 				return t.Return(TokenPattern, b.main)
 			}
 
-			return t.ReturnError(io.ErrUnexpectedEOF)
+			return t.ReturnError(ErrInvalidCharacter)
 		case '/':
 			if parens == 0 {
 				return t.Return(TokenPattern, b.parameterExpansionPatternEnd)
 			}
 
-			fallthrough
+			return t.ReturnError(ErrInvalidCharacter)
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
 		case '\\':

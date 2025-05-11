@@ -1275,7 +1275,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: "${"},
 				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenPunctuator, Data: "/"},
-				{Type: parser.TokenError, Data: "unexpected EOF"},
+				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
 		{ // 71
