@@ -1112,6 +1112,8 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 		}
 
 		return t.Return(TokenKeyword, b.function)
+	case "[[":
+		return t.Return(TokenKeyword, b.test)
 	case "continue", "break":
 		if td := b.lastTokenDepth(); td != 'l' {
 			return t.ReturnError(ErrInvalidKeyword)
@@ -1357,6 +1359,32 @@ func (b *bashTokeniser) functionCloseParen(t *parser.Tokeniser) (parser.Token, p
 	}
 
 	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.test)
+	} else if t.Accept(newline) {
+		t.AcceptRun(newline)
+
+		return t.Return(TokenLineTerminator, b.test)
+	} else if t.Accept("!") {
+		return t.Return(TokenPunctuator, b.test)
+	}
+
+	state := t.State()
+
+	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isKeywordSeperator(t) {
+		return t.Return(TokenPunctuator, b.testWord)
+	}
+
+	state.Reset()
+
+	return b.testWord(t)
+}
+
+func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return t.Error()
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
