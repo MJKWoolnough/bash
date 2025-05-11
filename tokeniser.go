@@ -64,6 +64,7 @@ const (
 	TokenOpenBacktick
 	TokenCloseBacktick
 	TokenPattern
+	TokenOperator
 )
 
 type heredocType struct {
@@ -180,7 +181,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if td == 't' {
 		return b.test(t)
 	} else if td == 'T' {
-		return b.testBinary(t)
+		return b.testBinaryOperator(t)
 	} else if t.Accept("#") {
 		if td == '}' || td == '~' {
 			return b.word(t)
@@ -1385,21 +1386,21 @@ func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	state := t.State()
 
 	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isKeywordSeperator(t) {
-		return t.Return(TokenPunctuator, b.testWord)
+		return t.Return(TokenPunctuator, b.testWordOrPunctuator)
 	}
 
 	state.Reset()
 
-	return b.testWord(t)
+	return b.testWordOrPunctuator(t)
 }
 
-func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if parseWhitespace(t) {
-		return t.Return(TokenWhitespace, b.test)
+		return t.Return(TokenWhitespace, b.testWordOrPunctuator)
 	} else if t.Accept(newline) {
 		t.AcceptRun(newline)
 
-		return t.Return(TokenLineTerminator, b.test)
+		return t.Return(TokenLineTerminator, b.testWordOrPunctuator)
 	}
 
 	switch c := t.Peek(); c {
@@ -1415,7 +1416,7 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
-		return t.Return(TokenPunctuator, b.testWord)
+		return t.Return(TokenPunctuator, b.testWordOrPunctuator)
 	case '|':
 		t.Next()
 
@@ -1459,7 +1460,7 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 	return t.Return(TokenPunctuator, b.test)
 }
 
-func (b *bashTokeniser) testBinary(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	switch t.Peek() {
 	case -1:
 		return t.ReturnError(io.ErrUnexpectedEOF)
@@ -1481,7 +1482,7 @@ func (b *bashTokeniser) testBinary(t *parser.Tokeniser) (parser.Token, parser.To
 		return t.ReturnError(ErrInvalidCharacter)
 	}
 
-	return t.Return(TokenPunctuator, b.main)
+	return t.Return(TokenOperator, b.main)
 }
 
 func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
