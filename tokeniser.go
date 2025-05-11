@@ -1454,6 +1454,31 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 }
 
 func (b *bashTokeniser) testBinary(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	switch t.Peek() {
+	case -1:
+		return t.ReturnError(io.ErrUnexpectedEOF)
+	case '=':
+		t.Next()
+		t.Accept("=~")
+	case '!':
+		if !t.Accept("=") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+	case '<', '>':
+	case '-':
+		t.Next()
+
+		if t.Accept("e") && !t.Accept("q") || t.Accept("n") && !t.Accept("e") || t.Accept("gl") && !t.Accept("et") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+	default:
+		return t.ReturnError(ErrInvalidCharacter)
+	}
+
+	return t.Return(TokenPunctuator, b.testPattern)
+}
+
+func (b *bashTokeniser) testPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return t.Error()
 }
 
