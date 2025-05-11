@@ -2092,6 +2092,16 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
+		{ // 118
+			"a() b",
+			[]parser.Token{
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
