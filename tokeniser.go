@@ -1414,6 +1414,8 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 		if b.lastTokenDepth() != 't' {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
+
+		return t.Return(TokenPunctuator, b.testWord)
 	case '|':
 		t.Next()
 
