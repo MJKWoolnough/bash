@@ -131,6 +131,10 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 	if isKeywordSeperator(t) && td == 'C' {
 		return b.caseIn(t)
+	} else if td == 'P' {
+		b.popTokenDepth()
+
+		return b.testPattern(t)
 	} else if t.Peek() == -1 {
 		if b.isInCommand() {
 			b.endCommand()
@@ -1475,11 +1479,44 @@ func (b *bashTokeniser) testBinary(t *parser.Tokeniser) (parser.Token, parser.To
 		return t.ReturnError(ErrInvalidCharacter)
 	}
 
-	return t.Return(TokenPunctuator, b.testPattern)
+	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.test)
+	} else if t.Accept(newline) {
+		t.AcceptRun(newline)
+
+		return t.Return(TokenLineTerminator, b.test)
+	}
+
+	return b.testPattern(t)
 }
 
 func (b *bashTokeniser) testPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return t.Error()
+Loop:
+	for {
+		switch t.ExceptRun("\\ \n$") {
+		case -1:
+			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '\\':
+			t.Next()
+			t.Next()
+		case ' ', '\n':
+			break Loop
+		case '$':
+			b.pushTokenDepth('P')
+
+			if t.Len() > 0 {
+				return t.Return(TokenPattern, b.identifier)
+			}
+
+			return b.identifier(t)
+		}
+	}
+
+	return t.Return(TokenPattern, b.test)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
