@@ -163,6 +163,10 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if td == 't' {
 		return b.testWord(t)
 	} else if parseWhitespace(t) {
+		if td == 'T' {
+			return t.Return(TokenWhitespace, b.testBinaryOperator)
+		}
+
 		return t.Return(TokenWhitespace, b.main)
 	} else if t.Accept(newline) {
 		b.endCommand()
@@ -177,11 +181,11 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.ifThen)
 		} else if td == 'L' {
 			return t.Return(TokenLineTerminator, b.loopDo)
+		} else if td == 'T' {
+			return t.Return(TokenLineTerminator, b.testBinaryOperator)
 		}
 
 		return t.Return(TokenLineTerminator, b.main)
-	} else if td == 'T' {
-		return b.testBinaryOperator(t)
 	} else if t.Accept("#") {
 		if td == '}' || td == '~' {
 			return b.word(t)
@@ -1465,6 +1469,14 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 }
 
 func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.testBinaryOperator)
+	} else if t.Accept(newline) {
+		t.AcceptRun(newline)
+
+		return t.Return(TokenLineTerminator, b.testBinaryOperator)
+	}
+
 	b.popTokenDepth()
 
 	switch t.Peek() {
