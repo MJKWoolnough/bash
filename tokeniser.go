@@ -27,7 +27,7 @@ const (
 	ansiStops           = "'\\"
 	word                = "\\\"'`(){}- \t\n"
 	wordNoBracket       = "\\\"'`(){}- \t\n]"
-	wordBreak           = " `\\\t\n$|&;<>()"
+	wordBreak           = "\\\"'`() \t\n$|&;<>{"
 	wordBreakNoBracket  = wordBreak + "]"
 	wordBreakNoBrace    = wordBreak + "}"
 	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
@@ -160,11 +160,9 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return b.heredocString(t)
 	} else if td == '"' || td == '\'' {
 		return b.string(t, false)
+	} else if td == 't' {
+		return b.testWord(t)
 	} else if parseWhitespace(t) {
-		if td == 'T' {
-			return t.Return(TokenWhitespace, b.testBinaryOperator)
-		}
-
 		return t.Return(TokenWhitespace, b.main)
 	} else if t.Accept(newline) {
 		b.endCommand()
@@ -179,13 +177,11 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.ifThen)
 		} else if td == 'L' {
 			return t.Return(TokenLineTerminator, b.loopDo)
-		} else if td == 'T' {
-			return t.Return(TokenLineTerminator, b.testBinaryOperator)
 		}
 
 		return t.Return(TokenLineTerminator, b.main)
-	} else if td == 't' {
-		return b.test(t)
+	} else if td == 'T' {
+		return b.testBinaryOperator(t)
 	} else if t.Accept("#") {
 		if td == '}' || td == '~' {
 			return b.word(t)
@@ -974,7 +970,7 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 
 func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !b.isInCommand() {
-		if b.lastTokenDepth() != 't' {
+		if td := b.lastTokenDepth(); td != 't' && td != 'T' {
 			state := t.State()
 			kw := t.AcceptWord(keywords, false)
 
@@ -1504,6 +1500,18 @@ func (b *bashTokeniser) testWordStart(t *parser.Tokeniser) (parser.Token, parser
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.testWordStart)
+	}
+
+	return b.testWord(t)
+}
+
+func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if c := t.Peek(); c == '$' {
+		return b.identifier(t)
+	} else if c == '"' || c == '\'' {
+		return b.stringStart(t)
+	} else if c == ' ' || c == '\n' {
+		return b.test(t)
 	}
 
 	return b.keywordIdentOrWord(t)
