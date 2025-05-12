@@ -1486,10 +1486,13 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 		t.Next()
 		t.Accept("=~")
 	case '!':
+		t.Next()
+
 		if !t.Accept("=") {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 	case '<', '>':
+		t.Next()
 	case '-':
 		t.Next()
 
@@ -1544,14 +1547,22 @@ func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, par
 func (b *bashTokeniser) testPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 Loop:
 	for {
-		switch t.ExceptRun("\\ \n$") {
+		switch t.ExceptRun("\\\"' \t\n$") {
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
 		case '\\':
 			t.Next()
 			t.Next()
-		case ' ', '\n':
+		case ' ', '\t', '\n':
 			break Loop
+		case '"', '\'':
+			b.pushTokenDepth('P')
+
+			if t.Len() > 0 {
+				return t.Return(TokenPattern, b.stringStart)
+			}
+
+			return b.stringStart(t)
 		case '$':
 			b.pushTokenDepth('P')
 
@@ -1563,7 +1574,11 @@ Loop:
 		}
 	}
 
-	return t.Return(TokenPattern, b.test)
+	if t.Len() > 0 {
+		return t.Return(TokenPattern, b.test)
+	}
+
+	return b.test(t)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
