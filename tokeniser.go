@@ -1414,6 +1414,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 		t.Next()
 		b.pushTokenDepth('t')
 	case ')':
+		t.Next()
 		b.popTokenDepth()
 
 		if b.lastTokenDepth() != 't' {
@@ -1547,14 +1548,14 @@ func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, par
 func (b *bashTokeniser) testPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 Loop:
 	for {
-		switch t.ExceptRun("\\\"' \t\n$") {
+		switch t.ExceptRun("\\\"' \t\n$()") {
+		default:
+			break Loop
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
 		case '\\':
 			t.Next()
 			t.Next()
-		case ' ', '\t', '\n':
-			break Loop
 		case '"', '\'':
 			b.pushTokenDepth('P')
 
