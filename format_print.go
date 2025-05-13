@@ -538,6 +538,8 @@ func (s String) printSource(w io.Writer, v bool) {
 
 func (t TestCompound) printSource(w io.Writer, v bool) {}
 
+func (t Tests) printSource(w io.Writer, v bool) {}
+
 func (t TestConsequence) printSource(w io.Writer, v bool) {
 	t.Test.printSource(w, v)
 	io.WriteString(w, " then\n")
