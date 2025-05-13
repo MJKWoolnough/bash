@@ -627,6 +627,17 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *Pattern) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Pattern {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *PatternLines) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -863,6 +874,40 @@ func (f *Tests) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
 	pp.Print("Tests {")
+
+	pp.Print("\nTest: ")
+	f.Test.printType(&pp, v)
+
+	if f.Word != nil {
+		pp.Print("\nWord: ")
+		f.Word.printType(&pp, v)
+	} else if v {
+		pp.Print("\nWord: nil")
+	}
+
+	if f.Pattern != nil {
+		pp.Print("\nPattern: ")
+		f.Pattern.printType(&pp, v)
+	} else if v {
+		pp.Print("\nPattern: nil")
+	}
+
+	if f.Parens != nil {
+		pp.Print("\nParens: ")
+		f.Parens.printType(&pp, v)
+	} else if v {
+		pp.Print("\nParens: nil")
+	}
+
+	pp.Print("\nLogicalOperator: ")
+	f.LogicalOperator.printType(&pp, v)
+
+	if f.Tests != nil {
+		pp.Print("\nTests: ")
+		f.Tests.printType(&pp, v)
+	} else if v {
+		pp.Print("\nTests: nil")
+	}
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
