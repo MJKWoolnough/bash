@@ -359,6 +359,95 @@ func (p ParameterType) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
 
+func (t TestOperator) String() string {
+	switch t {
+	case TestOperatorNone:
+		return "TestOperatorNone"
+	case TestOperatorFileExists:
+		return "TestOperatorFileExists"
+	case TestOperatorFileIsBlock:
+		return "TestOperatorFileIsBlock"
+	case TestOperatorFileIsCharacter:
+		return "TestOperatorFileIsCharacter"
+	case TestOperatorDirectoryExists:
+		return "TestOperatorDirectoryExists"
+	case TestOperatorFileIsRegular:
+		return "TestOperatorFileIsRegular"
+	case TestOperatorFileHasSetGroupID:
+		return "TestOperatorFileHasSetGroupID"
+	case TestOperatorFileIsSymbolic:
+		return "TestOperatorFileIsSymbolic"
+	case TestOperatorFileHasStickyBit:
+		return "TestOperatorFileHasStickyBit"
+	case TestOperatorFileIsPipe:
+		return "TestOperatorFileIsPipe"
+	case TestOperatorFileIsReadable:
+		return "TestOperatorFileIsReadable"
+	case TestOperatorFileIsNonZero:
+		return "TestOperatorFileIsNonZero"
+	case TestOperatorFileIsTerminal:
+		return "TestOperatorFileIsTerminal"
+	case TestOperatorFileHasSetUserID:
+		return "TestOperatorFileHasSetUserID"
+	case TestOperatorFileIsWritable:
+		return "TestOperatorFileIsWritable"
+	case TestOperatorFileIsExecutable:
+		return "TestOperatorFileIsExecutable"
+	case TestOperatorFileIsOwnedByEffectiveGroup:
+		return "TestOperatorFileIsOwnedByEffectiveGroup"
+	case TestOperatorFileWasModifiedSinceLastRead:
+		return "TestOperatorFileWasModifiedSinceLastRead"
+	case TestOperatorFileIsOwnedByEffectiveUser:
+		return "TestOperatorFileIsOwnedByEffectiveUser"
+	case TestOperatorFileIsSocket:
+		return "TestOperatorFileIsSocket"
+	case TestOperatorFilesAreSameInode:
+		return "TestOperatorFilesAreSameInode"
+	case TestOperatorFileIsNewerThan:
+		return "TestOperatorFileIsNewerThan"
+	case TestOperatorFileIsOlderThan:
+		return "TestOperatorFileIsOlderThan"
+	case TestOperatorOptNameIsEnabled:
+		return "TestOperatorOptNameIsEnabled"
+	case TestOperatorVarNameIsSet:
+		return "TestOperatorVarNameIsSet"
+	case TestOperatorVarnameIsRef:
+		return "TestOperatorVarnameIsRef"
+	case TestOperatorStringIsZero:
+		return "TestOperatorStringIsZero"
+	case TestOperatorStringIsNonZero:
+		return "TestOperatorStringIsNonZero"
+	case TestOperatorStringsEqual:
+		return "TestOperatorStringsEqual"
+	case TestOperatorStringsMatch:
+		return "TestOperatorStringsMatch"
+	case TestOperatorStringsNotEqual:
+		return "TestOperatorStringsNotEqual"
+	case TestOperatorStringBefore:
+		return "TestOperatorStringBefore"
+	case TestOperatorStringAfter:
+		return "TestOperatorStringAfter"
+	case TestOperatorEqual:
+		return "TestOperatorEqual"
+	case TestOperatorNotEqual:
+		return "TestOperatorNotEqual"
+	case TestOperatorLessThan:
+		return "TestOperatorLessThan"
+	case TestOperatorLessThanEqual:
+		return "TestOperatorLessThanEqual"
+	case TestOperatorGreaterThan:
+		return "TestOperatorGreaterThan"
+	case TestOperatorGreaterThanEqual:
+		return "TestOperatorGreaterThanEqual"
+	default:
+		return ""
+	}
+}
+
+func (t TestOperator) printType(w io.Writer, v bool) {
+	io.WriteString(w, t.String())
+}
+
 type formatter interface {
 	printType(io.Writer, bool)
 	printSource(io.Writer, bool)
