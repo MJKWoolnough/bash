@@ -23,4 +23,5 @@ var (
 	ErrMissingClosingPattern     = errors.New("missing pattern closing")
 	ErrInvalidKeyword            = errors.New("invalid keyword")
 	ErrInvalidIdentifier         = errors.New("invalid identifier")
+	ErrMissingOperator           = errors.New("missing operator")
 )
