@@ -833,6 +833,9 @@ func (f *TestCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("TestCompound {")
 
+	pp.Print("\nTests: ")
+	f.Tests.printType(&pp, v)
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
@@ -849,6 +852,17 @@ func (f *TestConsequence) printType(w io.Writer, v bool) {
 
 	pp.Print("\nConsequence: ")
 	f.Consequence.printType(&pp, v)
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *Tests) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Tests {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

@@ -329,6 +329,18 @@ func (f TestConsequence) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f Tests) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = Tests
+		type Tests X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Value) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Value

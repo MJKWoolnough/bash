@@ -66,6 +66,8 @@ func (TestCompound) bashType() {}
 
 func (TestConsequence) bashType() {}
 
+func (Tests) bashType() {}
+
 func (Value) bashType() {}
 
 func (Word) bashType() {}
