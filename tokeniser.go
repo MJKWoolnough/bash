@@ -1499,7 +1499,23 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 	case '-':
 		t.Next()
 
-		if t.Accept("e") && !t.Accept("q") || t.Accept("n") && !t.Accept("e") || t.Accept("gl") && !t.Accept("et") {
+		if t.Accept("e") {
+			if !t.Accept("qf") {
+				return t.ReturnError(ErrInvalidCharacter)
+			}
+		} else if t.Accept("n") {
+			if !t.Accept("et") {
+				return t.ReturnError(ErrInvalidCharacter)
+			}
+		} else if t.Accept("gl") {
+			if !t.Accept("et") {
+				return t.ReturnError(ErrInvalidCharacter)
+			}
+		} else if t.Accept("o") {
+			if !t.Accept("t") {
+				return t.ReturnError(ErrInvalidCharacter)
+			}
+		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
