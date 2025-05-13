@@ -834,10 +834,34 @@ func (s *SelectCompound) parse(b *bashParser) error {
 }
 
 type TestCompound struct {
+	Tests  Tests
 	Tokens Tokens
 }
 
 func (t *TestCompound) parse(b *bashParser) error {
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "[["})
+	b.AcceptRunAllWhitespace()
+
+	c := b.NewGoal()
+
+	if err := t.Tests.parse(c); err != nil {
+		return b.Error("TestCompound", err)
+	}
+
+	b.Score(c)
+	b.AcceptRunAllWhitespace()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "]]"})
+
+	t.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Tests struct {
+	Tokens Tokens
+}
+
+func (t *Tests) parse(b *bashParser) error {
 	return nil
 }
 
