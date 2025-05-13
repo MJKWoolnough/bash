@@ -857,11 +857,244 @@ func (t *TestCompound) parse(b *bashParser) error {
 	return nil
 }
 
+type TestOperator uint8
+
+const (
+	TestOperatorNone TestOperator = iota
+	TestOperatorFileExists
+	TestOperatorFileIsBlock
+	TestOperatorFileIsCharacter
+	TestOperatorDirectoryExists
+	TestOperatorFileIsRegular
+	TestOperatorFileHasSetGroupID
+	TestOperatorFileIsSymbolic
+	TestOperatorFileHasStickyBit
+	TestOperatorFileIsPipe
+	TestOperatorFileIsReadable
+	TestOperatorFileIsNonZero
+	TestOperatorFileIsTerminal
+	TestOperatorFileHasSetUserID
+	TestOperatorFileIsWritable
+	TestOperatorFileIsExecutable
+	TestOperatorFileIsOwnedByEffectiveGroup
+	TestOperatorFileWasModifiedSinceLastRead
+	TestOperatorFileIsOwnedByEffectiveUser
+	TestOperatorFileIsSocket
+	TestOperatorFilesAreSameInode
+	TestOperatorFileIsNewerThan
+	TestOperatorFileIsOlderThan
+	TestOperatorOptNameIsEnabled
+	TestOperatorVarNameIsSet
+	TestOperatorVarnameIsRef
+	TestOperatorStringIsZero
+	TestOperatorStringIsNonZero
+	TestOperatorStringsEqual
+	TestOperatorStringsMatch
+	TestOperatorStringsNotEqual
+	TestOperatorStringBefore
+	TestOperatorStringAfter
+	TestOperatorEqual
+	TestOperatorNotEqual
+	TestOperatorLessThan
+	TestOperatorLessThanEqual
+	TestOperatorGreaterThan
+	TestOperatorGreaterThanEqual
+)
+
 type Tests struct {
-	Tokens Tokens
+	Test            TestOperator
+	Word            *Word
+	Pattern         *Pattern
+	Parens          *Tests
+	LogicalOperator LogicalOperator
+	Tests           *Tests
+	Tokens          Tokens
 }
 
 func (t *Tests) parse(b *bashParser) error {
+	if tk := b.Peek(); tk.Type == TokenKeyword {
+		switch tk.Data {
+		case "-a", "-e":
+			t.Test = TestOperatorFileExists
+		case "-b":
+			t.Test = TestOperatorFileIsBlock
+		case "-c":
+			t.Test = TestOperatorFileIsCharacter
+		case "-d":
+			t.Test = TestOperatorDirectoryExists
+		case "-f":
+			t.Test = TestOperatorFileIsRegular
+		case "-g":
+			t.Test = TestOperatorFileHasSetGroupID
+		case "-h", "-L":
+			t.Test = TestOperatorFileIsSymbolic
+		case "-k":
+			t.Test = TestOperatorFileHasStickyBit
+		case "-p":
+			t.Test = TestOperatorFileIsPipe
+		case "-r":
+			t.Test = TestOperatorFileIsReadable
+		case "-s":
+			t.Test = TestOperatorFileIsNonZero
+		case "-t":
+			t.Test = TestOperatorFileIsTerminal
+		case "-u":
+			t.Test = TestOperatorFileHasSetUserID
+		case "-w":
+			t.Test = TestOperatorFileIsWritable
+		case "-x":
+			t.Test = TestOperatorFileIsExecutable
+		case "-G":
+			t.Test = TestOperatorFileIsOwnedByEffectiveGroup
+		case "-N":
+			t.Test = TestOperatorFileWasModifiedSinceLastRead
+		case "-O":
+			t.Test = TestOperatorFileIsOwnedByEffectiveUser
+		case "-S":
+			t.Test = TestOperatorFileIsSocket
+		case "-o":
+			t.Test = TestOperatorOptNameIsEnabled
+		case "-v":
+			t.Test = TestOperatorVarNameIsSet
+		case "-R":
+			t.Test = TestOperatorVarnameIsRef
+		case "-z":
+			t.Test = TestOperatorStringIsZero
+		case "-n":
+			t.Test = TestOperatorStringIsNonZero
+		}
+
+		b.Next()
+		b.AcceptRunAllWhitespace()
+
+		c := b.NewGoal()
+		t.Word = new(Word)
+
+		if err := t.Word.parse(c, false); err != nil {
+			return b.Error("Tests", err)
+		}
+	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
+		b.AcceptRunAllWhitespace()
+
+		c := b.NewGoal()
+		t.Parens = new(Tests)
+
+		if err := t.Parens.parse(c); err != nil {
+			return b.Error("Tests", err)
+		}
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+
+		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+			return b.Error("Tests", ErrMissingClosingParen)
+		}
+	} else {
+		c := b.NewGoal()
+		t.Word = new(Word)
+
+		if err := t.Word.parse(c, false); err != nil {
+			return b.Error("Tests", err)
+		}
+
+		b.Score(c)
+		b.AcceptRunAllWhitespace()
+
+		if tk := b.Peek(); tk.Type == TokenKeyword {
+			switch tk.Data {
+			case "-ef":
+				t.Test = TestOperatorFilesAreSameInode
+			case "-nt":
+				t.Test = TestOperatorFileIsNewerThan
+			case "-ot":
+				t.Test = TestOperatorFileIsOlderThan
+			case "-eq":
+				t.Test = TestOperatorEqual
+			case "-ne":
+				t.Test = TestOperatorNotEqual
+			case "-lt":
+				t.Test = TestOperatorLessThan
+			case "-le":
+				t.Test = TestOperatorLessThanEqual
+			case "-gt":
+				t.Test = TestOperatorGreaterThan
+			case "-ge":
+				t.Test = TestOperatorGreaterThanEqual
+			}
+
+			b.Next()
+
+			c := b.NewGoal()
+			t.Pattern = new(Pattern)
+
+			if err := t.Pattern.parse(c); err != nil {
+				return b.Error("Tests", err)
+			}
+
+			b.Score(c)
+		} else if tk.Type == TokenOperator {
+			switch tk.Data {
+			case "=", "==":
+				t.Test = TestOperatorStringsEqual
+			case "!=":
+				t.Test = TestOperatorStringsNotEqual
+			case "~=":
+				t.Test = TestOperatorStringsMatch
+			case "<":
+				t.Test = TestOperatorStringBefore
+			case ">":
+				t.Test = TestOperatorStringAfter
+			}
+
+			b.Next()
+
+			c := b.NewGoal()
+			t.Pattern = new(Pattern)
+
+			if err := t.Pattern.parse(c); err != nil {
+				return b.Error("Tests", err)
+			}
+
+			b.Score(c)
+		} else {
+			return b.Error("Tests", ErrMissingOperator)
+		}
+	}
+
+	c := b.NewGoal()
+
+	c.AcceptRunAllWhitespace()
+
+	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "||"}) {
+		t.LogicalOperator = LogicalOperatorOr
+	} else if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "&&"}) {
+		t.LogicalOperator = LogicalOperatorAnd
+	}
+
+	if t.LogicalOperator != LogicalOperatorNone {
+		c.AcceptRunAllWhitespace()
+		b.Score(c)
+
+		c := b.NewGoal()
+		t.Tests = new(Tests)
+
+		if err := t.Tests.parse(c); err != nil {
+			return b.Error("Tests", err)
+		}
+
+		b.Score(c)
+	}
+
+	t.Tokens = b.ToTokens()
+
+	return nil
+}
+
+type Pattern struct {
+	Tokens Tokens
+}
+
+func (p *Pattern) parse(b *bashParser) error {
 	return nil
 }
 
