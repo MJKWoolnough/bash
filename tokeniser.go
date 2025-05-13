@@ -1454,6 +1454,8 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 				return t.ReturnError(ErrInvalidCharacter)
 			}
 
+			b.setInCommand()
+
 			return t.Return(TokenKeyword, b.main)
 		}
 
