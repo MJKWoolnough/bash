@@ -5014,7 +5014,6 @@ func TestValue(t *testing.T) {
 		var v Value
 
 		t.Parser.Tokens = t.Parser.Tokens[2:2]
-
 		err := v.parse(t.Parser)
 
 		return v, err
@@ -6323,7 +6322,6 @@ func TestParameter(t *testing.T) {
 		var p Parameter
 
 		t.Parser.Tokens = t.Parser.Tokens[1:1]
-
 		err := p.parse(t.Parser)
 
 		return p, err
@@ -7183,7 +7181,6 @@ func TestHeredoc(t *testing.T) {
 		var h Heredoc
 
 		t.Parser.Tokens = t.Parser.Tokens[3:3]
-
 		err := h.parse(t.Parser)
 
 		return h, err
@@ -7259,7 +7256,6 @@ func TestHeredocPartOrWord(t *testing.T) {
 		var h HeredocPartOrWord
 
 		t.Parser.Tokens = t.Parser.Tokens[3:3]
-
 		err := h.parse(t.Parser)
 
 		return h, err
