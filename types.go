@@ -54,6 +54,8 @@ func (Pattern) bashType() {}
 
 func (PatternLines) bashType() {}
 
+func (PatternPart) bashType() {}
+
 func (Pipeline) bashType() {}
 
 func (Redirection) bashType() {}

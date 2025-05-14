@@ -632,6 +632,23 @@ func (f *Pattern) printType(w io.Writer, v bool) {
 
 	pp.Print("Pattern {")
 
+	if f.Parts == nil {
+		pp.Print("\nParts: nil")
+	} else if len(f.Parts) > 0 {
+		pp.Print("\nParts: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Parts {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nParts: []")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
@@ -665,6 +682,17 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 
 	pp.Print("\nCaseTerminationType: ")
 	f.CaseTerminationType.printType(&pp, v)
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
+func (f *PatternPart) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("PatternPart {")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
