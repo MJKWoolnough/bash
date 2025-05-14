@@ -3674,6 +3674,44 @@ func TestSelectCompound(t *testing.T) {
 	})
 }
 
+func TestPattern(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"[[ z = a ]]", func(t *test, tk Tokens) { // 1
+			t.Output = Pattern{
+				Parts: []WordPart{
+					{
+						Part:   &tk[6],
+						Tokens: tk[6:7],
+					},
+				},
+				Tokens: tk[6:7],
+			}
+		}},
+		{"[[ z = a$b ]]", func(t *test, tk Tokens) { // 2
+			t.Output = Pattern{
+				Parts: []WordPart{
+					{
+						Part:   &tk[6],
+						Tokens: tk[6:7],
+					},
+					{
+						Part:   &tk[7],
+						Tokens: tk[7:8],
+					},
+				},
+				Tokens: tk[6:8],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var p Pattern
+
+		t.Parser.Tokens = t.Parser.Tokens[6:6]
+		err := p.parse(t.Parser)
+
+		return p, err
+	})
+}
+
 func TestGroupingCompound(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"(a)", func(t *test, tk Tokens) { // 1
