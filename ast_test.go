@@ -3702,6 +3702,45 @@ func TestPattern(t *testing.T) {
 				Tokens: tk[6:8],
 			}
 		}},
+		{"[[ z = $(||) ]]", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[7],
+											},
+											Parsing: "CommandOrCompound",
+											Token:   tk[7],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[7],
+									},
+									Parsing: "Statement",
+									Token:   tk[7],
+								},
+								Parsing: "Line",
+								Token:   tk[7],
+							},
+							Parsing: "File",
+							Token:   tk[7],
+						},
+						Parsing: "CommandSubstitution",
+						Token:   tk[7],
+					},
+					Parsing: "WordPart",
+					Token:   tk[6],
+				},
+				Parsing: "Pattern",
+				Token:   tk[6],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var p Pattern
 
