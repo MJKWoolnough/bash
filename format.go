@@ -359,7 +359,7 @@ func (p ParameterType) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
 
-func (t TestOperator) printType(w io.Writer, v bool) {
+func (t TestOperator) printSource(w io.Writer, v bool) {
 	switch t {
 	case TestOperatorFileExists:
 		io.WriteString(w, "-e")
