@@ -1091,10 +1091,44 @@ func (t *Tests) parse(b *bashParser) error {
 }
 
 type Pattern struct {
+	Parts  []PatternPart
 	Tokens Tokens
 }
 
 func (p *Pattern) parse(b *bashParser) error {
+	for nextIsPatternPart(b) {
+		c := b.NewGoal()
+
+		var pp PatternPart
+
+		if err := pp.parse(c); err != nil {
+			return b.Error("Word", err)
+		}
+
+		p.Parts = append(p.Parts, pp)
+
+		b.Score(c)
+	}
+
+	p.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func nextIsPatternPart(b *bashParser) bool {
+	switch tk := b.Peek(); tk.Type {
+	case TokenWhitespace, TokenLineTerminator, TokenComment:
+		return false
+	}
+
+	return true
+}
+
+type PatternPart struct {
+	Tokens Tokens
+}
+
+func (p *PatternPart) parse(b *bashParser) error {
 	return nil
 }
 
