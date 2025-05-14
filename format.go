@@ -359,6 +359,87 @@ func (p ParameterType) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
 
+func (t TestOperator) printType(w io.Writer, v bool) {
+	switch t {
+	case TestOperatorFileExists:
+		io.WriteString(w, "-e")
+	case TestOperatorFileIsBlock:
+		io.WriteString(w, "-b")
+	case TestOperatorFileIsCharacter:
+		io.WriteString(w, "-c")
+	case TestOperatorDirectoryExists:
+		io.WriteString(w, "-d")
+	case TestOperatorFileIsRegular:
+		io.WriteString(w, "-f")
+	case TestOperatorFileHasSetGroupID:
+		io.WriteString(w, "-g")
+	case TestOperatorFileIsSymbolic:
+		io.WriteString(w, "-L")
+	case TestOperatorFileHasStickyBit:
+		io.WriteString(w, "-k")
+	case TestOperatorFileIsPipe:
+		io.WriteString(w, "-p")
+	case TestOperatorFileIsReadable:
+		io.WriteString(w, "-r")
+	case TestOperatorFileIsNonZero:
+		io.WriteString(w, "-s")
+	case TestOperatorFileIsTerminal:
+		io.WriteString(w, "-t")
+	case TestOperatorFileHasSetUserID:
+		io.WriteString(w, "-u")
+	case TestOperatorFileIsWritable:
+		io.WriteString(w, "-w")
+	case TestOperatorFileIsExecutable:
+		io.WriteString(w, "-x")
+	case TestOperatorFileIsOwnedByEffectiveGroup:
+		io.WriteString(w, "-G")
+	case TestOperatorFileWasModifiedSinceLastRead:
+		io.WriteString(w, "-N")
+	case TestOperatorFileIsOwnedByEffectiveUser:
+		io.WriteString(w, "-O")
+	case TestOperatorFileIsSocket:
+		io.WriteString(w, "-S")
+	case TestOperatorFilesAreSameInode:
+		io.WriteString(w, "-ef")
+	case TestOperatorFileIsNewerThan:
+		io.WriteString(w, "-nt")
+	case TestOperatorFileIsOlderThan:
+		io.WriteString(w, "-ot")
+	case TestOperatorOptNameIsEnabled:
+		io.WriteString(w, "-o")
+	case TestOperatorVarNameIsSet:
+		io.WriteString(w, "-v")
+	case TestOperatorVarnameIsRef:
+		io.WriteString(w, "-R")
+	case TestOperatorStringIsZero:
+		io.WriteString(w, "-z")
+	case TestOperatorStringIsNonZero:
+		io.WriteString(w, "-n")
+	case TestOperatorStringsEqual:
+		io.WriteString(w, "==")
+	case TestOperatorStringsMatch:
+		io.WriteString(w, "~=")
+	case TestOperatorStringsNotEqual:
+		io.WriteString(w, "!=")
+	case TestOperatorStringBefore:
+		io.WriteString(w, "<")
+	case TestOperatorStringAfter:
+		io.WriteString(w, ">")
+	case TestOperatorEqual:
+		io.WriteString(w, "-eq")
+	case TestOperatorNotEqual:
+		io.WriteString(w, "-ne")
+	case TestOperatorLessThan:
+		io.WriteString(w, "-lt")
+	case TestOperatorLessThanEqual:
+		io.WriteString(w, "-le")
+	case TestOperatorGreaterThan:
+		io.WriteString(w, "-gt")
+	case TestOperatorGreaterThanEqual:
+		io.WriteString(w, "-ge")
+	}
+}
+
 func (t TestOperator) String() string {
 	switch t {
 	case TestOperatorNone:
