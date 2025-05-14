@@ -689,17 +689,6 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *PatternPart) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
-
-	pp.Print("PatternPart {")
-
-	pp.Print("\nTokens: ")
-	f.Tokens.printType(&pp, v)
-
-	io.WriteString(w, "\n}")
-}
-
 func (f *Pipeline) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 

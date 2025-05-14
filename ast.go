@@ -1091,7 +1091,7 @@ func (t *Tests) parse(b *bashParser) error {
 }
 
 type Pattern struct {
-	Parts  []PatternPart
+	Parts  []WordPart
 	Tokens Tokens
 }
 
@@ -1099,10 +1099,10 @@ func (p *Pattern) parse(b *bashParser) error {
 	for nextIsPatternPart(b) {
 		c := b.NewGoal()
 
-		var pp PatternPart
+		var pp WordPart
 
 		if err := pp.parse(c); err != nil {
-			return b.Error("Word", err)
+			return b.Error("Pattern", err)
 		}
 
 		p.Parts = append(p.Parts, pp)
@@ -1122,14 +1122,6 @@ func nextIsPatternPart(b *bashParser) bool {
 	}
 
 	return true
-}
-
-type PatternPart struct {
-	Tokens Tokens
-}
-
-func (p *PatternPart) parse(b *bashParser) error {
-	return nil
 }
 
 type GroupingCompound struct {

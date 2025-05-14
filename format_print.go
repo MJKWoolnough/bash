@@ -425,8 +425,6 @@ func (p PatternLines) printSource(w io.Writer, v bool) {
 	p.CaseTerminationType.printSource(w, v)
 }
 
-func (p PatternPart) printSource(w io.Writer, v bool) {}
-
 func (p Pipeline) printSource(w io.Writer, v bool) {
 	p.PipelineTime.printSource(w, v)
 
