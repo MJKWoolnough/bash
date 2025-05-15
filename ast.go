@@ -1023,6 +1023,7 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Next()
+			b.AcceptRunAllWhitespace()
 
 			c := b.NewGoal()
 			t.Pattern = new(Pattern)
@@ -1047,6 +1048,7 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Next()
+			b.AcceptRunAllWhitespace()
 
 			c := b.NewGoal()
 			t.Pattern = new(Pattern)
