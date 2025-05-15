@@ -1007,9 +1007,13 @@ func (t *Tests) parse(b *bashParser) error {
 		}
 
 		b.Score(c)
-		b.AcceptRunAllWhitespace()
 
-		if tk := b.Peek(); tk.Type == TokenKeyword {
+		c = b.NewGoal()
+		c.AcceptRunAllWhitespace()
+
+		if tk := c.Peek(); tk.Type == TokenKeyword && tk.Data != "]]" {
+			b.Score(c)
+
 			switch tk.Data {
 			case "-ef":
 				t.Test = TestOperatorFilesAreSameInode
@@ -1043,6 +1047,8 @@ func (t *Tests) parse(b *bashParser) error {
 
 			b.Score(c)
 		} else if tk.Type == TokenOperator {
+			b.Score(c)
+
 			switch tk.Data {
 			case "=", "==":
 				t.Test = TestOperatorStringsEqual
@@ -1067,8 +1073,6 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Score(c)
-		} else {
-			return b.Error("Tests", ErrMissingOperator)
 		}
 	}
 
