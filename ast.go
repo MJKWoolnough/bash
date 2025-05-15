@@ -998,8 +998,6 @@ func (t *Tests) parse(b *bashParser) error {
 		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 			return b.Error("Tests", ErrMissingClosingParen)
 		}
-
-		b.Score(c)
 	} else {
 		c := b.NewGoal()
 		t.Word = new(Word)
