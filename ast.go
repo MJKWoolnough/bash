@@ -1130,8 +1130,13 @@ func (p *Pattern) parse(b *bashParser) error {
 
 func nextIsPatternPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenKeyword:
 		return false
+	case TokenPunctuator:
+		switch tk.Data {
+		case ")":
+			return false
+		}
 	}
 
 	return true
