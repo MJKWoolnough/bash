@@ -1039,7 +1039,7 @@ func (t *Tests) parse(b *bashParser) error {
 				t.Test = TestOperatorStringsEqual
 			case "!=":
 				t.Test = TestOperatorStringsNotEqual
-			case "~=":
+			case "=~":
 				t.Test = TestOperatorStringsMatch
 			case "<":
 				t.Test = TestOperatorStringBefore
