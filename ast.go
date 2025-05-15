@@ -902,6 +902,7 @@ const (
 )
 
 type Tests struct {
+	Not             bool
 	Test            TestOperator
 	Word            *Word
 	Pattern         *Pattern
@@ -912,6 +913,12 @@ type Tests struct {
 }
 
 func (t *Tests) parse(b *bashParser) error {
+	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"}) {
+		t.Not = true
+
+		b.AcceptRunAllWhitespace()
+	}
+
 	if tk := b.Peek(); tk.Type == TokenKeyword {
 		switch tk.Data {
 		case "-a", "-e":
