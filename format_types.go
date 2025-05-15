@@ -892,6 +892,10 @@ func (f *Tests) printType(w io.Writer, v bool) {
 
 	pp.Print("Tests {")
 
+	if f.Not || v {
+		pp.Printf("\nNot: %v", f.Not)
+	}
+
 	pp.Print("\nTest: ")
 	f.Test.printType(&pp, v)
 
