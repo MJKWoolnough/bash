@@ -32,6 +32,7 @@ const (
 	wordBreakNoBrace    = wordBreak + "}"
 	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
 	braceWordBreak      = " `\\\t\n|&;<>()={},"
+	testWordBreak       = " `\\\t\n\"'$|&;<>()={}!,"
 	hexDigit            = "0123456789ABCDEFabcdef"
 	octalDigit          = "012345678"
 	decimalDigit        = "0123456789"
@@ -423,17 +424,20 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.popTokenDepth()
 		}
 	case ')':
-		t.Next()
 		b.endCommand()
 
 		if td := b.lastTokenDepth(); td == ')' {
 			b.popTokenDepth()
-		} else if b.lastTokenDepth() == 'p' {
+		} else if td == 'p' {
 			b.popTokenDepth()
 			b.pushTokenDepth('c')
+		} else if td == 'T' {
+			return b.testBinaryOperator(t)
 		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
+
+		t.Next()
 	case '}':
 		t.Next()
 
@@ -1015,34 +1019,36 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 		b.setInCommand()
 	}
 
-	if t.Accept(identStart) {
-		t.AcceptRun(identCont)
+	if td := b.lastTokenDepth(); td != 't' && td != 'T' {
+		if t.Accept(identStart) {
+			t.AcceptRun(identCont)
 
-		if state := t.State(); t.AcceptWord(assignment, false) != "" {
-			state.Reset()
+			if state := t.State(); t.AcceptWord(assignment, false) != "" {
+				state.Reset()
 
-			return t.Return(TokenIdentifierAssign, b.main)
-		} else if t.Peek() == '[' {
-			return t.Return(TokenIdentifierAssign, b.startArrayAssign)
-		} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
-			return t.Return(TokenWord, b.main)
-		} else if !b.isInCommand() {
-			t.AcceptRun(whitespace)
+				return t.Return(TokenIdentifierAssign, b.main)
+			} else if t.Peek() == '[' {
+				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
+			} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
+				return t.Return(TokenWord, b.main)
+			} else if !b.isInCommand() {
+				t.AcceptRun(whitespace)
 
-			isFunc := t.Accept("(")
+				isFunc := t.Accept("(")
 
-			state.Reset()
+				state.Reset()
 
-			if isFunc {
-				return t.Return(TokenFunctionIdentifier, b.functionOpenParen)
+				if isFunc {
+					return t.Return(TokenFunctionIdentifier, b.functionOpenParen)
+				}
 			}
-		}
-	} else if t.Accept(decimalDigit) {
-		t.AcceptRun(decimalDigit)
+		} else if t.Accept(decimalDigit) {
+			t.AcceptRun(decimalDigit)
 
-		switch t.Peek() {
-		case '<', '>':
-			return t.Return(TokenNumberLiteral, b.main)
+			switch t.Peek() {
+			case '<', '>':
+				return t.Return(TokenNumberLiteral, b.main)
+			}
 		}
 	}
 
@@ -1484,7 +1490,7 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 
 	switch t.Peek() {
 	case -1:
-		return t.ReturnError(io.ErrUnexpectedEOF)
+		return b.test(t)
 	case '=':
 		t.Next()
 		t.Accept("=~")
@@ -1521,7 +1527,7 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 
 		return t.Return(TokenKeyword, b.testWordStart)
 	default:
-		return t.ReturnError(ErrInvalidCharacter)
+		return b.test(t)
 	}
 
 	return t.Return(TokenOperator, b.testPatternStart)
@@ -1545,6 +1551,8 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 	} else if c == '"' || c == '\'' {
 		return b.stringStart(t)
 	} else if c == ' ' || c == '\n' {
+		return b.test(t)
+	} else if c == ')' {
 		return b.test(t)
 	}
 
@@ -1610,6 +1618,8 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		wb = wordBreakNoBracket
 	case '>', '/', ':', 'f':
 		wb = wordBreakArithmetic
+	case 't', 'T':
+		wb = testWordBreak
 	default:
 		wb = wordBreak
 	}
