@@ -980,6 +980,8 @@ func (t *Tests) parse(b *bashParser) error {
 		if err := t.Word.parse(c, false); err != nil {
 			return b.Error("Tests", err)
 		}
+
+		b.Score(c)
 	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
 		b.AcceptRunAllWhitespace()
 
@@ -996,6 +998,8 @@ func (t *Tests) parse(b *bashParser) error {
 		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 			return b.Error("Tests", ErrMissingClosingParen)
 		}
+
+		b.Score(c)
 	} else {
 		c := b.NewGoal()
 		t.Word = new(Word)
