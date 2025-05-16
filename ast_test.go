@@ -1797,6 +1797,420 @@ func TestCompounds(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
+		{"if ||;then b;fi", func(t *test, tk Tokens) { // 13
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err:     ErrMissingWord,
+										Parsing: "Command",
+										Token:   tk[2],
+									},
+									Parsing: "CommandOrCompound",
+									Token:   tk[2],
+								},
+								Parsing: "Pipeline",
+								Token:   tk[2],
+							},
+							Parsing: "Statement",
+							Token:   tk[2],
+						},
+						Parsing: "TestConsequence",
+						Token:   tk[2],
+					},
+					Parsing: "IfCompound",
+					Token:   tk[2],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 14
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[3],
+													},
+													Parsing: "CommandOrCompound",
+													Token:   tk[3],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[3],
+											},
+											Parsing: "Statement",
+											Token:   tk[3],
+										},
+										Parsing: "Line",
+										Token:   tk[3],
+									},
+									Parsing: "File",
+									Token:   tk[3],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[3],
+							},
+							Parsing: "WordPart",
+							Token:   tk[2],
+						},
+						Parsing: "Word",
+						Token:   tk[2],
+					},
+					Parsing: "CaseCompound",
+					Token:   tk[2],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"while ||; do b; done", func(t *test, tk Tokens) { // 15
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err:     ErrMissingWord,
+									Parsing: "Command",
+									Token:   tk[2],
+								},
+								Parsing: "CommandOrCompound",
+								Token:   tk[2],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[2],
+						},
+						Parsing: "Statement",
+						Token:   tk[2],
+					},
+					Parsing: "LoopCompound",
+					Token:   tk[2],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"until a; do ||; done", func(t *test, tk Tokens) { // 16
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[7],
+										},
+										Parsing: "CommandOrCompound",
+										Token:   tk[7],
+									},
+									Parsing: "Pipeline",
+									Token:   tk[7],
+								},
+								Parsing: "Statement",
+								Token:   tk[7],
+							},
+							Parsing: "Line",
+							Token:   tk[7],
+						},
+						Parsing: "File",
+						Token:   tk[7],
+					},
+					Parsing: "LoopCompound",
+					Token:   tk[7],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 17
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[7],
+													},
+													Parsing: "CommandOrCompound",
+													Token:   tk[7],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[7],
+											},
+											Parsing: "Statement",
+											Token:   tk[7],
+										},
+										Parsing: "Line",
+										Token:   tk[7],
+									},
+									Parsing: "File",
+									Token:   tk[7],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[7],
+							},
+							Parsing: "WordPart",
+							Token:   tk[6],
+						},
+						Parsing: "Word",
+						Token:   tk[6],
+					},
+					Parsing: "ForCompound",
+					Token:   tk[6],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 18
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[7],
+													},
+													Parsing: "CommandOrCompound",
+													Token:   tk[7],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[7],
+											},
+											Parsing: "Statement",
+											Token:   tk[7],
+										},
+										Parsing: "Line",
+										Token:   tk[7],
+									},
+									Parsing: "File",
+									Token:   tk[7],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[7],
+							},
+							Parsing: "WordPart",
+							Token:   tk[6],
+						},
+						Parsing: "Word",
+						Token:   tk[6],
+					},
+					Parsing: "SelectCompound",
+					Token:   tk[6],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 19
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[5],
+														},
+														Parsing: "CommandOrCompound",
+														Token:   tk[5],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[5],
+												},
+												Parsing: "Statement",
+												Token:   tk[5],
+											},
+											Parsing: "Line",
+											Token:   tk[5],
+										},
+										Parsing: "File",
+										Token:   tk[5],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[5],
+								},
+								Parsing: "WordPart",
+								Token:   tk[4],
+							},
+							Parsing: "Word",
+							Token:   tk[4],
+						},
+						Parsing: "Tests",
+						Token:   tk[4],
+					},
+					Parsing: "TestCompound",
+					Token:   tk[2],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"(||)", func(t *test, tk Tokens) { // 20
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err:     ErrMissingWord,
+											Parsing: "Command",
+											Token:   tk[1],
+										},
+										Parsing: "CommandOrCompound",
+										Token:   tk[1],
+									},
+									Parsing: "Pipeline",
+									Token:   tk[1],
+								},
+								Parsing: "Statement",
+								Token:   tk[1],
+							},
+							Parsing: "Line",
+							Token:   tk[1],
+						},
+						Parsing: "File",
+						Token:   tk[1],
+					},
+					Parsing: "GroupingCompound",
+					Token:   tk[1],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"function a() { || }", func(t *test, tk Tokens) { // 21
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[8],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[8],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[8],
+										},
+										Parsing: "Statement",
+										Token:   tk[8],
+									},
+									Parsing: "Line",
+									Token:   tk[8],
+								},
+								Parsing: "File",
+								Token:   tk[8],
+							},
+							Parsing: "GroupingCompound",
+							Token:   tk[8],
+						},
+						Parsing: "Compound",
+						Token:   tk[6],
+					},
+					Parsing: "FunctionCompound",
+					Token:   tk[6],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
+		{"(($(||)))", func(t *test, tk Tokens) { // 22
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[2],
+														},
+														Parsing: "CommandOrCompound",
+														Token:   tk[2],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[2],
+												},
+												Parsing: "Statement",
+												Token:   tk[2],
+											},
+											Parsing: "Line",
+											Token:   tk[2],
+										},
+										Parsing: "File",
+										Token:   tk[2],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[2],
+								},
+								Parsing: "WordPart",
+								Token:   tk[1],
+							},
+							Parsing: "Word",
+							Token:   tk[1],
+						},
+						Parsing: "WordOrOperator",
+						Token:   tk[1],
+					},
+					Parsing: "ArithmeticExpansion",
+					Token:   tk[1],
+				},
+				Parsing: "Compound",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c Compound
 
