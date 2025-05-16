@@ -3674,6 +3674,882 @@ func TestSelectCompound(t *testing.T) {
 	})
 }
 
+func TestTests(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"[[ a = b ]]", func(t *test, tk Tokens) { // 1
+			t.Output = Tests{
+				Test: TestOperatorStringsEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a == b ]]", func(t *test, tk Tokens) { // 2
+			t.Output = Tests{
+				Test: TestOperatorStringsEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a != b ]]", func(t *test, tk Tokens) { // 3
+			t.Output = Tests{
+				Test: TestOperatorStringsNotEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a =~ b ]]", func(t *test, tk Tokens) { // 4
+			t.Output = Tests{
+				Test: TestOperatorStringsMatch,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a < b ]]", func(t *test, tk Tokens) { // 5
+			t.Output = Tests{
+				Test: TestOperatorStringBefore,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a > b ]]", func(t *test, tk Tokens) { // 6
+			t.Output = Tests{
+				Test: TestOperatorStringAfter,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -ef b ]]", func(t *test, tk Tokens) { // 7
+			t.Output = Tests{
+				Test: TestOperatorFilesAreSameInode,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -nt b ]]", func(t *test, tk Tokens) { // 8
+			t.Output = Tests{
+				Test: TestOperatorFileIsNewerThan,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -ot b ]]", func(t *test, tk Tokens) { // 9
+			t.Output = Tests{
+				Test: TestOperatorFileIsOlderThan,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -eq b ]]", func(t *test, tk Tokens) { // 10
+			t.Output = Tests{
+				Test: TestOperatorEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -ne b ]]", func(t *test, tk Tokens) { // 11
+			t.Output = Tests{
+				Test: TestOperatorNotEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -le b ]]", func(t *test, tk Tokens) { // 12
+			t.Output = Tests{
+				Test: TestOperatorLessThanEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -lt b ]]", func(t *test, tk Tokens) { // 13
+			t.Output = Tests{
+				Test: TestOperatorLessThan,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -ge b ]]", func(t *test, tk Tokens) { // 14
+			t.Output = Tests{
+				Test: TestOperatorGreaterThanEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a -gt b ]]", func(t *test, tk Tokens) { // 15
+			t.Output = Tests{
+				Test: TestOperatorGreaterThan,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ -a a ]]", func(t *test, tk Tokens) { // 16
+			t.Output = Tests{
+				Test: TestOperatorFileExists,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -e a ]]", func(t *test, tk Tokens) { // 17
+			t.Output = Tests{
+				Test: TestOperatorFileExists,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -b a ]]", func(t *test, tk Tokens) { // 18
+			t.Output = Tests{
+				Test: TestOperatorFileIsBlock,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -c a ]]", func(t *test, tk Tokens) { // 19
+			t.Output = Tests{
+				Test: TestOperatorFileIsCharacter,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -d a ]]", func(t *test, tk Tokens) { // 20
+			t.Output = Tests{
+				Test: TestOperatorDirectoryExists,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -f a ]]", func(t *test, tk Tokens) { // 21
+			t.Output = Tests{
+				Test: TestOperatorFileIsRegular,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -g a ]]", func(t *test, tk Tokens) { // 22
+			t.Output = Tests{
+				Test: TestOperatorFileHasSetGroupID,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -h a ]]", func(t *test, tk Tokens) { // 23
+			t.Output = Tests{
+				Test: TestOperatorFileIsSymbolic,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -L a ]]", func(t *test, tk Tokens) { // 24
+			t.Output = Tests{
+				Test: TestOperatorFileIsSymbolic,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -k a ]]", func(t *test, tk Tokens) { // 25
+			t.Output = Tests{
+				Test: TestOperatorFileHasStickyBit,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -p a ]]", func(t *test, tk Tokens) { // 26
+			t.Output = Tests{
+				Test: TestOperatorFileIsPipe,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -r a ]]", func(t *test, tk Tokens) { // 27
+			t.Output = Tests{
+				Test: TestOperatorFileIsReadable,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -s a ]]", func(t *test, tk Tokens) { // 28
+			t.Output = Tests{
+				Test: TestOperatorFileIsNonZero,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -t a ]]", func(t *test, tk Tokens) { // 29
+			t.Output = Tests{
+				Test: TestOperatorFileIsTerminal,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -u a ]]", func(t *test, tk Tokens) { // 30
+			t.Output = Tests{
+				Test: TestOperatorFileHasSetUserID,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -w a ]]", func(t *test, tk Tokens) { // 31
+			t.Output = Tests{
+				Test: TestOperatorFileIsWritable,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -x a ]]", func(t *test, tk Tokens) { // 32
+			t.Output = Tests{
+				Test: TestOperatorFileIsExecutable,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -G a ]]", func(t *test, tk Tokens) { // 33
+			t.Output = Tests{
+				Test: TestOperatorFileIsOwnedByEffectiveGroup,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -N a ]]", func(t *test, tk Tokens) { // 34
+			t.Output = Tests{
+				Test: TestOperatorFileWasModifiedSinceLastRead,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -O a ]]", func(t *test, tk Tokens) { // 35
+			t.Output = Tests{
+				Test: TestOperatorFileIsOwnedByEffectiveUser,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -S a ]]", func(t *test, tk Tokens) { // 36
+			t.Output = Tests{
+				Test: TestOperatorFileIsSocket,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -o a ]]", func(t *test, tk Tokens) { // 37
+			t.Output = Tests{
+				Test: TestOperatorOptNameIsEnabled,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -v a ]]", func(t *test, tk Tokens) { // 38
+			t.Output = Tests{
+				Test: TestOperatorVarNameIsSet,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -R a ]]", func(t *test, tk Tokens) { // 39
+			t.Output = Tests{
+				Test: TestOperatorVarnameIsRef,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -z a ]]", func(t *test, tk Tokens) { // 40
+			t.Output = Tests{
+				Test: TestOperatorStringIsZero,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ -n a ]]", func(t *test, tk Tokens) { // 41
+			t.Output = Tests{
+				Test: TestOperatorStringIsNonZero,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
+		{"[[ ! -z a ]]", func(t *test, tk Tokens) { // 42
+			t.Output = Tests{
+				Not:  true,
+				Test: TestOperatorStringIsZero,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ (a = b) ]]", func(t *test, tk Tokens) { // 43
+			t.Output = Tests{
+				Parens: &Tests{
+					Test: TestOperatorStringsEqual,
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+					Pattern: &Pattern{
+						Parts: []WordPart{
+							{
+								Part:   &tk[7],
+								Tokens: tk[7:8],
+							},
+						},
+						Tokens: tk[7:8],
+					},
+					Tokens: tk[3:8],
+				},
+				Tokens: tk[2:9],
+			}
+		}},
+		{"[[ a ]]", func(t *test, tk Tokens) { // 44
+			t.Output = Tests{
+				Test: TestOperatorNone,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[2:3],
+			}
+		}},
+		{"[[ a || b ]]", func(t *test, tk Tokens) { // 45
+			t.Output = Tests{
+				Test: TestOperatorNone,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				LogicalOperator: LogicalOperatorOr,
+				Tests: &Tests{
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+		{"[[ a && b ]]", func(t *test, tk Tokens) { // 46
+			t.Output = Tests{
+				Test: TestOperatorNone,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				LogicalOperator: LogicalOperatorAnd,
+				Tests: &Tests{
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[2:7],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var ts Tests
+
+		t.Parser.Tokens = t.Parser.Tokens[2:2]
+		err := ts.parse(t.Parser)
+
+		return ts, err
+	})
+}
+
 func TestPattern(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"[[ z = a ]]", func(t *test, tk Tokens) { // 1
