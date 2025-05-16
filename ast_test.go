@@ -3703,6 +3703,53 @@ func TestTestCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 2
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[5],
+													},
+													Parsing: "CommandOrCompound",
+													Token:   tk[5],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[5],
+											},
+											Parsing: "Statement",
+											Token:   tk[5],
+										},
+										Parsing: "Line",
+										Token:   tk[5],
+									},
+									Parsing: "File",
+									Token:   tk[5],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[5],
+							},
+							Parsing: "WordPart",
+							Token:   tk[4],
+						},
+						Parsing: "Word",
+						Token:   tk[4],
+					},
+					Parsing: "Tests",
+					Token:   tk[4],
+				},
+				Parsing: "TestCompound",
+				Token:   tk[2],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var tc TestCompound
 
