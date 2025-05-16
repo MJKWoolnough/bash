@@ -3674,6 +3674,44 @@ func TestSelectCompound(t *testing.T) {
 	})
 }
 
+func TestTestCompound(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"[[ a = b ]]", func(t *test, tk Tokens) { // 1
+			t.Output = TestCompound{
+				Tests: Tests{
+					Test: TestOperatorStringsEqual,
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[2],
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+					Pattern: &Pattern{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					Tokens: tk[2:7],
+				},
+				Tokens: tk[:9],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var tc TestCompound
+
+		err := tc.parse(t.Parser)
+
+		return tc, err
+	})
+}
+
 func TestTests(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"[[ a = b ]]", func(t *test, tk Tokens) { // 1
