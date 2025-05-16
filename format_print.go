@@ -542,7 +542,11 @@ func (s String) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (t TestCompound) printSource(w io.Writer, v bool) {}
+func (t TestCompound) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "[[ ")
+	t.Tests.printSource(w, v)
+	io.WriteString(w, " ]]")
+}
 
 func (t Tests) printSource(w io.Writer, v bool) {
 	if t.Not {
