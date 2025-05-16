@@ -380,7 +380,7 @@ type Compound struct {
 	SelectCompound     *SelectCompound
 	GroupingCompound   *GroupingCompound
 	TestCompound       *TestCompound
-	ArthimeticCompound *ArithmeticExpansion
+	ArithmeticCompound *ArithmeticExpansion
 	FunctionCompound   *FunctionCompound
 	Tokens             Tokens
 }
@@ -425,9 +425,9 @@ func (cc *Compound) parse(b *bashParser) error {
 
 			err = cc.TestCompound.parse(c)
 		case parser.Token{Type: TokenPunctuator, Data: "(("}:
-			cc.ArthimeticCompound = new(ArithmeticExpansion)
+			cc.ArithmeticCompound = new(ArithmeticExpansion)
 
-			err = cc.ArthimeticCompound.parse(c)
+			err = cc.ArithmeticCompound.parse(c)
 		case parser.Token{Type: TokenPunctuator, Data: "("}, parser.Token{Type: TokenPunctuator, Data: "{"}:
 			cc.GroupingCompound = new(GroupingCompound)
 

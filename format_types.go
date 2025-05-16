@@ -245,9 +245,9 @@ func (f *Compound) printType(w io.Writer, v bool) {
 		pp.Print("\nTestCompound: nil")
 	}
 
-	if f.ArthimeticCompound != nil {
+	if f.ArithmeticCompound != nil {
 		pp.Print("\nArthimeticCompound: ")
-		f.ArthimeticCompound.printType(&pp, v)
+		f.ArithmeticCompound.printType(&pp, v)
 	} else if v {
 		pp.Print("\nArthimeticCompound: nil")
 	}
