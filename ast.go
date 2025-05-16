@@ -1090,7 +1090,7 @@ func (t *Tests) parse(b *bashParser) error {
 		c.AcceptRunAllWhitespace()
 		b.Score(c)
 
-		c := b.NewGoal()
+		c = b.NewGoal()
 		t.Tests = new(Tests)
 
 		if err := t.Tests.parse(c); err != nil {
