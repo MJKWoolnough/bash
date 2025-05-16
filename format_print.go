@@ -544,7 +544,36 @@ func (s String) printSource(w io.Writer, v bool) {
 
 func (t TestCompound) printSource(w io.Writer, v bool) {}
 
-func (t Tests) printSource(w io.Writer, v bool) {}
+func (t Tests) printSource(w io.Writer, v bool) {
+	if t.Not {
+		io.WriteString(w, "! ")
+	}
+
+	if t.Parens != nil {
+		io.WriteString(w, "( ")
+		t.Parens.printSource(w, v)
+		io.WriteString(w, " )")
+	} else if t.Word != nil && t.Test == TestOperatorNone {
+		t.Word.printSource(w, v)
+	} else if t.Word != nil && t.Pattern != nil && t.Test >= TestOperatorStringsEqual {
+		t.Word.printSource(w, v)
+		io.WriteString(w, " ")
+		t.Test.printSource(w, v)
+		io.WriteString(w, " ")
+		t.Pattern.printSource(w, v)
+	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorVarnameIsRef {
+		t.Test.printSource(w, v)
+		io.WriteString(w, " ")
+		t.Word.printSource(w, v)
+	} else {
+		return
+	}
+
+	if t.Tests != nil && (t.LogicalOperator == LogicalOperatorOr || t.LogicalOperator == LogicalOperatorAnd) {
+		t.LogicalOperator.printSource(w, v)
+		t.Tests.printSource(w, v)
+	}
+}
 
 func (t TestConsequence) printSource(w io.Writer, v bool) {
 	t.Test.printSource(w, v)
