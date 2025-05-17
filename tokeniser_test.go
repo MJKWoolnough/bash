@@ -2321,6 +2321,21 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 130
+			"[[\na\n=\nb\n]]",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "[["},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenOperator, Data: "="},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenPattern, Data: "b"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenKeyword, Data: "]]"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
