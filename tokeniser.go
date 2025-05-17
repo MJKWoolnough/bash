@@ -235,8 +235,6 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 		switch t.ExceptRun(stops) {
 		default:
 			return t.ReturnError(io.ErrUnexpectedEOF)
-		case '\n':
-			return t.ReturnError(ErrInvalidCharacter)
 		case '`':
 			return t.Return(tk, b.startBacktick)
 		case '$':
