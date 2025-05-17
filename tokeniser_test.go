@@ -2342,6 +2342,40 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
+		{ // 132
+			"$((",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 133
+			"$(( \"1\" ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenString, Data: "\"1\""},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "))"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 134
+			"$(( : ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 135
+			"$(( ; ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
