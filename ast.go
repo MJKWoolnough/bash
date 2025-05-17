@@ -432,8 +432,6 @@ func (cc *Compound) parse(b *bashParser) error {
 			cc.GroupingCompound = new(GroupingCompound)
 
 			err = cc.GroupingCompound.parse(c)
-		default:
-			err = ErrInvalidKeyword
 		}
 	}
 
