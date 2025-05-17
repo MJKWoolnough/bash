@@ -113,7 +113,27 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, ")")
 }
 
-func (c Compound) printSource(w io.Writer, v bool) {}
+func (c Compound) printSource(w io.Writer, v bool) {
+	if c.IfCompound != nil {
+		c.IfCompound.printSource(w, v)
+	} else if c.CaseCompound != nil {
+		c.CaseCompound.printSource(w, v)
+	} else if c.LoopCompound != nil {
+		c.LoopCompound.printSource(w, v)
+	} else if c.ForCompound != nil {
+		c.ForCompound.printSource(w, v)
+	} else if c.SelectCompound != nil {
+		c.SelectCompound.printSource(w, v)
+	} else if c.GroupingCompound != nil {
+		c.GroupingCompound.printSource(w, v)
+	} else if c.TestCompound != nil {
+		c.TestCompound.printSource(w, v)
+	} else if c.ArithmeticCompound != nil {
+		c.ArithmeticCompound.printSource(w, v)
+	} else if c.FunctionCompound != nil {
+		c.FunctionCompound.printSource(w, v)
+	}
+}
 
 func (c Compound) printHeredoc(w io.Writer, v bool) {}
 
