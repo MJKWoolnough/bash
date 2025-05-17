@@ -5758,7 +5758,50 @@ func TestTests(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 50
+		{"[[ a -eq $(||) ]]", func(t *test, tk Tokens) { // 50
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[7],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[7],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[7],
+										},
+										Parsing: "Statement",
+										Token:   tk[7],
+									},
+									Parsing: "Line",
+									Token:   tk[7],
+								},
+								Parsing: "File",
+								Token:   tk[7],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[7],
+						},
+						Parsing: "WordPart",
+						Token:   tk[6],
+					},
+					Parsing: "Pattern",
+					Token:   tk[6],
+				},
+				Parsing: "Tests",
+				Token:   tk[6],
+			}
+		}},
+		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 51
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5805,14 +5848,14 @@ func TestTests(t *testing.T) {
 				Token:   tk[4],
 			}
 		}},
-		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 51
+		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 52
 			t.Err = Error{
 				Err:     ErrMissingClosingParen,
 				Parsing: "Tests",
 				Token:   tk[6],
 			}
 		}},
-		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 52
+		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 53
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
