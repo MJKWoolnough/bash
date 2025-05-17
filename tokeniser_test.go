@@ -2376,6 +2376,13 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
+		{ // 136
+			"`\\",
+			[]parser.Token{
+				{Type: TokenOpenBacktick, Data: "`"},
+				{Type: parser.TokenError, Data: "incorrect backtick depth"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
