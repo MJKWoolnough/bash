@@ -2336,6 +2336,12 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 131
+			"\"",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
