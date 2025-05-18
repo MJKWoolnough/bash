@@ -2468,6 +2468,46 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
+		{ // 146
+			"${a/(}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "/"},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 147
+			"${a/",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "/"},
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 148
+			"${a/)}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "/"},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
+		{ // 148
+			"${a/b[\\t]+/c}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "/"},
+				{Type: TokenPattern, Data: "b[\\t]+"},
+				{Type: TokenPunctuator, Data: "/"},
+				{Type: TokenWord, Data: "c"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
