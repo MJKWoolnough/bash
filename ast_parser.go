@@ -151,18 +151,6 @@ func (b *bashParser) AcceptRunAllWhitespace() parser.TokenType {
 	return b.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
 }
 
-func (b *bashParser) ExceptRunToken(tk parser.Token) {
-	for {
-		next := b.Next().Token
-
-		if next == tk || next.Type == parser.TokenDone {
-			b.backup()
-
-			break
-		}
-	}
-}
-
 // Error represents a Bash parsing error.
 type Error struct {
 	Err     error
