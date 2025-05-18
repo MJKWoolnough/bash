@@ -2402,11 +2402,22 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 138
+		{ // 139
 			"<<a",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
 				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 140
+			"<<a\\n\\tc\n123\na\n\tc",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<<"},
+				{Type: TokenWord, Data: "a\\n\\tc"},
+				{Type: TokenLineTerminator, Data: "\n"},
+				{Type: TokenHeredoc, Data: "123\n"},
+				{Type: TokenHeredocEnd, Data: "a\n\tc"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 	} {
