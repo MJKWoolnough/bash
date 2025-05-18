@@ -1,6 +1,7 @@
 package bash
 
 import (
+	"io"
 	"reflect"
 	"testing"
 
@@ -43,6 +44,136 @@ func doTests(t *testing.T, tests []sourceFn, fn func(*test) (Type, error)) {
 		} else if ts.Output != nil && !reflect.DeepEqual(output, ts.Output) {
 			t.Errorf("test %d: expecting \n%+v\n...got...\n%+v", n+1, ts.Output, output)
 		}
+	}
+}
+
+func TestParse(t *testing.T) {
+	tk := []Token{
+		{
+			Token: parser.Token{
+				Type: TokenWord,
+				Data: "(",
+			},
+		},
+		{
+			Token: parser.Token{
+				Type: parser.TokenError,
+				Data: "unexpected EOF",
+			},
+			Pos:     1,
+			LinePos: 1,
+		},
+	}
+	expectedErr := Error{
+		Err:     io.ErrUnexpectedEOF,
+		Parsing: "Tokens",
+		Token:   tk[1],
+	}
+	_, err := Parse(makeTokeniser(parser.NewStringTokeniser("(")))
+	if !reflect.DeepEqual(err, expectedErr) {
+		t.Errorf("expecting error: %v, got %v", expectedErr, err)
+	}
+
+	tk = []Token{
+		{
+			Token: parser.Token{
+				Type: TokenWord,
+				Data: "a",
+			},
+		},
+		{
+			Token: parser.Token{
+				Type: parser.TokenDone,
+			},
+			Pos:     1,
+			LinePos: 1,
+		},
+	}
+	expectedFile := &File{
+		Lines: []Line{
+			{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									Words: []Word{
+										{
+											Parts: []WordPart{
+												{
+													Part:   &tk[0],
+													Tokens: tk[:1],
+												},
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Tokens: tk[:1],
+			},
+		},
+		Tokens: tk[:1],
+	}
+
+	f, err := Parse(makeTokeniser(parser.NewStringTokeniser("a")))
+	if err != nil {
+		t.Errorf("unexpected error: %s", err)
+	} else if !reflect.DeepEqual(f, expectedFile) {
+		t.Errorf("expecting \n%+v\n...got...\n%+v", expectedFile, f)
+	}
+
+	tk = []Token{
+		{
+			Token: parser.Token{
+				Type: TokenPunctuator,
+				Data: "||",
+			},
+		},
+		{
+			Token: parser.Token{
+				Type: parser.TokenDone,
+			},
+			Pos:     1,
+			LinePos: 1,
+		},
+	}
+	expectedErr = Error{
+		Err: Error{
+			Err: Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err:     ErrMissingWord,
+							Parsing: "Command",
+							Token:   tk[0],
+						},
+						Parsing: "CommandOrCompound",
+						Token:   tk[0],
+					},
+					Parsing: "Pipeline",
+					Token:   tk[0],
+				},
+				Parsing: "Statement",
+				Token:   tk[0],
+			},
+			Parsing: "Line",
+			Token:   tk[0],
+		},
+		Parsing: "File",
+		Token:   tk[0],
+	}
+
+	f, err = Parse(makeTokeniser(parser.NewStringTokeniser("||")))
+	if !reflect.DeepEqual(err, expectedErr) {
+		t.Errorf("expecting error: %v, got %v", expectedErr, err)
 	}
 }
 
