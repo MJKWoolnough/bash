@@ -2429,7 +2429,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 141
+		{ // 142
 			"<<abc\n123$\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -2438,6 +2438,14 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenHeredoc, Data: "123$\n"},
 				{Type: TokenHeredocEnd, Data: "abc"},
 				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 143
+			"${a!}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
 	} {
