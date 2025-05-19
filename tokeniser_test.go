@@ -2528,6 +2528,84 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid number"},
 			},
 		},
+		{ // 152
+			"function a time",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 153
+			"then",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 154
+			"in",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 155
+			"do",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 156
+			"elif",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 157
+			"else",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 158
+			"fi",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 159
+			"done",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 160
+			"esac",
+			[]parser.Token{
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 161
+			"function a coproc",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 162
+			"function a function",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
