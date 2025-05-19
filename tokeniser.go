@@ -1201,10 +1201,6 @@ func (b *bashTokeniser) loopDo(t *parser.Tokeniser) (parser.Token, parser.TokenF
 func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.forStart)
-	} else if t.Accept(newline) {
-		t.AcceptRun(newline)
-
-		return t.Return(TokenLineTerminator, b.forStart)
 	}
 
 	if t.Accept("(") {
