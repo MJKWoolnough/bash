@@ -1216,7 +1216,7 @@ func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.Toke
 	}
 
 	if !t.Accept(identStart) {
-		return t.ReturnError(ErrInvalidParameterExpansion)
+		return t.ReturnError(ErrInvalidIdentifier)
 	}
 
 	t.AcceptRun(identCont)
