@@ -2495,7 +2495,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 148
+		{ // 149
 			"${a/b[\\t]+/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -2505,6 +2505,18 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: "/"},
 				{Type: TokenWord, Data: "c"},
 				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 150
+			"$(( 0x\"1\" ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "0x"},
+				{Type: TokenString, Data: "\"1\""},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "))"},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
