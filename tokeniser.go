@@ -983,31 +983,6 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 				return b.keyword(t, kw)
 			}
 		}
-	} else if b.lastTokenDepth() == 'x' {
-		return t.ReturnError(ErrInvalidKeyword)
-	} else {
-		b.endCommand()
-
-		if b.lastTokenDepth() == 'F' {
-			state := t.State()
-			kw := t.AcceptWord([]string{"in", "do"}, false)
-
-			if !isKeywordSeperator(t) || kw == "" {
-				state.Reset()
-			} else if kw == "in" {
-				b.popTokenDepth()
-				b.pushTokenDepth('L')
-
-				return t.Return(TokenKeyword, b.main)
-			} else if kw == "do" {
-				b.popTokenDepth()
-				b.pushTokenDepth('l')
-
-				return t.Return(TokenKeyword, b.main)
-			}
-		}
-
-		b.setInCommand()
 	}
 
 	if td := b.lastTokenDepth(); td != 't' && td != 'T' {
