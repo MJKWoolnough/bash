@@ -938,7 +938,7 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 	if t.Accept("xX") {
 		if !t.Accept(hexDigit) {
-			return t.ReturnError(ErrInvalidNumber)
+			return b.word(t)
 		}
 
 		t.AcceptRun(hexDigit)
