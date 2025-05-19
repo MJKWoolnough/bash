@@ -2520,6 +2520,14 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 151
+			"$(( 2#, ))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid number"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
