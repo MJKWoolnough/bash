@@ -924,12 +924,7 @@ func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.
 }
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if b.lastTokenDepth() == t.Peek() {
-		b.popTokenDepth()
-		t.Next()
-
-		return t.Return(TokenString, b.main)
-	} else if t.Accept("$") && t.Accept("'") {
+	if t.Accept("$") && t.Accept("'") {
 		b.pushTokenDepth('$')
 	} else {
 		b.pushTokenDepth(t.Next())
