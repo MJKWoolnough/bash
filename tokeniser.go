@@ -1223,10 +1223,6 @@ func (b *bashTokeniser) forStart(t *parser.Tokeniser) (parser.Token, parser.Toke
 func (b *bashTokeniser) selectStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if parseWhitespace(t) {
 		return t.Return(TokenWhitespace, b.selectStart)
-	} else if t.Accept(newline) {
-		t.AcceptRun(newline)
-
-		return t.Return(TokenLineTerminator, b.selectStart)
 	}
 
 	if !t.Accept(identStart) {
