@@ -2638,6 +2638,14 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
+		{ // 166
+			"select %; do b; done",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "select"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid identifier"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
