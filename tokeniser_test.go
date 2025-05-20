@@ -2651,6 +2651,16 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 167
+			"function a(\n) { echo b; }",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: parser.TokenError, Data: "missing closing paren"},
+			},
+		},
+		{ // 168
 			"select %; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
