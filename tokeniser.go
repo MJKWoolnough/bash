@@ -1407,7 +1407,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 
 		t.Next()
 
-		if t.Accept("]") {
+		if t.Accept("]") && isKeywordSeperator(t) {
 			b.popTokenDepth()
 
 			if b.lastTokenDepth() == 't' {
