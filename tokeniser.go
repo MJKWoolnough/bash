@@ -113,10 +113,6 @@ func (b *bashTokeniser) isInCommand() bool {
 func (b *bashTokeniser) endCommand() {
 	if b.isInCommand() {
 		b.popTokenDepth()
-
-		if b.lastTokenDepth() == 'x' {
-			b.popTokenDepth()
-		}
 	}
 }
 
