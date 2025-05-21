@@ -117,8 +117,6 @@ type Type interface {
 	fmt.Formatter
 	bashType()
 }
-
-func (Tokens) bashType() {}
 HEREDOC
 
 	while read type _; do
