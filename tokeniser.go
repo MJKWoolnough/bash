@@ -1594,10 +1594,6 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		switch t.ExceptRun(wb) {
 		case -1:
 			if t.Len() == 0 {
-				if b.lastTokenDepth() == 0 {
-					return t.Done()
-				}
-
 				return t.ReturnError(io.ErrUnexpectedEOF)
 			}
 
