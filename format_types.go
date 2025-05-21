@@ -246,10 +246,10 @@ func (f *Compound) printType(w io.Writer, v bool) {
 	}
 
 	if f.ArithmeticCompound != nil {
-		pp.Print("\nArthimeticCompound: ")
+		pp.Print("\nArithmeticCompound: ")
 		f.ArithmeticCompound.printType(&pp, v)
 	} else if v {
-		pp.Print("\nArthimeticCompound: nil")
+		pp.Print("\nArithmeticCompound: nil")
 	}
 
 	if f.FunctionCompound != nil {
