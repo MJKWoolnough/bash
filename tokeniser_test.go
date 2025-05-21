@@ -2894,6 +2894,14 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 188
+			"function (\n) { echo b; }",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid identifier"},
+			},
+		},
+		{ // 189
 			"select %; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
