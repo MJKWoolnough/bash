@@ -10,8 +10,6 @@ type Type interface {
 	bashType()
 }
 
-func (Tokens) bashType() {}
-
 func (ArithmeticExpansion) bashType() {}
 
 func (Assignment) bashType() {}
