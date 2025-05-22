@@ -233,7 +233,7 @@ type Pipeline struct {
 	Not               bool
 	Coproc            bool
 	CoprocIdentifier  *Token
-	CommandOrCompound CommandOrCompound
+	CommandOrCompound CommandCompoundOrBuiltin
 	Pipeline          *Pipeline
 	Tokens            Tokens
 }
@@ -320,13 +320,14 @@ func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
-type CommandOrCompound struct {
+type CommandCompoundOrBuiltin struct {
 	Command  *Command
 	Compound *Compound
+	Builtin  *Builtin
 	Tokens   Tokens
 }
 
-func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
+func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
 	var err error
 
 	c := b.NewGoal()
@@ -334,6 +335,9 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 	if isCompoundNext(b) {
 		cc.Compound = new(Compound)
 		err = cc.Compound.parse(c)
+	} else if tk := b.Peek(); tk.Type == TokenBuiltin {
+		cc.Builtin = new(Builtin)
+		err = cc.Builtin.parse(c)
 	} else {
 		cc.Command = new(Command)
 		err = cc.Command.parse(c, required)
@@ -350,7 +354,7 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 	return nil
 }
 
-func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
+func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
 	if cc.Command == nil {
 		return nil
 	}
@@ -1208,6 +1212,14 @@ func (f *FunctionCompound) parse(b *bashParser) error {
 
 	f.Tokens = b.ToTokens()
 
+	return nil
+}
+
+type Builtin struct {
+	Tokens Tokens
+}
+
+func (t *Builtin) parse(b *bashParser) error {
 	return nil
 }
 

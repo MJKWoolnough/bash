@@ -95,7 +95,7 @@ func TestParse(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -186,7 +186,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -221,7 +221,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -249,7 +249,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -284,7 +284,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -312,7 +312,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Words: []Word{
 												{
@@ -374,7 +374,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -422,7 +422,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -458,7 +458,7 @@ func TestFile(t *testing.T) {
 							},
 							{
 								Pipeline: Pipeline{
-									CommandOrCompound: CommandOrCompound{
+									CommandOrCompound: CommandCompoundOrBuiltin{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -590,7 +590,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -620,7 +620,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -643,7 +643,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -673,7 +673,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -697,7 +697,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -759,7 +759,7 @@ func TestStatement(t *testing.T) {
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -784,7 +784,7 @@ func TestStatement(t *testing.T) {
 		{"a||b", func(t *test, tk Tokens) { // 2
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -806,7 +806,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -833,7 +833,7 @@ func TestStatement(t *testing.T) {
 		{"a && b", func(t *test, tk Tokens) { // 3
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -855,7 +855,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorAnd,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -882,7 +882,7 @@ func TestStatement(t *testing.T) {
 		{"a||b;", func(t *test, tk Tokens) { // 4
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -904,7 +904,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -931,7 +931,7 @@ func TestStatement(t *testing.T) {
 		{"a||b &", func(t *test, tk Tokens) { // 5
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -953,7 +953,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -1033,7 +1033,7 @@ func TestPipeline(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Pipeline{
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1056,7 +1056,7 @@ func TestPipeline(t *testing.T) {
 		{"time a", func(t *test, tk Tokens) { // 2
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimeBash,
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1079,7 +1079,7 @@ func TestPipeline(t *testing.T) {
 		{"time -p a", func(t *test, tk Tokens) { // 3
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimePosix,
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1102,7 +1102,7 @@ func TestPipeline(t *testing.T) {
 		{"! a", func(t *test, tk Tokens) { // 4
 			t.Output = Pipeline{
 				Not: true,
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1125,7 +1125,7 @@ func TestPipeline(t *testing.T) {
 		{"coproc a", func(t *test, tk Tokens) { // 5
 			t.Output = Pipeline{
 				Coproc: true,
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1149,13 +1149,13 @@ func TestPipeline(t *testing.T) {
 			t.Output = Pipeline{
 				Coproc:           true,
 				CoprocIdentifier: &tk[2],
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Compound: &Compound{
 						IfCompound: &IfCompound{
 							If: TestConsequence{
 								Test: Statement{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -1182,7 +1182,7 @@ func TestPipeline(t *testing.T) {
 											Statements: []Statement{
 												{
 													Pipeline: Pipeline{
-														CommandOrCompound: CommandOrCompound{
+														CommandOrCompound: CommandCompoundOrBuiltin{
 															Command: &Command{
 																Words: []Word{
 																	{
@@ -1222,7 +1222,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a|b", func(t *test, tk Tokens) { // 7
 			t.Output = Pipeline{
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1240,7 +1240,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -1264,7 +1264,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a | b", func(t *test, tk Tokens) { // 8
 			t.Output = Pipeline{
-				CommandOrCompound: CommandOrCompound{
+				CommandOrCompound: CommandCompoundOrBuiltin{
 					Command: &Command{
 						Words: []Word{
 							{
@@ -1282,7 +1282,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandOrCompound: CommandOrCompound{
+					CommandOrCompound: CommandCompoundOrBuiltin{
 						Command: &Command{
 							Words: []Word{
 								{
@@ -1355,7 +1355,7 @@ func TestCompounds(t *testing.T) {
 					If: TestConsequence{
 						Test: Statement{
 							Pipeline: Pipeline{
-								CommandOrCompound: CommandOrCompound{
+								CommandOrCompound: CommandCompoundOrBuiltin{
 									Command: &Command{
 										Words: []Word{
 											{
@@ -1382,7 +1382,7 @@ func TestCompounds(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -1447,7 +1447,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandOrCompound: CommandOrCompound{
+													CommandOrCompound: CommandCompoundOrBuiltin{
 														Command: &Command{
 															Words: []Word{
 																{
@@ -1487,7 +1487,7 @@ func TestCompounds(t *testing.T) {
 				LoopCompound: &LoopCompound{
 					Statement: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -1514,7 +1514,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1552,7 +1552,7 @@ func TestCompounds(t *testing.T) {
 					Until: true,
 					Statement: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -1579,7 +1579,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1621,7 +1621,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1663,7 +1663,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1735,7 +1735,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1776,7 +1776,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -1821,7 +1821,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandOrCompound: CommandOrCompound{
+													CommandOrCompound: CommandCompoundOrBuiltin{
 														Command: &Command{
 															Words: []Word{
 																{
@@ -1869,7 +1869,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandOrCompound: CommandOrCompound{
+													CommandOrCompound: CommandCompoundOrBuiltin{
 														Command: &Command{
 															Words: []Word{
 																{
@@ -2358,7 +2358,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -2385,7 +2385,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -2422,7 +2422,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -2449,7 +2449,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -2486,7 +2486,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -2513,7 +2513,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -2548,7 +2548,7 @@ func TestIfCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -2583,7 +2583,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandOrCompound: CommandOrCompound{
+							CommandOrCompound: CommandCompoundOrBuiltin{
 								Command: &Command{
 									Words: []Word{
 										{
@@ -2610,7 +2610,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandOrCompound: CommandOrCompound{
+											CommandOrCompound: CommandCompoundOrBuiltin{
 												Command: &Command{
 													Words: []Word{
 														{
@@ -2643,7 +2643,7 @@ func TestIfCompound(t *testing.T) {
 					{
 						Test: Statement{
 							Pipeline: Pipeline{
-								CommandOrCompound: CommandOrCompound{
+								CommandOrCompound: CommandCompoundOrBuiltin{
 									Command: &Command{
 										Words: []Word{
 											{
@@ -2670,7 +2670,7 @@ func TestIfCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -2803,7 +2803,7 @@ func TestTestConsequence(t *testing.T) {
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -2830,7 +2830,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -2864,7 +2864,7 @@ func TestTestConsequence(t *testing.T) {
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -2891,7 +2891,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -2919,7 +2919,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3045,7 +3045,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -3108,7 +3108,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -3171,7 +3171,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -3235,7 +3235,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -3292,7 +3292,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -3434,7 +3434,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3483,7 +3483,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3532,7 +3532,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3582,7 +3582,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3632,7 +3632,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3700,7 +3700,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3828,7 +3828,7 @@ func TestLoopCompound(t *testing.T) {
 			t.Output = LoopCompound{
 				Statement: Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -3855,7 +3855,7 @@ func TestLoopCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -3890,7 +3890,7 @@ func TestLoopCompound(t *testing.T) {
 				Until: true,
 				Statement: Statement{
 					Pipeline: Pipeline{
-						CommandOrCompound: CommandOrCompound{
+						CommandOrCompound: CommandCompoundOrBuiltin{
 							Command: &Command{
 								Words: []Word{
 									{
@@ -3917,7 +3917,7 @@ func TestLoopCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4021,7 +4021,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4060,7 +4060,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4100,7 +4100,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4150,7 +4150,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4209,7 +4209,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4333,7 +4333,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4508,7 +4508,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4547,7 +4547,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4587,7 +4587,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4637,7 +4637,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -4696,7 +4696,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6131,7 +6131,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6170,7 +6170,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6209,7 +6209,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6248,7 +6248,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6286,7 +6286,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6324,7 +6324,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -6408,7 +6408,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -6454,7 +6454,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -6499,7 +6499,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -6544,7 +6544,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandOrCompound: CommandOrCompound{
+												CommandOrCompound: CommandCompoundOrBuiltin{
 													Command: &Command{
 														Words: []Word{
 															{
@@ -9024,7 +9024,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{
@@ -9069,7 +9069,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandOrCompound: CommandOrCompound{
+										CommandOrCompound: CommandCompoundOrBuiltin{
 											Command: &Command{
 												Words: []Word{
 													{

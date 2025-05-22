@@ -97,9 +97,9 @@ func (c Command) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandOrCompound) printSource(w io.Writer, v bool) {}
+func (c CommandCompoundOrBuiltin) printSource(w io.Writer, v bool) {}
 
-func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
+func (c CommandCompoundOrBuiltin) printHeredoc(w io.Writer, v bool) {
 	if c.Command != nil {
 		c.Command.printHeredoc(w, v)
 	} else if c.Compound != nil {
