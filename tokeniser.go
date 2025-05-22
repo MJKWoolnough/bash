@@ -51,6 +51,7 @@ const (
 	TokenFunctionIdentifier
 	TokenIdentifierAssign
 	TokenKeyword
+	TokenBuiltin
 	TokenWord
 	TokenNumberLiteral
 	TokenString
@@ -1574,7 +1575,22 @@ Loop:
 	return b.test(t)
 }
 
-func (b *bashTokeniser) builtin(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) builtin(t *parser.Tokeniser, bn string) (parser.Token, parser.TokenFunc) {
+	switch bn {
+	case "export":
+		b.pushTokenDepth('E')
+	case "readonly":
+		b.pushTokenDepth('R')
+	case "typeset":
+		b.pushTokenDepth('S')
+	default:
+		b.pushTokenDepth('D')
+	}
+
+	return t.Return(TokenBuiltin, b.builtinArgs)
+}
+
+func (b *bashTokeniser) builtinArgs(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	return t.ReturnError(nil)
 }
 
