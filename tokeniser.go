@@ -10,6 +10,7 @@ import (
 var (
 	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!", "break", "continue"}
 	compoundStart      = []string{"if", "while", "until", "for", "select", "{", "("}
+	builtins           = []string{"export", "readonly", "declare", "typeset", "local"}
 	dotdot             = []string{".."}
 	escapedNewline     = []string{"\\\n"}
 	assignment         = []string{"=", "+="}
@@ -978,6 +979,15 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			} else if kw != "" {
 				return b.keyword(t, kw)
 			}
+
+			state = t.State()
+			bn := t.AcceptWord(builtins, false)
+
+			if !isKeywordSeperator(t) {
+				state.Reset()
+			} else if bn != "" {
+				return b.builtin(t, bn)
+			}
 		}
 	}
 
@@ -1562,6 +1572,10 @@ Loop:
 	}
 
 	return b.test(t)
+}
+
+func (b *bashTokeniser) builtin(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	return t.ReturnError(nil)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
