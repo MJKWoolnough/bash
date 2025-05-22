@@ -56,6 +56,17 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *Builtin) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("Builtin {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *CaseCompound) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
@@ -149,10 +160,10 @@ func (f *Command) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *CommandOrCompound) printType(w io.Writer, v bool) {
+func (f *CommandCompoundOrBuiltin) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
-	pp.Print("CommandOrCompound {")
+	pp.Print("CommandCompoundOrBuiltin {")
 
 	if f.Command != nil {
 		pp.Print("\nCommand: ")
@@ -166,6 +177,13 @@ func (f *CommandOrCompound) printType(w io.Writer, v bool) {
 		f.Compound.printType(&pp, v)
 	} else if v {
 		pp.Print("\nCompound: nil")
+	}
+
+	if f.Builtin != nil {
+		pp.Print("\nBuiltin: ")
+		f.Builtin.printType(&pp, v)
+	} else if v {
+		pp.Print("\nBuiltin: nil")
 	}
 
 	pp.Print("\nTokens: ")

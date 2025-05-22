@@ -14,11 +14,13 @@ func (ArithmeticExpansion) bashType() {}
 
 func (Assignment) bashType() {}
 
+func (Builtin) bashType() {}
+
 func (CaseCompound) bashType() {}
 
 func (Command) bashType() {}
 
-func (CommandOrCompound) bashType() {}
+func (CommandCompoundOrBuiltin) bashType() {}
 
 func (CommandSubstitution) bashType() {}
 
