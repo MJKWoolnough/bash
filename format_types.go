@@ -56,10 +56,41 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("AssignmentOrWord {")
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Builtin) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
 	pp.Print("Builtin {")
+
+	pp.Print("\nBuiltinType: ")
+	f.BuiltinType.printType(&pp, v)
+
+	if f.AssignmentsOrWords == nil {
+		pp.Print("\nAssignmentsOrWords: nil")
+	} else if len(f.AssignmentsOrWords) > 0 {
+		pp.Print("\nAssignmentsOrWords: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.AssignmentsOrWords {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nAssignmentsOrWords: []")
+	}
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
