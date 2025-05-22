@@ -15,6 +15,10 @@ var (
 	escapedNewline     = []string{"\\\n"}
 	assignment         = []string{"=", "+="}
 	expansionOperators = [...]string{"#", "%", "^", ","}
+	declareParams      = "IAapfnxutrligF"
+	typesetParams      = declareParams[2:]
+	exportParams       = declareParams[3:6]
+	readonlyParams     = declareParams[1:5]
 )
 
 const (
@@ -1591,7 +1595,32 @@ func (b *bashTokeniser) builtin(t *parser.Tokeniser, bn string) (parser.Token, p
 }
 
 func (b *bashTokeniser) builtinArgs(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	return t.ReturnError(nil)
+	if parseWhitespace(t) {
+		return t.Return(TokenWhitespace, b.builtinArgs)
+	} else if !t.Accept("-") {
+		b.popTokenDepth()
+
+		return b.main(t)
+	}
+
+	params := declareParams
+
+	switch b.lastTokenDepth() {
+	case 'E':
+		params = exportParams
+	case 'R':
+		params = readonlyParams
+	case 'S':
+		params = typesetParams
+	}
+
+	if !t.Accept(params) {
+		return t.ReturnError(ErrInvalidCharacter)
+	}
+
+	t.AcceptRun(params)
+
+	return t.Return(TokenOperator, b.builtinArgs)
 }
 
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
