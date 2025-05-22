@@ -1215,11 +1215,78 @@ func (f *FunctionCompound) parse(b *bashParser) error {
 	return nil
 }
 
+type BuiltinType uint8
+
+const (
+	BuiltinExport BuiltinType = iota
+	BuiltinDeclare
+	BuiltinTypeset
+	BuiltinLocal
+	BuiltinReadonly
+)
+
 type Builtin struct {
-	Tokens Tokens
+	BuiltinType        BuiltinType
+	AssignmentsOrWords []AssignmentOrWord
+	Tokens             Tokens
 }
 
 func (t *Builtin) parse(b *bashParser) error {
+	switch b.Peek().Data {
+	case "declare":
+		t.BuiltinType = BuiltinDeclare
+	case "typeset":
+		t.BuiltinType = BuiltinTypeset
+	case "local":
+		t.BuiltinType = BuiltinLocal
+	case "readonly":
+		t.BuiltinType = BuiltinReadonly
+	}
+
+	b.Next()
+
+	c := b.NewGoal()
+
+	c.AcceptRunWhitespace()
+
+	for isAssignmentOrWord(c) {
+		b.Score(c)
+
+		c = b.NewGoal()
+
+		var a AssignmentOrWord
+
+		if err := a.parse(c); err != nil {
+			return b.Error("Builtin", err)
+		}
+
+		b.Score(c)
+
+		t.AssignmentsOrWords = append(t.AssignmentsOrWords, a)
+
+		if t.BuiltinType == BuiltinExport {
+			break
+		}
+
+		c = b.NewGoal()
+
+		c.AcceptRunWhitespace()
+	}
+
+	t.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func isAssignmentOrWord(b *bashParser) bool {
+	return false
+}
+
+type AssignmentOrWord struct {
+	Tokens Tokens
+}
+
+func (a *AssignmentOrWord) parse(b *bashParser) error {
 	return nil
 }
 
