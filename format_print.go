@@ -42,6 +42,8 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	a.Value.printSource(w, v)
 }
 
+func (b Builtin) printSource(w io.Writer, v bool) {}
+
 func (c CaseCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "case ")
 	c.Word.printSource(w, v)
