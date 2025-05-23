@@ -61,6 +61,20 @@ func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
 
 	pp.Print("AssignmentOrWord {")
 
+	if f.Assignment != nil {
+		pp.Print("\nAssignment: ")
+		f.Assignment.printType(&pp, v)
+	} else if v {
+		pp.Print("\nAssignment: nil")
+	}
+
+	if f.Word != nil {
+		pp.Print("\nWord: ")
+		f.Word.printType(&pp, v)
+	} else if v {
+		pp.Print("\nWord: nil")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
