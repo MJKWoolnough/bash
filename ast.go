@@ -1279,7 +1279,7 @@ func (t *Builtin) parse(b *bashParser) error {
 }
 
 func isAssignmentOrWord(b *bashParser) bool {
-	return false
+	return b.Peek().Type == TokenIdentifierAssign || nextIsWordPart(b)
 }
 
 type AssignmentOrWord struct {
