@@ -1283,10 +1283,29 @@ func isAssignmentOrWord(b *bashParser) bool {
 }
 
 type AssignmentOrWord struct {
-	Tokens Tokens
+	Assignment *Assignment
+	Word       *Word
+	Tokens     Tokens
 }
 
 func (a *AssignmentOrWord) parse(b *bashParser) error {
+	var err error
+
+	c := b.NewGoal()
+	if b.Peek().Type == TokenIdentifierAssign {
+		a.Assignment = new(Assignment)
+		err = a.Assignment.parse(c)
+	} else {
+		a.Word = new(Word)
+		err = a.Word.parse(c, false)
+	}
+
+	if err != nil {
+		return b.Error("AssignmentOrWord", err)
+	}
+
+	a.Tokens = b.ToTokens()
+
 	return nil
 }
 
