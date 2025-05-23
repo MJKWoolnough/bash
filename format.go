@@ -529,6 +529,21 @@ func (t TestOperator) printType(w io.Writer, v bool) {
 	io.WriteString(w, t.String())
 }
 
+func (b BuiltinType) printSource(w io.Writer, v bool) {
+	switch b {
+	case BuiltinExport:
+		io.WriteString(w, "export ")
+	case BuiltinDeclare:
+		io.WriteString(w, "declare ")
+	case BuiltinTypeset:
+		io.WriteString(w, "typeset ")
+	case BuiltinLocal:
+		io.WriteString(w, "local ")
+	case BuiltinReadonly:
+		io.WriteString(w, "readonly")
+	}
+}
+
 func (b BuiltinType) String() string {
 	switch b {
 	case BuiltinExport:
