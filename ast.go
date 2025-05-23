@@ -1304,6 +1304,8 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 		return b.Error("AssignmentOrWord", err)
 	}
 
+	b.Score(c)
+
 	a.Tokens = b.ToTokens()
 
 	return nil
