@@ -6667,6 +6667,100 @@ func TestAssignmentOrWord(t *testing.T) {
 				Tokens: tk[:3],
 			}
 		}},
+		{"$(||)", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[1],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[1],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[1],
+										},
+										Parsing: "Statement",
+										Token:   tk[1],
+									},
+									Parsing: "Line",
+									Token:   tk[1],
+								},
+								Parsing: "File",
+								Token:   tk[1],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[1],
+						},
+						Parsing: "WordPart",
+						Token:   tk[0],
+					},
+					Parsing: "Word",
+					Token:   tk[0],
+				},
+				Parsing: "AssignmentOrWord",
+				Token:   tk[0],
+			}
+		}},
+		{"a=$(||)", func(t *test, tk Tokens) { // 4
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[3],
+														},
+														Parsing: "CommandOrCompound",
+														Token:   tk[3],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[3],
+												},
+												Parsing: "Statement",
+												Token:   tk[3],
+											},
+											Parsing: "Line",
+											Token:   tk[3],
+										},
+										Parsing: "File",
+										Token:   tk[3],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[3],
+								},
+								Parsing: "WordPart",
+								Token:   tk[2],
+							},
+							Parsing: "Word",
+							Token:   tk[2],
+						},
+						Parsing: "Value",
+						Token:   tk[2],
+					},
+					Parsing: "Assignment",
+					Token:   tk[2],
+				},
+				Parsing: "AssignmentOrWord",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var a AssignmentOrWord
 
