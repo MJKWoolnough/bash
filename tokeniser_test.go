@@ -3134,6 +3134,42 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
+		{ // 213
+			"a=()",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 214
+			"a=(b c)",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "c"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 215
+			"a=([b]=c [d]=e)",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenWord, Data: "[b]=c"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "[d]=e"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
