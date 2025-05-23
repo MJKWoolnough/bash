@@ -42,7 +42,13 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	a.Value.printSource(w, v)
 }
 
-func (a AssignmentOrWord) printSource(w io.Writer, v bool) {}
+func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
+	if a.Assignment != nil {
+		a.Assignment.printSource(w, v)
+	} else if a.Word != nil {
+		a.Word.printSource(w, v)
+	}
+}
 
 func (b Builtin) printSource(w io.Writer, v bool) {}
 
