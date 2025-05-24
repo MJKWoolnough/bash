@@ -6626,6 +6626,221 @@ func TestFunctionCompound(t *testing.T) {
 	})
 }
 
+func TestBuiltin(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"declare a", func(t *test, tk Tokens) { // 1
+			t.Output = Builtin{
+				BuiltinType: BuiltinDeclare,
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"local -n a=b", func(t *test, tk Tokens) { // 2
+			t.Output = Builtin{
+				BuiltinType: BuiltinLocal,
+				Params: []*Token{
+					&tk[2],
+				},
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[4],
+								Tokens:     tk[4:5],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[6],
+											Tokens: tk[6:7],
+										},
+									},
+									Tokens: tk[6:7],
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[4:7],
+						},
+						Tokens: tk[4:7],
+					},
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"readonly -a -p a=b c=d", func(t *test, tk Tokens) { // 3
+			t.Output = Builtin{
+				BuiltinType: BuiltinReadonly,
+				Params: []*Token{
+					&tk[2],
+					&tk[4],
+				},
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[6],
+								Tokens:     tk[6:7],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[8],
+											Tokens: tk[8:9],
+										},
+									},
+									Tokens: tk[8:9],
+								},
+								Tokens: tk[8:9],
+							},
+							Tokens: tk[6:9],
+						},
+						Tokens: tk[6:9],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[10],
+								Tokens:     tk[10:11],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[12],
+											Tokens: tk[12:13],
+										},
+									},
+									Tokens: tk[12:13],
+								},
+								Tokens: tk[12:13],
+							},
+							Tokens: tk[10:13],
+						},
+						Tokens: tk[10:13],
+					},
+				},
+				Tokens: tk[:13],
+			}
+		}},
+		{"export -p a=b c=d", func(t *test, tk Tokens) { // 4
+			t.Output = Builtin{
+				BuiltinType: BuiltinExport,
+				Params: []*Token{
+					&tk[2],
+				},
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[4],
+								Tokens:     tk[4:5],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[6],
+											Tokens: tk[6:7],
+										},
+									},
+									Tokens: tk[6:7],
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[4:7],
+						},
+						Tokens: tk[4:7],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[8],
+								Tokens:     tk[8:9],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[10],
+											Tokens: tk[10:11],
+										},
+									},
+									Tokens: tk[10:11],
+								},
+								Tokens: tk[10:11],
+							},
+							Tokens: tk[8:11],
+						},
+						Tokens: tk[8:11],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"typeset -ag -pl a=b", func(t *test, tk Tokens) { // 5
+			t.Output = Builtin{
+				BuiltinType: BuiltinTypeset,
+				Params: []*Token{
+					&tk[2],
+					&tk[4],
+				},
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[6],
+								Tokens:     tk[6:7],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[8],
+											Tokens: tk[8:9],
+										},
+									},
+									Tokens: tk[8:9],
+								},
+								Tokens: tk[8:9],
+							},
+							Tokens: tk[6:9],
+						},
+						Tokens: tk[6:9],
+					},
+				},
+				Tokens: tk[:9],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var b Builtin
+
+		err := b.parse(t.Parser)
+
+		return b, err
+	})
+}
+
 func TestAssignmentOrWord(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
