@@ -50,7 +50,23 @@ func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (b Builtin) printSource(w io.Writer, v bool) {}
+func (b Builtin) printSource(w io.Writer, v bool) {
+	if b.BuiltinType > BuiltinReadonly {
+		return
+	}
+
+	b.BuiltinType.printSource(w, v)
+
+	for _, p := range b.Params {
+		io.WriteString(w, " ")
+		io.WriteString(w, p.Data)
+	}
+
+	for _, aw := range b.AssignmentsOrWords {
+		io.WriteString(w, " ")
+		aw.printSource(w, v)
+	}
+}
 
 func (c CaseCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "case ")
