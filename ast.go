@@ -1227,6 +1227,7 @@ const (
 
 type Builtin struct {
 	BuiltinType        BuiltinType
+	Params             []*Token
 	AssignmentsOrWords []AssignmentOrWord
 	Tokens             Tokens
 }
@@ -1248,6 +1249,16 @@ func (t *Builtin) parse(b *bashParser) error {
 	c := b.NewGoal()
 
 	c.AcceptRunWhitespace()
+
+	for c.Accept(TokenOperator) {
+		t.Params = append(t.Params, c.GetLastToken())
+
+		b.Score(c)
+
+		c = b.NewGoal()
+
+		c.AcceptRunWhitespace()
+	}
 
 	for isAssignmentOrWord(c) {
 		b.Score(c)
