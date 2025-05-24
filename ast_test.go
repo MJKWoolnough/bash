@@ -6832,6 +6832,61 @@ func TestBuiltin(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
+		{"export a=$(||)", func(t *test, tk Tokens) { // 6
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[5],
+															},
+															Parsing: "CommandOrCompound",
+															Token:   tk[5],
+														},
+														Parsing: "Pipeline",
+														Token:   tk[5],
+													},
+													Parsing: "Statement",
+													Token:   tk[5],
+												},
+												Parsing: "Line",
+												Token:   tk[5],
+											},
+											Parsing: "File",
+											Token:   tk[5],
+										},
+										Parsing: "CommandSubstitution",
+										Token:   tk[5],
+									},
+									Parsing: "WordPart",
+									Token:   tk[4],
+								},
+								Parsing: "Word",
+								Token:   tk[4],
+							},
+							Parsing: "Value",
+							Token:   tk[4],
+						},
+						Parsing: "Assignment",
+						Token:   tk[4],
+					},
+					Parsing: "AssignmentOrWord",
+					Token:   tk[2],
+				},
+				Parsing: "Builtin",
+				Token:   tk[2],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var b Builtin
 
