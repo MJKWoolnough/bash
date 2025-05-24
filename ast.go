@@ -373,7 +373,7 @@ func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
 func isCompoundNext(b *bashParser) bool {
 	tk := b.Peek()
 
-	return tk.Type == TokenKeyword && (tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "select" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "((" || tk.Data == "(" || tk.Data == "{") || tk.Type == TokenFunctionIdentifier
+	return tk.Type == TokenKeyword && (tk.Data == "function" || tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "select" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "((" || tk.Data == "(" || tk.Data == "{") || tk.Type == TokenFunctionIdentifier
 }
 
 type Compound struct {
