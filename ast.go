@@ -344,7 +344,7 @@ func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
 	}
 
 	if err != nil {
-		return b.Error("CommandOrCompound", err)
+		return b.Error("CommandCompoundOrBuiltin", err)
 	}
 
 	b.Score(c)
@@ -362,7 +362,7 @@ func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
 	c := b.NewGoal()
 
 	if err := cc.Command.parseHeredocs(c); err != nil {
-		return b.Error("CommandOrCompound", err)
+		return b.Error("CommandCompoundOrBuiltin", err)
 	}
 
 	b.Score(c)
