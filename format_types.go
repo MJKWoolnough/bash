@@ -89,6 +89,23 @@ func (f *Builtin) printType(w io.Writer, v bool) {
 	pp.Print("\nBuiltinType: ")
 	f.BuiltinType.printType(&pp, v)
 
+	if f.Params == nil {
+		pp.Print("\nParams: nil")
+	} else if len(f.Params) > 0 {
+		pp.Print("\nParams: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Params {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nParams: []")
+	}
+
 	if f.AssignmentsOrWords == nil {
 		pp.Print("\nAssignmentsOrWords: nil")
 	} else if len(f.AssignmentsOrWords) > 0 {
