@@ -1264,10 +1264,6 @@ func (t *Builtin) parse(b *bashParser) error {
 
 		t.AssignmentsOrWords = append(t.AssignmentsOrWords, a)
 
-		if t.BuiltinType == BuiltinExport {
-			break
-		}
-
 		c = b.NewGoal()
 
 		c.AcceptRunWhitespace()
