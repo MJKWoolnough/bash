@@ -2202,6 +2202,163 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
+		{"$(||)", func(t *test, tk Tokens) { // 19
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[1],
+													},
+													Parsing: "CommandCompoundOrBuiltin",
+													Token:   tk[1],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[1],
+											},
+											Parsing: "Statement",
+											Token:   tk[1],
+										},
+										Parsing: "Line",
+										Token:   tk[1],
+									},
+									Parsing: "File",
+									Token:   tk[1],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[1],
+							},
+							Parsing: "WordPart",
+							Token:   tk[0],
+						},
+						Parsing: "Word",
+						Token:   tk[0],
+					},
+					Parsing: "Command",
+					Token:   tk[0],
+				},
+				Parsing: "CommandCompoundOrBuiltin",
+				Token:   tk[0],
+			}
+		}},
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 20
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[3],
+														},
+														Parsing: "CommandCompoundOrBuiltin",
+														Token:   tk[3],
+													},
+													Parsing: "Pipeline",
+													Token:   tk[3],
+												},
+												Parsing: "Statement",
+												Token:   tk[3],
+											},
+											Parsing: "Line",
+											Token:   tk[3],
+										},
+										Parsing: "File",
+										Token:   tk[3],
+									},
+									Parsing: "CommandSubstitution",
+									Token:   tk[3],
+								},
+								Parsing: "WordPart",
+								Token:   tk[2],
+							},
+							Parsing: "Word",
+							Token:   tk[2],
+						},
+						Parsing: "CaseCompound",
+						Token:   tk[2],
+					},
+					Parsing: "Compound",
+					Token:   tk[0],
+				},
+				Parsing: "CommandCompoundOrBuiltin",
+				Token:   tk[0],
+			}
+		}},
+		{"export a=$(||)", func(t *test, tk Tokens) { // 21
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err:     ErrMissingWord,
+																	Parsing: "Command",
+																	Token:   tk[5],
+																},
+																Parsing: "CommandCompoundOrBuiltin",
+																Token:   tk[5],
+															},
+															Parsing: "Pipeline",
+															Token:   tk[5],
+														},
+														Parsing: "Statement",
+														Token:   tk[5],
+													},
+													Parsing: "Line",
+													Token:   tk[5],
+												},
+												Parsing: "File",
+												Token:   tk[5],
+											},
+											Parsing: "CommandSubstitution",
+											Token:   tk[5],
+										},
+										Parsing: "WordPart",
+										Token:   tk[4],
+									},
+									Parsing: "Word",
+									Token:   tk[4],
+								},
+								Parsing: "Value",
+								Token:   tk[4],
+							},
+							Parsing: "Assignment",
+							Token:   tk[4],
+						},
+						Parsing: "AssignmentOrWord",
+						Token:   tk[2],
+					},
+					Parsing: "Builtin",
+					Token:   tk[2],
+				},
+				Parsing: "CommandCompoundOrBuiltin",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c CommandCompoundOrBuiltin
 
