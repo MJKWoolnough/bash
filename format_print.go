@@ -167,6 +167,11 @@ func (c Compound) printSource(w io.Writer, v bool) {
 	} else if c.FunctionCompound != nil {
 		c.FunctionCompound.printSource(w, v)
 	}
+
+	for _, r := range c.Redirections {
+		io.WriteString(w, " ")
+		r.printSource(w, v)
+	}
 }
 
 func (c Compound) printHeredoc(w io.Writer, v bool) {}
