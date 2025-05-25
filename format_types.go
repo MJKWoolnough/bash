@@ -339,6 +339,23 @@ func (f *Compound) printType(w io.Writer, v bool) {
 		pp.Print("\nFunctionCompound: nil")
 	}
 
+	if f.Redirections == nil {
+		pp.Print("\nRedirections: nil")
+	} else if len(f.Redirections) > 0 {
+		pp.Print("\nRedirections: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Redirections {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nRedirections: []")
+	}
+
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
