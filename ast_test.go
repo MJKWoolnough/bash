@@ -2949,7 +2949,111 @@ func TestCompounds(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"if ||;then b;fi", func(t *test, tk Tokens) { // 13
+		{"[[ a = b ]] >c", func(t *test, tk Tokens) { // 13
+			t.Output = Compound{
+				TestCompound: &TestCompound{
+					Tests: Tests{
+						Test: TestOperatorStringsEqual,
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Pattern: &Pattern{
+							Parts: []WordPart{
+								{
+									Part:   &tk[6],
+									Tokens: tk[6:7],
+								},
+							},
+							Tokens: tk[6:7],
+						},
+						Tokens: tk[2:7],
+					},
+					Tokens: tk[:9],
+				},
+				Redirections: []Redirection{
+					{
+						Redirector: &tk[10],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[11],
+									Tokens: tk[11:12],
+								},
+							},
+							Tokens: tk[11:12],
+						},
+						Tokens: tk[10:12],
+					},
+				},
+				Tokens: tk[:12],
+			}
+		}},
+		{"[[ a = b ]] >a 2>&1", func(t *test, tk Tokens) { // 14
+			t.Output = Compound{
+				TestCompound: &TestCompound{
+					Tests: Tests{
+						Test: TestOperatorStringsEqual,
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Pattern: &Pattern{
+							Parts: []WordPart{
+								{
+									Part:   &tk[6],
+									Tokens: tk[6:7],
+								},
+							},
+							Tokens: tk[6:7],
+						},
+						Tokens: tk[2:7],
+					},
+					Tokens: tk[:9],
+				},
+				Redirections: []Redirection{
+					{
+						Redirector: &tk[10],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[11],
+									Tokens: tk[11:12],
+								},
+							},
+							Tokens: tk[11:12],
+						},
+						Tokens: tk[10:12],
+					},
+					{
+						Input:      &tk[13],
+						Redirector: &tk[14],
+						Output: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[15],
+									Tokens: tk[15:16],
+								},
+							},
+							Tokens: tk[15:16],
+						},
+						Tokens: tk[13:16],
+					},
+				},
+				Tokens: tk[:16],
+			}
+		}},
+		{"if ||;then b;fi", func(t *test, tk Tokens) { // 15
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -2980,7 +3084,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 14
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 16
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3027,7 +3131,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"while ||; do b; done", func(t *test, tk Tokens) { // 15
+		{"while ||; do b; done", func(t *test, tk Tokens) { // 17
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3054,7 +3158,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"until a; do ||; done", func(t *test, tk Tokens) { // 16
+		{"until a; do ||; done", func(t *test, tk Tokens) { // 18
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3089,7 +3193,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 17
+		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 19
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3136,7 +3240,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 18
+		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 20
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3183,7 +3287,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 19
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 21
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3234,7 +3338,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"(||)", func(t *test, tk Tokens) { // 20
+		{"(||)", func(t *test, tk Tokens) { // 22
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3269,7 +3373,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"function a() { || }", func(t *test, tk Tokens) { // 21
+		{"function a() { || }", func(t *test, tk Tokens) { // 23
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3312,7 +3416,7 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"(($(||)))", func(t *test, tk Tokens) { // 22
+		{"(($(||)))", func(t *test, tk Tokens) { // 24
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
