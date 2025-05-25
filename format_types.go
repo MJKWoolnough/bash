@@ -792,8 +792,8 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 		pp.Print("\nCoprocIdentifier: nil")
 	}
 
-	pp.Print("\nCommandOrCompound: ")
-	f.CommandOrCompound.printType(&pp, v)
+	pp.Print("\nCommandCompoundOrBuiltin: ")
+	f.CommandCompoundOrBuiltin.printType(&pp, v)
 
 	if f.Pipeline != nil {
 		pp.Print("\nPipeline: ")

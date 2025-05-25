@@ -491,7 +491,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 		}
 	}
 
-	p.CommandOrCompound.printSource(w, v)
+	p.CommandCompoundOrBuiltin.printSource(w, v)
 
 	if p.Pipeline != nil {
 		io.WriteString(w, " | ")
@@ -500,7 +500,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 }
 
 func (p Pipeline) printHeredoc(w io.Writer, v bool) {
-	p.CommandOrCompound.printHeredoc(w, v)
+	p.CommandCompoundOrBuiltin.printHeredoc(w, v)
 
 	if p.Pipeline != nil {
 		p.printHeredoc(w, v)

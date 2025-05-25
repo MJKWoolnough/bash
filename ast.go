@@ -230,12 +230,12 @@ const (
 
 type Pipeline struct {
 	PipelineTime
-	Not               bool
-	Coproc            bool
-	CoprocIdentifier  *Token
-	CommandOrCompound CommandCompoundOrBuiltin
-	Pipeline          *Pipeline
-	Tokens            Tokens
+	Not                      bool
+	Coproc                   bool
+	CoprocIdentifier         *Token
+	CommandCompoundOrBuiltin CommandCompoundOrBuiltin
+	Pipeline                 *Pipeline
+	Tokens                   Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser, required bool) error {
@@ -269,7 +269,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 
 	c := b.NewGoal()
 
-	if err := p.CommandOrCompound.parse(c, required); err != nil {
+	if err := p.CommandCompoundOrBuiltin.parse(c, required); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -301,7 +301,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	c := b.NewGoal()
 
-	if err := p.CommandOrCompound.parseHeredoc(c); err != nil {
+	if err := p.CommandCompoundOrBuiltin.parseHeredoc(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
