@@ -386,6 +386,7 @@ type Compound struct {
 	TestCompound       *TestCompound
 	ArithmeticCompound *ArithmeticExpansion
 	FunctionCompound   *FunctionCompound
+	Redirections       []Redirection
 	Tokens             Tokens
 }
 
@@ -444,6 +445,30 @@ func (cc *Compound) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
+
+	c = b.NewGoal()
+
+	c.AcceptRunWhitespace()
+
+	for isRedirection(c) {
+		b.Score(c)
+
+		c = b.NewGoal()
+
+		var r Redirection
+
+		if err := r.parse(c); err != nil {
+			return b.Error("Compound", err)
+		}
+
+		cc.Redirections = append(cc.Redirections, r)
+
+		b.Score(c)
+
+		c = b.NewGoal()
+
+		c.AcceptRunWhitespace()
+	}
 
 	cc.Tokens = b.ToTokens()
 
