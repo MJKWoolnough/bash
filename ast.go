@@ -355,13 +355,19 @@ func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
 }
 
 func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
-	if cc.Command == nil {
-		return nil
-	}
+	var err error
 
 	c := b.NewGoal()
 
-	if err := cc.Command.parseHeredocs(c); err != nil {
+	if cc.Command != nil {
+		err = cc.Command.parseHeredocs(c)
+	} else if cc.Compound != nil {
+		err = cc.Compound.parseHeredocs(c)
+	} else if cc.Builtin != nil {
+		err = cc.Builtin.parseHeredocs(c)
+	}
+
+	if err != nil {
 		return b.Error("CommandCompoundOrBuiltin", err)
 	}
 
@@ -472,6 +478,10 @@ func (cc *Compound) parse(b *bashParser) error {
 
 	cc.Tokens = b.ToTokens()
 
+	return nil
+}
+
+func (cc *Compound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
@@ -1307,6 +1317,10 @@ func (t *Builtin) parse(b *bashParser) error {
 
 	t.Tokens = b.ToTokens()
 
+	return nil
+}
+
+func (t *Builtin) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
