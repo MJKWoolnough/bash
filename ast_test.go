@@ -3467,6 +3467,53 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
+		{"[[ a = b ]] >$(||)", func(t *test, tk Tokens) { // 25
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[12],
+													},
+													Parsing: "CommandCompoundOrBuiltin",
+													Token:   tk[12],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[12],
+											},
+											Parsing: "Statement",
+											Token:   tk[12],
+										},
+										Parsing: "Line",
+										Token:   tk[12],
+									},
+									Parsing: "File",
+									Token:   tk[12],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[12],
+							},
+							Parsing: "WordPart",
+							Token:   tk[11],
+						},
+						Parsing: "Word",
+						Token:   tk[11],
+					},
+					Parsing: "Redirection",
+					Token:   tk[11],
+				},
+				Parsing: "Compound",
+				Token:   tk[10],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c Compound
 
