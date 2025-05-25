@@ -229,7 +229,7 @@ const (
 )
 
 type Pipeline struct {
-	PipelineTime
+	PipelineTime             PipelineTime
 	Not                      bool
 	Coproc                   bool
 	CoprocIdentifier         *Token
