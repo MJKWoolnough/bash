@@ -123,7 +123,15 @@ func (c Command) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandCompoundOrBuiltin) printSource(w io.Writer, v bool) {}
+func (c CommandCompoundOrBuiltin) printSource(w io.Writer, v bool) {
+	if c.Command != nil {
+		c.Command.printSource(w, v)
+	} else if c.Compound != nil {
+		c.Compound.printSource(w, v)
+	} else if c.Builtin != nil {
+		c.Builtin.printSource(w, v)
+	}
+}
 
 func (c CommandCompoundOrBuiltin) printHeredoc(w io.Writer, v bool) {
 	if c.Command != nil {
