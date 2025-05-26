@@ -476,10 +476,10 @@ func (cc *Compound) parse(b *bashParser) error {
 }
 
 func (cc *Compound) parseHeredocs(b *bashParser) error {
-	for _, r := range cc.Redirections {
+	for n := range cc.Redirections {
 		c := b.NewGoal()
 
-		if err := r.parseHeredocs(c); err != nil {
+		if err := cc.Redirections[n].parseHeredocs(c); err != nil {
 			return b.Error("Compound", err)
 		}
 
