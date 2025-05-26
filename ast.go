@@ -1368,10 +1368,10 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 }
 
 type Command struct {
-	Vars         []Assignment
-	Redirections []Redirection
-	Words        []Word
-	Tokens       Tokens
+	Vars               []Assignment
+	Redirections       []Redirection
+	AssignmentsOrWords []AssignmentOrWord
+	Tokens             Tokens
 }
 
 func (cc *Command) parse(b *bashParser, required bool) error {
@@ -1417,13 +1417,13 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 
 			cc.Redirections = append(cc.Redirections, r)
 		} else {
-			var w Word
+			var a AssignmentOrWord
 
-			if err := w.parse(c, false); err != nil {
+			if err := a.parse(c); err != nil {
 				return b.Error("Command", err)
 			}
 
-			cc.Words = append(cc.Words, w)
+			cc.AssignmentsOrWords = append(cc.AssignmentsOrWords, a)
 		}
 
 		b.Score(c)
@@ -1433,7 +1433,7 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 		c.AcceptRunWhitespace()
 	}
 
-	if len(cc.Words) == 0 && (required || len(cc.Redirections) == 0 && len(cc.Vars) == 0) {
+	if len(cc.AssignmentsOrWords) == 0 && (required || len(cc.Redirections) == 0 && len(cc.Vars) == 0) {
 		return b.Error("Command", ErrMissingWord)
 	}
 

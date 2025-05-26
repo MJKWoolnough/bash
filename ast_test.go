@@ -97,13 +97,16 @@ func TestParse(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[0],
-													Tokens: tk[:1],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
 												},
+												Tokens: tk[:1],
 											},
 											Tokens: tk[:1],
 										},
@@ -188,13 +191,16 @@ func TestFile(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[0],
-															Tokens: tk[:1],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[0],
+																Tokens: tk[:1],
+															},
 														},
+														Tokens: tk[:1],
 													},
 													Tokens: tk[:1],
 												},
@@ -223,13 +229,16 @@ func TestFile(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[0],
-															Tokens: tk[:1],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[0],
+																Tokens: tk[:1],
+															},
 														},
+														Tokens: tk[:1],
 													},
 													Tokens: tk[:1],
 												},
@@ -251,13 +260,16 @@ func TestFile(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[2],
-															Tokens: tk[2:3],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
 														},
+														Tokens: tk[2:3],
 													},
 													Tokens: tk[2:3],
 												},
@@ -286,13 +298,16 @@ func TestFile(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[0],
-															Tokens: tk[:1],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[0],
+																Tokens: tk[:1],
+															},
 														},
+														Tokens: tk[:1],
 													},
 													Tokens: tk[:1],
 												},
@@ -314,13 +329,16 @@ func TestFile(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[2],
-															Tokens: tk[2:3],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
 														},
+														Tokens: tk[2:3],
 													},
 													Tokens: tk[2:3],
 												},
@@ -592,13 +610,16 @@ func TestLine(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[0],
-													Tokens: tk[:1],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
 												},
+												Tokens: tk[:1],
 											},
 											Tokens: tk[:1],
 										},
@@ -622,13 +643,16 @@ func TestLine(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[0],
-													Tokens: tk[:1],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
 												},
+												Tokens: tk[:1],
 											},
 											Tokens: tk[:1],
 										},
@@ -645,13 +669,16 @@ func TestLine(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -675,13 +702,16 @@ func TestLine(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[0],
-													Tokens: tk[:1],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
 												},
+												Tokens: tk[:1],
 											},
 											Tokens: tk[:1],
 										},
@@ -699,13 +729,16 @@ func TestLine(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[4],
-													Tokens: tk[4:5],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[4],
+														Tokens: tk[4:5],
+													},
 												},
+												Tokens: tk[4:5],
 											},
 											Tokens: tk[4:5],
 										},
@@ -761,13 +794,16 @@ func TestStatement(t *testing.T) {
 				Pipeline: Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[0],
-											Tokens: tk[:1],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
 										},
+										Tokens: tk[:1],
 									},
 									Tokens: tk[:1],
 								},
@@ -786,13 +822,16 @@ func TestStatement(t *testing.T) {
 				Pipeline: Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[0],
-											Tokens: tk[:1],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
 										},
+										Tokens: tk[:1],
 									},
 									Tokens: tk[:1],
 								},
@@ -808,13 +847,16 @@ func TestStatement(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -835,13 +877,16 @@ func TestStatement(t *testing.T) {
 				Pipeline: Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[0],
-											Tokens: tk[:1],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
 										},
+										Tokens: tk[:1],
 									},
 									Tokens: tk[:1],
 								},
@@ -857,13 +902,16 @@ func TestStatement(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[4],
-												Tokens: tk[4:5],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[4],
+													Tokens: tk[4:5],
+												},
 											},
+											Tokens: tk[4:5],
 										},
 										Tokens: tk[4:5],
 									},
@@ -884,13 +932,16 @@ func TestStatement(t *testing.T) {
 				Pipeline: Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[0],
-											Tokens: tk[:1],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
 										},
+										Tokens: tk[:1],
 									},
 									Tokens: tk[:1],
 								},
@@ -906,13 +957,16 @@ func TestStatement(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -933,13 +987,16 @@ func TestStatement(t *testing.T) {
 				Pipeline: Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[0],
-											Tokens: tk[:1],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[0],
+												Tokens: tk[:1],
+											},
 										},
+										Tokens: tk[:1],
 									},
 									Tokens: tk[:1],
 								},
@@ -955,13 +1012,16 @@ func TestStatement(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -1035,13 +1095,16 @@ func TestPipeline(t *testing.T) {
 			t.Output = Pipeline{
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[0],
-										Tokens: tk[:1],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[0],
+											Tokens: tk[:1],
+										},
 									},
+									Tokens: tk[:1],
 								},
 								Tokens: tk[:1],
 							},
@@ -1058,13 +1121,16 @@ func TestPipeline(t *testing.T) {
 				PipelineTime: PipelineTimeBash,
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[2],
-										Tokens: tk[2:3],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[2],
+											Tokens: tk[2:3],
+										},
 									},
+									Tokens: tk[2:3],
 								},
 								Tokens: tk[2:3],
 							},
@@ -1081,13 +1147,16 @@ func TestPipeline(t *testing.T) {
 				PipelineTime: PipelineTimePosix,
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[4],
-										Tokens: tk[4:5],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[4],
+											Tokens: tk[4:5],
+										},
 									},
+									Tokens: tk[4:5],
 								},
 								Tokens: tk[4:5],
 							},
@@ -1104,13 +1173,16 @@ func TestPipeline(t *testing.T) {
 				Not: true,
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[2],
-										Tokens: tk[2:3],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[2],
+											Tokens: tk[2:3],
+										},
 									},
+									Tokens: tk[2:3],
 								},
 								Tokens: tk[2:3],
 							},
@@ -1127,13 +1199,16 @@ func TestPipeline(t *testing.T) {
 				Coproc: true,
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[2],
-										Tokens: tk[2:3],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[2],
+											Tokens: tk[2:3],
+										},
 									},
+									Tokens: tk[2:3],
 								},
 								Tokens: tk[2:3],
 							},
@@ -1157,13 +1232,16 @@ func TestPipeline(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[6],
-																Tokens: tk[6:7],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[6],
+																	Tokens: tk[6:7],
+																},
 															},
+															Tokens: tk[6:7],
 														},
 														Tokens: tk[6:7],
 													},
@@ -1184,13 +1262,16 @@ func TestPipeline(t *testing.T) {
 													Pipeline: Pipeline{
 														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 															Command: &Command{
-																Words: []Word{
+																AssignmentsOrWords: []AssignmentOrWord{
 																	{
-																		Parts: []WordPart{
-																			{
-																				Part:   &tk[11],
-																				Tokens: tk[11:12],
+																		Word: &Word{
+																			Parts: []WordPart{
+																				{
+																					Part:   &tk[11],
+																					Tokens: tk[11:12],
+																				},
 																			},
+																			Tokens: tk[11:12],
 																		},
 																		Tokens: tk[11:12],
 																	},
@@ -1224,13 +1305,16 @@ func TestPipeline(t *testing.T) {
 			t.Output = Pipeline{
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[0],
-										Tokens: tk[:1],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[0],
+											Tokens: tk[:1],
+										},
 									},
+									Tokens: tk[:1],
 								},
 								Tokens: tk[:1],
 							},
@@ -1242,13 +1326,16 @@ func TestPipeline(t *testing.T) {
 				Pipeline: &Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[2],
-											Tokens: tk[2:3],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[2],
+												Tokens: tk[2:3],
+											},
 										},
+										Tokens: tk[2:3],
 									},
 									Tokens: tk[2:3],
 								},
@@ -1266,13 +1353,16 @@ func TestPipeline(t *testing.T) {
 			t.Output = Pipeline{
 				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 					Command: &Command{
-						Words: []Word{
+						AssignmentsOrWords: []AssignmentOrWord{
 							{
-								Parts: []WordPart{
-									{
-										Part:   &tk[0],
-										Tokens: tk[:1],
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[0],
+											Tokens: tk[:1],
+										},
 									},
+									Tokens: tk[:1],
 								},
 								Tokens: tk[:1],
 							},
@@ -1284,13 +1374,16 @@ func TestPipeline(t *testing.T) {
 				Pipeline: &Pipeline{
 					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 						Command: &Command{
-							Words: []Word{
+							AssignmentsOrWords: []AssignmentOrWord{
 								{
-									Parts: []WordPart{
-										{
-											Part:   &tk[4],
-											Tokens: tk[4:5],
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[4],
+												Tokens: tk[4:5],
+											},
 										},
+										Tokens: tk[4:5],
 									},
 									Tokens: tk[4:5],
 								},
@@ -1352,13 +1445,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = CommandCompoundOrBuiltin{
 				Command: &Command{
-					Words: []Word{
+					AssignmentsOrWords: []AssignmentOrWord{
 						{
-							Parts: []WordPart{
-								{
-									Part:   &tk[0],
-									Tokens: tk[:1],
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[0],
+										Tokens: tk[:1],
+									},
 								},
+								Tokens: tk[:1],
 							},
 							Tokens: tk[:1],
 						},
@@ -1377,13 +1473,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 								Pipeline: Pipeline{
 									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 										Command: &Command{
-											Words: []Word{
+											AssignmentsOrWords: []AssignmentOrWord{
 												{
-													Parts: []WordPart{
-														{
-															Part:   &tk[2],
-															Tokens: tk[2:3],
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[2],
+																Tokens: tk[2:3],
+															},
 														},
+														Tokens: tk[2:3],
 													},
 													Tokens: tk[2:3],
 												},
@@ -1404,13 +1503,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 												Pipeline: Pipeline{
 													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 														Command: &Command{
-															Words: []Word{
+															AssignmentsOrWords: []AssignmentOrWord{
 																{
-																	Parts: []WordPart{
-																		{
-																			Part:   &tk[7],
-																			Tokens: tk[7:8],
+																	Word: &Word{
+																		Parts: []WordPart{
+																			{
+																				Part:   &tk[7],
+																				Tokens: tk[7:8],
+																			},
 																		},
+																		Tokens: tk[7:8],
 																	},
 																	Tokens: tk[7:8],
 																},
@@ -1472,13 +1574,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 													Pipeline: Pipeline{
 														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 															Command: &Command{
-																Words: []Word{
+																AssignmentsOrWords: []AssignmentOrWord{
 																	{
-																		Parts: []WordPart{
-																			{
-																				Part:   &tk[8],
-																				Tokens: tk[8:9],
+																		Word: &Word{
+																			Parts: []WordPart{
+																				{
+																					Part:   &tk[8],
+																					Tokens: tk[8:9],
+																				},
 																			},
+																			Tokens: tk[8:9],
 																		},
 																		Tokens: tk[8:9],
 																	},
@@ -1515,13 +1620,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 							Pipeline: Pipeline{
 								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 									Command: &Command{
-										Words: []Word{
+										AssignmentsOrWords: []AssignmentOrWord{
 											{
-												Parts: []WordPart{
-													{
-														Part:   &tk[2],
-														Tokens: tk[2:3],
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[2],
+															Tokens: tk[2:3],
+														},
 													},
+													Tokens: tk[2:3],
 												},
 												Tokens: tk[2:3],
 											},
@@ -1542,13 +1650,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[6],
-																		Tokens: tk[6:7],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[6],
+																			Tokens: tk[6:7],
+																		},
 																	},
+																	Tokens: tk[6:7],
 																},
 																Tokens: tk[6:7],
 															},
@@ -1583,13 +1694,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 							Pipeline: Pipeline{
 								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 									Command: &Command{
-										Words: []Word{
+										AssignmentsOrWords: []AssignmentOrWord{
 											{
-												Parts: []WordPart{
-													{
-														Part:   &tk[2],
-														Tokens: tk[2:3],
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[2],
+															Tokens: tk[2:3],
+														},
 													},
+													Tokens: tk[2:3],
 												},
 												Tokens: tk[2:3],
 											},
@@ -1610,13 +1724,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[7],
-																		Tokens: tk[7:8],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[7],
+																			Tokens: tk[7:8],
+																		},
 																	},
+																	Tokens: tk[7:8],
 																},
 																Tokens: tk[7:8],
 															},
@@ -1655,13 +1772,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[7],
-																		Tokens: tk[7:8],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[7],
+																			Tokens: tk[7:8],
+																		},
 																	},
+																	Tokens: tk[7:8],
 																},
 																Tokens: tk[7:8],
 															},
@@ -1700,13 +1820,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[7],
-																		Tokens: tk[7:8],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[7],
+																			Tokens: tk[7:8],
+																		},
 																	},
+																	Tokens: tk[7:8],
 																},
 																Tokens: tk[7:8],
 															},
@@ -1778,13 +1901,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[1],
-																		Tokens: tk[1:2],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[1],
+																			Tokens: tk[1:2],
+																		},
 																	},
+																	Tokens: tk[1:2],
 																},
 																Tokens: tk[1:2],
 															},
@@ -1822,13 +1948,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[2],
-																		Tokens: tk[2:3],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[2],
+																			Tokens: tk[2:3],
+																		},
 																	},
+																	Tokens: tk[2:3],
 																},
 																Tokens: tk[2:3],
 															},
@@ -1870,13 +1999,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 													Pipeline: Pipeline{
 														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 															Command: &Command{
-																Words: []Word{
+																AssignmentsOrWords: []AssignmentOrWord{
 																	{
-																		Parts: []WordPart{
-																			{
-																				Part:   &tk[8],
-																				Tokens: tk[8:9],
+																		Word: &Word{
+																			Parts: []WordPart{
+																				{
+																					Part:   &tk[8],
+																					Tokens: tk[8:9],
+																				},
 																			},
+																			Tokens: tk[8:9],
 																		},
 																		Tokens: tk[8:9],
 																	},
@@ -1921,13 +2053,16 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 													Pipeline: Pipeline{
 														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 															Command: &Command{
-																Words: []Word{
+																AssignmentsOrWords: []AssignmentOrWord{
 																	{
-																		Parts: []WordPart{
-																			{
-																				Part:   &tk[6],
-																				Tokens: tk[6:7],
+																		Word: &Word{
+																			Parts: []WordPart{
+																				{
+																					Part:   &tk[6],
+																					Tokens: tk[6:7],
+																				},
 																			},
+																			Tokens: tk[6:7],
 																		},
 																		Tokens: tk[6:7],
 																	},
@@ -2214,32 +2349,36 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[1],
+														},
+														Parsing: "CommandCompoundOrBuiltin",
 														Token:   tk[1],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "Pipeline",
 													Token:   tk[1],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[1],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[1],
 										},
-										Parsing: "Line",
+										Parsing: "File",
 										Token:   tk[1],
 									},
-									Parsing: "File",
+									Parsing: "CommandSubstitution",
 									Token:   tk[1],
 								},
-								Parsing: "CommandSubstitution",
-								Token:   tk[1],
+								Parsing: "WordPart",
+								Token:   tk[0],
 							},
-							Parsing: "WordPart",
+							Parsing: "Word",
 							Token:   tk[0],
 						},
-						Parsing: "Word",
+						Parsing: "AssignmentOrWord",
 						Token:   tk[0],
 					},
 					Parsing: "Command",
@@ -2378,13 +2517,16 @@ func TestCompounds(t *testing.T) {
 							Pipeline: Pipeline{
 								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 									Command: &Command{
-										Words: []Word{
+										AssignmentsOrWords: []AssignmentOrWord{
 											{
-												Parts: []WordPart{
-													{
-														Part:   &tk[2],
-														Tokens: tk[2:3],
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[2],
+															Tokens: tk[2:3],
+														},
 													},
+													Tokens: tk[2:3],
 												},
 												Tokens: tk[2:3],
 											},
@@ -2405,13 +2547,16 @@ func TestCompounds(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[7],
-																		Tokens: tk[7:8],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[7],
+																			Tokens: tk[7:8],
+																		},
 																	},
+																	Tokens: tk[7:8],
 																},
 																Tokens: tk[7:8],
 															},
@@ -2470,13 +2615,16 @@ func TestCompounds(t *testing.T) {
 												Pipeline: Pipeline{
 													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 														Command: &Command{
-															Words: []Word{
+															AssignmentsOrWords: []AssignmentOrWord{
 																{
-																	Parts: []WordPart{
-																		{
-																			Part:   &tk[8],
-																			Tokens: tk[8:9],
+																	Word: &Word{
+																		Parts: []WordPart{
+																			{
+																				Part:   &tk[8],
+																				Tokens: tk[8:9],
+																			},
 																		},
+																		Tokens: tk[8:9],
 																	},
 																	Tokens: tk[8:9],
 																},
@@ -2510,13 +2658,16 @@ func TestCompounds(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -2537,13 +2688,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[6],
-																	Tokens: tk[6:7],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[6],
+																		Tokens: tk[6:7],
+																	},
 																},
+																Tokens: tk[6:7],
 															},
 															Tokens: tk[6:7],
 														},
@@ -2575,13 +2729,16 @@ func TestCompounds(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -2602,13 +2759,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -2644,13 +2804,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -2686,13 +2849,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -2758,13 +2924,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[1],
-																	Tokens: tk[1:2],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[1],
+																		Tokens: tk[1:2],
+																	},
 																},
+																Tokens: tk[1:2],
 															},
 															Tokens: tk[1:2],
 														},
@@ -2799,13 +2968,16 @@ func TestCompounds(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[2],
-																	Tokens: tk[2:3],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[2],
+																		Tokens: tk[2:3],
+																	},
 																},
+																Tokens: tk[2:3],
 															},
 															Tokens: tk[2:3],
 														},
@@ -2844,13 +3016,16 @@ func TestCompounds(t *testing.T) {
 												Pipeline: Pipeline{
 													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 														Command: &Command{
-															Words: []Word{
+															AssignmentsOrWords: []AssignmentOrWord{
 																{
-																	Parts: []WordPart{
-																		{
-																			Part:   &tk[8],
-																			Tokens: tk[8:9],
+																	Word: &Word{
+																		Parts: []WordPart{
+																			{
+																				Part:   &tk[8],
+																				Tokens: tk[8:9],
+																			},
 																		},
+																		Tokens: tk[8:9],
 																	},
 																	Tokens: tk[8:9],
 																},
@@ -2892,13 +3067,16 @@ func TestCompounds(t *testing.T) {
 												Pipeline: Pipeline{
 													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 														Command: &Command{
-															Words: []Word{
+															AssignmentsOrWords: []AssignmentOrWord{
 																{
-																	Parts: []WordPart{
-																		{
-																			Part:   &tk[6],
-																			Tokens: tk[6:7],
+																	Word: &Word{
+																		Parts: []WordPart{
+																			{
+																				Part:   &tk[6],
+																				Tokens: tk[6:7],
+																			},
 																		},
+																		Tokens: tk[6:7],
 																	},
 																	Tokens: tk[6:7],
 																},
@@ -3532,13 +3710,16 @@ func TestIfCompound(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -3559,13 +3740,16 @@ func TestIfCompound(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -3596,13 +3780,16 @@ func TestIfCompound(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -3623,13 +3810,16 @@ func TestIfCompound(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[6],
-																	Tokens: tk[6:7],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[6],
+																		Tokens: tk[6:7],
+																	},
 																},
+																Tokens: tk[6:7],
 															},
 															Tokens: tk[6:7],
 														},
@@ -3660,13 +3850,16 @@ func TestIfCompound(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -3687,13 +3880,16 @@ func TestIfCompound(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -3722,13 +3918,16 @@ func TestIfCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[12],
-																Tokens: tk[12:13],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[12],
+																	Tokens: tk[12:13],
+																},
 															},
+															Tokens: tk[12:13],
 														},
 														Tokens: tk[12:13],
 													},
@@ -3757,13 +3956,16 @@ func TestIfCompound(t *testing.T) {
 						Pipeline: Pipeline{
 							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 								Command: &Command{
-									Words: []Word{
+									AssignmentsOrWords: []AssignmentOrWord{
 										{
-											Parts: []WordPart{
-												{
-													Part:   &tk[2],
-													Tokens: tk[2:3],
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
 												},
+												Tokens: tk[2:3],
 											},
 											Tokens: tk[2:3],
 										},
@@ -3784,13 +3986,16 @@ func TestIfCompound(t *testing.T) {
 										Pipeline: Pipeline{
 											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 												Command: &Command{
-													Words: []Word{
+													AssignmentsOrWords: []AssignmentOrWord{
 														{
-															Parts: []WordPart{
-																{
-																	Part:   &tk[7],
-																	Tokens: tk[7:8],
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[7],
+																		Tokens: tk[7:8],
+																	},
 																},
+																Tokens: tk[7:8],
 															},
 															Tokens: tk[7:8],
 														},
@@ -3817,13 +4022,16 @@ func TestIfCompound(t *testing.T) {
 							Pipeline: Pipeline{
 								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 									Command: &Command{
-										Words: []Word{
+										AssignmentsOrWords: []AssignmentOrWord{
 											{
-												Parts: []WordPart{
-													{
-														Part:   &tk[12],
-														Tokens: tk[12:13],
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[12],
+															Tokens: tk[12:13],
+														},
 													},
+													Tokens: tk[12:13],
 												},
 												Tokens: tk[12:13],
 											},
@@ -3844,13 +4052,16 @@ func TestIfCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[17],
-																		Tokens: tk[17:18],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[17],
+																			Tokens: tk[17:18],
+																		},
 																	},
+																	Tokens: tk[17:18],
 																},
 																Tokens: tk[17:18],
 															},
@@ -3977,13 +4188,16 @@ func TestTestConsequence(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -4004,13 +4218,16 @@ func TestTestConsequence(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[7],
-																Tokens: tk[7:8],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[7],
+																	Tokens: tk[7:8],
+																},
 															},
+															Tokens: tk[7:8],
 														},
 														Tokens: tk[7:8],
 													},
@@ -4038,13 +4255,16 @@ func TestTestConsequence(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -4065,13 +4285,16 @@ func TestTestConsequence(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[6],
-																Tokens: tk[6:7],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[6],
+																	Tokens: tk[6:7],
+																},
 															},
+															Tokens: tk[6:7],
 														},
 														Tokens: tk[6:7],
 													},
@@ -4093,13 +4316,16 @@ func TestTestConsequence(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4219,13 +4445,16 @@ func TestCaseCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -4282,13 +4511,16 @@ func TestCaseCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -4345,13 +4577,16 @@ func TestCaseCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -4409,13 +4644,16 @@ func TestCaseCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -4466,13 +4704,16 @@ func TestCaseCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[15],
-																		Tokens: tk[15:16],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[15],
+																			Tokens: tk[15:16],
+																		},
 																	},
+																	Tokens: tk[15:16],
 																},
 																Tokens: tk[15:16],
 															},
@@ -4608,13 +4849,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4657,13 +4901,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4706,13 +4953,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4756,13 +5006,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4806,13 +5059,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[8],
-																Tokens: tk[8:9],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
 															},
+															Tokens: tk[8:9],
 														},
 														Tokens: tk[8:9],
 													},
@@ -4874,13 +5130,16 @@ func TestPatternLines(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[12],
-																Tokens: tk[12:13],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[12],
+																	Tokens: tk[12:13],
+																},
 															},
+															Tokens: tk[12:13],
 														},
 														Tokens: tk[12:13],
 													},
@@ -5002,13 +5261,16 @@ func TestLoopCompound(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -5029,13 +5291,16 @@ func TestLoopCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[6],
-																Tokens: tk[6:7],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[6],
+																	Tokens: tk[6:7],
+																},
 															},
+															Tokens: tk[6:7],
 														},
 														Tokens: tk[6:7],
 													},
@@ -5064,13 +5329,16 @@ func TestLoopCompound(t *testing.T) {
 					Pipeline: Pipeline{
 						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 							Command: &Command{
-								Words: []Word{
+								AssignmentsOrWords: []AssignmentOrWord{
 									{
-										Parts: []WordPart{
-											{
-												Part:   &tk[2],
-												Tokens: tk[2:3],
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
 											},
+											Tokens: tk[2:3],
 										},
 										Tokens: tk[2:3],
 									},
@@ -5091,13 +5359,16 @@ func TestLoopCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[7],
-																Tokens: tk[7:8],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[7],
+																	Tokens: tk[7:8],
+																},
 															},
+															Tokens: tk[7:8],
 														},
 														Tokens: tk[7:8],
 													},
@@ -5195,13 +5466,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[7],
-																Tokens: tk[7:8],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[7],
+																	Tokens: tk[7:8],
+																},
 															},
+															Tokens: tk[7:8],
 														},
 														Tokens: tk[7:8],
 													},
@@ -5234,13 +5508,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[6],
-																Tokens: tk[6:7],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[6],
+																	Tokens: tk[6:7],
+																},
 															},
+															Tokens: tk[6:7],
 														},
 														Tokens: tk[6:7],
 													},
@@ -5274,13 +5551,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[9],
-																Tokens: tk[9:10],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[9],
+																	Tokens: tk[9:10],
+																},
 															},
+															Tokens: tk[9:10],
 														},
 														Tokens: tk[9:10],
 													},
@@ -5324,13 +5604,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[11],
-																Tokens: tk[11:12],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[11],
+																	Tokens: tk[11:12],
+																},
 															},
+															Tokens: tk[11:12],
 														},
 														Tokens: tk[11:12],
 													},
@@ -5383,13 +5666,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[13],
-																Tokens: tk[13:14],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[13],
+																	Tokens: tk[13:14],
+																},
 															},
+															Tokens: tk[13:14],
 														},
 														Tokens: tk[13:14],
 													},
@@ -5507,13 +5793,16 @@ func TestForCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[22],
-																Tokens: tk[22:23],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[22],
+																	Tokens: tk[22:23],
+																},
 															},
+															Tokens: tk[22:23],
 														},
 														Tokens: tk[22:23],
 													},
@@ -5682,13 +5971,16 @@ func TestSelectCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[7],
-																Tokens: tk[7:8],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[7],
+																	Tokens: tk[7:8],
+																},
 															},
+															Tokens: tk[7:8],
 														},
 														Tokens: tk[7:8],
 													},
@@ -5721,13 +6013,16 @@ func TestSelectCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[6],
-																Tokens: tk[6:7],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[6],
+																	Tokens: tk[6:7],
+																},
 															},
+															Tokens: tk[6:7],
 														},
 														Tokens: tk[6:7],
 													},
@@ -5761,13 +6056,16 @@ func TestSelectCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[9],
-																Tokens: tk[9:10],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[9],
+																	Tokens: tk[9:10],
+																},
 															},
+															Tokens: tk[9:10],
 														},
 														Tokens: tk[9:10],
 													},
@@ -5811,13 +6109,16 @@ func TestSelectCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[11],
-																Tokens: tk[11:12],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[11],
+																	Tokens: tk[11:12],
+																},
 															},
+															Tokens: tk[11:12],
 														},
 														Tokens: tk[11:12],
 													},
@@ -5870,13 +6171,16 @@ func TestSelectCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[13],
-																Tokens: tk[13:14],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[13],
+																	Tokens: tk[13:14],
+																},
 															},
+															Tokens: tk[13:14],
 														},
 														Tokens: tk[13:14],
 													},
@@ -7305,13 +7609,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[1],
-																Tokens: tk[1:2],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[1],
+																	Tokens: tk[1:2],
+																},
 															},
+															Tokens: tk[1:2],
 														},
 														Tokens: tk[1:2],
 													},
@@ -7344,13 +7651,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[2],
-																Tokens: tk[2:3],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[2],
+																	Tokens: tk[2:3],
+																},
 															},
+															Tokens: tk[2:3],
 														},
 														Tokens: tk[2:3],
 													},
@@ -7383,13 +7693,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[2],
-																Tokens: tk[2:3],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[2],
+																	Tokens: tk[2:3],
+																},
 															},
+															Tokens: tk[2:3],
 														},
 														Tokens: tk[2:3],
 													},
@@ -7422,13 +7735,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[2],
-																Tokens: tk[2:3],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[2],
+																	Tokens: tk[2:3],
+																},
 															},
+															Tokens: tk[2:3],
 														},
 														Tokens: tk[2:3],
 													},
@@ -7460,13 +7776,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[2],
-																Tokens: tk[2:3],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[2],
+																	Tokens: tk[2:3],
+																},
 															},
+															Tokens: tk[2:3],
 														},
 														Tokens: tk[2:3],
 													},
@@ -7498,13 +7817,16 @@ func TestGroupingCompound(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																Part:   &tk[2],
-																Tokens: tk[2:3],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[2],
+																	Tokens: tk[2:3],
+																},
 															},
+															Tokens: tk[2:3],
 														},
 														Tokens: tk[2:3],
 													},
@@ -7582,13 +7904,16 @@ func TestFunctionCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -7628,13 +7953,16 @@ func TestFunctionCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[10],
-																		Tokens: tk[10:11],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[10],
+																			Tokens: tk[10:11],
+																		},
 																	},
+																	Tokens: tk[10:11],
 																},
 																Tokens: tk[10:11],
 															},
@@ -7673,13 +8001,16 @@ func TestFunctionCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[6],
-																		Tokens: tk[6:7],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[6],
+																			Tokens: tk[6:7],
+																		},
 																	},
+																	Tokens: tk[6:7],
 																},
 																Tokens: tk[6:7],
 															},
@@ -7718,13 +8049,16 @@ func TestFunctionCompound(t *testing.T) {
 											Pipeline: Pipeline{
 												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 													Command: &Command{
-														Words: []Word{
+														AssignmentsOrWords: []AssignmentOrWord{
 															{
-																Parts: []WordPart{
-																	{
-																		Part:   &tk[8],
-																		Tokens: tk[8:9],
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
 																	},
+																	Tokens: tk[8:9],
 																},
 																Tokens: tk[8:9],
 															},
@@ -8216,13 +8550,16 @@ func TestCommand(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Command{
-				Words: []Word{
+				AssignmentsOrWords: []AssignmentOrWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[0],
-								Tokens: tk[:1],
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
 							},
+							Tokens: tk[:1],
 						},
 						Tokens: tk[:1],
 					},
@@ -8273,13 +8610,16 @@ func TestCommand(t *testing.T) {
 						Tokens: tk[:3],
 					},
 				},
-				Words: []Word{
+				AssignmentsOrWords: []AssignmentOrWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[4],
-								Tokens: tk[4:5],
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
 							},
+							Tokens: tk[4:5],
 						},
 						Tokens: tk[4:5],
 					},
@@ -8325,13 +8665,16 @@ func TestCommand(t *testing.T) {
 						Tokens: tk[4:6],
 					},
 				},
-				Words: []Word{
+				AssignmentsOrWords: []AssignmentOrWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[7],
-								Tokens: tk[7:8],
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[7],
+									Tokens: tk[7:8],
+								},
 							},
+							Tokens: tk[7:8],
 						},
 						Tokens: tk[7:8],
 					},
@@ -8410,30 +8753,39 @@ func TestCommand(t *testing.T) {
 						Tokens: tk[17:20],
 					},
 				},
-				Words: []Word{
+				AssignmentsOrWords: []AssignmentOrWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[11],
-								Tokens: tk[11:12],
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[11],
+									Tokens: tk[11:12],
+								},
 							},
+							Tokens: tk[11:12],
 						},
 						Tokens: tk[11:12],
 					},
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[13],
-								Tokens: tk[13:14],
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[13],
+								Tokens:     tk[13:14],
 							},
-							{
-								Part:   &tk[14],
-								Tokens: tk[14:15],
-							},
-							{
-								Part:   &tk[15],
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[15],
+											Tokens: tk[15:16],
+										},
+									},
+									Tokens: tk[15:16],
+								},
 								Tokens: tk[15:16],
 							},
+							Tokens: tk[13:16],
 						},
 						Tokens: tk[13:16],
 					},
@@ -8550,32 +8902,36 @@ func TestCommand(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[1],
+													},
+													Parsing: "CommandCompoundOrBuiltin",
 													Token:   tk[1],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "Pipeline",
 												Token:   tk[1],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[1],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[1],
 									},
-									Parsing: "Line",
+									Parsing: "File",
 									Token:   tk[1],
 								},
-								Parsing: "File",
+								Parsing: "CommandSubstitution",
 								Token:   tk[1],
 							},
-							Parsing: "CommandSubstitution",
-							Token:   tk[1],
+							Parsing: "WordPart",
+							Token:   tk[0],
 						},
-						Parsing: "WordPart",
+						Parsing: "Word",
 						Token:   tk[0],
 					},
-					Parsing: "Word",
+					Parsing: "AssignmentOrWord",
 					Token:   tk[0],
 				},
 				Parsing: "Command",
@@ -10612,19 +10968,22 @@ func TestCommandSubstitution(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																CommandSubstitution: &CommandSubstitution{
-																	SubstitutionType: SubstitutionBacktick,
-																	Command: File{
-																		Tokens: tk[2:2],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	CommandSubstitution: &CommandSubstitution{
+																		SubstitutionType: SubstitutionBacktick,
+																		Command: File{
+																			Tokens: tk[2:2],
+																		},
+																		Tokens: tk[1:3],
 																	},
 																	Tokens: tk[1:3],
 																},
-																Tokens: tk[1:3],
 															},
+															Tokens: tk[1:3],
 														},
 														Tokens: tk[1:3],
 													},
@@ -10657,19 +11016,22 @@ func TestCommandSubstitution(t *testing.T) {
 									Pipeline: Pipeline{
 										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
 											Command: &Command{
-												Words: []Word{
+												AssignmentsOrWords: []AssignmentOrWord{
 													{
-														Parts: []WordPart{
-															{
-																CommandSubstitution: &CommandSubstitution{
-																	SubstitutionType: SubstitutionBacktick,
-																	Command: File{
-																		Tokens: tk[2:2],
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	CommandSubstitution: &CommandSubstitution{
+																		SubstitutionType: SubstitutionBacktick,
+																		Command: File{
+																			Tokens: tk[2:2],
+																		},
+																		Tokens: tk[1:3],
 																	},
 																	Tokens: tk[1:3],
 																},
-																Tokens: tk[1:3],
 															},
+															Tokens: tk[1:3],
 														},
 														Tokens: tk[1:3],
 													},

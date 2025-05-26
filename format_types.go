@@ -199,21 +199,21 @@ func (f *Command) printType(w io.Writer, v bool) {
 		pp.Print("\nRedirections: []")
 	}
 
-	if f.Words == nil {
-		pp.Print("\nWords: nil")
-	} else if len(f.Words) > 0 {
-		pp.Print("\nWords: [")
+	if f.AssignmentsOrWords == nil {
+		pp.Print("\nAssignmentsOrWords: nil")
+	} else if len(f.AssignmentsOrWords) > 0 {
+		pp.Print("\nAssignmentsOrWords: [")
 
 		ipp := indentPrinter{&pp}
 
-		for n, e := range f.Words {
+		for n, e := range f.AssignmentsOrWords {
 			ipp.Printf("\n%d: ", n)
 			e.printType(&ipp, v)
 		}
 
 		pp.Print("\n]")
 	} else if v {
-		pp.Print("\nWords: []")
+		pp.Print("\nAssignmentsOrWords: []")
 	}
 
 	pp.Print("\nTokens: ")

@@ -91,21 +91,21 @@ func (c Command) printSource(w io.Writer, v bool) {
 		}
 	}
 
-	if len(c.Words) > 0 {
+	if len(c.AssignmentsOrWords) > 0 {
 		if len(c.Vars) > 0 {
 			io.WriteString(w, " ")
 		}
 
-		c.Words[0].printSource(w, v)
+		c.AssignmentsOrWords[0].printSource(w, v)
 
-		for _, wd := range c.Words[1:] {
+		for _, wd := range c.AssignmentsOrWords[1:] {
 			io.WriteString(w, " ")
 			wd.printSource(w, v)
 		}
 	}
 
 	if len(c.Redirections) > 0 {
-		if len(c.Vars) > 0 || len(c.Words) > 0 {
+		if len(c.Vars) > 0 || len(c.AssignmentsOrWords) > 0 {
 			io.WriteString(w, " ")
 		}
 
