@@ -787,6 +787,558 @@ func TestLine(t *testing.T) {
 	})
 }
 
+func TestLineHeredocs(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a >b", func(t *test, tk Tokens) { // 1
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Redirections: []Redirection{
+										{
+											Redirector: &tk[2],
+											Output: Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[3],
+														Tokens: tk[3:4],
+													},
+												},
+												Tokens: tk[3:4],
+											},
+											Tokens: tk[2:4],
+										},
+									},
+									Tokens: tk[:4],
+								},
+								Tokens: tk[:4],
+							},
+							Tokens: tk[:4],
+						},
+						Tokens: tk[:4],
+					},
+				},
+				Tokens: tk[:4],
+			}
+		}},
+		{"a <<b\nSome content\nb", func(t *test, tk Tokens) { // 2
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Redirections: []Redirection{
+										{
+											Redirector: &tk[2],
+											Output: Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[3],
+														Tokens: tk[3:4],
+													},
+												},
+												Tokens: tk[3:4],
+											},
+											Heredoc: &Heredoc{
+												HeredocPartsOrWords: []HeredocPartOrWord{
+													{
+														HeredocPart: &tk[5],
+														Tokens:      tk[5:6],
+													},
+												},
+												Tokens: tk[5:7],
+											},
+											Tokens: tk[2:4],
+										},
+									},
+									Tokens: tk[:4],
+								},
+								Tokens: tk[:4],
+							},
+							Tokens: tk[:4],
+						},
+						Tokens: tk[:4],
+					},
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"a | b <<c\nSome content\nc", func(t *test, tk Tokens) { // 3
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Pipeline: &Pipeline{
+								CommandOrCompound: CommandOrCompound{
+									Command: &Command{
+										AssignmentsOrWords: []AssignmentOrWord{
+											{
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[4],
+															Tokens: tk[4:5],
+														},
+													},
+													Tokens: tk[4:5],
+												},
+												Tokens: tk[4:5],
+											},
+										},
+										Redirections: []Redirection{
+											{
+												Redirector: &tk[6],
+												Output: Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[7],
+															Tokens: tk[7:8],
+														},
+													},
+													Tokens: tk[7:8],
+												},
+												Heredoc: &Heredoc{
+													HeredocPartsOrWords: []HeredocPartOrWord{
+														{
+															HeredocPart: &tk[9],
+															Tokens:      tk[9:10],
+														},
+													},
+													Tokens: tk[9:11],
+												},
+												Tokens: tk[6:8],
+											},
+										},
+										Tokens: tk[4:8],
+									},
+									Tokens: tk[4:8],
+								},
+								Tokens: tk[4:8],
+							},
+							Tokens: tk[:8],
+						},
+						Tokens: tk[:8],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"a <<b | c\nSome content\nb", func(t *test, tk Tokens) { // 4
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Redirections: []Redirection{
+										{
+											Redirector: &tk[2],
+											Output: Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[3],
+														Tokens: tk[3:4],
+													},
+												},
+												Tokens: tk[3:4],
+											},
+											Heredoc: &Heredoc{
+												HeredocPartsOrWords: []HeredocPartOrWord{
+													{
+														HeredocPart: &tk[9],
+														Tokens:      tk[9:10],
+													},
+												},
+												Tokens: tk[9:11],
+											},
+											Tokens: tk[2:4],
+										},
+									},
+									Tokens: tk[:4],
+								},
+								Tokens: tk[:4],
+							},
+							Pipeline: &Pipeline{
+								CommandOrCompound: CommandOrCompound{
+									Command: &Command{
+										AssignmentsOrWords: []AssignmentOrWord{
+											{
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[7],
+															Tokens: tk[7:8],
+														},
+													},
+													Tokens: tk[7:8],
+												},
+												Tokens: tk[7:8],
+											},
+										},
+										Tokens: tk[7:8],
+									},
+									Tokens: tk[7:8],
+								},
+								Tokens: tk[7:8],
+							},
+							Tokens: tk[:8],
+						},
+						Tokens: tk[:8],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"a || b <<c\nSome content\nc", func(t *test, tk Tokens) { // 5
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						LogicalOperator: LogicalOperatorOr,
+						Statement: &Statement{
+							Pipeline: Pipeline{
+								CommandOrCompound: CommandOrCompound{
+									Command: &Command{
+										AssignmentsOrWords: []AssignmentOrWord{
+											{
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[4],
+															Tokens: tk[4:5],
+														},
+													},
+													Tokens: tk[4:5],
+												},
+												Tokens: tk[4:5],
+											},
+										},
+										Redirections: []Redirection{
+											{
+												Redirector: &tk[6],
+												Output: Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[7],
+															Tokens: tk[7:8],
+														},
+													},
+													Tokens: tk[7:8],
+												},
+												Heredoc: &Heredoc{
+													HeredocPartsOrWords: []HeredocPartOrWord{
+														{
+															HeredocPart: &tk[9],
+															Tokens:      tk[9:10],
+														},
+													},
+													Tokens: tk[9:11],
+												},
+												Tokens: tk[6:8],
+											},
+										},
+										Tokens: tk[4:8],
+									},
+									Tokens: tk[4:8],
+								},
+								Tokens: tk[4:8],
+							},
+							Tokens: tk[4:8],
+						},
+						Tokens: tk[:8],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"a <<b && c\nSome content\nb", func(t *test, tk Tokens) { // 6
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Redirections: []Redirection{
+										{
+											Redirector: &tk[2],
+											Output: Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[3],
+														Tokens: tk[3:4],
+													},
+												},
+												Tokens: tk[3:4],
+											},
+											Heredoc: &Heredoc{
+												HeredocPartsOrWords: []HeredocPartOrWord{
+													{
+														HeredocPart: &tk[9],
+														Tokens:      tk[9:10],
+													},
+												},
+												Tokens: tk[9:11],
+											},
+											Tokens: tk[2:4],
+										},
+									},
+									Tokens: tk[:4],
+								},
+								Tokens: tk[:4],
+							},
+							Tokens: tk[:4],
+						},
+						LogicalOperator: LogicalOperatorAnd,
+						Statement: &Statement{
+							Pipeline: Pipeline{
+								CommandOrCompound: CommandOrCompound{
+									Command: &Command{
+										AssignmentsOrWords: []AssignmentOrWord{
+											{
+												Word: &Word{
+													Parts: []WordPart{
+														{
+															Part:   &tk[7],
+															Tokens: tk[7:8],
+														},
+													},
+													Tokens: tk[7:8],
+												},
+												Tokens: tk[7:8],
+											},
+										},
+										Tokens: tk[7:8],
+									},
+									Tokens: tk[7:8],
+								},
+								Tokens: tk[7:8],
+							},
+							Tokens: tk[7:8],
+						},
+						Tokens: tk[:8],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"while a; do b; done <<c\nSome content\nc", func(t *test, tk Tokens) { // 7
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Compound: &Compound{
+									LoopCompound: &LoopCompound{
+										Statement: Statement{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														AssignmentsOrWords: []AssignmentOrWord{
+															{
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[2],
+																			Tokens: tk[2:3],
+																		},
+																	},
+																	Tokens: tk[2:3],
+																},
+																Tokens: tk[2:3],
+															},
+														},
+														Tokens: tk[2:3],
+													},
+													Tokens: tk[2:3],
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:4],
+										},
+										File: File{
+											Lines: []Line{
+												{
+													Statements: []Statement{
+														{
+															Pipeline: Pipeline{
+																CommandOrCompound: CommandOrCompound{
+																	Command: &Command{
+																		AssignmentsOrWords: []AssignmentOrWord{
+																			{
+																				Word: &Word{
+																					Parts: []WordPart{
+																						{
+																							Part:   &tk[7],
+																							Tokens: tk[7:8],
+																						},
+																					},
+																					Tokens: tk[7:8],
+																				},
+																				Tokens: tk[7:8],
+																			},
+																		},
+																		Tokens: tk[7:8],
+																	},
+																	Tokens: tk[7:8],
+																},
+																Tokens: tk[7:8],
+															},
+															Tokens: tk[7:9],
+														},
+													},
+													Tokens: tk[7:9],
+												},
+											},
+											Tokens: tk[7:9],
+										},
+										Tokens: tk[:11],
+									},
+									Redirections: []Redirection{
+										{
+											Redirector: &tk[12],
+											Output: Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[13],
+														Tokens: tk[13:14],
+													},
+												},
+												Tokens: tk[13:14],
+											},
+											Heredoc: &Heredoc{
+												HeredocPartsOrWords: []HeredocPartOrWord{
+													{
+														HeredocPart: &tk[15],
+														Tokens:      tk[15:16],
+													},
+												},
+												Tokens: tk[15:17],
+											},
+											Tokens: tk[12:14],
+										},
+									},
+									Tokens: tk[:14],
+								},
+								Tokens: tk[:14],
+							},
+							Tokens: tk[:14],
+						},
+						Tokens: tk[:14],
+					},
+				},
+				Tokens: tk[:17],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var l Line
+
+		err := l.parse(t.Parser)
+
+		return l, err
+	})
+}
+
 func TestStatement(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
