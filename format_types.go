@@ -222,10 +222,10 @@ func (f *Command) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *CommandCompoundOrBuiltin) printType(w io.Writer, v bool) {
+func (f *CommandOrCompound) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
-	pp.Print("CommandCompoundOrBuiltin {")
+	pp.Print("CommandOrCompound {")
 
 	if f.Command != nil {
 		pp.Print("\nCommand: ")
@@ -239,13 +239,6 @@ func (f *CommandCompoundOrBuiltin) printType(w io.Writer, v bool) {
 		f.Compound.printType(&pp, v)
 	} else if v {
 		pp.Print("\nCompound: nil")
-	}
-
-	if f.Builtin != nil {
-		pp.Print("\nBuiltin: ")
-		f.Builtin.printType(&pp, v)
-	} else if v {
-		pp.Print("\nBuiltin: nil")
 	}
 
 	pp.Print("\nTokens: ")
@@ -809,8 +802,8 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 		pp.Print("\nCoprocIdentifier: nil")
 	}
 
-	pp.Print("\nCommandCompoundOrBuiltin: ")
-	f.CommandCompoundOrBuiltin.printType(&pp, v)
+	pp.Print("\nCommandOrCompound: ")
+	f.CommandOrCompound.printType(&pp, v)
 
 	if f.Pipeline != nil {
 		pp.Print("\nPipeline: ")

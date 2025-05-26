@@ -123,17 +123,15 @@ func (c Command) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandCompoundOrBuiltin) printSource(w io.Writer, v bool) {
+func (c CommandOrCompound) printSource(w io.Writer, v bool) {
 	if c.Command != nil {
 		c.Command.printSource(w, v)
 	} else if c.Compound != nil {
 		c.Compound.printSource(w, v)
-	} else if c.Builtin != nil {
-		c.Builtin.printSource(w, v)
 	}
 }
 
-func (c CommandCompoundOrBuiltin) printHeredoc(w io.Writer, v bool) {
+func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
 	if c.Command != nil {
 		c.Command.printHeredoc(w, v)
 	} else if c.Compound != nil {
@@ -508,7 +506,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 		}
 	}
 
-	p.CommandCompoundOrBuiltin.printSource(w, v)
+	p.CommandOrCompound.printSource(w, v)
 
 	if p.Pipeline != nil {
 		io.WriteString(w, " | ")
@@ -517,7 +515,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 }
 
 func (p Pipeline) printHeredoc(w io.Writer, v bool) {
-	p.CommandCompoundOrBuiltin.printHeredoc(w, v)
+	p.CommandOrCompound.printHeredoc(w, v)
 
 	if p.Pipeline != nil {
 		p.printHeredoc(w, v)

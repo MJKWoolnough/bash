@@ -95,7 +95,7 @@ func TestParse(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -158,7 +158,7 @@ func TestParse(t *testing.T) {
 							Parsing: "Command",
 							Token:   tk[0],
 						},
-						Parsing: "CommandCompoundOrBuiltin",
+						Parsing: "CommandOrCompound",
 						Token:   tk[0],
 					},
 					Parsing: "Pipeline",
@@ -189,7 +189,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -227,7 +227,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -258,7 +258,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -296,7 +296,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -327,7 +327,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -369,7 +369,7 @@ func TestFile(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[0],
 								},
-								Parsing: "CommandCompoundOrBuiltin",
+								Parsing: "CommandOrCompound",
 								Token:   tk[0],
 							},
 							Parsing: "Pipeline",
@@ -392,7 +392,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -440,7 +440,7 @@ func TestFile(t *testing.T) {
 						Statements: []Statement{
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -476,7 +476,7 @@ func TestFile(t *testing.T) {
 							},
 							{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											Redirections: []Redirection{
 												{
@@ -540,7 +540,7 @@ func TestFile(t *testing.T) {
 																					Parsing: "Command",
 																					Token:   tk[4],
 																				},
-																				Parsing: "CommandCompoundOrBuiltin",
+																				Parsing: "CommandOrCompound",
 																				Token:   tk[4],
 																			},
 																			Parsing: "Pipeline",
@@ -576,7 +576,7 @@ func TestFile(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[3],
 								},
-								Parsing: "CommandCompoundOrBuiltin",
+								Parsing: "CommandOrCompound",
 								Token:   tk[3],
 							},
 							Parsing: "Pipeline",
@@ -608,7 +608,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -641,7 +641,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -667,7 +667,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -700,7 +700,7 @@ func TestLine(t *testing.T) {
 				Statements: []Statement{
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -727,7 +727,7 @@ func TestLine(t *testing.T) {
 					},
 					{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -765,7 +765,7 @@ func TestLine(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[0],
 							},
-							Parsing: "CommandCompoundOrBuiltin",
+							Parsing: "CommandOrCompound",
 							Token:   tk[0],
 						},
 						Parsing: "Pipeline",
@@ -792,7 +792,7 @@ func TestStatement(t *testing.T) {
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -820,7 +820,7 @@ func TestStatement(t *testing.T) {
 		{"a||b", func(t *test, tk Tokens) { // 2
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -845,7 +845,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -875,7 +875,7 @@ func TestStatement(t *testing.T) {
 		{"a && b", func(t *test, tk Tokens) { // 3
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -900,7 +900,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorAnd,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -930,7 +930,7 @@ func TestStatement(t *testing.T) {
 		{"a||b;", func(t *test, tk Tokens) { // 4
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -955,7 +955,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -985,7 +985,7 @@ func TestStatement(t *testing.T) {
 		{"a||b &", func(t *test, tk Tokens) { // 5
 			t.Output = Statement{
 				Pipeline: Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -1010,7 +1010,7 @@ func TestStatement(t *testing.T) {
 				LogicalOperator: LogicalOperatorOr,
 				Statement: &Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -1047,7 +1047,7 @@ func TestStatement(t *testing.T) {
 							Parsing: "Command",
 							Token:   tk[0],
 						},
-						Parsing: "CommandCompoundOrBuiltin",
+						Parsing: "CommandOrCompound",
 						Token:   tk[0],
 					},
 					Parsing: "Pipeline",
@@ -1067,7 +1067,7 @@ func TestStatement(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[4],
 							},
-							Parsing: "CommandCompoundOrBuiltin",
+							Parsing: "CommandOrCompound",
 							Token:   tk[4],
 						},
 						Parsing: "Pipeline",
@@ -1093,7 +1093,7 @@ func TestPipeline(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
 			t.Output = Pipeline{
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1119,7 +1119,7 @@ func TestPipeline(t *testing.T) {
 		{"time a", func(t *test, tk Tokens) { // 2
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimeBash,
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1145,7 +1145,7 @@ func TestPipeline(t *testing.T) {
 		{"time -p a", func(t *test, tk Tokens) { // 3
 			t.Output = Pipeline{
 				PipelineTime: PipelineTimePosix,
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1171,7 +1171,7 @@ func TestPipeline(t *testing.T) {
 		{"! a", func(t *test, tk Tokens) { // 4
 			t.Output = Pipeline{
 				Not: true,
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1197,7 +1197,7 @@ func TestPipeline(t *testing.T) {
 		{"coproc a", func(t *test, tk Tokens) { // 5
 			t.Output = Pipeline{
 				Coproc: true,
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1224,13 +1224,13 @@ func TestPipeline(t *testing.T) {
 			t.Output = Pipeline{
 				Coproc:           true,
 				CoprocIdentifier: &tk[2],
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Compound: &Compound{
 						IfCompound: &IfCompound{
 							If: TestConsequence{
 								Test: Statement{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -1260,7 +1260,7 @@ func TestPipeline(t *testing.T) {
 											Statements: []Statement{
 												{
 													Pipeline: Pipeline{
-														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+														CommandOrCompound: CommandOrCompound{
 															Command: &Command{
 																AssignmentsOrWords: []AssignmentOrWord{
 																	{
@@ -1303,7 +1303,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a|b", func(t *test, tk Tokens) { // 7
 			t.Output = Pipeline{
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1324,7 +1324,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -1351,7 +1351,7 @@ func TestPipeline(t *testing.T) {
 		}},
 		{"a | b", func(t *test, tk Tokens) { // 8
 			t.Output = Pipeline{
-				CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+				CommandOrCompound: CommandOrCompound{
 					Command: &Command{
 						AssignmentsOrWords: []AssignmentOrWord{
 							{
@@ -1372,7 +1372,7 @@ func TestPipeline(t *testing.T) {
 					Tokens: tk[:1],
 				},
 				Pipeline: &Pipeline{
-					CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+					CommandOrCompound: CommandOrCompound{
 						Command: &Command{
 							AssignmentsOrWords: []AssignmentOrWord{
 								{
@@ -1405,7 +1405,7 @@ func TestPipeline(t *testing.T) {
 						Parsing: "Command",
 						Token:   tk[0],
 					},
-					Parsing: "CommandCompoundOrBuiltin",
+					Parsing: "CommandOrCompound",
 					Token:   tk[0],
 				},
 				Parsing: "Pipeline",
@@ -1421,7 +1421,7 @@ func TestPipeline(t *testing.T) {
 							Parsing: "Command",
 							Token:   tk[4],
 						},
-						Parsing: "CommandCompoundOrBuiltin",
+						Parsing: "CommandOrCompound",
 						Token:   tk[4],
 					},
 					Parsing: "Pipeline",
@@ -1440,10 +1440,10 @@ func TestPipeline(t *testing.T) {
 	})
 }
 
-func TestCommandCompoundOrBuiltin(t *testing.T) {
+func TestCommandOrCompound(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"a", func(t *test, tk Tokens) { // 1
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Command: &Command{
 					AssignmentsOrWords: []AssignmentOrWord{
 						{
@@ -1465,13 +1465,13 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"if a; then b; fi", func(t *test, tk Tokens) { // 2
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					IfCompound: &IfCompound{
 						If: TestConsequence{
 							Test: Statement{
 								Pipeline: Pipeline{
-									CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+									CommandOrCompound: CommandOrCompound{
 										Command: &Command{
 											AssignmentsOrWords: []AssignmentOrWord{
 												{
@@ -1501,7 +1501,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+													CommandOrCompound: CommandOrCompound{
 														Command: &Command{
 															AssignmentsOrWords: []AssignmentOrWord{
 																{
@@ -1541,7 +1541,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"case a in b)c\nesac", func(t *test, tk Tokens) { // 3
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					CaseCompound: &CaseCompound{
 						Word: Word{
@@ -1572,7 +1572,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Statements: []Statement{
 												{
 													Pipeline: Pipeline{
-														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+														CommandOrCompound: CommandOrCompound{
 															Command: &Command{
 																AssignmentsOrWords: []AssignmentOrWord{
 																	{
@@ -1613,12 +1613,12 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"while a\ndo\nb\ndone", func(t *test, tk Tokens) { // 4
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					LoopCompound: &LoopCompound{
 						Statement: Statement{
 							Pipeline: Pipeline{
-								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+								CommandOrCompound: CommandOrCompound{
 									Command: &Command{
 										AssignmentsOrWords: []AssignmentOrWord{
 											{
@@ -1648,7 +1648,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1686,13 +1686,13 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"until a; do b; done", func(t *test, tk Tokens) { // 5
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					LoopCompound: &LoopCompound{
 						Until: true,
 						Statement: Statement{
 							Pipeline: Pipeline{
-								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+								CommandOrCompound: CommandOrCompound{
 									Command: &Command{
 										AssignmentsOrWords: []AssignmentOrWord{
 											{
@@ -1722,7 +1722,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1760,7 +1760,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"for a; do b;done", func(t *test, tk Tokens) { // 6
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					ForCompound: &ForCompound{
 						Identifier: &tk[2],
@@ -1770,7 +1770,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1808,7 +1808,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"select a; do b;done", func(t *test, tk Tokens) { // 7
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					SelectCompound: &SelectCompound{
 						Identifier: &tk[2],
@@ -1818,7 +1818,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1856,7 +1856,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"[[ a = b ]]", func(t *test, tk Tokens) { // 8
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					TestCompound: &TestCompound{
 						Tests: Tests{
@@ -1889,7 +1889,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"(a)", func(t *test, tk Tokens) { // 9
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					GroupingCompound: &GroupingCompound{
 						SubShell: true,
@@ -1899,7 +1899,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1937,7 +1937,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"{\na\n}", func(t *test, tk Tokens) { // 10
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					GroupingCompound: &GroupingCompound{
 						File: File{
@@ -1946,7 +1946,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -1984,7 +1984,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"function a() { b; }", func(t *test, tk Tokens) { // 11
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					FunctionCompound: &FunctionCompound{
 						HasKeyword: true,
@@ -1997,7 +1997,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Statements: []Statement{
 												{
 													Pipeline: Pipeline{
-														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+														CommandOrCompound: CommandOrCompound{
 															Command: &Command{
 																AssignmentsOrWords: []AssignmentOrWord{
 																	{
@@ -2039,7 +2039,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"a() { b; }", func(t *test, tk Tokens) { // 12
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					FunctionCompound: &FunctionCompound{
 						Identifier: &tk[0],
@@ -2051,7 +2051,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 											Statements: []Statement{
 												{
 													Pipeline: Pipeline{
-														CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+														CommandOrCompound: CommandOrCompound{
 															Command: &Command{
 																AssignmentsOrWords: []AssignmentOrWord{
 																	{
@@ -2093,7 +2093,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 			}
 		}},
 		{"(( a ))", func(t *test, tk Tokens) { // 13
-			t.Output = CommandCompoundOrBuiltin{
+			t.Output = CommandOrCompound{
 				Compound: &Compound{
 					ArithmeticCompound: &ArithmeticExpansion{
 						Expression: true,
@@ -2118,226 +2118,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"declare a", func(t *test, tk Tokens) { // 14
-			t.Output = CommandCompoundOrBuiltin{
-				Builtin: &Builtin{
-					BuiltinType: BuiltinDeclare,
-					AssignmentsOrWords: []AssignmentOrWord{
-						{
-							Word: &Word{
-								Parts: []WordPart{
-									{
-										Part:   &tk[2],
-										Tokens: tk[2:3],
-									},
-								},
-								Tokens: tk[2:3],
-							},
-							Tokens: tk[2:3],
-						},
-					},
-					Tokens: tk[:3],
-				},
-				Tokens: tk[:3],
-			}
-		}},
-		{"local -n a=b", func(t *test, tk Tokens) { // 15
-			t.Output = CommandCompoundOrBuiltin{
-				Builtin: &Builtin{
-					BuiltinType: BuiltinLocal,
-					Params: []*Token{
-						&tk[2],
-					},
-					AssignmentsOrWords: []AssignmentOrWord{
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[4],
-									Tokens:     tk[4:5],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[6],
-												Tokens: tk[6:7],
-											},
-										},
-										Tokens: tk[6:7],
-									},
-									Tokens: tk[6:7],
-								},
-								Tokens: tk[4:7],
-							},
-							Tokens: tk[4:7],
-						},
-					},
-					Tokens: tk[:7],
-				},
-				Tokens: tk[:7],
-			}
-		}},
-		{"readonly -a -p a=b c=d", func(t *test, tk Tokens) { // 16
-			t.Output = CommandCompoundOrBuiltin{
-				Builtin: &Builtin{
-					BuiltinType: BuiltinReadonly,
-					Params: []*Token{
-						&tk[2],
-						&tk[4],
-					},
-					AssignmentsOrWords: []AssignmentOrWord{
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[6],
-									Tokens:     tk[6:7],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[8],
-												Tokens: tk[8:9],
-											},
-										},
-										Tokens: tk[8:9],
-									},
-									Tokens: tk[8:9],
-								},
-								Tokens: tk[6:9],
-							},
-							Tokens: tk[6:9],
-						},
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[10],
-									Tokens:     tk[10:11],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[12],
-												Tokens: tk[12:13],
-											},
-										},
-										Tokens: tk[12:13],
-									},
-									Tokens: tk[12:13],
-								},
-								Tokens: tk[10:13],
-							},
-							Tokens: tk[10:13],
-						},
-					},
-					Tokens: tk[:13],
-				},
-				Tokens: tk[:13],
-			}
-		}},
-		{"export -p a=b c=d", func(t *test, tk Tokens) { // 17
-			t.Output = CommandCompoundOrBuiltin{
-				Builtin: &Builtin{
-					BuiltinType: BuiltinExport,
-					Params: []*Token{
-						&tk[2],
-					},
-					AssignmentsOrWords: []AssignmentOrWord{
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[4],
-									Tokens:     tk[4:5],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[6],
-												Tokens: tk[6:7],
-											},
-										},
-										Tokens: tk[6:7],
-									},
-									Tokens: tk[6:7],
-								},
-								Tokens: tk[4:7],
-							},
-							Tokens: tk[4:7],
-						},
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[8],
-									Tokens:     tk[8:9],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[10],
-												Tokens: tk[10:11],
-											},
-										},
-										Tokens: tk[10:11],
-									},
-									Tokens: tk[10:11],
-								},
-								Tokens: tk[8:11],
-							},
-							Tokens: tk[8:11],
-						},
-					},
-					Tokens: tk[:11],
-				},
-				Tokens: tk[:11],
-			}
-		}},
-		{"typeset -ag -pl a=b", func(t *test, tk Tokens) { // 18
-			t.Output = CommandCompoundOrBuiltin{
-				Builtin: &Builtin{
-					BuiltinType: BuiltinTypeset,
-					Params: []*Token{
-						&tk[2],
-						&tk[4],
-					},
-					AssignmentsOrWords: []AssignmentOrWord{
-						{
-							Assignment: &Assignment{
-								Identifier: ParameterAssign{
-									Identifier: &tk[6],
-									Tokens:     tk[6:7],
-								},
-								Assignment: AssignmentAssign,
-								Value: Value{
-									Word: &Word{
-										Parts: []WordPart{
-											{
-												Part:   &tk[8],
-												Tokens: tk[8:9],
-											},
-										},
-										Tokens: tk[8:9],
-									},
-									Tokens: tk[8:9],
-								},
-								Tokens: tk[6:9],
-							},
-							Tokens: tk[6:9],
-						},
-					},
-					Tokens: tk[:9],
-				},
-				Tokens: tk[:9],
-			}
-		}},
-		{"$(||)", func(t *test, tk Tokens) { // 19
+		{"$(||)", func(t *test, tk Tokens) { // 14
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -2354,7 +2135,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[1],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[1],
 													},
 													Parsing: "Pipeline",
@@ -2384,11 +2165,11 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 					Parsing: "Command",
 					Token:   tk[0],
 				},
-				Parsing: "CommandCompoundOrBuiltin",
+				Parsing: "CommandOrCompound",
 				Token:   tk[0],
 			}
 		}},
-		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 20
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 15
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -2405,7 +2186,7 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[3],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[3],
 													},
 													Parsing: "Pipeline",
@@ -2435,71 +2216,12 @@ func TestCommandCompoundOrBuiltin(t *testing.T) {
 					Parsing: "Compound",
 					Token:   tk[0],
 				},
-				Parsing: "CommandCompoundOrBuiltin",
-				Token:   tk[0],
-			}
-		}},
-		{"export a=$(||)", func(t *test, tk Tokens) { // 21
-			t.Err = Error{
-				Err: Error{
-					Err: Error{
-						Err: Error{
-							Err: Error{
-								Err: Error{
-									Err: Error{
-										Err: Error{
-											Err: Error{
-												Err: Error{
-													Err: Error{
-														Err: Error{
-															Err: Error{
-																Err: Error{
-																	Err:     ErrMissingWord,
-																	Parsing: "Command",
-																	Token:   tk[5],
-																},
-																Parsing: "CommandCompoundOrBuiltin",
-																Token:   tk[5],
-															},
-															Parsing: "Pipeline",
-															Token:   tk[5],
-														},
-														Parsing: "Statement",
-														Token:   tk[5],
-													},
-													Parsing: "Line",
-													Token:   tk[5],
-												},
-												Parsing: "File",
-												Token:   tk[5],
-											},
-											Parsing: "CommandSubstitution",
-											Token:   tk[5],
-										},
-										Parsing: "WordPart",
-										Token:   tk[4],
-									},
-									Parsing: "Word",
-									Token:   tk[4],
-								},
-								Parsing: "Value",
-								Token:   tk[4],
-							},
-							Parsing: "Assignment",
-							Token:   tk[4],
-						},
-						Parsing: "AssignmentOrWord",
-						Token:   tk[2],
-					},
-					Parsing: "Builtin",
-					Token:   tk[2],
-				},
-				Parsing: "CommandCompoundOrBuiltin",
+				Parsing: "CommandOrCompound",
 				Token:   tk[0],
 			}
 		}},
 	}, func(t *test) (Type, error) {
-		var c CommandCompoundOrBuiltin
+		var c CommandOrCompound
 
 		err := c.parse(t.Parser, true)
 
@@ -2515,7 +2237,7 @@ func TestCompounds(t *testing.T) {
 					If: TestConsequence{
 						Test: Statement{
 							Pipeline: Pipeline{
-								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+								CommandOrCompound: CommandOrCompound{
 									Command: &Command{
 										AssignmentsOrWords: []AssignmentOrWord{
 											{
@@ -2545,7 +2267,7 @@ func TestCompounds(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -2613,7 +2335,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+													CommandOrCompound: CommandOrCompound{
 														Command: &Command{
 															AssignmentsOrWords: []AssignmentOrWord{
 																{
@@ -2656,7 +2378,7 @@ func TestCompounds(t *testing.T) {
 				LoopCompound: &LoopCompound{
 					Statement: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -2686,7 +2408,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -2727,7 +2449,7 @@ func TestCompounds(t *testing.T) {
 					Until: true,
 					Statement: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -2757,7 +2479,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -2802,7 +2524,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -2847,7 +2569,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -2922,7 +2644,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -2966,7 +2688,7 @@ func TestCompounds(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -3014,7 +2736,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+													CommandOrCompound: CommandOrCompound{
 														Command: &Command{
 															AssignmentsOrWords: []AssignmentOrWord{
 																{
@@ -3065,7 +2787,7 @@ func TestCompounds(t *testing.T) {
 										Statements: []Statement{
 											{
 												Pipeline: Pipeline{
-													CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+													CommandOrCompound: CommandOrCompound{
 														Command: &Command{
 															AssignmentsOrWords: []AssignmentOrWord{
 																{
@@ -3243,7 +2965,7 @@ func TestCompounds(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[2],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[2],
 								},
 								Parsing: "Pipeline",
@@ -3278,7 +3000,7 @@ func TestCompounds(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[3],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[3],
 												},
 												Parsing: "Pipeline",
@@ -3320,7 +3042,7 @@ func TestCompounds(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[2],
 								},
-								Parsing: "CommandCompoundOrBuiltin",
+								Parsing: "CommandOrCompound",
 								Token:   tk[2],
 							},
 							Parsing: "Pipeline",
@@ -3349,7 +3071,7 @@ func TestCompounds(t *testing.T) {
 											Parsing: "Command",
 											Token:   tk[7],
 										},
-										Parsing: "CommandCompoundOrBuiltin",
+										Parsing: "CommandOrCompound",
 										Token:   tk[7],
 									},
 									Parsing: "Pipeline",
@@ -3387,7 +3109,7 @@ func TestCompounds(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[7],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[7],
 												},
 												Parsing: "Pipeline",
@@ -3434,7 +3156,7 @@ func TestCompounds(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[7],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[7],
 												},
 												Parsing: "Pipeline",
@@ -3482,7 +3204,7 @@ func TestCompounds(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[5],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[5],
 													},
 													Parsing: "Pipeline",
@@ -3529,7 +3251,7 @@ func TestCompounds(t *testing.T) {
 											Parsing: "Command",
 											Token:   tk[1],
 										},
-										Parsing: "CommandCompoundOrBuiltin",
+										Parsing: "CommandOrCompound",
 										Token:   tk[1],
 									},
 									Parsing: "Pipeline",
@@ -3566,7 +3288,7 @@ func TestCompounds(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[8],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[8],
 											},
 											Parsing: "Pipeline",
@@ -3611,7 +3333,7 @@ func TestCompounds(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[2],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[2],
 													},
 													Parsing: "Pipeline",
@@ -3661,7 +3383,7 @@ func TestCompounds(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[12],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[12],
 												},
 												Parsing: "Pipeline",
@@ -3708,7 +3430,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -3738,7 +3460,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -3778,7 +3500,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -3808,7 +3530,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -3848,7 +3570,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -3878,7 +3600,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -3916,7 +3638,7 @@ func TestIfCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -3954,7 +3676,7 @@ func TestIfCompound(t *testing.T) {
 				If: TestConsequence{
 					Test: Statement{
 						Pipeline: Pipeline{
-							CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+							CommandOrCompound: CommandOrCompound{
 								Command: &Command{
 									AssignmentsOrWords: []AssignmentOrWord{
 										{
@@ -3984,7 +3706,7 @@ func TestIfCompound(t *testing.T) {
 								Statements: []Statement{
 									{
 										Pipeline: Pipeline{
-											CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+											CommandOrCompound: CommandOrCompound{
 												Command: &Command{
 													AssignmentsOrWords: []AssignmentOrWord{
 														{
@@ -4020,7 +3742,7 @@ func TestIfCompound(t *testing.T) {
 					{
 						Test: Statement{
 							Pipeline: Pipeline{
-								CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+								CommandOrCompound: CommandOrCompound{
 									Command: &Command{
 										AssignmentsOrWords: []AssignmentOrWord{
 											{
@@ -4050,7 +3772,7 @@ func TestIfCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4097,7 +3819,7 @@ func TestIfCompound(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[2],
 								},
-								Parsing: "CommandCompoundOrBuiltin",
+								Parsing: "CommandOrCompound",
 								Token:   tk[2],
 							},
 							Parsing: "Pipeline",
@@ -4124,7 +3846,7 @@ func TestIfCompound(t *testing.T) {
 									Parsing: "Command",
 									Token:   tk[10],
 								},
-								Parsing: "CommandCompoundOrBuiltin",
+								Parsing: "CommandOrCompound",
 								Token:   tk[10],
 							},
 							Parsing: "Pipeline",
@@ -4152,7 +3874,7 @@ func TestIfCompound(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[10],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[10],
 								},
 								Parsing: "Pipeline",
@@ -4186,7 +3908,7 @@ func TestTestConsequence(t *testing.T) {
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -4216,7 +3938,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -4253,7 +3975,7 @@ func TestTestConsequence(t *testing.T) {
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -4283,7 +4005,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -4314,7 +4036,7 @@ func TestTestConsequence(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -4357,7 +4079,7 @@ func TestTestConsequence(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[2],
 							},
-							Parsing: "CommandCompoundOrBuiltin",
+							Parsing: "CommandOrCompound",
 							Token:   tk[2],
 						},
 						Parsing: "Pipeline",
@@ -4382,7 +4104,7 @@ func TestTestConsequence(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[7],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[7],
 								},
 								Parsing: "Pipeline",
@@ -4443,7 +4165,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4509,7 +4231,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4575,7 +4297,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4642,7 +4364,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4702,7 +4424,7 @@ func TestCaseCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -4754,7 +4476,7 @@ func TestCaseCompound(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -4795,7 +4517,7 @@ func TestCaseCompound(t *testing.T) {
 											Parsing: "Command",
 											Token:   tk[8],
 										},
-										Parsing: "CommandCompoundOrBuiltin",
+										Parsing: "CommandOrCompound",
 										Token:   tk[8],
 									},
 									Parsing: "Pipeline",
@@ -4847,7 +4569,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -4899,7 +4621,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -4951,7 +4673,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5004,7 +4726,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5057,7 +4779,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5128,7 +4850,7 @@ func TestPatternLines(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5177,7 +4899,7 @@ func TestPatternLines(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[7],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[7],
 											},
 											Parsing: "Pipeline",
@@ -5224,7 +4946,7 @@ func TestPatternLines(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[8],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[8],
 								},
 								Parsing: "Pipeline",
@@ -5259,7 +4981,7 @@ func TestLoopCompound(t *testing.T) {
 			t.Output = LoopCompound{
 				Statement: Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -5289,7 +5011,7 @@ func TestLoopCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5327,7 +5049,7 @@ func TestLoopCompound(t *testing.T) {
 				Until: true,
 				Statement: Statement{
 					Pipeline: Pipeline{
-						CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+						CommandOrCompound: CommandOrCompound{
 							Command: &Command{
 								AssignmentsOrWords: []AssignmentOrWord{
 									{
@@ -5357,7 +5079,7 @@ func TestLoopCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5400,7 +5122,7 @@ func TestLoopCompound(t *testing.T) {
 								Parsing: "Command",
 								Token:   tk[2],
 							},
-							Parsing: "CommandCompoundOrBuiltin",
+							Parsing: "CommandOrCompound",
 							Token:   tk[2],
 						},
 						Parsing: "Pipeline",
@@ -5425,7 +5147,7 @@ func TestLoopCompound(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[7],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[7],
 								},
 								Parsing: "Pipeline",
@@ -5464,7 +5186,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5506,7 +5228,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5549,7 +5271,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5602,7 +5324,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5664,7 +5386,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5791,7 +5513,7 @@ func TestForCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -5839,7 +5561,7 @@ func TestForCompound(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[7],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[7],
 											},
 											Parsing: "Pipeline",
@@ -5884,7 +5606,7 @@ func TestForCompound(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[5],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[5],
 													},
 													Parsing: "Pipeline",
@@ -5930,7 +5652,7 @@ func TestForCompound(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[7],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[7],
 								},
 								Parsing: "Pipeline",
@@ -5969,7 +5691,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -6011,7 +5733,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -6054,7 +5776,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -6107,7 +5829,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -6169,7 +5891,7 @@ func TestSelectCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -6217,7 +5939,7 @@ func TestSelectCompound(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[7],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[7],
 											},
 											Parsing: "Pipeline",
@@ -6257,7 +5979,7 @@ func TestSelectCompound(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[7],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[7],
 								},
 								Parsing: "Pipeline",
@@ -6330,7 +6052,7 @@ func TestTestCompound(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[5],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[5],
 												},
 												Parsing: "Pipeline",
@@ -7251,7 +6973,7 @@ func TestTests(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[5],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[5],
 											},
 											Parsing: "Pipeline",
@@ -7294,7 +7016,7 @@ func TestTests(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -7337,7 +7059,7 @@ func TestTests(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[7],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[7],
 											},
 											Parsing: "Pipeline",
@@ -7380,7 +7102,7 @@ func TestTests(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[7],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[7],
 											},
 											Parsing: "Pipeline",
@@ -7424,7 +7146,7 @@ func TestTests(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[5],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[5],
 												},
 												Parsing: "Pipeline",
@@ -7478,7 +7200,7 @@ func TestTests(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[7],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[7],
 												},
 												Parsing: "Pipeline",
@@ -7561,7 +7283,7 @@ func TestPattern(t *testing.T) {
 												Parsing: "Command",
 												Token:   tk[7],
 											},
-											Parsing: "CommandCompoundOrBuiltin",
+											Parsing: "CommandOrCompound",
 											Token:   tk[7],
 										},
 										Parsing: "Pipeline",
@@ -7607,7 +7329,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7649,7 +7371,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7691,7 +7413,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7733,7 +7455,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7774,7 +7496,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7815,7 +7537,7 @@ func TestGroupingCompound(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -7860,7 +7582,7 @@ func TestGroupingCompound(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[1],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[1],
 								},
 								Parsing: "Pipeline",
@@ -7902,7 +7624,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -7951,7 +7673,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -7999,7 +7721,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -8047,7 +7769,7 @@ func TestFunctionCompound(t *testing.T) {
 									Statements: []Statement{
 										{
 											Pipeline: Pipeline{
-												CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+												CommandOrCompound: CommandOrCompound{
 													Command: &Command{
 														AssignmentsOrWords: []AssignmentOrWord{
 															{
@@ -8098,7 +7820,7 @@ func TestFunctionCompound(t *testing.T) {
 												Parsing: "Command",
 												Token:   tk[8],
 											},
-											Parsing: "CommandCompoundOrBuiltin",
+											Parsing: "CommandOrCompound",
 											Token:   tk[8],
 										},
 										Parsing: "Pipeline",
@@ -8356,7 +8078,7 @@ func TestBuiltin(t *testing.T) {
 																Parsing: "Command",
 																Token:   tk[5],
 															},
-															Parsing: "CommandCompoundOrBuiltin",
+															Parsing: "CommandOrCompound",
 															Token:   tk[5],
 														},
 														Parsing: "Pipeline",
@@ -8458,7 +8180,7 @@ func TestAssignmentOrWord(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",
@@ -8503,7 +8225,7 @@ func TestAssignmentOrWord(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[3],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[3],
 													},
 													Parsing: "Pipeline",
@@ -9127,7 +8849,7 @@ func TestCommand(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[3],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[3],
 													},
 													Parsing: "Pipeline",
@@ -9177,7 +8899,7 @@ func TestCommand(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[2],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[2],
 												},
 												Parsing: "Pipeline",
@@ -9224,7 +8946,7 @@ func TestCommand(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[1],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[1],
 												},
 												Parsing: "Pipeline",
@@ -9271,7 +8993,7 @@ func TestCommand(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -9320,7 +9042,7 @@ func TestCommand(t *testing.T) {
 																Parsing: "Command",
 																Token:   tk[5],
 															},
-															Parsing: "CommandCompoundOrBuiltin",
+															Parsing: "CommandOrCompound",
 															Token:   tk[5],
 														},
 														Parsing: "Pipeline",
@@ -9421,7 +9143,7 @@ func TestAssignment(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[3],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[3],
 												},
 												Parsing: "Pipeline",
@@ -9468,7 +9190,7 @@ func TestAssignment(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[3],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[3],
 												},
 												Parsing: "Pipeline",
@@ -9561,7 +9283,7 @@ func TestParameterAssign(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -9699,7 +9421,7 @@ func TestValue(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[3],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[3],
 											},
 											Parsing: "Pipeline",
@@ -9742,7 +9464,7 @@ func TestValue(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -9913,7 +9635,7 @@ func TestWord(t *testing.T) {
 												Parsing: "Command",
 												Token:   tk[1],
 											},
-											Parsing: "CommandCompoundOrBuiltin",
+											Parsing: "CommandOrCompound",
 											Token:   tk[1],
 										},
 										Parsing: "Pipeline",
@@ -10015,7 +9737,7 @@ func TestWordPart(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[4],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[4],
 													},
 													Parsing: "Pipeline",
@@ -10066,7 +9788,7 @@ func TestWordPart(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[2],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[2],
 													},
 													Parsing: "Pipeline",
@@ -10113,7 +9835,7 @@ func TestWordPart(t *testing.T) {
 											Parsing: "Command",
 											Token:   tk[1],
 										},
-										Parsing: "CommandCompoundOrBuiltin",
+										Parsing: "CommandOrCompound",
 										Token:   tk[1],
 									},
 									Parsing: "Pipeline",
@@ -10795,7 +10517,7 @@ func TestParameterExpansion(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -10841,7 +10563,7 @@ func TestParameterExpansion(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -10893,7 +10615,7 @@ func TestParameterExpansion(t *testing.T) {
 															Parsing: "Command",
 															Token:   tk[6],
 														},
-														Parsing: "CommandCompoundOrBuiltin",
+														Parsing: "CommandOrCompound",
 														Token:   tk[6],
 													},
 													Parsing: "Pipeline",
@@ -11043,7 +10765,7 @@ func TestParameter(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -11195,7 +10917,7 @@ func TestString(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[1],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[1],
 												},
 												Parsing: "Pipeline",
@@ -11272,7 +10994,7 @@ func TestWordOrToken(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",
@@ -11338,7 +11060,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -11386,7 +11108,7 @@ func TestCommandSubstitution(t *testing.T) {
 							Statements: []Statement{
 								{
 									Pipeline: Pipeline{
-										CommandCompoundOrBuiltin: CommandCompoundOrBuiltin{
+										CommandOrCompound: CommandOrCompound{
 											Command: &Command{
 												AssignmentsOrWords: []AssignmentOrWord{
 													{
@@ -11437,7 +11159,7 @@ func TestCommandSubstitution(t *testing.T) {
 										Parsing: "Command",
 										Token:   tk[1],
 									},
-									Parsing: "CommandCompoundOrBuiltin",
+									Parsing: "CommandOrCompound",
 									Token:   tk[1],
 								},
 								Parsing: "Pipeline",
@@ -11774,7 +11496,7 @@ func TestRedirection(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[2],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[2],
 											},
 											Parsing: "Pipeline",
@@ -11912,7 +11634,7 @@ func TestHeredoc(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[4],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
 												Parsing: "Pipeline",
@@ -11990,7 +11712,7 @@ func TestHeredocPartOrWord(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[4],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[4],
 											},
 											Parsing: "Pipeline",
@@ -12162,7 +11884,7 @@ func TestArithmeticExpansion(t *testing.T) {
 														Parsing: "Command",
 														Token:   tk[2],
 													},
-													Parsing: "CommandCompoundOrBuiltin",
+													Parsing: "CommandOrCompound",
 													Token:   tk[2],
 												},
 												Parsing: "Pipeline",
@@ -12259,7 +11981,7 @@ func TestWordOrOperator(t *testing.T) {
 													Parsing: "Command",
 													Token:   tk[1],
 												},
-												Parsing: "CommandCompoundOrBuiltin",
+												Parsing: "CommandOrCompound",
 												Token:   tk[1],
 											},
 											Parsing: "Pipeline",

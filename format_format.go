@@ -77,10 +77,10 @@ func (f Command) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
-func (f CommandCompoundOrBuiltin) Format(s fmt.State, v rune) {
+func (f CommandOrCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
-		type X = CommandCompoundOrBuiltin
-		type CommandCompoundOrBuiltin X
+		type X = CommandOrCompound
+		type CommandOrCompound X
 
 		fmt.Fprintf(s, "%#v", (f))
 	} else {

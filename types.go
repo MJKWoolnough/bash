@@ -22,7 +22,7 @@ func (CaseCompound) bashType() {}
 
 func (Command) bashType() {}
 
-func (CommandCompoundOrBuiltin) bashType() {}
+func (CommandOrCompound) bashType() {}
 
 func (CommandSubstitution) bashType() {}
 

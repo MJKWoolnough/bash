@@ -229,13 +229,13 @@ const (
 )
 
 type Pipeline struct {
-	PipelineTime             PipelineTime
-	Not                      bool
-	Coproc                   bool
-	CoprocIdentifier         *Token
-	CommandCompoundOrBuiltin CommandCompoundOrBuiltin
-	Pipeline                 *Pipeline
-	Tokens                   Tokens
+	PipelineTime      PipelineTime
+	Not               bool
+	Coproc            bool
+	CoprocIdentifier  *Token
+	CommandOrCompound CommandOrCompound
+	Pipeline          *Pipeline
+	Tokens            Tokens
 }
 
 func (p *Pipeline) parse(b *bashParser, required bool) error {
@@ -269,7 +269,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 
 	c := b.NewGoal()
 
-	if err := p.CommandCompoundOrBuiltin.parse(c, required); err != nil {
+	if err := p.CommandOrCompound.parse(c, required); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -301,7 +301,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	c := b.NewGoal()
 
-	if err := p.CommandCompoundOrBuiltin.parseHeredoc(c); err != nil {
+	if err := p.CommandOrCompound.parseHeredoc(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -320,14 +320,13 @@ func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
-type CommandCompoundOrBuiltin struct {
+type CommandOrCompound struct {
 	Command  *Command
 	Compound *Compound
-	Builtin  *Builtin
 	Tokens   Tokens
 }
 
-func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
+func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 	var err error
 
 	c := b.NewGoal()
@@ -335,16 +334,13 @@ func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
 	if isCompoundNext(b) {
 		cc.Compound = new(Compound)
 		err = cc.Compound.parse(c)
-	} else if tk := b.Peek(); tk.Type == TokenBuiltin {
-		cc.Builtin = new(Builtin)
-		err = cc.Builtin.parse(c)
 	} else {
 		cc.Command = new(Command)
 		err = cc.Command.parse(c, required)
 	}
 
 	if err != nil {
-		return b.Error("CommandCompoundOrBuiltin", err)
+		return b.Error("CommandOrCompound", err)
 	}
 
 	b.Score(c)
@@ -354,7 +350,7 @@ func (cc *CommandCompoundOrBuiltin) parse(b *bashParser, required bool) error {
 	return nil
 }
 
-func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
+func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
@@ -363,12 +359,10 @@ func (cc *CommandCompoundOrBuiltin) parseHeredoc(b *bashParser) error {
 		err = cc.Command.parseHeredocs(c)
 	} else if cc.Compound != nil {
 		err = cc.Compound.parseHeredocs(c)
-	} else if cc.Builtin != nil {
-		err = cc.Builtin.parseHeredocs(c)
 	}
 
 	if err != nil {
-		return b.Error("CommandCompoundOrBuiltin", err)
+		return b.Error("CommandOrCompound", err)
 	}
 
 	b.Score(c)
