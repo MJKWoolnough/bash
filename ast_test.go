@@ -8793,7 +8793,324 @@ func TestCommand(t *testing.T) {
 				Tokens: tk[:20],
 			}
 		}},
-		{"a[$(||)]=", func(t *test, tk Tokens) { // 6
+		{"declare a", func(t *test, tk Tokens) { // 6
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{"local -n a=b", func(t *test, tk Tokens) { // 7
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[4],
+								Tokens:     tk[4:5],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[6],
+											Tokens: tk[6:7],
+										},
+									},
+									Tokens: tk[6:7],
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[4:7],
+						},
+						Tokens: tk[4:7],
+					},
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"readonly -a -p a=b c=d", func(t *test, tk Tokens) { // 8
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+						Tokens: tk[4:5],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[6],
+								Tokens:     tk[6:7],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[8],
+											Tokens: tk[8:9],
+										},
+									},
+									Tokens: tk[8:9],
+								},
+								Tokens: tk[8:9],
+							},
+							Tokens: tk[6:9],
+						},
+						Tokens: tk[6:9],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[10],
+								Tokens:     tk[10:11],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[12],
+											Tokens: tk[12:13],
+										},
+									},
+									Tokens: tk[12:13],
+								},
+								Tokens: tk[12:13],
+							},
+							Tokens: tk[10:13],
+						},
+						Tokens: tk[10:13],
+					},
+				},
+				Tokens: tk[:13],
+			}
+		}},
+		{"export -p a=b c=d", func(t *test, tk Tokens) { // 9
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[4],
+								Tokens:     tk[4:5],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[6],
+											Tokens: tk[6:7],
+										},
+									},
+									Tokens: tk[6:7],
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[4:7],
+						},
+						Tokens: tk[4:7],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[8],
+								Tokens:     tk[8:9],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[10],
+											Tokens: tk[10:11],
+										},
+									},
+									Tokens: tk[10:11],
+								},
+								Tokens: tk[10:11],
+							},
+							Tokens: tk[8:11],
+						},
+						Tokens: tk[8:11],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"typeset -ag -pl a=b", func(t *test, tk Tokens) { // 10
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[2],
+									Tokens: tk[2:3],
+								},
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[4:5],
+						},
+						Tokens: tk[4:5],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[6],
+								Tokens:     tk[6:7],
+							},
+							Assignment: AssignmentAssign,
+							Value: Value{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[8],
+											Tokens: tk[8:9],
+										},
+									},
+									Tokens: tk[8:9],
+								},
+								Tokens: tk[8:9],
+							},
+							Tokens: tk[6:9],
+						},
+						Tokens: tk[6:9],
+					},
+				},
+				Tokens: tk[:9],
+			}
+		}},
+		{"a[$(||)]=", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8844,7 +9161,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{">$(||)", func(t *test, tk Tokens) { // 7
+		{">$(||)", func(t *test, tk Tokens) { // 12
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8891,7 +9208,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 8
+		{"$(||)", func(t *test, tk Tokens) { // 13
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8938,7 +9255,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"a >$(||)", func(t *test, tk Tokens) { // 9
+		{"a >$(||)", func(t *test, tk Tokens) { // 14
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8980,6 +9297,61 @@ func TestCommand(t *testing.T) {
 					},
 					Parsing: "Redirection",
 					Token:   tk[3],
+				},
+				Parsing: "Command",
+				Token:   tk[2],
+			}
+		}},
+		{"export a=$(||)", func(t *test, tk Tokens) { // 15
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[5],
+															},
+															Parsing: "CommandCompoundOrBuiltin",
+															Token:   tk[5],
+														},
+														Parsing: "Pipeline",
+														Token:   tk[5],
+													},
+													Parsing: "Statement",
+													Token:   tk[5],
+												},
+												Parsing: "Line",
+												Token:   tk[5],
+											},
+											Parsing: "File",
+											Token:   tk[5],
+										},
+										Parsing: "CommandSubstitution",
+										Token:   tk[5],
+									},
+									Parsing: "WordPart",
+									Token:   tk[4],
+								},
+								Parsing: "Word",
+								Token:   tk[4],
+							},
+							Parsing: "Value",
+							Token:   tk[4],
+						},
+						Parsing: "Assignment",
+						Token:   tk[4],
+					},
+					Parsing: "AssignmentOrWord",
+					Token:   tk[2],
 				},
 				Parsing: "Command",
 				Token:   tk[2],
