@@ -41,18 +41,6 @@ func (f AssignmentOrWord) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
-func (f Builtin) Format(s fmt.State, v rune) {
-	if v == 'v' && s.Flag('#') {
-		type X = Builtin
-		type Builtin X
-
-		fmt.Fprintf(s, "%#v", (f))
-	} else {
-		format(&f, s, v)
-	}
-}
-
-// Format implements the fmt.Formatter interface
 func (f CaseCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CaseCompound

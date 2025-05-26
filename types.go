@@ -16,8 +16,6 @@ func (Assignment) bashType() {}
 
 func (AssignmentOrWord) bashType() {}
 
-func (Builtin) bashType() {}
-
 func (CaseCompound) bashType() {}
 
 func (Command) bashType() {}
