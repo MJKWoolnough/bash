@@ -174,7 +174,11 @@ func (c Compound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c Compound) printHeredoc(w io.Writer, v bool) {}
+func (c Compound) printHeredoc(w io.Writer, v bool) {
+	for _, r := range c.Redirections {
+		r.printHeredoc(w, v)
+	}
+}
 
 func (f File) printSource(w io.Writer, v bool) {
 	if len(f.Lines) > 0 {
