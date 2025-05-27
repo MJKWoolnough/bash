@@ -133,7 +133,7 @@ func (b *bashTokeniser) setInCommand() {
 func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	td := b.lastTokenDepth()
 
-	if isKeywordSeperator(t) && td == 'C' {
+	if isWhitespace(t) && td == 'C' {
 		return b.caseIn(t)
 	} else if td == 'P' {
 		b.popTokenDepth()
@@ -1184,7 +1184,7 @@ func (b *bashTokeniser) middleCompound(t *parser.Tokeniser, fn parser.TokenFunc,
 
 	b.popTokenDepth()
 
-	if t.AcceptString(kw, false) == len(kw) && isKeywordSeperator(t) {
+	if t.AcceptString(kw, false) == len(kw) && isWhitespace(t) {
 		b.pushTokenDepth(td)
 
 		return t.Return(TokenKeyword, b.main)
@@ -1376,7 +1376,7 @@ func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 	state := t.State()
 
-	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isKeywordSeperator(t) {
+	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isWhitespace(t) {
 		return t.Return(TokenKeyword, b.testWordStart)
 	}
 
@@ -1438,7 +1438,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 
 		t.Next()
 
-		if t.Accept("]") && isKeywordSeperator(t) {
+		if t.Accept("]") && isWhitespace(t) {
 			b.popTokenDepth()
 
 			if b.lastTokenDepth() == 't' {
