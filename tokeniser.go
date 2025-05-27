@@ -975,7 +975,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			state := t.State()
 			kw := t.AcceptWord(keywords, false)
 
-			if !isKeywordSeperator(t) {
+			if !isWordSeperator(t) {
 				if b.lastTokenDepth() == 'x' {
 					return t.ReturnError(ErrInvalidKeyword)
 				}
@@ -988,7 +988,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			state = t.State()
 			bn := t.AcceptWord(builtins, false)
 
-			if !isKeywordSeperator(t) {
+			if !isWordSeperator(t) {
 				state.Reset()
 			} else if bn != "" {
 				return b.builtin(t, bn)
@@ -1041,7 +1041,7 @@ func isWhitespace(t *parser.Tokeniser) bool {
 	return false
 }
 
-func isKeywordSeperator(t *parser.Tokeniser) bool {
+func isWordSeperator(t *parser.Tokeniser) bool {
 	return isWhitespace(t) || t.Peek() == ';'
 }
 
@@ -1146,7 +1146,7 @@ func (b *bashTokeniser) time(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 	state := t.State()
 
-	if t.AcceptString("-p", false) == 2 && isKeywordSeperator(t) {
+	if t.AcceptString("-p", false) == 2 && isWordSeperator(t) {
 		return t.Return(TokenWord, b.main)
 	}
 
@@ -1270,7 +1270,7 @@ func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.Token
 
 	state := t.State()
 
-	if t.AcceptString("in", false) == 2 && isKeywordSeperator(t) {
+	if t.AcceptString("in", false) == 2 && isWordSeperator(t) {
 		b.setInCommand()
 
 		return t.Return(TokenKeyword, b.main)
@@ -1289,7 +1289,7 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 	state := t.State()
 
 	if t.AcceptWord(keywords, false) != "" {
-		if isKeywordSeperator(t) {
+		if isWordSeperator(t) {
 			state.Reset()
 
 			return b.main(t)
@@ -1306,7 +1306,7 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		if t.Accept(whitespace) {
 			t.AcceptRun(whitespace)
 
-			if t.AcceptWord(compoundStart, false) != "" && isKeywordSeperator(t) {
+			if t.AcceptWord(compoundStart, false) != "" && isWordSeperator(t) {
 				nameEnd.Reset()
 
 				return t.Return(TokenIdentifier, b.main)
