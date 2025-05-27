@@ -1032,13 +1032,17 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 	return b.word(t)
 }
 
-func isKeywordSeperator(t *parser.Tokeniser) bool {
+func isWhitespace(t *parser.Tokeniser) bool {
 	switch t.Peek() {
-	case ' ', '\t', '\n', ';', -1:
+	case ' ', '\t', '\n', -1:
 		return true
 	}
 
 	return false
+}
+
+func isKeywordSeperator(t *parser.Tokeniser) bool {
+	return isWhitespace(t) || t.Peek() == ';'
 }
 
 func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, parser.TokenFunc) {
@@ -1506,6 +1510,10 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 			}
 		} else {
 			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		if !isWhitespace(t) {
+			return t.ReturnError(ErrInvalidOperator)
 		}
 
 		return t.Return(TokenKeyword, b.testWordStart)
