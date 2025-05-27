@@ -1330,6 +1330,298 @@ func TestLineHeredocs(t *testing.T) {
 				Tokens: tk[:17],
 			}
 		}},
+		{"a <<b\n$(||)\nb", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err: Error{
+																		Err: Error{
+																			Err: Error{
+																				Err:     ErrMissingWord,
+																				Parsing: "Command",
+																				Token:   tk[6],
+																			},
+																			Parsing: "CommandOrCompound",
+																			Token:   tk[6],
+																		},
+																		Parsing: "Pipeline",
+																		Token:   tk[6],
+																	},
+																	Parsing: "Statement",
+																	Token:   tk[6],
+																},
+																Parsing: "Line",
+																Token:   tk[6],
+															},
+															Parsing: "File",
+															Token:   tk[6],
+														},
+														Parsing: "CommandSubstitution",
+														Token:   tk[6],
+													},
+													Parsing: "WordPart",
+													Token:   tk[5],
+												},
+												Parsing: "Word",
+												Token:   tk[5],
+											},
+											Parsing: "HeredocPartOrWord",
+											Token:   tk[5],
+										},
+										Parsing: "Heredoc",
+										Token:   tk[5],
+									},
+									Parsing: "Redirection",
+									Token:   tk[5],
+								},
+								Parsing: "Command",
+								Token:   tk[5],
+							},
+							Parsing: "CommandOrCompound",
+							Token:   tk[5],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[5],
+					},
+					Parsing: "Statement",
+					Token:   tk[5],
+				},
+				Parsing: "Line",
+				Token:   tk[5],
+			}
+		}},
+		{"a | b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err: Error{
+																		Err: Error{
+																			Err: Error{
+																				Err: Error{
+																					Err:     ErrMissingWord,
+																					Parsing: "Command",
+																					Token:   tk[10],
+																				},
+																				Parsing: "CommandOrCompound",
+																				Token:   tk[10],
+																			},
+																			Parsing: "Pipeline",
+																			Token:   tk[10],
+																		},
+																		Parsing: "Statement",
+																		Token:   tk[10],
+																	},
+																	Parsing: "Line",
+																	Token:   tk[10],
+																},
+																Parsing: "File",
+																Token:   tk[10],
+															},
+															Parsing: "CommandSubstitution",
+															Token:   tk[10],
+														},
+														Parsing: "WordPart",
+														Token:   tk[9],
+													},
+													Parsing: "Word",
+													Token:   tk[9],
+												},
+												Parsing: "HeredocPartOrWord",
+												Token:   tk[9],
+											},
+											Parsing: "Heredoc",
+											Token:   tk[9],
+										},
+										Parsing: "Redirection",
+										Token:   tk[9],
+									},
+									Parsing: "Command",
+									Token:   tk[9],
+								},
+								Parsing: "CommandOrCompound",
+								Token:   tk[9],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[9],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[9],
+					},
+					Parsing: "Statement",
+					Token:   tk[9],
+				},
+				Parsing: "Line",
+				Token:   tk[9],
+			}
+		}},
+		{"a && b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err: Error{
+																		Err: Error{
+																			Err: Error{
+																				Err: Error{
+																					Err:     ErrMissingWord,
+																					Parsing: "Command",
+																					Token:   tk[10],
+																				},
+																				Parsing: "CommandOrCompound",
+																				Token:   tk[10],
+																			},
+																			Parsing: "Pipeline",
+																			Token:   tk[10],
+																		},
+																		Parsing: "Statement",
+																		Token:   tk[10],
+																	},
+																	Parsing: "Line",
+																	Token:   tk[10],
+																},
+																Parsing: "File",
+																Token:   tk[10],
+															},
+															Parsing: "CommandSubstitution",
+															Token:   tk[10],
+														},
+														Parsing: "WordPart",
+														Token:   tk[9],
+													},
+													Parsing: "Word",
+													Token:   tk[9],
+												},
+												Parsing: "HeredocPartOrWord",
+												Token:   tk[9],
+											},
+											Parsing: "Heredoc",
+											Token:   tk[9],
+										},
+										Parsing: "Redirection",
+										Token:   tk[9],
+									},
+									Parsing: "Command",
+									Token:   tk[9],
+								},
+								Parsing: "CommandOrCompound",
+								Token:   tk[9],
+							},
+							Parsing: "Pipeline",
+							Token:   tk[9],
+						},
+						Parsing: "Statement",
+						Token:   tk[9],
+					},
+					Parsing: "Statement",
+					Token:   tk[9],
+				},
+				Parsing: "Line",
+				Token:   tk[9],
+			}
+		}},
+		{"until a; do b; done <<b\n$(||)\nb", func(t *test, tk Tokens) { // 8
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err: Error{
+																	Err: Error{
+																		Err: Error{
+																			Err: Error{
+																				Err:     ErrMissingWord,
+																				Parsing: "Command",
+																				Token:   tk[16],
+																			},
+																			Parsing: "CommandOrCompound",
+																			Token:   tk[16],
+																		},
+																		Parsing: "Pipeline",
+																		Token:   tk[16],
+																	},
+																	Parsing: "Statement",
+																	Token:   tk[16],
+																},
+																Parsing: "Line",
+																Token:   tk[16],
+															},
+															Parsing: "File",
+															Token:   tk[16],
+														},
+														Parsing: "CommandSubstitution",
+														Token:   tk[16],
+													},
+													Parsing: "WordPart",
+													Token:   tk[15],
+												},
+												Parsing: "Word",
+												Token:   tk[15],
+											},
+											Parsing: "HeredocPartOrWord",
+											Token:   tk[15],
+										},
+										Parsing: "Heredoc",
+										Token:   tk[15],
+									},
+									Parsing: "Redirection",
+									Token:   tk[15],
+								},
+								Parsing: "Compound",
+								Token:   tk[15],
+							},
+							Parsing: "CommandOrCompound",
+							Token:   tk[15],
+						},
+						Parsing: "Pipeline",
+						Token:   tk[15],
+					},
+					Parsing: "Statement",
+					Token:   tk[15],
+				},
+				Parsing: "Line",
+				Token:   tk[15],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var l Line
 
