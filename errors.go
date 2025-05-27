@@ -24,4 +24,5 @@ var (
 	ErrInvalidKeyword            = errors.New("invalid keyword")
 	ErrInvalidIdentifier         = errors.New("invalid identifier")
 	ErrMissingOperator           = errors.New("missing operator")
+	ErrInvalidOperator           = errors.New("invalid operator")
 )
