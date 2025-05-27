@@ -1362,6 +1362,10 @@ func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.test)
+	} else if t.Accept("#") {
+		t.ExceptRun("\n")
+
+		return t.Return(TokenComment, b.test)
 	} else if t.Accept("!") {
 		return t.Return(TokenPunctuator, b.test)
 	}
@@ -1384,6 +1388,10 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.testWordOrPunctuator)
+	} else if t.Accept("#") {
+		t.ExceptRun("\n")
+
+		return t.Return(TokenComment, b.test)
 	}
 
 	switch c := t.Peek(); c {
@@ -1457,6 +1465,8 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.testBinaryOperator)
+	} else if t.Accept("#") {
+		return t.ReturnError(ErrInvalidCharacter)
 	}
 
 	b.popTokenDepth()
@@ -1513,6 +1523,8 @@ func (b *bashTokeniser) testWordStart(t *parser.Tokeniser) (parser.Token, parser
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.testWordStart)
+	} else if t.Accept("#") {
+		return t.ReturnError(ErrInvalidCharacter)
 	}
 
 	return b.testWord(t)
@@ -1541,6 +1553,8 @@ func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, par
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.testPatternStart)
+	} else if t.Accept("#") {
+		return t.ReturnError(ErrInvalidCharacter)
 	}
 
 	return b.testPattern(t)
