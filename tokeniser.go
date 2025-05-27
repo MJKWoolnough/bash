@@ -1172,6 +1172,10 @@ func (b *bashTokeniser) middleCompound(t *parser.Tokeniser, fn parser.TokenFunc,
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, fn)
+	} else if t.Accept("#") {
+		t.ExceptRun("\n")
+
+		return t.Return(TokenComment, fn)
 	}
 
 	b.popTokenDepth()
