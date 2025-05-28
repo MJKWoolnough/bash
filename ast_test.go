@@ -517,7 +517,25 @@ func TestFile(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 7
+		{"#!/bin/bash", func(t *test, tk Tokens) { // 7
+			t.Output = File{
+				Comments: [2]Comments{{tk[0]}},
+				Tokens:   tk[:1],
+			}
+		}},
+		{"#!/bin/bash\n# comment", func(t *test, tk Tokens) { // 8
+			t.Output = File{
+				Comments: [2]Comments{{tk[0], tk[2]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"#!/bin/bash\n# comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 9
+			t.Output = File{
+				Comments: [2]Comments{{tk[0], tk[2]}, {tk[4], tk[6]}},
+				Tokens:   tk[:7],
+			}
+		}},
+		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
