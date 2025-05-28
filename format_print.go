@@ -161,6 +161,8 @@ func (c Compound) printHeredoc(w io.Writer, v bool) {
 }
 
 func (f File) printSource(w io.Writer, v bool) {
+	f.Comments[0].printSource(w, v)
+
 	if len(f.Lines) > 0 {
 		f.Lines[0].printSource(w, v)
 
@@ -169,6 +171,8 @@ func (f File) printSource(w io.Writer, v bool) {
 			l.printSource(w, v)
 		}
 	}
+
+	f.Comments[1].printSource(w, v)
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
