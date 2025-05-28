@@ -15,6 +15,9 @@ type Token struct {
 // Tokens represents a list ok tokens that have been parsed.
 type Tokens []Token
 
+// Comments is a collection of Comment Tokens.
+type Comments []Token
+
 type bashParser struct {
 	Tokens
 }
