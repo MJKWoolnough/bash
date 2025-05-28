@@ -150,6 +150,10 @@ func (t Tokens) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n]")
 }
 
+func (c Comments) printType(w io.Writer, v bool) {
+	Tokens(c).printType(w, v)
+}
+
 func (a AssignmentType) String() string {
 	switch a {
 	case AssignmentAssign:
