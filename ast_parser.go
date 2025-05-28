@@ -15,6 +15,7 @@ type Token struct {
 // Tokens represents a list ok tokens that have been parsed.
 type Tokens []Token
 
+// Comments is a collection of Comment Tokens.
 type Comments []Token
 
 type bashParser struct {
@@ -149,12 +150,12 @@ func (b *bashParser) AcceptRunWhitespace() parser.TokenType {
 	return b.AcceptRun(TokenWhitespace)
 }
 
-func (b *bashParser) AcceptRunWhitespaceComments() Comments {
+func (b *bashParser) AcceptRunAllWhitespaceComments() Comments {
 	var c Comments
 
 	s := b.NewGoal()
 
-	for s.AcceptRunWhitespace() == TokenComment {
+	for s.AcceptRunAllWhitespaceNoComments() == TokenComment {
 		c = append(c, s.Next())
 
 		b.Score(s)
@@ -165,7 +166,7 @@ func (b *bashParser) AcceptRunWhitespaceComments() Comments {
 	return c
 }
 
-func (b *bashParser) AcceptRunWhitespaceCommentsNoNewline() Comments {
+func (b *bashParser) AcceptRunWhitespaceComments() Comments {
 	var c Comments
 
 	s := b.NewGoal()
@@ -176,7 +177,11 @@ func (b *bashParser) AcceptRunWhitespaceCommentsNoNewline() Comments {
 		c = append(c, b.Next())
 		s = b.NewGoal()
 
-		s.Accept(TokenLineTerminator)
+		if s.Accept(TokenLineTerminator) {
+			if len(s.GetLastToken().Data) > 1 {
+				break
+			}
+		}
 	}
 
 	return c
@@ -184,6 +189,10 @@ func (b *bashParser) AcceptRunWhitespaceCommentsNoNewline() Comments {
 
 func (b *bashParser) AcceptRunAllWhitespace() parser.TokenType {
 	return b.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
+}
+
+func (b *bashParser) AcceptRunAllWhitespaceNoComments() parser.TokenType {
+	return b.AcceptRun(TokenWhitespace, TokenLineTerminator)
 }
 
 // Error represents a Bash parsing error.
