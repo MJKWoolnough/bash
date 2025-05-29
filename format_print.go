@@ -272,12 +272,15 @@ func (i IfCompound) printSource(w io.Writer, v bool) {
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
+		l.Comments[0].printSource(w, v)
 		l.Statements[0].printSource(w, v)
 
 		for _, s := range l.Statements[1:] {
 			io.WriteString(w, " ")
 			s.printSource(w, v)
 		}
+
+		l.Comments[1].printSource(w, v)
 
 		for _, s := range l.Statements {
 			s.printHeredoc(w, v)
