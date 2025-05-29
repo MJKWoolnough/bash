@@ -561,6 +561,7 @@ func (i *IfCompound) parse(b *bashParser) error {
 type TestConsequence struct {
 	Test        Statement
 	Consequence File
+	Comments    Comments
 	Tokens
 }
 
@@ -572,9 +573,12 @@ func (t *TestConsequence) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
+
+	t.Comments = b.AcceptRunAllWhitespaceComments()
 	b.AcceptRunAllWhitespace()
+
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"})
-	b.AcceptRunAllWhitespace()
+	b.AcceptRunAllWhitespaceNoComments()
 
 	c = b.NewGoal()
 
