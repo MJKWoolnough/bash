@@ -535,7 +535,47 @@ func TestFile(t *testing.T) {
 				Tokens:   tk[:7],
 			}
 		}},
-		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 10
+		{"#!/bin/bash\n# comment\n\n# pre-line comment\na #post-line comment\n# another post line comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 10
+			t.Output = File{
+				Lines: []Line{
+					{
+						Statements: []Statement{
+							{
+								Pipeline: Pipeline{
+									CommandOrCompound: CommandOrCompound{
+										Command: &Command{
+											AssignmentsOrWords: []AssignmentOrWord{
+												{
+													Word: &Word{
+														Parts: []WordPart{
+															{
+																Part:   &tk[6],
+																Tokens: tk[6:7],
+															},
+														},
+														Tokens: tk[6:7],
+													},
+													Tokens: tk[6:7],
+												},
+											},
+											Tokens: tk[6:7],
+										},
+										Tokens: tk[6:7],
+									},
+									Tokens: tk[6:7],
+								},
+								Tokens: tk[6:7],
+							},
+						},
+						Comments: [2]Comments{{tk[4]}, {tk[8], tk[10]}},
+						Tokens:   tk[4:11],
+					},
+				},
+				Comments: [2]Comments{{tk[0], tk[2]}, {tk[12], tk[14]}},
+				Tokens:   tk[:15],
+			}
+		}},
+		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
