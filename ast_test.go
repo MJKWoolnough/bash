@@ -773,7 +773,177 @@ func TestLine(t *testing.T) {
 				Tokens: tk[:6],
 			}
 		}},
-		{"||", func(t *test, tk Tokens) { // 4
+		{"# comment\na", func(t *test, tk Tokens) { // 4
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[2],
+														Tokens: tk[2:3],
+													},
+												},
+												Tokens: tk[2:3],
+											},
+											Tokens: tk[2:3],
+										},
+									},
+									Tokens: tk[2:3],
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+				},
+				Comments: [2]Comments{{tk[0]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"# comment\n\n# another comment\na", func(t *test, tk Tokens) { // 5
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[4],
+														Tokens: tk[4:5],
+													},
+												},
+												Tokens: tk[4:5],
+											},
+											Tokens: tk[4:5],
+										},
+									},
+									Tokens: tk[4:5],
+								},
+								Tokens: tk[4:5],
+							},
+							Tokens: tk[4:5],
+						},
+						Tokens: tk[4:5],
+					},
+				},
+				Comments: [2]Comments{{tk[0], tk[2]}},
+				Tokens:   tk[:5],
+			}
+		}},
+		{"a # comment", func(t *test, tk Tokens) { // 6
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Comments: [2]Comments{nil, {tk[2]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"a # comment\n# another comment", func(t *test, tk Tokens) { // 7
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Comments: [2]Comments{nil, {tk[2], tk[4]}},
+				Tokens:   tk[:5],
+			}
+		}},
+		{"a # comment\n\n# another comment", func(t *test, tk Tokens) { // 8
+			t.Output = Line{
+				Statements: []Statement{
+					{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Command: &Command{
+									AssignmentsOrWords: []AssignmentOrWord{
+										{
+											Word: &Word{
+												Parts: []WordPart{
+													{
+														Part:   &tk[0],
+														Tokens: tk[:1],
+													},
+												},
+												Tokens: tk[:1],
+											},
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+				},
+				Comments: [2]Comments{nil, {tk[2]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"||", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1419,7 +1589,7 @@ func TestLineHeredocs(t *testing.T) {
 				Token:   tk[5],
 			}
 		}},
-		{"a | b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 8
+		{"a | b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1494,7 +1664,7 @@ func TestLineHeredocs(t *testing.T) {
 				Token:   tk[9],
 			}
 		}},
-		{"a && b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 8
+		{"a && b <<c\n$(||)\nc", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1569,7 +1739,7 @@ func TestLineHeredocs(t *testing.T) {
 				Token:   tk[9],
 			}
 		}},
-		{"until a; do b; done <<b\n$(||)\nb", func(t *test, tk Tokens) { // 8
+		{"until a; do b; done <<b\n$(||)\nb", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
