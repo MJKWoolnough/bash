@@ -5199,7 +5199,143 @@ func TestTestConsequence(t *testing.T) {
 				Tokens: tk[2:9],
 			}
 		}},
-		{"if ||; then b;fi", func(t *test, tk Tokens) { // 3
+		{"if a; #comment\nthen b;fi", func(t *test, tk Tokens) { // 3
+			t.Output = TestConsequence{
+				Test: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								AssignmentsOrWords: []AssignmentOrWord{
+									{
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:4],
+				},
+				Consequence: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[9],
+																	Tokens: tk[9:10],
+																},
+															},
+															Tokens: tk[9:10],
+														},
+														Tokens: tk[9:10],
+													},
+												},
+												Tokens: tk[9:10],
+											},
+											Tokens: tk[9:10],
+										},
+										Tokens: tk[9:10],
+									},
+									Tokens: tk[9:11],
+								},
+							},
+							Tokens: tk[9:11],
+						},
+					},
+					Tokens: tk[9:11],
+				},
+				Comments: Comments{tk[5]},
+				Tokens:   tk[2:11],
+			}
+		}},
+		{"if a\n#comment\nthen b;fi", func(t *test, tk Tokens) { // 4
+			t.Output = TestConsequence{
+				Test: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								AssignmentsOrWords: []AssignmentOrWord{
+									{
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				Consequence: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
+															},
+															Tokens: tk[8:9],
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+					},
+					Tokens: tk[8:10],
+				},
+				Comments: Comments{tk[4]},
+				Tokens:   tk[2:10],
+			}
+		}},
+		{"if ||; then b;fi", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5222,7 +5358,7 @@ func TestTestConsequence(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"if a; then ||;fi", func(t *test, tk Tokens) { // 4
+		{"if a; then ||;fi", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
