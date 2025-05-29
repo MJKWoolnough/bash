@@ -66,10 +66,15 @@ func isEnd(tk parser.Token) bool {
 
 type Line struct {
 	Statements []Statement
+	Comments   [2]Comments
 	Tokens     Tokens
 }
 
 func (l *Line) parse(b *bashParser) error {
+	l.Comments[0] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespace()
+
 	c := b.NewGoal()
 
 	for {
@@ -94,6 +99,8 @@ func (l *Line) parse(b *bashParser) error {
 		c = b.NewGoal()
 		c.AcceptRunWhitespace()
 	}
+
+	l.Comments[1] = b.AcceptRunWhitespaceComments()
 
 	if err := l.parseHeredocs(b); err != nil {
 		return err
