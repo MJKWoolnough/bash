@@ -20,6 +20,7 @@ type Comments []Token
 
 type bashParser struct {
 	Tokens
+	ignoreTopComment bool
 }
 
 // Tokeniser represents the methods required by the bash tokeniser.
@@ -193,6 +194,20 @@ func (b *bashParser) AcceptRunAllWhitespace() parser.TokenType {
 
 func (b *bashParser) AcceptRunAllWhitespaceNoComments() parser.TokenType {
 	return b.AcceptRun(TokenWhitespace, TokenLineTerminator)
+}
+
+func (b *bashParser) HasTopComment() bool {
+	if b.ignoreTopComment {
+		b.ignoreTopComment = false
+
+		return false
+	}
+
+	return b.Peek().Type == TokenComment
+}
+
+func (b *bashParser) SetIgnoreTopComment(v bool) {
+	b.ignoreTopComment = v
 }
 
 // Error represents a Bash parsing error.
