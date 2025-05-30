@@ -206,8 +206,19 @@ func (b *bashParser) HasTopComment() bool {
 	return b.Peek().Type == TokenComment
 }
 
-func (b *bashParser) SetIgnoreTopComment(v bool) {
-	b.ignoreTopComment = v
+func (b *bashParser) NewFileGoal() *bashParser {
+	b.AcceptRunWhitespace()
+
+	hasComment := b.Peek().Type == TokenComment
+
+	if !hasComment {
+		b.AcceptRunAllWhitespaceNoComments()
+	}
+
+	c := b.NewGoal()
+	c.ignoreTopComment = !hasComment
+
+	return c
 }
 
 // Error represents a Bash parsing error.

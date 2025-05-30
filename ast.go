@@ -540,18 +540,7 @@ func (i *IfCompound) parse(b *bashParser) error {
 	}
 
 	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "else"}) {
-		b.AcceptRunWhitespace()
-
-		hasComment := b.Peek().Type == TokenComment
-
-		if !hasComment {
-			b.AcceptRunAllWhitespaceNoComments()
-		}
-
-		c := b.NewGoal()
-
-		c.SetIgnoreTopComment(!hasComment)
-
+		c := b.NewFileGoal()
 		i.Else = new(File)
 
 		if err := i.Else.parse(c); err != nil {
