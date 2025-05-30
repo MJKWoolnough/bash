@@ -635,12 +635,11 @@ func (t TestConsequence) printSource(w io.Writer, v bool) {
 	ip := indentPrinter{Writer: w}
 
 	if len(t.Comments) > 0 {
-		io.WriteString(w, " then ")
+		io.WriteString(w, " ")
 		t.Comments.printSource(&ip, v)
-	} else {
-		io.WriteString(&ip, " then\n")
 	}
 
+	io.WriteString(&ip, " then\n")
 	t.Consequence.printSource(&ip, v)
 }
 
