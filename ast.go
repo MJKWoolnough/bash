@@ -578,9 +578,7 @@ func (t *TestConsequence) parse(b *bashParser) error {
 	b.AcceptRunAllWhitespace()
 
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"})
-	b.AcceptRunAllWhitespaceNoComments()
-
-	c = b.NewGoal()
+	c = b.NewFileGoal()
 
 	if err := t.Consequence.parse(c); err != nil {
 		return b.Error("TestConsequence", err)
