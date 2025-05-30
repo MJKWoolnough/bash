@@ -12,7 +12,7 @@ type Token struct {
 	Pos, Line, LinePos uint64
 }
 
-// Tokens represents a list ok tokens that have been parsed.
+// Tokens represents a list of tokens that have been parsed.
 type Tokens []Token
 
 // Comments is a collection of Comment Tokens.
