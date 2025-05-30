@@ -26,7 +26,7 @@ type File struct {
 }
 
 func (f *File) parse(b *bashParser) error {
-	if b.Peek().Type == TokenComment {
+	if b.HasTopComment() {
 		f.Comments[0] = b.AcceptRunWhitespaceComments()
 	}
 
@@ -540,9 +540,18 @@ func (i *IfCompound) parse(b *bashParser) error {
 	}
 
 	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "else"}) {
-		b.AcceptRunAllWhitespace()
+		b.AcceptRunWhitespace()
+
+		hasComment := b.Peek().Type == TokenComment
+
+		if !hasComment {
+			b.AcceptRunAllWhitespaceNoComments()
+		}
 
 		c := b.NewGoal()
+
+		c.SetIgnoreTopComment(!hasComment)
+
 		i.Else = new(File)
 
 		if err := i.Else.parse(c); err != nil {
