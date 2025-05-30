@@ -523,19 +523,31 @@ func TestFile(t *testing.T) {
 				Tokens:   tk[:1],
 			}
 		}},
-		{"#!/bin/bash\n# comment", func(t *test, tk Tokens) { // 8
+		{" #!/bin/bash", func(t *test, tk Tokens) { // 8
+			t.Output = File{
+				Comments: [2]Comments{nil, {tk[1]}},
+				Tokens:   tk[:2],
+			}
+		}},
+		{"\n#!/bin/bash", func(t *test, tk Tokens) { // 9
+			t.Output = File{
+				Comments: [2]Comments{nil, {tk[1]}},
+				Tokens:   tk[:2],
+			}
+		}},
+		{"#!/bin/bash\n# comment", func(t *test, tk Tokens) { // 10
 			t.Output = File{
 				Comments: [2]Comments{{tk[0], tk[2]}},
 				Tokens:   tk[:3],
 			}
 		}},
-		{"#!/bin/bash\n# comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 9
+		{"#!/bin/bash\n# comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 11
 			t.Output = File{
 				Comments: [2]Comments{{tk[0], tk[2]}, {tk[4], tk[6]}},
 				Tokens:   tk[:7],
 			}
 		}},
-		{"#!/bin/bash\n# comment\n\n# pre-line comment\na #post-line comment\n# another post line comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 10
+		{"#!/bin/bash\n# comment\n\n# pre-line comment\na #post-line comment\n# another post line comment\n\n# final\n# comment", func(t *test, tk Tokens) { // 12
 			t.Output = File{
 				Lines: []Line{
 					{
@@ -575,7 +587,7 @@ func TestFile(t *testing.T) {
 				Tokens:   tk[:15],
 			}
 		}},
-		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 11
+		{"<<a\n$(||)\na", func(t *test, tk Tokens) { // 13
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
