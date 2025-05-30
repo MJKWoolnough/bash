@@ -26,7 +26,9 @@ type File struct {
 }
 
 func (f *File) parse(b *bashParser) error {
-	f.Comments[0] = b.AcceptRunWhitespaceComments()
+	if b.Peek().Type == TokenComment {
+		f.Comments[0] = b.AcceptRunWhitespaceComments()
+	}
 
 	c := b.NewGoal()
 
