@@ -592,9 +592,10 @@ func (t *TestConsequence) parse(b *bashParser) error {
 }
 
 type CaseCompound struct {
-	Word    Word
-	Matches []PatternLines
-	Tokens  Tokens
+	Word     Word
+	Matches  []PatternLines
+	Comments [3]Comments
+	Tokens   Tokens
 }
 
 func (cc *CaseCompound) parse(b *bashParser) error {
@@ -608,18 +609,33 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
-	b.AcceptRunAllWhitespace()
+
+	cc.Comments[0] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
+
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"})
-	b.AcceptRunAllWhitespace()
+
+	cc.Comments[1] = b.AcceptRunWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
 
 	for {
-		b.AcceptRunAllWhitespace()
+		c := b.NewGoal()
 
-		if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"}) {
+		cc.Comments[2] = c.AcceptRunAllWhitespaceComments()
+
+		c.AcceptRunAllWhitespaceNoComments()
+
+		if c.AcceptToken(parser.Token{Type: TokenKeyword, Data: "esac"}) {
+			b.Score(c)
+
 			break
 		}
 
-		c := b.NewGoal()
+		b.AcceptRunAllWhitespaceNoComments()
+
+		c = b.NewGoal()
 
 		var pl PatternLines
 
