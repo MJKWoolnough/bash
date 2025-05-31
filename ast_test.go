@@ -6225,7 +6225,75 @@ func TestCaseCompound(t *testing.T) {
 				Tokens:   tk[:13],
 			}
 		}},
-		{"case a in b)c;; # comment\nesac", func(t *test, tk Tokens) { // 7
+		{"case a in\n# comment\nb)c;;esac", func(t *test, tk Tokens) { // 7
+			t.Output = CaseCompound{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Matches: []PatternLines{
+					{
+						Patterns: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[8],
+										Tokens: tk[8:9],
+									},
+								},
+								Tokens: tk[8:9],
+							},
+						},
+						Lines: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														AssignmentsOrWords: []AssignmentOrWord{
+															{
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[10],
+																			Tokens: tk[10:11],
+																		},
+																	},
+																	Tokens: tk[10:11],
+																},
+																Tokens: tk[10:11],
+															},
+														},
+														Tokens: tk[10:11],
+													},
+													Tokens: tk[10:11],
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+									},
+									Tokens: tk[10:11],
+								},
+							},
+							Tokens: tk[10:11],
+						},
+						CaseTerminationType: CaseTerminationEnd,
+						Comments:            Comments{tk[6]},
+						Tokens:              tk[6:12],
+					},
+				},
+				Tokens: tk[:13],
+			}
+		}},
+		{"case a in b)c;; # comment\nesac", func(t *test, tk Tokens) { // 8
 			t.Output = CaseCompound{
 				Word: Word{
 					Parts: []WordPart{
@@ -6293,7 +6361,7 @@ func TestCaseCompound(t *testing.T) {
 				Tokens:   tk[:14],
 			}
 		}},
-		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 8
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6336,7 +6404,7 @@ func TestCaseCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"case a in b)||;esac", func(t *test, tk Tokens) { // 9
+		{"case a in b)||;esac", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6823,7 +6891,61 @@ func TestPatternLines(t *testing.T) {
 				Tokens: tk[6:14],
 			}
 		}},
-		{"case a in $(||))d;;esac", func(t *test, tk Tokens) { // 9
+		{"case a in\n# comment\na)b;;esac", func(t *test, tk Tokens) { // 9
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[8],
+								Tokens: tk[8:9],
+							},
+						},
+						Tokens: tk[8:9],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[10],
+																	Tokens: tk[10:11],
+																},
+															},
+															Tokens: tk[10:11],
+														},
+														Tokens: tk[10:11],
+													},
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+										Tokens: tk[10:11],
+									},
+									Tokens: tk[10:11],
+								},
+							},
+							Tokens: tk[10:11],
+						},
+					},
+					Tokens: tk[10:11],
+				},
+				CaseTerminationType: CaseTerminationEnd,
+				Comments:            Comments{tk[6]},
+				Tokens:              tk[6:12],
+			}
+		}},
+		{"case a in $(||))d;;esac", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6866,14 +6988,14 @@ func TestPatternLines(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"case a in a|\nb)c;;esac", func(t *test, tk Tokens) { // 10
+		{"case a in a|\nb)c;;esac", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err:     ErrMissingClosingPattern,
 				Parsing: "PatternLines",
 				Token:   tk[8],
 			}
 		}},
-		{"case a in a)||;;esac", func(t *test, tk Tokens) { // 11
+		{"case a in a)||;;esac", func(t *test, tk Tokens) { // 12
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
