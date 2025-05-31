@@ -4950,7 +4950,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:21],
 			}
 		}},
-		{"if a; then b; else\n# comment\nc; fi", func(t *test, tk Tokens) { // 3
+		{"if a; then b; else\n# comment\nc; fi", func(t *test, tk Tokens) { // 5
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -5057,7 +5057,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
-		{"if a; then b; else # comment\nc; fi", func(t *test, tk Tokens) { // 3
+		{"if a; then b; else # comment\nc; fi", func(t *test, tk Tokens) { // 6
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -5164,7 +5164,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
-		{"if ||;then b;fi", func(t *test, tk Tokens) { // 5
+		{"if ||;then b;fi", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5191,7 +5191,7 @@ func TestIfCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"if a;then b;elif ||;then d;fi", func(t *test, tk Tokens) { // 6
+		{"if a;then b;elif ||;then d;fi", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5218,7 +5218,7 @@ func TestIfCompound(t *testing.T) {
 				Token:   tk[10],
 			}
 		}},
-		{"if a;then b;else ||;fi", func(t *test, tk Tokens) { // 7
+		{"if a;then b;else ||;fi", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5561,7 +5561,7 @@ func TestTestConsequence(t *testing.T) {
 				Tokens:   tk[2:10],
 			}
 		}},
-		{"if a; then # comment\nb;fi", func(t *test, tk Tokens) { // 1
+		{"if a; then # comment\nb;fi", func(t *test, tk Tokens) { // 5
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
@@ -5629,7 +5629,7 @@ func TestTestConsequence(t *testing.T) {
 				Tokens: tk[2:11],
 			}
 		}},
-		{"if a; then\n# comment\nb;fi", func(t *test, tk Tokens) { // 1
+		{"if a; then\n# comment\nb;fi", func(t *test, tk Tokens) { // 6
 			t.Output = TestConsequence{
 				Test: Statement{
 					Pipeline: Pipeline{
@@ -5697,7 +5697,7 @@ func TestTestConsequence(t *testing.T) {
 				Tokens: tk[2:11],
 			}
 		}},
-		{"if ||; then b;fi", func(t *test, tk Tokens) { // 5
+		{"if ||; then b;fi", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5720,7 +5720,7 @@ func TestTestConsequence(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"if a; then ||;fi", func(t *test, tk Tokens) { // 6
+		{"if a; then ||;fi", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6512,7 +6512,114 @@ func TestPatternLines(t *testing.T) {
 				Tokens:              tk[6:14],
 			}
 		}},
-		{"case a in $(||))d;;esac", func(t *test, tk Tokens) { // 7
+		{"case a in a)# comment\nb;;# comment2\nesac", func(t *test, tk Tokens) { // 7
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[10],
+																	Tokens: tk[10:11],
+																},
+															},
+															Tokens: tk[10:11],
+														},
+														Tokens: tk[10:11],
+													},
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+										Tokens: tk[10:11],
+									},
+									Tokens: tk[10:11],
+								},
+							},
+							Tokens: tk[10:11],
+						},
+					},
+					Comments: [2]Comments{{tk[8]}},
+					Tokens:   tk[8:11],
+				},
+				CaseTerminationType: CaseTerminationEnd,
+				Tokens:              tk[6:12],
+			}
+		}},
+		{"case a in a)# comment\nb;\n# comment2\nesac", func(t *test, tk Tokens) { // 8
+			t.Output = PatternLines{
+				Patterns: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				Lines: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[10],
+																	Tokens: tk[10:11],
+																},
+															},
+															Tokens: tk[10:11],
+														},
+														Tokens: tk[10:11],
+													},
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+										Tokens: tk[10:11],
+									},
+									Tokens: tk[10:12],
+								},
+							},
+							Tokens: tk[10:12],
+						},
+					},
+					Comments: [2]Comments{{tk[8]}, {tk[13]}},
+					Tokens:   tk[8:14],
+				},
+				Tokens: tk[6:14],
+			}
+		}},
+		{"case a in $(||))d;;esac", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6555,14 +6662,14 @@ func TestPatternLines(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"case a in a|\nb)c;;esac", func(t *test, tk Tokens) { // 8
+		{"case a in a|\nb)c;;esac", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err:     ErrMissingClosingPattern,
 				Parsing: "PatternLines",
 				Token:   tk[8],
 			}
 		}},
-		{"case a in a)||;;esac", func(t *test, tk Tokens) { // 9
+		{"case a in a)||;;esac", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
