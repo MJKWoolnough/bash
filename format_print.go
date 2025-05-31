@@ -53,11 +53,25 @@ func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
 func (c CaseCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "case ")
 	c.Word.printSource(w, v)
-	io.WriteString(w, " in ")
+
+	if len(c.Comments[0]) > 0 {
+		io.WriteString(w, " ")
+		c.Comments[0].printSource(w, false)
+		io.WriteString(w, "\nin ")
+	} else {
+		io.WriteString(w, " in ")
+	}
+
+	c.Comments[1].printSource(w, true)
 
 	for _, m := range c.Matches {
 		io.WriteString(w, "\n")
 		m.printSource(w, v)
+	}
+
+	if len(c.Comments[2]) > 0 {
+		io.WriteString(w, "\n")
+		c.Comments[2].printSource(w, false)
 	}
 
 	io.WriteString(w, "\nesac")
