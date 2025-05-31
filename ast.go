@@ -677,9 +677,7 @@ func (pl *PatternLines) parse(b *bashParser) error {
 		return b.Error("PatternLines", ErrMissingClosingPattern)
 	}
 
-	b.AcceptRunAllWhitespace()
-
-	c := b.NewGoal()
+	c := b.NewFileGoal()
 
 	if err := pl.Lines.parse(c); err != nil {
 		return b.Error("PatternLines", err)
