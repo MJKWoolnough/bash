@@ -666,10 +666,15 @@ type PatternLines struct {
 	Patterns []Word
 	Lines    File
 	CaseTerminationType
-	Tokens Tokens
+	Comments Comments
+	Tokens   Tokens
 }
 
 func (pl *PatternLines) parse(b *bashParser) error {
+	pl.Comments = b.AcceptRunWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
+
 	for {
 		c := b.NewGoal()
 
