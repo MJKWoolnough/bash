@@ -6089,7 +6089,211 @@ func TestCaseCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
-		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 5
+		{"case a # comment\nin b)c;;esac", func(t *test, tk Tokens) { // 5
+			t.Output = CaseCompound{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Matches: []PatternLines{
+					{
+						Patterns: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[8],
+										Tokens: tk[8:9],
+									},
+								},
+								Tokens: tk[8:9],
+							},
+						},
+						Lines: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														AssignmentsOrWords: []AssignmentOrWord{
+															{
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[10],
+																			Tokens: tk[10:11],
+																		},
+																	},
+																	Tokens: tk[10:11],
+																},
+																Tokens: tk[10:11],
+															},
+														},
+														Tokens: tk[10:11],
+													},
+													Tokens: tk[10:11],
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+									},
+									Tokens: tk[10:11],
+								},
+							},
+							Tokens: tk[10:11],
+						},
+						CaseTerminationType: CaseTerminationEnd,
+						Tokens:              tk[8:12],
+					},
+				},
+				Comments: [3]Comments{{tk[4]}},
+				Tokens:   tk[:13],
+			}
+		}},
+		{"case a in # comment\nb)c;;esac", func(t *test, tk Tokens) { // 6
+			t.Output = CaseCompound{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Matches: []PatternLines{
+					{
+						Patterns: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[8],
+										Tokens: tk[8:9],
+									},
+								},
+								Tokens: tk[8:9],
+							},
+						},
+						Lines: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														AssignmentsOrWords: []AssignmentOrWord{
+															{
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[10],
+																			Tokens: tk[10:11],
+																		},
+																	},
+																	Tokens: tk[10:11],
+																},
+																Tokens: tk[10:11],
+															},
+														},
+														Tokens: tk[10:11],
+													},
+													Tokens: tk[10:11],
+												},
+												Tokens: tk[10:11],
+											},
+											Tokens: tk[10:11],
+										},
+									},
+									Tokens: tk[10:11],
+								},
+							},
+							Tokens: tk[10:11],
+						},
+						CaseTerminationType: CaseTerminationEnd,
+						Tokens:              tk[8:12],
+					},
+				},
+				Comments: [3]Comments{nil, {tk[6]}},
+				Tokens:   tk[:13],
+			}
+		}},
+		{"case a in b)c;; # comment\nesac", func(t *test, tk Tokens) { // 7
+			t.Output = CaseCompound{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Matches: []PatternLines{
+					{
+						Patterns: []Word{
+							{
+								Parts: []WordPart{
+									{
+										Part:   &tk[6],
+										Tokens: tk[6:7],
+									},
+								},
+								Tokens: tk[6:7],
+							},
+						},
+						Lines: File{
+							Lines: []Line{
+								{
+									Statements: []Statement{
+										{
+											Pipeline: Pipeline{
+												CommandOrCompound: CommandOrCompound{
+													Command: &Command{
+														AssignmentsOrWords: []AssignmentOrWord{
+															{
+																Word: &Word{
+																	Parts: []WordPart{
+																		{
+																			Part:   &tk[8],
+																			Tokens: tk[8:9],
+																		},
+																	},
+																	Tokens: tk[8:9],
+																},
+																Tokens: tk[8:9],
+															},
+														},
+														Tokens: tk[8:9],
+													},
+													Tokens: tk[8:9],
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+						CaseTerminationType: CaseTerminationEnd,
+						Tokens:              tk[6:10],
+					},
+				},
+				Comments: [3]Comments{nil, nil, {tk[11]}},
+				Tokens:   tk[:14],
+			}
+		}},
+		{"case $(||) in b)c;esac", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6132,7 +6336,7 @@ func TestCaseCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"case a in b)||;esac", func(t *test, tk Tokens) { // 6
+		{"case a in b)||;esac", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
