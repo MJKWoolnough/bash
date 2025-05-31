@@ -478,6 +478,8 @@ func (p PatternLines) printSource(w io.Writer, v bool) {
 		return
 	}
 
+	p.Comments.printSource(w, true)
+
 	p.Patterns[0].printSource(w, v)
 
 	for _, pattern := range p.Patterns[1:] {
