@@ -7173,7 +7173,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"while a # comment\ndo b; done", func(t *test, tk Tokens) { // 2
+		{"while a # comment\ndo b; done", func(t *test, tk Tokens) { // 3
 			t.Output = LoopCompound{
 				Statement: Statement{
 					Pipeline: Pipeline{
@@ -7241,7 +7241,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens:   tk[:12],
 			}
 		}},
-		{"until a; do # comment\nb; done", func(t *test, tk Tokens) { // 2
+		{"until a; do # comment\nb; done", func(t *test, tk Tokens) { // 4
 			t.Output = LoopCompound{
 				Until: true,
 				Statement: Statement{
@@ -7310,7 +7310,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:13],
 			}
 		}},
-		{"while ||; do b; done", func(t *test, tk Tokens) { // 3
+		{"while ||; do b; done", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -7333,7 +7333,7 @@ func TestLoopCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"until a; do ||; done", func(t *test, tk Tokens) { // 4
+		{"until a; do ||; done", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -7742,6 +7742,413 @@ func TestForCompound(t *testing.T) {
 					Tokens: tk[22:24],
 				},
 				Tokens: tk[:25],
+			}
+		}},
+		{"for a #comment\ndo b;done", func(t *test, tk Tokens) { // 1
+			t.Output = ForCompound{
+				Identifier: &tk[2],
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
+															},
+															Tokens: tk[8:9],
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+					},
+					Tokens: tk[8:10],
+				},
+				Comments: [2]Comments{{tk[4]}},
+				Tokens:   tk[:11],
+			}
+		}},
+		{"for a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 4
+			t.Output = ForCompound{
+				Identifier: &tk[2],
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[8],
+								Tokens: tk[8:9],
+							},
+						},
+						Tokens: tk[8:9],
+					},
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[14],
+																	Tokens: tk[14:15],
+																},
+															},
+															Tokens: tk[14:15],
+														},
+														Tokens: tk[14:15],
+													},
+												},
+												Tokens: tk[14:15],
+											},
+											Tokens: tk[14:15],
+										},
+										Tokens: tk[14:15],
+									},
+									Tokens: tk[14:16],
+								},
+							},
+							Tokens: tk[14:16],
+						},
+					},
+					Tokens: tk[14:16],
+				},
+				Comments: [2]Comments{{tk[4]}, {tk[10]}},
+				Tokens:   tk[:17],
+			}
+		}},
+		{"for a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 4
+			t.Output = ForCompound{
+				Identifier: &tk[2],
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[12],
+																	Tokens: tk[12:13],
+																},
+															},
+															Tokens: tk[12:13],
+														},
+														Tokens: tk[12:13],
+													},
+												},
+												Tokens: tk[12:13],
+											},
+											Tokens: tk[12:13],
+										},
+										Tokens: tk[12:13],
+									},
+									Tokens: tk[12:14],
+								},
+							},
+							Tokens: tk[12:14],
+						},
+					},
+					Tokens: tk[12:14],
+				},
+				Comments: [2]Comments{nil, {tk[8]}},
+				Tokens:   tk[:15],
+			}
+		}},
+		{"for (( a=1; a<2; a++ )) #comment\ndo b;done", func(t *test, tk Tokens) { // 6
+			t.Output = ForCompound{
+				ArithmeticExpansion: &ArithmeticExpansion{
+					Expression: true,
+					WordsAndOperators: []WordOrOperator{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[4],
+										Tokens: tk[4:5],
+									},
+								},
+								Tokens: tk[4:5],
+							},
+							Tokens: tk[4:5],
+						},
+						{
+							Operator: &tk[5],
+							Tokens:   tk[5:6],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[6],
+										Tokens: tk[6:7],
+									},
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[6:7],
+						},
+						{
+							Operator: &tk[7],
+							Tokens:   tk[7:8],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[9],
+										Tokens: tk[9:10],
+									},
+								},
+								Tokens: tk[9:10],
+							},
+							Tokens: tk[9:10],
+						},
+						{
+							Operator: &tk[10],
+							Tokens:   tk[10:11],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[11],
+										Tokens: tk[11:12],
+									},
+								},
+								Tokens: tk[11:12],
+							},
+							Tokens: tk[11:12],
+						},
+						{
+							Operator: &tk[12],
+							Tokens:   tk[12:13],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[14],
+										Tokens: tk[14:15],
+									},
+								},
+								Tokens: tk[14:15],
+							},
+							Tokens: tk[14:15],
+						},
+						{
+							Operator: &tk[15],
+							Tokens:   tk[15:16],
+						},
+					},
+					Tokens: tk[2:18],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[23],
+																	Tokens: tk[23:24],
+																},
+															},
+															Tokens: tk[23:24],
+														},
+														Tokens: tk[23:24],
+													},
+												},
+												Tokens: tk[23:24],
+											},
+											Tokens: tk[23:24],
+										},
+										Tokens: tk[23:24],
+									},
+									Tokens: tk[23:25],
+								},
+							},
+							Tokens: tk[23:25],
+						},
+					},
+					Tokens: tk[23:25],
+				},
+				Comments: [2]Comments{nil, {tk[19]}},
+				Tokens:   tk[:26],
+			}
+		}},
+		{"for (( a=1; a<2; a++ )) ;#comment\ndo b;done", func(t *test, tk Tokens) { // 6
+			t.Output = ForCompound{
+				ArithmeticExpansion: &ArithmeticExpansion{
+					Expression: true,
+					WordsAndOperators: []WordOrOperator{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[4],
+										Tokens: tk[4:5],
+									},
+								},
+								Tokens: tk[4:5],
+							},
+							Tokens: tk[4:5],
+						},
+						{
+							Operator: &tk[5],
+							Tokens:   tk[5:6],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[6],
+										Tokens: tk[6:7],
+									},
+								},
+								Tokens: tk[6:7],
+							},
+							Tokens: tk[6:7],
+						},
+						{
+							Operator: &tk[7],
+							Tokens:   tk[7:8],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[9],
+										Tokens: tk[9:10],
+									},
+								},
+								Tokens: tk[9:10],
+							},
+							Tokens: tk[9:10],
+						},
+						{
+							Operator: &tk[10],
+							Tokens:   tk[10:11],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[11],
+										Tokens: tk[11:12],
+									},
+								},
+								Tokens: tk[11:12],
+							},
+							Tokens: tk[11:12],
+						},
+						{
+							Operator: &tk[12],
+							Tokens:   tk[12:13],
+						},
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[14],
+										Tokens: tk[14:15],
+									},
+								},
+								Tokens: tk[14:15],
+							},
+							Tokens: tk[14:15],
+						},
+						{
+							Operator: &tk[15],
+							Tokens:   tk[15:16],
+						},
+					},
+					Tokens: tk[2:18],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[24],
+																	Tokens: tk[24:25],
+																},
+															},
+															Tokens: tk[24:25],
+														},
+														Tokens: tk[24:25],
+													},
+												},
+												Tokens: tk[24:25],
+											},
+											Tokens: tk[24:25],
+										},
+										Tokens: tk[24:25],
+									},
+									Tokens: tk[24:26],
+								},
+							},
+							Tokens: tk[24:26],
+						},
+					},
+					Tokens: tk[24:26],
+				},
+				Comments: [2]Comments{nil, {tk[20]}},
+				Tokens:   tk[:27],
 			}
 		}},
 		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 7
