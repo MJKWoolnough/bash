@@ -7173,6 +7173,143 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
+		{"while a # comment\ndo b; done", func(t *test, tk Tokens) { // 2
+			t.Output = LoopCompound{
+				Statement: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								AssignmentsOrWords: []AssignmentOrWord{
+									{
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:3],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
+															},
+															Tokens: tk[8:9],
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+					},
+					Tokens: tk[8:10],
+				},
+				Comments: Comments{tk[4]},
+				Tokens:   tk[:12],
+			}
+		}},
+		{"until a; do # comment\nb; done", func(t *test, tk Tokens) { // 2
+			t.Output = LoopCompound{
+				Until: true,
+				Statement: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Command: &Command{
+								AssignmentsOrWords: []AssignmentOrWord{
+									{
+										Word: &Word{
+											Parts: []WordPart{
+												{
+													Part:   &tk[2],
+													Tokens: tk[2:3],
+												},
+											},
+											Tokens: tk[2:3],
+										},
+										Tokens: tk[2:3],
+									},
+								},
+								Tokens: tk[2:3],
+							},
+							Tokens: tk[2:3],
+						},
+						Tokens: tk[2:3],
+					},
+					Tokens: tk[2:4],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[9],
+																	Tokens: tk[9:10],
+																},
+															},
+															Tokens: tk[9:10],
+														},
+														Tokens: tk[9:10],
+													},
+												},
+												Tokens: tk[9:10],
+											},
+											Tokens: tk[9:10],
+										},
+										Tokens: tk[9:10],
+									},
+									Tokens: tk[9:11],
+								},
+							},
+							Tokens: tk[9:11],
+						},
+					},
+					Comments: [2]Comments{{tk[7]}},
+					Tokens:   tk[7:11],
+				},
+				Tokens: tk[:13],
+			}
+		}},
 		{"while ||; do b; done", func(t *test, tk Tokens) { // 3
 			t.Err = Error{
 				Err: Error{
