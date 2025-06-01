@@ -315,8 +315,9 @@ func (l LoopCompound) printSource(w io.Writer, v bool) {
 
 	ip := indentPrinter{Writer: w}
 
+	l.Comments.printSource(&ip, true)
 	io.WriteString(&ip, " do\n")
-	l.File.printSource(w, v)
+	l.File.printSource(&ip, v)
 	io.WriteString(w, "\ndone")
 }
 
