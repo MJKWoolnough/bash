@@ -779,6 +779,7 @@ type ForCompound struct {
 	Words               []Word
 	ArithmeticExpansion *ArithmeticExpansion
 	File                File
+	Comments            [2]Comments
 	Tokens              Tokens
 }
 
@@ -789,7 +790,9 @@ func (f *ForCompound) parse(b *bashParser) error {
 	if b.Accept(TokenIdentifier) {
 		f.Identifier = b.GetLastToken()
 
-		b.AcceptRunAllWhitespace()
+		f.Comments[0] = b.AcceptRunAllWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
 
 		if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"}) {
 			b.AcceptRunWhitespace()
@@ -797,7 +800,7 @@ func (f *ForCompound) parse(b *bashParser) error {
 			f.Words = []Word{}
 
 			for {
-				if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator {
+				if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator || tk.Type == TokenComment {
 					break
 				}
 
@@ -826,7 +829,14 @@ func (f *ForCompound) parse(b *bashParser) error {
 		b.Score(c)
 	}
 
-	b.AcceptRunAllWhitespace()
+	if f.Comments[1] = b.AcceptRunAllWhitespaceComments(); len(f.Comments[1]) == 0 {
+		b.AcceptRunWhitespace()
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"})
+
+		f.Comments[1] = b.AcceptRunAllWhitespaceComments()
+	}
+
+	b.AcceptRunAllWhitespaceNoComments()
 	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"})
 	b.AcceptRunAllWhitespace()
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
