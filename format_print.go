@@ -175,7 +175,7 @@ func (c Compound) printHeredoc(w io.Writer, v bool) {
 }
 
 func (f File) printSource(w io.Writer, v bool) {
-	f.Comments[0].printSource(w, v)
+	f.Comments[0].printSource(w, true)
 
 	if len(f.Lines) > 0 {
 		f.Lines[0].printSource(w, v)
@@ -186,7 +186,7 @@ func (f File) printSource(w io.Writer, v bool) {
 		}
 	}
 
-	f.Comments[1].printSource(w, v)
+	f.Comments[1].printSource(w, true)
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
@@ -251,6 +251,8 @@ func (g GroupingCompound) printSource(w io.Writer, v bool) {
 }
 
 func (h Heredoc) printSource(w io.Writer, v bool) {
+	io.WriteString(w, "\n")
+
 	for _, p := range h.HeredocPartsOrWords {
 		p.printSource(w, v)
 	}
@@ -286,7 +288,7 @@ func (i IfCompound) printSource(w io.Writer, v bool) {
 
 func (l Line) printSource(w io.Writer, v bool) {
 	if len(l.Statements) > 0 {
-		l.Comments[0].printSource(w, v)
+		l.Comments[0].printSource(w, true)
 		l.Statements[0].printSource(w, v)
 
 		for _, s := range l.Statements[1:] {
@@ -294,7 +296,7 @@ func (l Line) printSource(w io.Writer, v bool) {
 			s.printSource(w, v)
 		}
 
-		l.Comments[1].printSource(w, v)
+		l.Comments[1].printSource(w, false)
 
 		for _, s := range l.Statements {
 			s.printHeredoc(w, v)
@@ -652,10 +654,12 @@ func (t TestConsequence) printSource(w io.Writer, v bool) {
 
 	if len(t.Comments) > 0 {
 		io.WriteString(w, " ")
-		t.Comments.printSource(&ip, v)
+		t.Comments.printSource(&ip, true)
+		io.WriteString(&ip, "then\n")
+	} else {
+		io.WriteString(&ip, " then\n")
 	}
 
-	io.WriteString(&ip, " then\n")
 	t.Consequence.printSource(&ip, v)
 }
 
