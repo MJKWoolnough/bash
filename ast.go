@@ -733,6 +733,7 @@ type LoopCompound struct {
 	Until     bool
 	Statement Statement
 	File      File
+	Comments  Comments
 	Tokens    Tokens
 }
 
@@ -752,11 +753,13 @@ func (l *LoopCompound) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
-	b.AcceptRunAllWhitespace()
-	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
-	b.AcceptRunAllWhitespace()
 
-	c = b.NewGoal()
+	l.Comments = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
+
+	c = b.NewFileGoal()
 
 	if err := l.File.parse(c); err != nil {
 		return b.Error("LoopCompound", err)
