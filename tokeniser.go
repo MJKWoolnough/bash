@@ -1264,6 +1264,10 @@ func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.Token
 		t.AcceptRun(newline)
 
 		return t.Return(TokenLineTerminator, b.forInDo)
+	} else if t.Accept("#") {
+		t.ExceptRun("\n")
+
+		return t.Return(TokenComment, b.forInDo)
 	}
 
 	b.pushTokenDepth('L')
