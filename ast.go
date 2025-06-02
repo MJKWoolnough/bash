@@ -1000,14 +1000,20 @@ type Tests struct {
 	Parens          *Tests
 	LogicalOperator LogicalOperator
 	Tests           *Tests
+	Comments        [5]Comments
 	Tokens          Tokens
 }
 
 func (t *Tests) parse(b *bashParser) error {
+	t.Comments[0] = b.AcceptRunAllWhitespaceComments()
+	b.AcceptRunAllWhitespaceNoComments()
+
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "!"}) {
 		t.Not = true
 
-		b.AcceptRunAllWhitespace()
+		t.Comments[1] = b.AcceptRunAllWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
 	}
 
 	if tk := b.Peek(); tk.Type == TokenKeyword {
@@ -1063,7 +1069,7 @@ func (t *Tests) parse(b *bashParser) error {
 		}
 
 		b.Next()
-		b.AcceptRunAllWhitespace()
+		b.AcceptRunWhitespace()
 
 		c := b.NewGoal()
 		t.Word = new(Word)
@@ -1074,7 +1080,9 @@ func (t *Tests) parse(b *bashParser) error {
 
 		b.Score(c)
 	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
-		b.AcceptRunAllWhitespace()
+		t.Comments[2] = b.AcceptRunWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
 
 		c := b.NewGoal()
 		t.Parens = new(Tests)
@@ -1084,7 +1092,10 @@ func (t *Tests) parse(b *bashParser) error {
 		}
 
 		b.Score(c)
-		b.AcceptRunAllWhitespace()
+
+		t.Comments[3] = b.AcceptRunAllWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
 
 		if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 			return b.Error("Tests", ErrMissingClosingParen)
@@ -1100,7 +1111,7 @@ func (t *Tests) parse(b *bashParser) error {
 		b.Score(c)
 
 		c = b.NewGoal()
-		c.AcceptRunAllWhitespace()
+		c.AcceptRunWhitespace()
 
 		if tk := c.Peek(); tk.Type == TokenKeyword && tk.Data != "]]" {
 			b.Score(c)
@@ -1127,7 +1138,8 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Next()
-			b.AcceptRunAllWhitespace()
+
+			b.AcceptRunWhitespace()
 
 			c := b.NewGoal()
 			t.Pattern = new(Pattern)
@@ -1154,7 +1166,8 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Next()
-			b.AcceptRunAllWhitespace()
+
+			b.AcceptRunWhitespace()
 
 			c := b.NewGoal()
 			t.Pattern = new(Pattern)
@@ -1169,7 +1182,9 @@ func (t *Tests) parse(b *bashParser) error {
 
 	c := b.NewGoal()
 
-	c.AcceptRunAllWhitespace()
+	t.Comments[4] = c.AcceptRunAllWhitespaceComments()
+
+	c.AcceptRunAllWhitespaceNoComments()
 
 	if c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "||"}) {
 		t.LogicalOperator = LogicalOperatorOr
@@ -1189,6 +1204,8 @@ func (t *Tests) parse(b *bashParser) error {
 		}
 
 		b.Score(c)
+	} else {
+		t.Comments[4] = b.AcceptRunWhitespaceComments()
 	}
 
 	t.Tokens = b.ToTokens()
