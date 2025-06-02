@@ -9714,7 +9714,103 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 47
+		{"[[\n#comment\na = b ]]", func(t *test, tk Tokens) { // 47
+			t.Output = Tests{
+				Test: TestOperatorStringsEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[8],
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				Comments: [5]Comments{{tk[2]}},
+				Tokens:   tk[2:9],
+			}
+		}},
+		{"[[ a = b # comment\n ]]", func(t *test, tk Tokens) { // 48
+			t.Output = Tests{
+				Test: TestOperatorStringsEqual,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Comments: [5]Comments{nil, nil, nil, nil, {tk[8]}},
+				Tokens:   tk[2:9],
+			}
+		}},
+		{"[[ #comment A\n! #comment B\n-z a ]]", func(t *test, tk Tokens) { // 49
+			t.Output = Tests{
+				Not:  true,
+				Test: TestOperatorStringIsZero,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[10],
+							Tokens: tk[10:11],
+						},
+					},
+					Tokens: tk[10:11],
+				},
+				Comments: [5]Comments{{tk[2]}, {tk[6]}},
+				Tokens:   tk[2:11],
+			}
+		}},
+		{"[[ ( #comment A\n\n#comment B\na = b #comment C\n\n#comment D\n) ]]", func(t *test, tk Tokens) { // 50
+			t.Output = Tests{
+				Parens: &Tests{
+					Test: TestOperatorStringsEqual,
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[8],
+								Tokens: tk[8:9],
+							},
+						},
+						Tokens: tk[8:9],
+					},
+					Pattern: &Pattern{
+						Parts: []WordPart{
+							{
+								Part:   &tk[12],
+								Tokens: tk[12:13],
+							},
+						},
+						Tokens: tk[12:13],
+					},
+					Comments: [5]Comments{{tk[6]}, nil, nil, nil, {tk[14]}},
+					Tokens:   tk[6:15],
+				},
+				Comments: [5]Comments{nil, nil, {tk[4]}, {tk[16]}},
+				Tokens:   tk[2:19],
+			}
+		}},
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 51
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -9757,7 +9853,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[4],
 			}
 		}},
-		{"[[ $(||) = a ]]", func(t *test, tk Tokens) { // 48
+		{"[[ $(||) = a ]]", func(t *test, tk Tokens) { // 52
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -9800,7 +9896,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"[[ a = $(||) ]]", func(t *test, tk Tokens) { // 49
+		{"[[ a = $(||) ]]", func(t *test, tk Tokens) { // 53
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -9843,7 +9939,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"[[ a -eq $(||) ]]", func(t *test, tk Tokens) { // 50
+		{"[[ a -eq $(||) ]]", func(t *test, tk Tokens) { // 54
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -9886,7 +9982,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 51
+		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 55
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -9933,14 +10029,14 @@ func TestTests(t *testing.T) {
 				Token:   tk[4],
 			}
 		}},
-		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 52
+		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 56
 			t.Err = Error{
 				Err:     ErrMissingClosingParen,
 				Parsing: "Tests",
 				Token:   tk[6],
 			}
 		}},
-		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 53
+		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 57
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
