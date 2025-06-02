@@ -882,6 +882,16 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 
 	pp.Print("\nFile: ")
 	f.File.printType(&pp, v)
+	pp.Print("\nComments: [")
+
+	ipp := indentPrinter{&pp}
+
+	for n, e := range f.Comments {
+		ipp.Printf("\n%d: ", n)
+		e.printType(&ipp, v)
+	}
+
+	pp.Print("\n]")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
