@@ -202,6 +202,8 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 		io.WriteString(w, f.Identifier.Data)
 
 		if f.Words != nil {
+			io.WriteString(w, " ")
+			f.Comments[0].printSource(w, true)
 			io.WriteString(w, "in")
 
 			for _, wd := range f.Words {
@@ -213,7 +215,9 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 
 	ip := indentPrinter{Writer: w}
 
-	io.WriteString(&ip, "; do\n")
+	io.WriteString(&ip, "; ")
+	f.Comments[1].printSource(&ip, true)
+	io.WriteString(&ip, "do\n")
 	f.File.printSource(&ip, v)
 	io.WriteString(&ip, "\ndone")
 }
