@@ -861,6 +861,7 @@ type SelectCompound struct {
 	Identifier *Token
 	Words      []Word
 	File       File
+	Comments   [2]Comments
 	Tokens     Tokens
 }
 
@@ -871,7 +872,9 @@ func (s *SelectCompound) parse(b *bashParser) error {
 
 	s.Identifier = b.GetLastToken()
 
-	b.AcceptRunWhitespace()
+	s.Comments[0] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
 
 	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "in"}) {
 		b.AcceptRunWhitespace()
@@ -879,7 +882,7 @@ func (s *SelectCompound) parse(b *bashParser) error {
 		s.Words = []Word{}
 
 		for {
-			if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator {
+			if tk := b.Peek(); tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || tk.Type == TokenLineTerminator || tk.Type == TokenComment {
 				break
 			}
 
@@ -898,13 +901,15 @@ func (s *SelectCompound) parse(b *bashParser) error {
 		}
 	}
 
-	b.AcceptRunAllWhitespace()
+	b.AcceptRunWhitespace()
 	b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ";"})
-	b.AcceptRunAllWhitespace()
-	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
-	b.AcceptRunAllWhitespace()
 
-	c := b.NewGoal()
+	s.Comments[1] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
+	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "do"})
+
+	c := b.NewFileGoal()
 
 	if err := s.File.parse(c); err != nil {
 		return b.Error("SelectCompound", err)
