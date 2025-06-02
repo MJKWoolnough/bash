@@ -626,14 +626,21 @@ func (t TestCompound) printSource(w io.Writer, v bool) {
 }
 
 func (t Tests) printSource(w io.Writer, v bool) {
+	t.Comments[0].printSource(w, true)
+
 	if t.Not {
 		io.WriteString(w, "! ")
+
+		t.Comments[1].printSource(w, true)
 	}
 
 	if t.Parens != nil {
 		io.WriteString(w, "( ")
+		t.Comments[2].printSource(w, true)
 		t.Parens.printSource(w, v)
-		io.WriteString(w, " )")
+		io.WriteString(w, " ")
+		t.Comments[3].printSource(w, true)
+		io.WriteString(w, ")")
 	} else if t.Word != nil && t.Test == TestOperatorNone {
 		t.Word.printSource(w, v)
 	} else if t.Word != nil && t.Pattern != nil && t.Test >= TestOperatorStringsEqual {
@@ -641,18 +648,25 @@ func (t Tests) printSource(w io.Writer, v bool) {
 		io.WriteString(w, " ")
 		t.Test.printSource(w, v)
 		io.WriteString(w, " ")
+		t.Comments[2].printSource(w, true)
 		t.Pattern.printSource(w, v)
 	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorVarnameIsRef {
 		t.Test.printSource(w, v)
 		io.WriteString(w, " ")
+		t.Comments[2].printSource(w, true)
 		t.Word.printSource(w, v)
 	} else {
 		return
 	}
 
 	if t.Tests != nil && (t.LogicalOperator == LogicalOperatorOr || t.LogicalOperator == LogicalOperatorAnd) {
+		io.WriteString(w, " ")
+		t.Comments[4].printSource(w, true)
 		t.LogicalOperator.printSource(w, v)
 		t.Tests.printSource(w, v)
+	} else if len(t.Comments[4]) > 0 {
+		io.WriteString(w, " ")
+		t.Comments[4].printSource(w, true)
 	}
 }
 
