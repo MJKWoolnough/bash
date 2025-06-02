@@ -7744,7 +7744,7 @@ func TestForCompound(t *testing.T) {
 				Tokens: tk[:25],
 			}
 		}},
-		{"for a #comment\ndo b;done", func(t *test, tk Tokens) { // 1
+		{"for a #comment\ndo b;done", func(t *test, tk Tokens) { // 7
 			t.Output = ForCompound{
 				Identifier: &tk[2],
 				File: File{
@@ -7787,7 +7787,7 @@ func TestForCompound(t *testing.T) {
 				Tokens:   tk[:11],
 			}
 		}},
-		{"for a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 4
+		{"for a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 8
 			t.Output = ForCompound{
 				Identifier: &tk[2],
 				Words: []Word{
@@ -7841,7 +7841,7 @@ func TestForCompound(t *testing.T) {
 				Tokens:   tk[:17],
 			}
 		}},
-		{"for a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 4
+		{"for a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 9
 			t.Output = ForCompound{
 				Identifier: &tk[2],
 				Words: []Word{
@@ -7895,7 +7895,7 @@ func TestForCompound(t *testing.T) {
 				Tokens:   tk[:15],
 			}
 		}},
-		{"for (( a=1; a<2; a++ )) #comment\ndo b;done", func(t *test, tk Tokens) { // 6
+		{"for (( a=1; a<2; a++ )) #comment\ndo b;done", func(t *test, tk Tokens) { // 10
 			t.Output = ForCompound{
 				ArithmeticExpansion: &ArithmeticExpansion{
 					Expression: true,
@@ -8023,7 +8023,7 @@ func TestForCompound(t *testing.T) {
 				Tokens:   tk[:26],
 			}
 		}},
-		{"for (( a=1; a<2; a++ )) ;#comment\ndo b;done", func(t *test, tk Tokens) { // 6
+		{"for (( a=1; a<2; a++ )) ;#comment\ndo b;done", func(t *test, tk Tokens) { // 11
 			t.Output = ForCompound{
 				ArithmeticExpansion: &ArithmeticExpansion{
 					Expression: true,
@@ -8151,7 +8151,7 @@ func TestForCompound(t *testing.T) {
 				Tokens:   tk[:27],
 			}
 		}},
-		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 7
+		{"for a in $(||); do b;done", func(t *test, tk Tokens) { // 12
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8194,7 +8194,7 @@ func TestForCompound(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"for (( $(||) )); do b;done", func(t *test, tk Tokens) { // 8
+		{"for (( $(||) )); do b;done", func(t *test, tk Tokens) { // 13
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8245,7 +8245,7 @@ func TestForCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"for a; do ||;done", func(t *test, tk Tokens) { // 9
+		{"for a; do ||;done", func(t *test, tk Tokens) { // 14
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8529,7 +8529,7 @@ func TestSelectCompound(t *testing.T) {
 				Tokens: tk[:16],
 			}
 		}},
-		{"select a #comment\ndo b;done", func(t *test, tk Tokens) { // 1
+		{"select a #comment\ndo b;done", func(t *test, tk Tokens) { // 6
 			t.Output = SelectCompound{
 				Identifier: &tk[2],
 				File: File{
@@ -8572,7 +8572,7 @@ func TestSelectCompound(t *testing.T) {
 				Tokens:   tk[:11],
 			}
 		}},
-		{"select a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 4
+		{"select a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 7
 			t.Output = SelectCompound{
 				Identifier: &tk[2],
 				Words: []Word{
@@ -8626,7 +8626,7 @@ func TestSelectCompound(t *testing.T) {
 				Tokens:   tk[:17],
 			}
 		}},
-		{"select a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 4
+		{"select a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 8
 			t.Output = SelectCompound{
 				Identifier: &tk[2],
 				Words: []Word{
@@ -8680,7 +8680,7 @@ func TestSelectCompound(t *testing.T) {
 				Tokens:   tk[:15],
 			}
 		}},
-		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 6
+		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -8723,7 +8723,7 @@ func TestSelectCompound(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"select a; do ||;done", func(t *test, tk Tokens) { // 7
+		{"select a; do ||;done", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
