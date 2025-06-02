@@ -567,6 +567,8 @@ func (s SelectCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, s.Identifier.Data)
 
 	if s.Words != nil {
+		io.WriteString(w, " ")
+		s.Comments[0].printSource(w, true)
 		io.WriteString(w, "in")
 
 		for _, wd := range s.Words {
@@ -577,7 +579,9 @@ func (s SelectCompound) printSource(w io.Writer, v bool) {
 
 	ip := indentPrinter{Writer: w}
 
-	io.WriteString(&ip, "; do\n")
+	io.WriteString(&ip, "; ")
+	s.Comments[1].printSource(w, true)
+	io.WriteString(&ip, "do\n")
 	s.File.printSource(&ip, v)
 	io.WriteString(&ip, "\ndone")
 }
