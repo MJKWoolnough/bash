@@ -8529,6 +8529,157 @@ func TestSelectCompound(t *testing.T) {
 				Tokens: tk[:16],
 			}
 		}},
+		{"select a #comment\ndo b;done", func(t *test, tk Tokens) { // 1
+			t.Output = SelectCompound{
+				Identifier: &tk[2],
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
+															},
+															Tokens: tk[8:9],
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:10],
+								},
+							},
+							Tokens: tk[8:10],
+						},
+					},
+					Tokens: tk[8:10],
+				},
+				Comments: [2]Comments{{tk[4]}},
+				Tokens:   tk[:11],
+			}
+		}},
+		{"select a # comment\nin b #comment 2\ndo c;done", func(t *test, tk Tokens) { // 4
+			t.Output = SelectCompound{
+				Identifier: &tk[2],
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[8],
+								Tokens: tk[8:9],
+							},
+						},
+						Tokens: tk[8:9],
+					},
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[14],
+																	Tokens: tk[14:15],
+																},
+															},
+															Tokens: tk[14:15],
+														},
+														Tokens: tk[14:15],
+													},
+												},
+												Tokens: tk[14:15],
+											},
+											Tokens: tk[14:15],
+										},
+										Tokens: tk[14:15],
+									},
+									Tokens: tk[14:16],
+								},
+							},
+							Tokens: tk[14:16],
+						},
+					},
+					Tokens: tk[14:16],
+				},
+				Comments: [2]Comments{{tk[4]}, {tk[10]}},
+				Tokens:   tk[:17],
+			}
+		}},
+		{"select a in b #comment\ndo c;done", func(t *test, tk Tokens) { // 4
+			t.Output = SelectCompound{
+				Identifier: &tk[2],
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[12],
+																	Tokens: tk[12:13],
+																},
+															},
+															Tokens: tk[12:13],
+														},
+														Tokens: tk[12:13],
+													},
+												},
+												Tokens: tk[12:13],
+											},
+											Tokens: tk[12:13],
+										},
+										Tokens: tk[12:13],
+									},
+									Tokens: tk[12:14],
+								},
+							},
+							Tokens: tk[12:14],
+						},
+					},
+					Tokens: tk[12:14],
+				},
+				Comments: [2]Comments{nil, {tk[8]}},
+				Tokens:   tk[:15],
+			}
+		}},
 		{"select a in $(||); do b;done", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
