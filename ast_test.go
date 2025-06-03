@@ -8792,7 +8792,65 @@ func TestTestCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
-		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 2
+		{"[[ #comment A\n\n#comment B\na = b ]]", func(t *test, tk Tokens) { // 2
+			t.Output = TestCompound{
+				Tests: Tests{
+					Test: TestOperatorStringsEqual,
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					Pattern: &Pattern{
+						Parts: []WordPart{
+							{
+								Part:   &tk[10],
+								Tokens: tk[10:11],
+							},
+						},
+						Tokens: tk[10:11],
+					},
+					Comments: [5]Comments{{tk[4]}},
+					Tokens:   tk[4:11],
+				},
+				Comments: [2]Comments{{tk[2]}},
+				Tokens:   tk[:13],
+			}
+		}},
+		{"[[ a = b # comment A\n\n#comment B\n]]", func(t *test, tk Tokens) { // 3
+			t.Output = TestCompound{
+				Tests: Tests{
+					Test: TestOperatorStringsEqual,
+					Word: &Word{
+						Parts: []WordPart{
+							{
+								Part:   &tk[2],
+								Tokens: tk[2:3],
+							},
+						},
+						Tokens: tk[2:3],
+					},
+					Pattern: &Pattern{
+						Parts: []WordPart{
+							{
+								Part:   &tk[6],
+								Tokens: tk[6:7],
+							},
+						},
+						Tokens: tk[6:7],
+					},
+					Comments: [5]Comments{nil, nil, nil, nil, {tk[8]}},
+					Tokens:   tk[2:9],
+				},
+				Comments: [2]Comments{nil, {tk[10]}},
+				Tokens:   tk[:13],
+			}
+		}},
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 4
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
