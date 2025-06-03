@@ -190,7 +190,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return t.Return(TokenLineTerminator, b.main)
 	} else if t.Accept("#") {
-		if td == '}' || td == '~' {
+		if td == '~' {
 			return b.word(t)
 		}
 
