@@ -621,8 +621,11 @@ func (s String) printSource(w io.Writer, v bool) {
 
 func (t TestCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "[[ ")
+	t.Comments[0].printSource(w, true)
 	t.Tests.printSource(w, v)
-	io.WriteString(w, " ]]")
+	io.WriteString(w, " ")
+	t.Comments[1].printSource(w, true)
+	io.WriteString(w, "]]")
 }
 
 func (t Tests) printSource(w io.Writer, v bool) {
