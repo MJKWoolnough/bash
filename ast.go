@@ -1272,9 +1272,7 @@ func (g *GroupingCompound) parse(b *bashParser) error {
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "{"})
 	}
 
-	b.AcceptRunAllWhitespace()
-
-	c := b.NewGoal()
+	c := b.NewFileGoal()
 
 	if err := g.File.parse(c); err != nil {
 		return b.Error("GroupingCompound", err)
