@@ -925,13 +925,17 @@ func (s *SelectCompound) parse(b *bashParser) error {
 }
 
 type TestCompound struct {
-	Tests  Tests
-	Tokens Tokens
+	Tests    Tests
+	Comments [2]Comments
+	Tokens   Tokens
 }
 
 func (t *TestCompound) parse(b *bashParser) error {
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "[["})
-	b.AcceptRunAllWhitespace()
+
+	t.Comments[0] = b.AcceptRunWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
 
 	c := b.NewGoal()
 
@@ -940,7 +944,10 @@ func (t *TestCompound) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
-	b.AcceptRunAllWhitespace()
+
+	t.Comments[1] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "]]"})
 
 	t.Tokens = b.ToTokens()
