@@ -36,6 +36,20 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
+func (f *ArrayWord) printType(w io.Writer, v bool) {
+	pp := indentPrinter{w}
+
+	pp.Print("ArrayWord {")
+
+	pp.Print("\nWord: ")
+	f.Word.printType(&pp, v)
+
+	pp.Print("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	io.WriteString(w, "\n}")
+}
+
 func (f *Assignment) printType(w io.Writer, v bool) {
 	pp := indentPrinter{w}
 
