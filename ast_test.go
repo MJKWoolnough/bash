@@ -12221,19 +12221,22 @@ func TestValue(t *testing.T) {
 		}},
 		{"a=()", func(t *test, tk Tokens) { // 2
 			t.Output = Value{
-				Array:  []Word{},
+				Array:  []ArrayWord{},
 				Tokens: tk[2:4],
 			}
 		}},
 		{"a=(b)", func(t *test, tk Tokens) { // 3
 			t.Output = Value{
-				Array: []Word{
+				Array: []ArrayWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[3],
-								Tokens: tk[3:4],
+						Word: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
 							},
+							Tokens: tk[3:4],
 						},
 						Tokens: tk[3:4],
 					},
@@ -12243,13 +12246,16 @@ func TestValue(t *testing.T) {
 		}},
 		{"a=( b )", func(t *test, tk Tokens) { // 4
 			t.Output = Value{
-				Array: []Word{
+				Array: []ArrayWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[4],
-								Tokens: tk[4:5],
+						Word: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
 							},
+							Tokens: tk[4:5],
 						},
 						Tokens: tk[4:5],
 					},
@@ -12259,22 +12265,28 @@ func TestValue(t *testing.T) {
 		}},
 		{"a=( b c )", func(t *test, tk Tokens) { // 5
 			t.Output = Value{
-				Array: []Word{
+				Array: []ArrayWord{
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[4],
-								Tokens: tk[4:5],
+						Word: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
 							},
+							Tokens: tk[4:5],
 						},
 						Tokens: tk[4:5],
 					},
 					{
-						Parts: []WordPart{
-							{
-								Part:   &tk[6],
-								Tokens: tk[6:7],
+						Word: Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[6],
+									Tokens: tk[6:7],
+								},
 							},
+							Tokens: tk[6:7],
 						},
 						Tokens: tk[6:7],
 					},
@@ -12336,32 +12348,36 @@ func TestValue(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[4],
+													},
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrCompound",
+												Parsing: "Pipeline",
 												Token:   tk[4],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[4],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[4],
 									},
-									Parsing: "Line",
+									Parsing: "File",
 									Token:   tk[4],
 								},
-								Parsing: "File",
+								Parsing: "CommandSubstitution",
 								Token:   tk[4],
 							},
-							Parsing: "CommandSubstitution",
-							Token:   tk[4],
+							Parsing: "WordPart",
+							Token:   tk[3],
 						},
-						Parsing: "WordPart",
+						Parsing: "Word",
 						Token:   tk[3],
 					},
-					Parsing: "Word",
+					Parsing: "ArrayWord",
 					Token:   tk[3],
 				},
 				Parsing: "Value",

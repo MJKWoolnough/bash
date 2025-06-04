@@ -32,6 +32,8 @@ func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "))")
 }
 
+func (a ArrayWord) printSource(w io.Writer, v bool) {}
+
 func (a Assignment) printSource(w io.Writer, v bool) {
 	if a.Assignment != AssignmentAssign && a.Assignment != AssignmentAppend {
 		return
