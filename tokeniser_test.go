@@ -3474,6 +3474,14 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 230
+			"(( #comment\n))",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "(("},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid character"},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
