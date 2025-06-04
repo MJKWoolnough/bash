@@ -192,6 +192,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if t.Accept("#") {
 		if td == '~' {
 			return b.word(t)
+		} else if td == '>' || td == '/' || td == ':' || td == 'f' {
+			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		t.ExceptRun(newline)
