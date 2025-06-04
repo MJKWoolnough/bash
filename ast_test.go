@@ -12294,7 +12294,7 @@ func TestValue(t *testing.T) {
 				Tokens: tk[2:9],
 			}
 		}},
-		{"a=$(||)", func(t *test, tk Tokens) { // 6
+		{"a=$(||)", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -12337,7 +12337,7 @@ func TestValue(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"a=($(||))", func(t *test, tk Tokens) { // 7
+		{"a=($(||))", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -12391,6 +12391,74 @@ func TestValue(t *testing.T) {
 		err := v.parse(t.Parser)
 
 		return v, err
+	})
+}
+
+func TestArrayWord(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"a", func(t *test, tk Tokens) { // 1
+			t.Output = ArrayWord{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{"$(||)", func(t *test, tk Tokens) { // 2
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[1],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[1],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[1],
+										},
+										Parsing: "Statement",
+										Token:   tk[1],
+									},
+									Parsing: "Line",
+									Token:   tk[1],
+								},
+								Parsing: "File",
+								Token:   tk[1],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[1],
+						},
+						Parsing: "WordPart",
+						Token:   tk[0],
+					},
+					Parsing: "Word",
+					Token:   tk[0],
+				},
+				Parsing: "ArrayWord",
+				Token:   tk[0],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var a ArrayWord
+
+		err := a.parse(t.Parser)
+
+		return a, err
 	})
 }
 
