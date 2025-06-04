@@ -233,6 +233,7 @@ func (f FunctionCompound) printSource(w io.Writer, v bool) {
 
 	io.WriteString(w, f.Identifier.Data)
 	io.WriteString(w, "() ")
+	f.Comments.printSource(w, true)
 	f.Body.printSource(w, v)
 }
 
