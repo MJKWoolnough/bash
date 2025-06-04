@@ -1291,6 +1291,7 @@ type FunctionCompound struct {
 	HasKeyword bool
 	Identifier *Token
 	Body       Compound
+	Comments   Comments
 	Tokens     Tokens
 }
 
@@ -1312,6 +1313,10 @@ func (f *FunctionCompound) parse(b *bashParser) error {
 		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"})
 		b.AcceptRunWhitespace()
 	}
+
+	f.Comments = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
 
 	c := b.NewGoal()
 
