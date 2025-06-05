@@ -12294,7 +12294,7 @@ func TestValue(t *testing.T) {
 				Tokens: tk[2:9],
 			}
 		}},
-		{"a=$(||)", func(t *test, tk Tokens) { // 8
+		{"a=$(||)", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -12337,7 +12337,7 @@ func TestValue(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"a=($(||))", func(t *test, tk Tokens) { // 9
+		{"a=($(||))", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -12410,7 +12410,52 @@ func TestArrayWord(t *testing.T) {
 				Tokens: tk[:1],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 2
+		{"# comment\na", func(t *test, tk Tokens) { // 2
+			t.Output = ArrayWord{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Comments: [2]Comments{{tk[0]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"a # comment", func(t *test, tk Tokens) { // 3
+			t.Output = ArrayWord{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Comments: [2]Comments{nil, {tk[2]}},
+				Tokens:   tk[:3],
+			}
+		}},
+		{"# comment A\na # comment B", func(t *test, tk Tokens) { // 4
+			t.Output = ArrayWord{
+				Word: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Comments: [2]Comments{{tk[0]}, {tk[4]}},
+				Tokens:   tk[:5],
+			}
+		}},
+		{"$(||)", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
