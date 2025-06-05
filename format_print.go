@@ -33,7 +33,17 @@ func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 }
 
 func (a ArrayWord) printSource(w io.Writer, v bool) {
+	if len(a.Comments[0]) > 0 {
+		io.WriteString(w, " ")
+		a.Comments[0].printSource(w, v)
+	}
+
 	a.Word.printSource(w, v)
+
+	if len(a.Comments[1]) > 0 {
+		io.WriteString(w, " ")
+		a.Comments[1].printSource(w, v)
+	}
 }
 
 func (a Assignment) printSource(w io.Writer, v bool) {
