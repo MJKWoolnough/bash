@@ -1112,6 +1112,16 @@ func (f *Value) printType(w io.Writer, v bool) {
 	} else if v {
 		pp.Print("\nArray: []")
 	}
+	pp.Print("\nComments: [")
+
+	ipp := indentPrinter{&pp}
+
+	for n, e := range f.Comments {
+		ipp.Printf("\n%d: ", n)
+		e.printType(&ipp, v)
+	}
+
+	pp.Print("\n]")
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)
