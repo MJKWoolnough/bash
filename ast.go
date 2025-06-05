@@ -1546,19 +1546,26 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 }
 
 type Value struct {
-	Word   *Word
-	Array  []ArrayWord
-	Tokens Tokens
+	Word     *Word
+	Array    []ArrayWord
+	Comments [2]Comments
+	Tokens   Tokens
 }
 
 func (v *Value) parse(b *bashParser) error {
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
-		b.AcceptRunAllWhitespace()
+		v.Comments[0] = b.AcceptRunWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
 
 		v.Array = []ArrayWord{}
 
-		for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
-			c := b.NewGoal()
+		c := b.NewGoal()
+
+		for !c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
+			b.AcceptRunAllWhitespaceNoComments()
+
+			c = b.NewGoal()
 
 			var a ArrayWord
 
@@ -1569,8 +1576,16 @@ func (v *Value) parse(b *bashParser) error {
 			v.Array = append(v.Array, a)
 
 			b.Score(c)
-			b.AcceptRunAllWhitespace()
+
+			c = b.NewGoal()
+
+			c.AcceptRunAllWhitespace()
 		}
+
+		v.Comments[1] = b.AcceptRunAllWhitespaceComments()
+
+		b.AcceptRunAllWhitespaceNoComments()
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"})
 	} else {
 		c := b.NewGoal()
 		v.Word = new(Word)
