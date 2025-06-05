@@ -708,28 +708,28 @@ func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
 		ve.printSource(w, v)
 	} else if ve.Array != nil {
-		if len(ve.Array) == 0 {
-			io.WriteString(w, "()")
+		if v || len(ve.Comments[0]) > 0 {
+			io.WriteString(w, "( ")
+			ve.Comments[0].printSource(w, true)
 		} else {
+			io.WriteString(w, "(")
+		}
 
-			if v {
-				io.WriteString(w, "( ")
-			} else {
-				io.WriteString(w, "(")
-			}
-
+		if len(ve.Array) > 0 {
 			ve.Array[0].printSource(w, v)
 
 			for _, word := range ve.Array[1:] {
 				io.WriteString(w, " ")
 				word.printSource(w, v)
 			}
+		}
 
-			if v {
-				io.WriteString(w, " )")
-			} else {
-				io.WriteString(w, ")")
-			}
+		ve.Comments[1].printSource(w, true)
+
+		if v && len(ve.Comments) == 0 {
+			io.WriteString(w, " )")
+		} else {
+			io.WriteString(w, ")")
 		}
 	}
 }
