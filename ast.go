@@ -1588,11 +1588,16 @@ func (v *Value) parse(b *bashParser) error {
 }
 
 type ArrayWord struct {
-	Word   Word
-	Tokens Tokens
+	Word     Word
+	Comments [2]Comments
+	Tokens   Tokens
 }
 
 func (a *ArrayWord) parse(b *bashParser) error {
+	a.Comments[0] = b.AcceptRunAllWhitespaceComments()
+
+	b.AcceptRunAllWhitespaceNoComments()
+
 	c := b.NewGoal()
 
 	if err := a.Word.parse(c, false); err != nil {
@@ -1600,6 +1605,8 @@ func (a *ArrayWord) parse(b *bashParser) error {
 	}
 
 	b.Score(c)
+
+	a.Comments[1] = b.AcceptRunWhitespaceComments()
 
 	a.Tokens = b.ToTokens()
 
