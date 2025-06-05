@@ -12,6 +12,8 @@ type Type interface {
 
 func (ArithmeticExpansion) bashType() {}
 
+func (ArrayWord) bashType() {}
+
 func (Assignment) bashType() {}
 
 func (AssignmentOrWord) bashType() {}

@@ -17,6 +17,18 @@ func (f ArithmeticExpansion) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface
+func (f ArrayWord) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = ArrayWord
+		type ArrayWord X
+
+		fmt.Fprintf(s, "%#v", (f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface
 func (f Assignment) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Assignment
