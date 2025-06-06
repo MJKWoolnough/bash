@@ -3482,6 +3482,24 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
+		{ // 234
+			"a[",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "["},
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 235
+			"a b[",
+			[]parser.Token{
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifierAssign, Data: "b"},
+				{Type: TokenPunctuator, Data: "["},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
