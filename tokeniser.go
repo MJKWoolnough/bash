@@ -124,7 +124,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastTokenDepth() {
-	case ']', '[', 'X', 'h', '"', '>', '~', 'C', 'f', 't', 'T':
+	case ']', '[', 'X', 'h', '"', '>', '~', 'C', 'f', 't', 'T', 'v':
 	default:
 		b.pushTokenDepth('X')
 	}
@@ -132,6 +132,12 @@ func (b *bashTokeniser) setInCommand() {
 
 func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	td := b.lastTokenDepth()
+
+	if td == 'v' && (isWhitespace(t) || t.Peek() == ';') {
+		b.popTokenDepth()
+
+		td = b.lastTokenDepth()
+	}
 
 	if isWhitespace(t) && td == 'C' {
 		return b.caseIn(t)
@@ -430,6 +436,8 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if b.lastTokenDepth() == ']' {
 			b.popTokenDepth()
+
+			return t.Return(TokenPunctuator, b.startAssign)
 		}
 	case ')':
 		b.endCommand()
@@ -1013,7 +1021,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			if state := t.State(); t.AcceptWord(assignment, false) != "" {
 				state.Reset()
 
-				return t.Return(TokenIdentifierAssign, b.main)
+				return t.Return(TokenIdentifierAssign, b.startAssign)
 			} else if t.Peek() == '[' {
 				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
 			} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
@@ -1739,6 +1747,41 @@ func (b *bashTokeniser) startArrayAssign(t *parser.Tokeniser) (parser.Token, par
 	b.pushTokenDepth(']')
 
 	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	state := t.State()
+
+	t.Accept("+")
+
+	if !t.Accept("=") {
+		state.Reset()
+
+		return b.main(t)
+	}
+
+	return t.Return(TokenPunctuator, b.value)
+}
+
+func (b *bashTokeniser) value(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	switch t.Peek() {
+	case '(':
+		t.Next()
+
+		if t.Accept("(") {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		b.pushTokenDepth(')')
+
+		return t.Return(TokenPunctuator, b.main)
+	case '$':
+		return b.identifier(t)
+	}
+
+	b.pushTokenDepth('v')
+
+	return b.main(t)
 }
 
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
