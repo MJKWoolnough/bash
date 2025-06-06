@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"unsafe"
 )
 
 var indent = []byte{'\t'}
@@ -57,7 +58,7 @@ func (i *indentPrinter) Printf(format string, args ...interface{}) {
 }
 
 func (i *indentPrinter) WriteString(s string) (int, error) {
-	return i.Write([]byte(s))
+	return i.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
 func unwrapIndentPrinter(w io.Writer) io.Writer {
