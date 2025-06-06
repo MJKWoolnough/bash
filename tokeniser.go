@@ -411,9 +411,11 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		if t.Accept("(") {
 			b.setInCommand()
 			b.pushTokenDepth('>')
-		} else {
+		} else if !b.isInCommand() {
 			b.setInCommand()
 			b.pushTokenDepth(')')
+		} else {
+			return t.ReturnError(ErrInvalidCharacter)
 		}
 	case '{':
 		t.Next()

@@ -198,7 +198,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 12
-			"< <<< <& <> > >> >& &>> >| | |& || & && () {} + = += `` $() $(()) (())",
+			"< <<< <& <> > >> >& &>> >| | |& || & && {} + = += `` $() $(()) (())",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<"},
 				{Type: TokenWhitespace, Data: " "},
@@ -227,9 +227,6 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: "&"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenPunctuator, Data: "&&"},
-				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenPunctuator, Data: "("},
-				{Type: TokenPunctuator, Data: ")"},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenPunctuator, Data: "{"},
 				{Type: TokenPunctuator, Data: "}"},
