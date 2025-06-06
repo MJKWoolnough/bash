@@ -3491,6 +3491,21 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 235
+			"a[b]=c d[",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "["},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenWord, Data: "c"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenIdentifierAssign, Data: "d"},
+				{Type: TokenPunctuator, Data: "["},
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
+		{ // 236
 			"a b[",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
