@@ -140,6 +140,14 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return b.testPattern(t)
 	} else if t.Peek() == -1 {
+		if td == ']' {
+			b.popTokenDepth()
+
+			if !b.isInCommand() {
+				b.pushTokenDepth(']')
+			}
+		}
+
 		if b.isInCommand() {
 			b.endCommand()
 
