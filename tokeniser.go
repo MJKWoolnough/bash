@@ -37,7 +37,7 @@ const (
 	wordBreakNoBrace    = wordBreak + "}"
 	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
 	braceWordBreak      = " `\\\t\n|&;<>()={},"
-	testWordBreak       = " `\\\t\n\"'$|&;<>()={}!,"
+	testWordBreak       = " `\\\t\n\"'$|&;<>(){}!,"
 	hexDigit            = "0123456789ABCDEFabcdef"
 	octalDigit          = "012345678"
 	decimalDigit        = "0123456789"
@@ -464,11 +464,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		if td := b.lastTokenDepth(); td == '}' || td == '~' {
 			b.popTokenDepth()
 		}
-	case '+':
-		t.Next()
-		t.Accept("=")
-	case '=':
-		t.Next()
 	case '$':
 		b.setInCommand()
 
