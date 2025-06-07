@@ -439,8 +439,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		if b.lastTokenDepth() == ']' {
-			b.popTokenDepth()
-
 			return t.Return(TokenPunctuator, b.startAssign)
 		}
 	case ')':
@@ -1756,6 +1754,10 @@ func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.T
 	if !t.Accept("=") {
 		state.Reset()
 
+		if b.lastTokenDepth() == ']' {
+			b.popTokenDepth()
+		}
+
 		return b.main(t)
 	}
 
@@ -1763,11 +1765,16 @@ func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.T
 }
 
 func (b *bashTokeniser) value(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	isArray := b.lastTokenDepth() == ']'
+	if isArray {
+		b.popTokenDepth()
+	}
+
 	switch t.Peek() {
 	case '(':
 		t.Next()
 
-		if t.Accept("(") {
+		if isArray || t.Accept("(") {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
