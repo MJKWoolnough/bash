@@ -246,9 +246,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenPunctuator, Data: "$(("},
 				{Type: TokenPunctuator, Data: "))"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenPunctuator, Data: "(("},
-				{Type: TokenPunctuator, Data: "))"},
-				{Type: parser.TokenDone, Data: ""},
+				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
 		{ // 13

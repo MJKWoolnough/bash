@@ -406,16 +406,18 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		return b.stringStart(t)
 	case '(':
+		if b.isInCommand() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		if t.Accept("(") {
 			b.setInCommand()
 			b.pushTokenDepth('>')
-		} else if !b.isInCommand() {
+		} else {
 			b.setInCommand()
 			b.pushTokenDepth(')')
-		} else {
-			return t.ReturnError(ErrInvalidCharacter)
 		}
 	case '{':
 		t.Next()
