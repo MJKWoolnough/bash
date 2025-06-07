@@ -180,7 +180,9 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if td == 't' {
 		return b.testWord(t)
 	} else if parseWhitespace(t) {
-		if td == 'T' {
+		if td == ']' {
+			return t.ReturnError(ErrInvalidCharacter)
+		} else if td == 'T' {
 			return t.Return(TokenWhitespace, b.testBinaryOperator)
 		}
 
@@ -190,6 +192,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		if td = b.lastTokenDepth(); td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
+		} else if td == ']' {
+			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		t.AcceptRun(newline)
