@@ -12187,13 +12187,6 @@ func TestParameterAssign(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"a[0;]=", func(t *test, tk Tokens) { // 5
-			t.Err = Error{
-				Err:     ErrMissingClosingBracket,
-				Parsing: "ParameterAssign",
-				Token:   tk[3],
-			}
-		}},
 	}, func(t *test) (Type, error) {
 		var pa ParameterAssign
 

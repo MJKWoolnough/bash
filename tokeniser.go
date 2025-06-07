@@ -33,7 +33,7 @@ const (
 	word                = "\\\"'`(){}- \t\n"
 	wordNoBracket       = "\\\"'`(){}- \t\n]"
 	wordBreak           = "\\\"'`() \t\n$|&;<>{"
-	wordBreakNoBracket  = wordBreak + "]"
+	wordBreakNoBracket  = wordBreak + "#}]"
 	wordBreakNoBrace    = wordBreak + "}"
 	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
 	braceWordBreak      = " `\\\t\n|&;<>()={},"
@@ -146,12 +146,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return b.testPattern(t)
 	} else if t.Peek() == -1 {
-		if td == ']' {
-			b.popTokenDepth()
-
-			if !b.isInCommand() {
-				b.pushTokenDepth(']')
-			}
+		if b.inPreCommandShellParam() {
+			b.pushTokenDepth(']')
 		}
 
 		if b.isInCommand() {
@@ -180,12 +176,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if td == 't' {
 		return b.testWord(t)
 	} else if parseWhitespace(t) {
-		if td == ']' {
-			b.popTokenDepth()
-
-			if !b.isInCommand() {
-				return t.ReturnError(ErrInvalidCharacter)
-			}
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
 		} else if td == 'T' {
 			return t.Return(TokenWhitespace, b.testBinaryOperator)
 		}
@@ -196,10 +188,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		if td = b.lastTokenDepth(); td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
-		} else if td == ']' {
-			b.popTokenDepth()
-
-			if !b.isInCommand() {
+		} else {
+			if b.inPreCommandShellParam() {
 				return t.ReturnError(ErrInvalidCharacter)
 			}
 
@@ -356,6 +346,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	default:
 		return b.keywordIdentOrWord(t)
 	case '<':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		if t.Accept("<") {
@@ -368,13 +362,25 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			t.Accept("&>")
 		}
 	case '>':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 		t.Accept(">&|")
 	case '|':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 		t.Accept("&|")
 		b.endCommand()
 	case '&':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		if t.Accept(">") {
@@ -391,6 +397,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			}
 		}
 	case ';':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		l := t.Accept(";")
@@ -434,6 +444,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.pushTokenDepth(')')
 		}
 	case '{':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		if tk := t.Peek(); !strings.ContainsRune(word, tk) || tk == '-' {
@@ -471,6 +485,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		t.Next()
 	case '}':
+		if b.inPreCommandShellParam() {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
 		t.Next()
 
 		if td := b.lastTokenDepth(); td == '}' || td == '~' {
@@ -487,6 +505,16 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	}
 
 	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) inPreCommandShellParam() bool {
+	if b.lastTokenDepth() == ']' {
+		b.popTokenDepth()
+
+		return !b.isInCommand()
+	}
+
+	return false
 }
 
 func (b *bashTokeniser) startBacktick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -1685,7 +1713,9 @@ func (b *bashTokeniser) builtinArgs(t *parser.Tokeniser) (parser.Token, parser.T
 func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	var wb string
 
-	switch b.lastTokenDepth() {
+	td := b.lastTokenDepth()
+
+	switch td {
 	case '~':
 		wb = wordBreakNoBrace
 	case ']', '[':
@@ -1719,6 +1749,10 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		default:
 			return t.Return(TokenWord, b.main)
 		case '{':
+			if td == ']' || td == '[' {
+				return t.Return(TokenWord, b.main)
+			}
+
 			state := t.State()
 
 			t.Next()
