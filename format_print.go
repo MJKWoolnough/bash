@@ -344,9 +344,13 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	if p.Identifier != nil {
 		io.WriteString(w, p.Identifier.Data)
 
-		if p.Subscript != nil {
+		if len(p.Subscript) > 0 {
 			io.WriteString(w, "[")
-			p.Subscript.printSource(w, v)
+
+			for _, s := range p.Subscript {
+				s.printSource(w, v)
+			}
+
 			io.WriteString(w, "]")
 		}
 	}

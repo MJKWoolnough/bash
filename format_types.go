@@ -670,11 +670,21 @@ func (f *ParameterAssign) printType(w io.Writer, v bool) {
 		pp.Print("\nIdentifier: nil")
 	}
 
-	if f.Subscript != nil {
-		pp.Print("\nSubscript: ")
-		f.Subscript.printType(&pp, v)
-	} else if v {
+	if f.Subscript == nil {
 		pp.Print("\nSubscript: nil")
+	} else if len(f.Subscript) > 0 {
+		pp.Print("\nSubscript: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Subscript {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nSubscript: []")
 	}
 
 	pp.Print("\nTokens: ")

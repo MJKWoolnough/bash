@@ -1513,7 +1513,7 @@ func (a *Assignment) parse(b *bashParser) error {
 
 type ParameterAssign struct {
 	Identifier *Token
-	Subscript  *Word
+	Subscript  []WordOrOperator
 	Tokens     Tokens
 }
 
@@ -1523,15 +1523,23 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 	p.Identifier = b.GetLastToken()
 
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "["}) {
-		c := b.NewGoal()
-		p.Subscript = new(Word)
+		b.AcceptRunWhitespace()
 
-		if err := p.Subscript.parse(c, false); err != nil {
-			return b.Error("ParameterAssign", err)
+		for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
+			c := b.NewGoal()
+
+			var w WordOrOperator
+
+			if err := w.parse(c); err != nil {
+				return b.Error("ParameterAssign", err)
+			}
+
+			p.Subscript = append(p.Subscript, w)
+
+			b.Score(c)
+			b.AcceptRunAllWhitespace()
+
 		}
-
-		b.Score(c)
-		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"})
 	}
 
 	p.Tokens = b.ToTokens()
