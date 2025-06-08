@@ -22,29 +22,29 @@ var (
 )
 
 const (
-	whitespace          = " \t"
-	newline             = "\n"
-	whitespaceNewline   = whitespace + newline
-	heredocsBreak       = whitespace + newline + "|&;()<>\\\"'"
-	heredocStringBreak  = newline + "$"
-	doubleStops         = "\\`$\""
-	singleStops         = "'"
-	ansiStops           = "'\\"
-	word                = "\\\"'`(){}- \t\n"
-	wordNoBracket       = "\\\"'`(){}- \t\n]"
-	wordBreak           = "\\\"'`() \t\n$|&;<>{"
-	wordBreakNoBracket  = wordBreak + "#}]"
-	wordBreakNoBrace    = wordBreak + "}"
-	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
-	braceWordBreak      = " `\\\t\n|&;<>()={},"
-	testWordBreak       = " `\\\t\n\"'$|&;<>(){}!,"
-	hexDigit            = "0123456789ABCDEFabcdef"
-	octalDigit          = "012345678"
-	decimalDigit        = "0123456789"
-	letters             = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	identStart          = letters + "_"
-	identCont           = decimalDigit + identStart
-	numberChars         = identCont + "@"
+	whitespace                   = " \t"
+	newline                      = "\n"
+	whitespaceNewline            = whitespace + newline
+	heredocsBreak                = whitespace + newline + "|&;()<>\\\"'"
+	heredocStringBreak           = newline + "$"
+	doubleStops                  = "\\`$\""
+	singleStops                  = "'"
+	ansiStops                    = "'\\"
+	word                         = "\\\"'`(){}- \t\n"
+	wordNoBracket                = "\\\"'`(){}- \t\n]"
+	wordBreak                    = "\\\"'`() \t\n$|&;<>{"
+	wordBreakNoBrace             = wordBreak + "}"
+	wordBreakArithmetic          = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
+	wordBreakArithmeticNoBracket = wordBreak + "#}]"
+	braceWordBreak               = " `\\\t\n|&;<>()={},"
+	testWordBreak                = " `\\\t\n\"'$|&;<>(){}!,"
+	hexDigit                     = "0123456789ABCDEFabcdef"
+	octalDigit                   = "012345678"
+	decimalDigit                 = "0123456789"
+	letters                      = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	identStart                   = letters + "_"
+	identCont                    = decimalDigit + identStart
+	numberChars                  = identCont + "@"
 )
 
 const (
@@ -210,14 +210,14 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if t.Accept("#") {
 		if td == '~' {
 			return b.word(t)
-		} else if td == '>' || td == '/' || td == ':' || td == 'f' {
+		} else if td == '>' || td == '/' || td == ':' || td == 'f' || td == ']' {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	} else if td == '>' || td == '/' || td == ':' || td == 'f' {
+	} else if td == '>' || td == '/' || td == ':' || td == 'f' || td == ']' {
 		return b.arithmeticExpansion(t)
 	}
 
@@ -315,6 +315,14 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		}
 
 		b.popTokenDepth()
+	case ']':
+		t.Next()
+
+		if b.lastTokenDepth() != ']' {
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		return t.Return(TokenPunctuator, b.startAssign)
 	case ')':
 		t.Next()
 
@@ -833,9 +841,25 @@ func (b *bashTokeniser) parameterExpansionArrayOrOperation(t *parser.Tokeniser) 
 		return b.parameterExpansionOperation(t)
 	}
 
+	return t.Return(TokenPunctuator, b.parameterExpansionArraySpecial)
+}
+
+func (b *bashTokeniser) parameterExpansionArraySpecial(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if t.Accept("*@") {
+		return t.Return(TokenWord, b.parameterExpansionArrayEnd)
+	}
+
 	b.pushTokenDepth('[')
 
-	return t.Return(TokenPunctuator, b.main)
+	return b.main(t)
+}
+
+func (b *bashTokeniser) parameterExpansionArrayEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	if !t.Accept("]") {
+		return t.ReturnError(ErrInvalidCharacter)
+	}
+
+	return t.Return(TokenPunctuator, b.parameterExpansionOperation)
 }
 
 func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -1010,7 +1034,7 @@ func (b *bashTokeniser) zero(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !t.Accept(decimalDigit) {
-		return b.keywordIdentOrWord(t)
+		return b.word(t)
 	}
 
 	t.AcceptRun(decimalDigit)
@@ -1750,7 +1774,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	case '~':
 		wb = wordBreakNoBrace
 	case ']', '[':
-		wb = wordBreakNoBracket
+		wb = wordBreakArithmeticNoBracket
 	case '>', '/', ':', 'f':
 		wb = wordBreakArithmetic
 	case 't', 'T':
