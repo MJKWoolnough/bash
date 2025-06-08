@@ -487,7 +487,11 @@ func (p Parameter) printSource(w io.Writer, v bool) {
 
 		if p.Array != nil {
 			io.WriteString(w, "[")
-			p.Array.printSource(w, v)
+
+			for _, a := range p.Array {
+				a.printSource(w, v)
+			}
+
 			io.WriteString(w, "]")
 		}
 	}

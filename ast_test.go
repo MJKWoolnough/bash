@@ -12773,32 +12773,36 @@ func TestWordPart(t *testing.T) {
 												Err: Error{
 													Err: Error{
 														Err: Error{
-															Err:     ErrMissingWord,
-															Parsing: "Command",
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[4],
+															},
+															Parsing: "CommandOrCompound",
 															Token:   tk[4],
 														},
-														Parsing: "CommandOrCompound",
+														Parsing: "Pipeline",
 														Token:   tk[4],
 													},
-													Parsing: "Pipeline",
+													Parsing: "Statement",
 													Token:   tk[4],
 												},
-												Parsing: "Statement",
+												Parsing: "Line",
 												Token:   tk[4],
 											},
-											Parsing: "Line",
+											Parsing: "File",
 											Token:   tk[4],
 										},
-										Parsing: "File",
+										Parsing: "CommandSubstitution",
 										Token:   tk[4],
 									},
-									Parsing: "CommandSubstitution",
-									Token:   tk[4],
+									Parsing: "WordPart",
+									Token:   tk[3],
 								},
-								Parsing: "WordPart",
+								Parsing: "Word",
 								Token:   tk[3],
 							},
-							Parsing: "Word",
+							Parsing: "WordOrOperator",
 							Token:   tk[3],
 						},
 						Parsing: "Parameter",
@@ -12921,14 +12925,19 @@ func TestParameterExpansion(t *testing.T) {
 			t.Output = ParameterExpansion{
 				Parameter: Parameter{
 					Parameter: &tk[1],
-					Array: &Word{
-						Parts: []WordPart{
-							{
-								Part:   &tk[3],
+					Array: []WordOrOperator{
+						{
+							Word: &Word{
+								Parts: []WordPart{
+									{
+										Part:   &tk[3],
+										Tokens: tk[3:4],
+									},
+								},
 								Tokens: tk[3:4],
 							},
+							Tokens: tk[3:4],
 						},
-						Tokens: tk[3:4],
 					},
 					Tokens: tk[1:5],
 				},
@@ -13553,32 +13562,36 @@ func TestParameterExpansion(t *testing.T) {
 											Err: Error{
 												Err: Error{
 													Err: Error{
-														Err:     ErrMissingWord,
-														Parsing: "Command",
+														Err: Error{
+															Err:     ErrMissingWord,
+															Parsing: "Command",
+															Token:   tk[4],
+														},
+														Parsing: "CommandOrCompound",
 														Token:   tk[4],
 													},
-													Parsing: "CommandOrCompound",
+													Parsing: "Pipeline",
 													Token:   tk[4],
 												},
-												Parsing: "Pipeline",
+												Parsing: "Statement",
 												Token:   tk[4],
 											},
-											Parsing: "Statement",
+											Parsing: "Line",
 											Token:   tk[4],
 										},
-										Parsing: "Line",
+										Parsing: "File",
 										Token:   tk[4],
 									},
-									Parsing: "File",
+									Parsing: "CommandSubstitution",
 									Token:   tk[4],
 								},
-								Parsing: "CommandSubstitution",
-								Token:   tk[4],
+								Parsing: "WordPart",
+								Token:   tk[3],
 							},
-							Parsing: "WordPart",
+							Parsing: "Word",
 							Token:   tk[3],
 						},
-						Parsing: "Word",
+						Parsing: "WordOrOperator",
 						Token:   tk[3],
 					},
 					Parsing: "Parameter",
@@ -13733,14 +13746,19 @@ func TestParameter(t *testing.T) {
 		{"${a[0]}", func(t *test, tk Tokens) { // 6
 			t.Output = Parameter{
 				Parameter: &tk[1],
-				Array: &Word{
-					Parts: []WordPart{
-						{
-							Part:   &tk[3],
+				Array: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
 							Tokens: tk[3:4],
 						},
+						Tokens: tk[3:4],
 					},
-					Tokens: tk[3:4],
 				},
 				Tokens: tk[1:5],
 			}
@@ -13748,14 +13766,19 @@ func TestParameter(t *testing.T) {
 		{"${a[ 0 ]}", func(t *test, tk Tokens) { // 7
 			t.Output = Parameter{
 				Parameter: &tk[1],
-				Array: &Word{
-					Parts: []WordPart{
-						{
-							Part:   &tk[4],
+				Array: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[4],
+									Tokens: tk[4:5],
+								},
+							},
 							Tokens: tk[4:5],
 						},
+						Tokens: tk[4:5],
 					},
-					Tokens: tk[4:5],
 				},
 				Tokens: tk[1:7],
 			}
@@ -13763,14 +13786,19 @@ func TestParameter(t *testing.T) {
 		{"${a[@]}", func(t *test, tk Tokens) { // 8
 			t.Output = Parameter{
 				Parameter: &tk[1],
-				Array: &Word{
-					Parts: []WordPart{
-						{
-							Part:   &tk[3],
+				Array: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
 							Tokens: tk[3:4],
 						},
+						Tokens: tk[3:4],
 					},
-					Tokens: tk[3:4],
 				},
 				Tokens: tk[1:5],
 			}
@@ -13778,14 +13806,19 @@ func TestParameter(t *testing.T) {
 		{"${a[*]}", func(t *test, tk Tokens) { // 9
 			t.Output = Parameter{
 				Parameter: &tk[1],
-				Array: &Word{
-					Parts: []WordPart{
-						{
-							Part:   &tk[3],
+				Array: []WordOrOperator{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
 							Tokens: tk[3:4],
 						},
+						Tokens: tk[3:4],
 					},
-					Tokens: tk[3:4],
 				},
 				Tokens: tk[1:5],
 			}
@@ -13801,43 +13834,40 @@ func TestParameter(t *testing.T) {
 										Err: Error{
 											Err: Error{
 												Err: Error{
-													Err:     ErrMissingWord,
-													Parsing: "Command",
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[4],
+													},
+													Parsing: "CommandOrCompound",
 													Token:   tk[4],
 												},
-												Parsing: "CommandOrCompound",
+												Parsing: "Pipeline",
 												Token:   tk[4],
 											},
-											Parsing: "Pipeline",
+											Parsing: "Statement",
 											Token:   tk[4],
 										},
-										Parsing: "Statement",
+										Parsing: "Line",
 										Token:   tk[4],
 									},
-									Parsing: "Line",
+									Parsing: "File",
 									Token:   tk[4],
 								},
-								Parsing: "File",
+								Parsing: "CommandSubstitution",
 								Token:   tk[4],
 							},
-							Parsing: "CommandSubstitution",
-							Token:   tk[4],
+							Parsing: "WordPart",
+							Token:   tk[3],
 						},
-						Parsing: "WordPart",
+						Parsing: "Word",
 						Token:   tk[3],
 					},
-					Parsing: "Word",
+					Parsing: "WordOrOperator",
 					Token:   tk[3],
 				},
 				Parsing: "Parameter",
 				Token:   tk[3],
-			}
-		}},
-		{"${a[b c]}", func(t *test, tk Tokens) { // 11
-			t.Err = Error{
-				Err:     ErrMissingClosingBracket,
-				Parsing: "Parameter",
-				Token:   tk[5],
 			}
 		}},
 	}, func(t *test) (Type, error) {

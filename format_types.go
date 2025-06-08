@@ -645,11 +645,21 @@ func (f *Parameter) printType(w io.Writer, v bool) {
 		pp.Print("\nParameter: nil")
 	}
 
-	if f.Array != nil {
-		pp.Print("\nArray: ")
-		f.Array.printType(&pp, v)
-	} else if v {
+	if f.Array == nil {
 		pp.Print("\nArray: nil")
+	} else if len(f.Array) > 0 {
+		pp.Print("\nArray: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Array {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nArray: []")
 	}
 
 	pp.Print("\nTokens: ")

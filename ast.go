@@ -1922,7 +1922,7 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 
 type Parameter struct {
 	Parameter *Token
-	Array     *Word
+	Array     []WordOrOperator
 	Tokens    Tokens
 }
 
@@ -1933,18 +1933,20 @@ func (p *Parameter) parse(b *bashParser) error {
 		if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "["}) {
 			b.AcceptRunWhitespace()
 
-			c := b.NewGoal()
-			p.Array = new(Word)
+			for !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
+				c := b.NewGoal()
 
-			if err := p.Array.parse(c, false); err != nil {
-				return b.Error("Parameter", err)
-			}
+				var w WordOrOperator
 
-			b.Score(c)
-			b.AcceptRunWhitespace()
+				if err := w.parse(c); err != nil {
+					return b.Error("Parameter", err)
+				}
 
-			if !b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "]"}) {
-				return b.Error("Parameter", ErrMissingClosingBracket)
+				p.Array = append(p.Array, w)
+
+				b.Score(c)
+				b.AcceptRunAllWhitespace()
+
 			}
 		}
 	} else {
