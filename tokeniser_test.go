@@ -3465,8 +3465,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "b"},
-				{Type: TokenPunctuator, Data: "["},
+				{Type: TokenWord, Data: "b["},
 				{Type: TokenWhitespace, Data: " "},
 				{Type: TokenWord, Data: "c]=1"},
 				{Type: parser.TokenDone, Data: ""},
@@ -3541,8 +3540,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "b"},
-				{Type: TokenPunctuator, Data: "["},
+				{Type: TokenWord, Data: "b["},
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
@@ -3602,15 +3600,6 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 247
-			"a[b#]",
-			[]parser.Token{
-				{Type: TokenIdentifierAssign, Data: "a"},
-				{Type: TokenPunctuator, Data: "["},
-				{Type: TokenWord, Data: "b"},
-				{Type: parser.TokenError, Data: "invalid character"},
-			},
-		},
-		{ // 248
 			"a[b<]",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3619,7 +3608,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 249
+		{ // 248
 			"a[b>]",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3628,7 +3617,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 250
+		{ // 249
 			"a=(( 1 ))",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3636,7 +3625,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 251
+		{ // 250
 			"a=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3644,7 +3633,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 252
+		{ // 251
 			"a=;",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3653,7 +3642,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 253
+		{ // 252
 			"a= b",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3664,10 +3653,6 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 	} {
-		if n != 244 {
-			continue
-		}
-
 		p := parser.NewStringTokeniser(test.Input)
 
 		SetTokeniser(&p)

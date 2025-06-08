@@ -1061,7 +1061,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 				state.Reset()
 
 				return t.Return(TokenIdentifierAssign, b.startAssign)
-			} else if t.Peek() == '[' {
+			} else if t.Peek() == '[' && !b.isInCommand() || b.isArrayStart(t) {
 				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
 			} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
 				return t.Return(TokenWord, b.main)
@@ -1100,6 +1100,37 @@ func isWhitespace(t *parser.Tokeniser) bool {
 
 func isWordSeperator(t *parser.Tokeniser) bool {
 	return isWhitespace(t) || t.Peek() == ';'
+}
+
+func (b *bashTokeniser) isArrayStart(t *parser.Tokeniser) bool {
+	state := t.State()
+	defer state.Reset()
+
+	if !t.Accept("[") || t.Accept("]") {
+		return false
+	}
+
+	b.pushTokenDepth(']')
+	defer b.popTokenDepth()
+
+	sub := t.SubTokeniser()
+
+	c := &bashTokeniser{tokenDepth: b.tokenDepth}
+
+	sub.TokeniserState(c.main)
+
+	for {
+		tk, err := sub.GetToken()
+		if err != nil {
+			return false
+		}
+
+		if len(c.tokenDepth) == len(b.tokenDepth) && tk == (parser.Token{Type: TokenPunctuator, Data: "]"}) {
+			return sub.AcceptWord(assignment, false) != ""
+		} else if len(c.tokenDepth) < len(b.tokenDepth) {
+			return false
+		}
+	}
 }
 
 func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, parser.TokenFunc) {
