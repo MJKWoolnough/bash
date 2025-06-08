@@ -15010,7 +15010,7 @@ func TestWordOrOperator(t *testing.T) {
 				Tokens: tk[:1],
 			}
 		}},
-		{"$a", func(t *test, tk Tokens) { // 2
+		{"a=b", func(t *test, tk Tokens) { // 2
 			t.Output = WordOrOperator{
 				Word: &Word{
 					Parts: []WordPart{
@@ -15024,19 +15024,33 @@ func TestWordOrOperator(t *testing.T) {
 				Tokens: tk[:1],
 			}
 		}},
-		{">", func(t *test, tk Tokens) { // 3
+		{"$a", func(t *test, tk Tokens) { // 3
+			t.Output = WordOrOperator{
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[0],
+							Tokens: tk[:1],
+						},
+					},
+					Tokens: tk[:1],
+				},
+				Tokens: tk[:1],
+			}
+		}},
+		{">", func(t *test, tk Tokens) { // 4
 			t.Output = WordOrOperator{
 				Operator: &tk[0],
 				Tokens:   tk[:1],
 			}
 		}},
-		{"&", func(t *test, tk Tokens) { // 4
+		{"&", func(t *test, tk Tokens) { // 5
 			t.Output = WordOrOperator{
 				Operator: &tk[0],
 				Tokens:   tk[:1],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 5
+		{"$(||)", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
