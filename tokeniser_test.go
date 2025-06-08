@@ -3457,7 +3457,14 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
 				{Type: TokenPunctuator, Data: "["},
-				{Type: parser.TokenError, Data: "invalid character"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: TokenWord, Data: "1"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "c"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 		{ // 233

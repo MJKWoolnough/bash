@@ -145,10 +145,6 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return b.testPattern(t)
 	} else if t.Peek() == -1 {
-		if b.inPreCommandShellParam() {
-			b.pushTokenDepth(']')
-		}
-
 		if b.isInCommand() {
 			b.endCommand()
 
@@ -175,8 +171,12 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if td == 't' {
 		return b.testWord(t)
 	} else if parseWhitespace(t) {
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
+		if td == ']' || td == '[' {
+			b.popTokenDepth()
+
+			if !b.isInCommand() {
+				b.pushTokenDepth(td)
+			}
 		} else if td == 'T' {
 			return t.Return(TokenWhitespace, b.testBinaryOperator)
 		}
@@ -187,14 +187,9 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		if td = b.lastTokenDepth(); td == 'H' {
 			return t.Return(TokenLineTerminator, b.heredocString)
-		} else {
-			if b.inPreCommandShellParam() {
-				return t.ReturnError(ErrInvalidCharacter)
-			}
-
-			b.endCommand()
 		}
 
+		b.endCommand()
 		t.AcceptRun(newline)
 
 		if td == 'I' {
@@ -353,10 +348,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	default:
 		return b.keywordIdentOrWord(t)
 	case '<':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 
 		if t.Accept("<") {
@@ -369,25 +360,13 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			t.Accept("&>")
 		}
 	case '>':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 		t.Accept(">&|")
 	case '|':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 		t.Accept("&|")
 		b.endCommand()
 	case '&':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 
 		if t.Accept(">") {
@@ -404,10 +383,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			}
 		}
 	case ';':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 
 		l := t.Accept(";")
@@ -451,10 +426,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.pushTokenDepth(')')
 		}
 	case '{':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 
 		if tk := t.Peek(); !strings.ContainsRune(word, tk) || tk == '-' {
@@ -472,10 +443,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 			return t.Return(TokenPunctuator, b.parameterExpansionOperation)
 		}
-
-		if b.lastTokenDepth() == ']' {
-			return t.Return(TokenPunctuator, b.startAssign)
-		}
 	case ')':
 		b.endCommand()
 
@@ -492,10 +459,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		t.Next()
 	case '}':
-		if b.inPreCommandShellParam() {
-			return t.ReturnError(ErrInvalidCharacter)
-		}
-
 		t.Next()
 
 		if td := b.lastTokenDepth(); td == '}' || td == '~' {
