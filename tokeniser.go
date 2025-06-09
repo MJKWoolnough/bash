@@ -477,16 +477,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	return t.Return(TokenPunctuator, b.main)
 }
 
-func (b *bashTokeniser) inPreCommandShellParam() bool {
-	if b.lastTokenDepth() == ']' {
-		b.popTokenDepth()
-
-		return !b.isInCommand()
-	}
-
-	return false
-}
-
 func (b *bashTokeniser) startBacktick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	t.Next()
 
