@@ -1561,7 +1561,6 @@ func (v *Value) parse(b *bashParser) error {
 		b.AcceptRunAllWhitespaceNoComments()
 
 		v.Array = []ArrayWord{}
-
 		c := b.NewGoal()
 
 		for !c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
@@ -1624,7 +1623,6 @@ func (a *ArrayWord) parse(b *bashParser) error {
 	b.Score(c)
 
 	a.Comments[1] = b.AcceptRunWhitespaceComments()
-
 	a.Tokens = b.ToTokens()
 
 	return nil
