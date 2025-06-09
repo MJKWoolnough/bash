@@ -76,38 +76,38 @@ const (
 type state uint8
 
 const (
-	stateNone                     state = 0
-	stateInCommand                state = 'X'
-	stateTernary                  state = ':'
-	stateArithmeticParens         state = '/'
-	stateCaseEnd                  state = 'p'
-	stateArithmeticExpansion      state = '>'
-	stateParens                   state = ')'
-	stateBrace                    state = '}'
-	stateCaseBody                 state = 'c'
-	stateHeredoc                  state = 'H'
-	stateHeredocIdentifier        state = 'h'
-	stateBraceExpansion           state = '~'
-	stateBraceExpansionArrayIndex state = '['
-	stateSpecialString            state = '$'
-	stateStringSingle             state = '\''
-	stateStringDouble             state = '"'
-	stateArrayIndex               state = ']'
-	stateLoopBody                 state = 'l'
-	stateTest                     state = 't'
-	stateLoopCondition            state = 'L'
-	stateForArithmetic            state = 'f'
-	stateFunctionBody             state = 'x'
-	stateTestBinary               state = 'T'
-	stateTestPattern              state = 'P'
-	stateBuiltinExport            state = 'E'
-	stateBuiltinReadonly          state = 'R'
-	stateBuiltinTypeset           state = 'S'
-	stateBuiltinDeclare           state = 'D'
-	stateValue                    state = 'v'
-	stateIfTest                   state = 'I'
-	stateIfBody                   state = 'i'
-	stateCaseParam                state = 'C'
+	stateNone state = iota
+	stateInCommand
+	stateTernary
+	stateArithmeticParens
+	stateCaseEnd
+	stateArithmeticExpansion
+	stateParens
+	stateBrace
+	stateCaseBody
+	stateHeredoc
+	stateHeredocIdentifier
+	stateBraceExpansion
+	stateBraceExpansionArrayIndex
+	stateSpecialString
+	stateStringSingle
+	stateStringDouble
+	stateArrayIndex
+	stateLoopBody
+	stateTest
+	stateLoopCondition
+	stateForArithmetic
+	stateFunctionBody
+	stateTestBinary
+	stateTestPattern
+	stateBuiltinExport
+	stateBuiltinReadonly
+	stateBuiltinTypeset
+	stateBuiltinDeclare
+	stateValue
+	stateIfTest
+	stateIfBody
+	stateCaseParam
 )
 
 type heredocType struct {
@@ -341,7 +341,7 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case ':':
 		t.Next()
 
-		if b.lastState() != ':' {
+		if b.lastState() != stateTernary {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
