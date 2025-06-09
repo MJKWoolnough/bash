@@ -1037,9 +1037,9 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 				state.Reset()
 
 				return t.Return(TokenIdentifierAssign, b.startAssign)
-			} else if t.Peek() == '[' && !b.isInCommand() || b.isArrayStart(t) {
+			} else if c := t.Peek(); c == '[' && !b.isInCommand() || b.isArrayStart(t) {
 				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
-			} else if td := b.lastTokenDepth(); t.Peek() == td || td == '~' {
+			} else if td := b.lastTokenDepth(); c == '}' && td == '}' || c == ')' && td == ')' || td == '~' {
 				return t.Return(TokenWord, b.main)
 			} else if !b.isInCommand() {
 				t.AcceptRun(whitespace)
