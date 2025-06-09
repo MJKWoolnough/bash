@@ -77,37 +77,37 @@ type state uint8
 
 const (
 	stateNone state = iota
-	stateInCommand
-	stateTernary
-	stateArithmeticParens
-	stateCaseEnd
 	stateArithmeticExpansion
-	stateParens
+	stateArithmeticParens
+	stateArrayIndex
 	stateBrace
-	stateCaseBody
-	stateHeredoc
-	stateHeredocIdentifier
 	stateBraceExpansion
 	stateBraceExpansionArrayIndex
-	stateSpecialString
-	stateStringSingle
-	stateStringDouble
-	stateArrayIndex
-	stateLoopBody
-	stateTest
-	stateLoopCondition
-	stateForArithmetic
-	stateFunctionBody
-	stateTestBinary
-	stateTestPattern
+	stateBuiltinDeclare
 	stateBuiltinExport
 	stateBuiltinReadonly
 	stateBuiltinTypeset
-	stateBuiltinDeclare
-	stateValue
-	stateIfTest
-	stateIfBody
+	stateCaseBody
+	stateCaseEnd
 	stateCaseParam
+	stateForArithmetic
+	stateFunctionBody
+	stateHeredoc
+	stateHeredocIdentifier
+	stateIfBody
+	stateIfTest
+	stateInCommand
+	stateLoopBody
+	stateLoopCondition
+	stateParens
+	stateStringDouble
+	stateStringSingle
+	stateStringSpecial
+	stateTernary
+	stateTest
+	stateTestBinary
+	stateTestPattern
+	stateValue
 )
 
 type heredocType struct {
@@ -276,7 +276,7 @@ func (b *bashTokeniser) string(t *parser.Tokeniser, start bool) (parser.Token, p
 
 	if td == stateStringDouble {
 		stops = doubleStops
-	} else if td == stateSpecialString {
+	} else if td == stateStringSpecial {
 		stops = ansiStops
 	}
 
@@ -997,7 +997,7 @@ func (b *bashTokeniser) parameterExpansionOperator(t *parser.Tokeniser) (parser.
 
 func (b *bashTokeniser) stringStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if t.Accept("$") && t.Accept("'") {
-		b.pushState(stateSpecialString)
+		b.pushState(stateStringSpecial)
 	} else if t.Accept("'") {
 		b.pushState(stateStringSingle)
 	} else {
