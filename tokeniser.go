@@ -1091,6 +1091,10 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 		}
 	}
 
+	return b.identOrWord(t)
+}
+
+func (b *bashTokeniser) identOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if td := b.lastState(); td != stateTest && td != stateTestBinary {
 		if t.Accept(identStart) {
 			t.AcceptRun(identCont)
