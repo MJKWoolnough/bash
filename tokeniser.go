@@ -35,6 +35,7 @@ const (
 	wordBreak           = "\\\"'`() \t\n$|&;<>{"
 	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
 	wordBreakNoBrace    = wordBreak + "#}]"
+	wordBreakIndex      = wordBreakArithmetic + "]"
 	braceWordBreak      = " `\\\t\n|&;<>()={},"
 	testWordBreak       = " `\\\t\n\"'$|&;<>(){}!,"
 	hexDigit            = "0123456789ABCDEFabcdef"
@@ -90,6 +91,7 @@ const (
 	stateCaseBody
 	stateCaseEnd
 	stateCaseParam
+	stateCommandIndex
 	stateForArithmetic
 	stateFunctionBody
 	stateHeredoc
@@ -160,7 +162,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastState() {
-	case stateArrayIndex, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue:
+	case stateArrayIndex, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex:
 	default:
 		b.pushState(stateInCommand)
 	}
@@ -218,6 +220,10 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenWhitespace, b.testBinaryOperator)
 		}
 
+		if td == stateCommandIndex {
+			return t.Return(TokenWord, b.main)
+		}
+
 		return t.Return(TokenWhitespace, b.main)
 	} else if t.Accept(newline) {
 		b.endCommand()
@@ -237,9 +243,13 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.testBinaryOperator)
 		}
 
+		if td == stateCommandIndex {
+			return t.Return(TokenWord, b.main)
+		}
+
 		return t.Return(TokenLineTerminator, b.main)
 	} else if t.Accept("#") {
-		if td == stateBraceExpansion {
+		if td == stateBraceExpansion || td == stateCommandIndex {
 			return b.word(t)
 		} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex {
 			return t.ReturnError(ErrInvalidCharacter)
@@ -248,7 +258,7 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex {
+	} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex || td == stateCommandIndex {
 		return b.arithmeticExpansion(t)
 	}
 
@@ -349,11 +359,13 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case ']':
 		t.Next()
 
-		if b.lastState() != stateArrayIndex {
-			return t.ReturnError(ErrInvalidCharacter)
+		if td := b.lastState(); td == stateCommandIndex {
+			return t.Return(TokenPunctuator, b.endCommandIndex)
+		} else if td == stateArrayIndex {
+			return t.Return(TokenPunctuator, b.startAssign)
 		}
 
-		return t.Return(TokenPunctuator, b.startAssign)
+		return t.ReturnError(ErrInvalidCharacter)
 	case ')':
 		t.Next()
 
@@ -373,6 +385,14 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		}
 
 		t.Next()
+	case '{', '}':
+		t.Next()
+
+		if td := b.lastState(); td == stateCommandIndex {
+			return t.Return(TokenPunctuator, b.main)
+		}
+
+		return t.ReturnError(ErrInvalidCharacter)
 	default:
 		return b.number(t)
 	}
@@ -1078,7 +1098,11 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 				state.Reset()
 
 				return t.Return(TokenIdentifierAssign, b.startAssign)
-			} else if c := t.Peek(); c == '[' && !b.isInCommand() || b.isArrayStart(t) {
+			} else if !b.isInCommand() && b.isCommandIndex(t) {
+				b.pushState(stateCommandIndex)
+
+				return t.Return(TokenWord, b.startCommandIndex)
+			} else if c := t.Peek(); !b.isInCommand() && c == '[' || b.isArrayStart(t) {
 				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
 			} else if td := b.lastState(); c == '}' && td == stateBrace || c == ')' && td == stateParens || td == stateBraceExpansion {
 				return t.Return(TokenWord, b.main)
@@ -1119,6 +1143,17 @@ func isWordSeperator(t *parser.Tokeniser) bool {
 	return isWhitespace(t) || t.Peek() == ';'
 }
 
+func (b *bashTokeniser) isCommandIndex(t *parser.Tokeniser) bool {
+	state := t.State()
+	defer state.Reset()
+
+	if !t.Accept("[") {
+		return false
+	}
+
+	return b.hasCompleteBracket(t, stateCommandIndex) && t.AcceptWord(assignment, false) == ""
+}
+
 func (b *bashTokeniser) isArrayStart(t *parser.Tokeniser) bool {
 	state := t.State()
 	defer state.Reset()
@@ -1127,7 +1162,11 @@ func (b *bashTokeniser) isArrayStart(t *parser.Tokeniser) bool {
 		return false
 	}
 
-	b.pushState(stateArrayIndex)
+	return b.hasCompleteBracket(t, stateArrayIndex) && t.AcceptWord(assignment, false) != ""
+}
+
+func (b *bashTokeniser) hasCompleteBracket(t *parser.Tokeniser, s state) bool {
+	b.pushState(s)
 	defer b.popState()
 
 	sub := t.SubTokeniser()
@@ -1143,11 +1182,24 @@ func (b *bashTokeniser) isArrayStart(t *parser.Tokeniser) bool {
 		}
 
 		if len(c.state) == len(b.state) && tk == (parser.Token{Type: TokenPunctuator, Data: "]"}) {
-			return sub.AcceptWord(assignment, false) != ""
+			return true
 		} else if len(c.state) < len(b.state) {
 			return false
 		}
 	}
+}
+
+func (b *bashTokeniser) startCommandIndex(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Next()
+
+	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) endCommandIndex(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	b.popState()
+	b.setInCommand()
+
+	return b.main(t)
 }
 
 func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, parser.TokenFunc) {
@@ -1766,8 +1818,8 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	switch td {
 	case stateBraceExpansion:
 		wb = wordBreakNoBrace
-	case stateArrayIndex, stateBraceExpansionArrayIndex:
-		wb = wordBreakNoBrace
+	case stateArrayIndex, stateBraceExpansionArrayIndex, stateCommandIndex:
+		wb = wordBreakIndex
 	case stateArithmeticExpansion, stateArithmeticParens, stateTernary, stateForArithmetic:
 		wb = wordBreakArithmetic
 	case stateTest, stateTestBinary:

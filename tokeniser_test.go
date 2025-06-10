@@ -3572,7 +3572,7 @@ func TestTokeniser(t *testing.T) {
 		{ // 243
 			"a[b]",
 			[]parser.Token{
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenWord, Data: "a"},
 				{Type: TokenPunctuator, Data: "["},
 				{Type: TokenWord, Data: "b"},
 				{Type: TokenPunctuator, Data: "]"},
@@ -3582,28 +3582,32 @@ func TestTokeniser(t *testing.T) {
 		{ // 244
 			"a[b;]",
 			[]parser.Token{
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenWord, Data: "a"},
 				{Type: TokenPunctuator, Data: "["},
-				{Type: TokenWord, Data: "b"},
-				{Type: parser.TokenError, Data: "invalid character"},
+				{Type: TokenWord, Data: "b;"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 		{ // 245
 			"a[b{]",
 			[]parser.Token{
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenWord, Data: "a"},
 				{Type: TokenPunctuator, Data: "["},
-				{Type: TokenWord, Data: "b"},
-				{Type: parser.TokenError, Data: "invalid character"},
+				{Type: TokenWord, Data: "b{"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 		{ // 246
 			"a[b}]",
 			[]parser.Token{
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenWord, Data: "a"},
 				{Type: TokenPunctuator, Data: "["},
 				{Type: TokenWord, Data: "b"},
-				{Type: parser.TokenError, Data: "invalid character"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: parser.TokenDone, Data: ""},
 			},
 		},
 		{ // 247
