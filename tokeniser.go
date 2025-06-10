@@ -22,29 +22,30 @@ var (
 )
 
 const (
-	whitespace          = " \t"
-	newline             = "\n"
-	whitespaceNewline   = whitespace + newline
-	heredocsBreak       = whitespace + newline + "|&;()<>\\\"'"
-	heredocStringBreak  = newline + "$"
-	doubleStops         = "\\`$\""
-	singleStops         = "'"
-	ansiStops           = "'\\"
-	word                = "\\\"'`(){}- \t\n"
-	wordNoBracket       = "\\\"'`(){}- \t\n]"
-	wordBreak           = "\\\"'`() \t\n$|&;<>{"
-	wordBreakArithmetic = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,"
-	wordBreakNoBrace    = wordBreak + "#}]"
-	wordBreakIndex      = wordBreakArithmetic + "]"
-	braceWordBreak      = " `\\\t\n|&;<>()={},"
-	testWordBreak       = " `\\\t\n\"'$|&;<>(){}!,"
-	hexDigit            = "0123456789ABCDEFabcdef"
-	octalDigit          = "012345678"
-	decimalDigit        = "0123456789"
-	letters             = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
-	identStart          = letters + "_"
-	identCont           = decimalDigit + identStart
-	numberChars         = identCont + "@"
+	whitespace            = " \t"
+	newline               = "\n"
+	whitespaceNewline     = whitespace + newline
+	heredocsBreak         = whitespace + newline + "|&;()<>\\\"'"
+	heredocStringBreak    = newline + "$"
+	doubleStops           = "\\`$\""
+	singleStops           = "'"
+	ansiStops             = "'\\"
+	word                  = "\\\"'`(){}- \t\n"
+	wordNoBracket         = "\\\"'`(){}- \t\n]"
+	wordBreak             = "\\\"'`() \t\n$|&;<>{"
+	wordBreakArithmetic   = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,;"
+	wordBreakNoBrace      = wordBreak + "#}]"
+	wordBreakIndex        = wordBreakArithmetic + "]"
+	wordBreakCommandIndex = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,]"
+	braceWordBreak        = " `\\\t\n|&;<>()={},"
+	testWordBreak         = " `\\\t\n\"'$|&;<>(){}!,"
+	hexDigit              = "0123456789ABCDEFabcdef"
+	octalDigit            = "012345678"
+	decimalDigit          = "0123456789"
+	letters               = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
+	identStart            = letters + "_"
+	identCont             = decimalDigit + identStart
+	numberChars           = identCont + "@"
 )
 
 const (
@@ -1818,8 +1819,10 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	switch td {
 	case stateBraceExpansion:
 		wb = wordBreakNoBrace
-	case stateArrayIndex, stateBraceExpansionArrayIndex, stateCommandIndex:
+	case stateArrayIndex, stateBraceExpansionArrayIndex:
 		wb = wordBreakIndex
+	case stateCommandIndex:
+		wb = wordBreakCommandIndex
 	case stateArithmeticExpansion, stateArithmeticParens, stateTernary, stateForArithmetic:
 		wb = wordBreakArithmetic
 	case stateTest, stateTestBinary:
