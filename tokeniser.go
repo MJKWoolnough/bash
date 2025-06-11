@@ -749,7 +749,6 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 				return t.Return(TokenHeredoc, b.heredocString)
 			}
 		}
-
 	}
 }
 
