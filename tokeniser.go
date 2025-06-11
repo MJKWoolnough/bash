@@ -1904,19 +1904,8 @@ func (b *bashTokeniser) startArrayAssign(t *parser.Tokeniser) (parser.Token, par
 }
 
 func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	state := t.State()
-
 	t.Accept("+")
-
-	if !t.Accept("=") {
-		state.Reset()
-
-		if b.lastState() == stateArrayIndex {
-			b.popState()
-		}
-
-		return b.main(t)
-	}
+	t.Accept("=")
 
 	return t.Return(TokenPunctuator, b.value)
 }
