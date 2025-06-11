@@ -790,7 +790,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 		t.Reset()
 
 		return b.stringStart(t)
-	} else if t.Accept("$!@*") {
+	} else if t.Accept("$!?@*") {
 		return t.Return(TokenIdentifier, b.main)
 	}
 
