@@ -472,12 +472,11 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 
 		t.Next()
+		b.setInCommand()
 
 		if t.Accept("(") {
-			b.setInCommand()
 			b.pushState(stateArithmeticExpansion)
 		} else {
-			b.setInCommand()
 			b.pushState(stateParens)
 		}
 	case '{':
