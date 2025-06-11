@@ -31,7 +31,6 @@ const (
 	singleStops           = "'"
 	ansiStops             = "'\\"
 	word                  = "\\\"'`(){}- \t\n"
-	wordNoBracket         = "\\\"'`(){}- \t\n]"
 	wordBreak             = "\\\"'`() \t\n$|&;<>{"
 	wordBreakArithmetic   = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,;"
 	wordBreakNoBrace      = wordBreak + "#}]"
@@ -791,17 +790,25 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 		t.Reset()
 
 		return b.stringStart(t)
+	} else if t.Accept("$!@*") {
+		return t.Return(TokenIdentifier, b.main)
 	}
 
 	var wb string
 
 	switch b.lastState() {
-	case stateArrayIndex:
-		wb = wordNoBracket
-	case stateArithmeticExpansion:
+	case stateBraceExpansion:
+		wb = wordBreakNoBrace
+	case stateArrayIndex, stateBraceExpansionArrayIndex:
+		wb = wordBreakIndex
+	case stateCommandIndex:
+		wb = wordBreakCommandIndex
+	case stateArithmeticExpansion, stateArithmeticParens, stateTernary, stateForArithmetic:
 		wb = wordBreakArithmetic
+	case stateTest, stateTestBinary:
+		wb = testWordBreak
 	default:
-		wb = word
+		wb = wordBreak
 	}
 
 	t.ExceptRun(wb)
