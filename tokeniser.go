@@ -1274,7 +1274,7 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 
 		return t.Return(TokenKeyword, b.test)
 	case "continue", "break":
-		if td := b.lastState(); td != stateLoopBody {
+		if b.lastState() != stateLoopBody {
 			return t.ReturnError(ErrInvalidKeyword)
 		}
 
