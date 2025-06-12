@@ -1069,7 +1069,6 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !b.isInCommand() {
 		if td := b.lastState(); td != stateTest && td != stateTestBinary {
-			state := t.State()
 			kw := t.AcceptWord(keywords, false)
 
 			if !isWordSeperator(t) {
@@ -1077,16 +1076,15 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 					return t.ReturnError(ErrInvalidKeyword)
 				}
 
-				state.Reset()
+				t.Reset()
 			} else if kw != "" {
 				return b.keyword(t, kw)
 			}
 
-			state = t.State()
 			bn := t.AcceptWord(builtins, false)
 
 			if !isWordSeperator(t) {
-				state.Reset()
+				t.Reset()
 			} else if bn != "" {
 				return b.builtin(t, bn)
 			}
