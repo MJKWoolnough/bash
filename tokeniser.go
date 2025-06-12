@@ -1306,13 +1306,11 @@ func (b *bashTokeniser) time(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return t.Return(TokenWhitespace, b.time)
 	}
 
-	state := t.State()
-
 	if t.AcceptString("-p", false) == 2 && isWordSeperator(t) {
 		return t.Return(TokenWord, b.main)
 	}
 
-	state.Reset()
+	t.Reset()
 
 	return b.main(t)
 }
@@ -1434,15 +1432,13 @@ func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.Token
 
 	b.pushState(stateLoopCondition)
 
-	state := t.State()
-
 	if t.AcceptString("in", false) == 2 && isWordSeperator(t) {
 		b.setInCommand()
 
 		return t.Return(TokenKeyword, b.main)
 	}
 
-	state.Reset()
+	t.Reset()
 
 	return b.main(t)
 }
@@ -1452,16 +1448,14 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		return t.Return(TokenWhitespace, b.coproc)
 	}
 
-	state := t.State()
-
 	if t.AcceptWord(keywords, false) != "" {
 		if isWordSeperator(t) {
-			state.Reset()
+			t.Reset()
 
 			return b.main(t)
 		}
 
-		state.Reset()
+		t.Reset()
 	}
 
 	if t.Accept(identStart) {
@@ -1480,7 +1474,7 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		}
 	}
 
-	state.Reset()
+	t.Reset()
 
 	return b.main(t)
 }
@@ -1540,13 +1534,11 @@ func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return t.Return(TokenPunctuator, b.test)
 	}
 
-	state := t.State()
-
 	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isWhitespace(t) {
 		return t.Return(TokenKeyword, b.testWordStart)
 	}
 
-	state.Reset()
+	t.Reset()
 
 	return b.testWordOrPunctuator(t)
 }
@@ -1600,8 +1592,6 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 
 		return b.stringStart(t)
 	case ']':
-		state := t.State()
-
 		t.Next()
 
 		if t.Accept("]") && isWhitespace(t) {
@@ -1616,7 +1606,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 			return t.Return(TokenKeyword, b.main)
 		}
 
-		state.Reset()
+		t.Reset()
 
 		fallthrough
 	default:
