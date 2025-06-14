@@ -213,6 +213,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return b.string(t, false)
 	} else if td == stateTest {
 		return b.testWord(t)
+	} else if td == stateTestBinary {
+		return b.testBinaryOperator(t)
 	} else if parseWhitespace(t) {
 		if td == stateArrayIndex || td == stateBraceExpansionArrayIndex {
 			b.popState()
@@ -220,8 +222,6 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			if !b.isInCommand() {
 				b.pushState(td)
 			}
-		} else if td == stateTestBinary {
-			return t.Return(TokenWhitespace, b.testBinaryOperator)
 		}
 
 		if td == stateCommandIndex {
@@ -243,8 +243,6 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			return t.Return(TokenLineTerminator, b.ifThen)
 		} else if td == stateLoopCondition {
 			return t.Return(TokenLineTerminator, b.loopDo)
-		} else if td == stateTestBinary {
-			return t.Return(TokenLineTerminator, b.testBinaryOperator)
 		}
 
 		if td == stateCommandIndex {
@@ -1281,6 +1279,7 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 
 		return t.Return(TokenKeyword, b.function)
 	case "[[":
+		b.setInCommand()
 		b.pushState(stateTest)
 
 		return t.Return(TokenKeyword, b.test)
@@ -1600,14 +1599,12 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 	case ']':
 		t.Next()
 
-		if t.Accept("]") && isWhitespace(t) {
+		if t.Accept("]") && isWordSeperator(t) {
 			b.popState()
 
 			if b.lastState() == stateTest {
 				return t.ReturnError(ErrInvalidCharacter)
 			}
-
-			b.setInCommand()
 
 			return t.Return(TokenKeyword, b.main)
 		}
@@ -1713,7 +1710,7 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 		return b.startBacktick(t)
 	}
 
-	return b.keywordIdentOrWord(t)
+	return b.testWordOrPunctuator(t)
 }
 
 func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
