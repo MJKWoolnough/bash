@@ -157,6 +157,10 @@ func (b *bashTokeniser) isInCommand() bool {
 func (b *bashTokeniser) endCommand() {
 	if b.isInCommand() {
 		b.popState()
+
+		if b.lastState() == stateFunctionBody {
+			b.popState()
+		}
 	}
 }
 
@@ -476,6 +480,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		if t.Accept("(") {
 			b.pushState(stateArithmeticExpansion)
 		} else {
+			b.setInCommand()
 			b.pushState(stateParens)
 		}
 	case '{':
@@ -486,6 +491,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 			return b.braceExpansion(t)
 		} else if strings.ContainsRune(whitespaceNewline, tk) && !b.isInCommand() {
+			b.setInCommand()
 			b.pushState(stateBrace)
 		}
 	case ']':
