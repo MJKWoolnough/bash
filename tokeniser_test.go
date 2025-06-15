@@ -3415,6 +3415,17 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid identifier"},
 			},
 		},
+		{ // 226
+			"function a()",
+			[]parser.Token{
+				{Type: TokenKeyword, Data: "function"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenError, Data: "unexpected EOF"},
+			},
+		},
 		{ // 227
 			"select %; do b; done",
 			[]parser.Token{
