@@ -1696,8 +1696,6 @@ func (b *bashTokeniser) testWord(t *parser.Tokeniser) (parser.Token, parser.Toke
 		return b.stringStart(t)
 	} else if c == ' ' || c == '\n' {
 		return b.test(t)
-	} else if c == ')' {
-		return b.test(t)
 	} else if c == '`' {
 		return b.startBacktick(t)
 	}
