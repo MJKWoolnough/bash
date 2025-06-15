@@ -194,12 +194,6 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			td = b.lastState()
 		}
 
-		if td == stateFunctionBody {
-			b.popState()
-
-			td = b.lastState()
-		}
-
 		if td == stateNone {
 			return t.Done()
 		}
