@@ -502,8 +502,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		} else if td == stateCaseEnd {
 			b.popState()
 			b.pushState(stateCaseBody)
-		} else if td == stateTestBinary {
-			return b.testBinaryOperator(t)
 		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
