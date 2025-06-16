@@ -1830,12 +1830,6 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 	for {
 		switch t.ExceptRun(wb) {
-		case -1:
-			if t.Len() == 0 {
-				return t.ReturnError(io.ErrUnexpectedEOF)
-			}
-
-			fallthrough
 		default:
 			return t.Return(TokenWord, b.main)
 		case '{':
