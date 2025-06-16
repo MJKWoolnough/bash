@@ -1341,7 +1341,7 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
-	if b.Peek().Type == TokenIdentifierAssign {
+	if tk := b.Peek().Type; tk == TokenIdentifierAssign || tk == TokenLetIdentifierAssign {
 		a.Assignment = new(Assignment)
 		err = a.Assignment.parse(c)
 	} else {
@@ -1479,12 +1479,15 @@ const (
 type Assignment struct {
 	Identifier ParameterAssign
 	Assignment AssignmentType
-	Value      Value
+	Expression []WordOrOperator
+	Value      *Value
 	Tokens     Tokens
 }
 
 func (a *Assignment) parse(b *bashParser) error {
 	c := b.NewGoal()
+
+	isLet := b.Peek().Type == TokenLetIdentifierAssign
 
 	if err := a.Identifier.parse(c); err != nil {
 		return b.Error("Assignment", err)
@@ -1498,13 +1501,40 @@ func (a *Assignment) parse(b *bashParser) error {
 		a.Assignment = AssignmentAppend
 	}
 
-	c = b.NewGoal()
+	if isLet {
+		parens := 0
 
-	if err := a.Value.parse(c); err != nil {
-		return b.Error("Assignment", err)
+		for {
+			if tk := b.Peek(); parens == 0 && (tk.Type == TokenWhitespace || tk.Type == TokenLineTerminator || tk.Type == TokenComment || isEnd(tk)) {
+				break
+			} else if tk == (parser.Token{Type: TokenPunctuator, Data: "("}) {
+				parens++
+			} else if tk == (parser.Token{Type: TokenPunctuator, Data: ")"}) {
+				parens--
+			}
+
+			c := b.NewGoal()
+
+			var w WordOrOperator
+
+			if err := w.parse(c); err != nil {
+				return b.Error("Assignment", err)
+			}
+
+			a.Expression = append(a.Expression, w)
+
+			b.Score(c)
+		}
+	} else {
+		c := b.NewGoal()
+
+		a.Value = new(Value)
+		if err := a.Value.parse(c); err != nil {
+			return b.Error("Assignment", err)
+		}
+
+		b.Score(c)
 	}
-
-	b.Score(c)
 
 	a.Tokens = b.ToTokens()
 
