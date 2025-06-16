@@ -10,7 +10,7 @@ import (
 var (
 	keywords           = []string{"if", "then", "else", "elif", "fi", "case", "esac", "while", "for", "in", "do", "done", "time", "until", "coproc", "select", "function", "{", "}", "[[", "]]", "!", "break", "continue"}
 	compoundStart      = []string{"if", "while", "until", "for", "select", "{", "("}
-	builtins           = []string{"export", "readonly", "declare", "typeset", "local"}
+	builtins           = []string{"export", "readonly", "declare", "typeset", "local", "let"}
 	dotdot             = []string{".."}
 	escapedNewline     = []string{"\\\n"}
 	assignment         = []string{"=", "+="}
@@ -86,6 +86,10 @@ const (
 	stateBraceExpansionArrayIndex
 	stateBuiltinDeclare
 	stateBuiltinExport
+	stateBuiltinLet
+	stateBuiltinLetExpression
+	stateBuiltinLetParens
+	stateBuiltinLetTernary
 	stateBuiltinReadonly
 	stateBuiltinTypeset
 	stateCaseBody
@@ -155,6 +159,18 @@ func (b *bashTokeniser) isInCommand() bool {
 }
 
 func (b *bashTokeniser) endCommand() {
+	td := b.lastState()
+
+	if td == stateBuiltinLetExpression {
+		b.popState()
+
+		td = b.lastState()
+	}
+
+	if td == stateBuiltinLet {
+		b.popState()
+	}
+
 	if b.isInCommand() {
 		b.popState()
 
@@ -166,7 +182,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastState() {
-	case stateArrayIndex, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex:
+	case stateArrayIndex, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
 	default:
 		b.pushState(stateInCommand)
 	}
@@ -188,11 +204,9 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 		return b.testPattern(t)
 	} else if t.Peek() == -1 {
-		if b.isInCommand() {
-			b.endCommand()
+		b.endCommand()
 
-			td = b.lastState()
-		}
+		td = b.lastState()
 
 		if td == stateNone {
 			return t.Done()
@@ -216,6 +230,8 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 			if !b.isInCommand() {
 				b.pushState(td)
 			}
+		} else if td == stateBuiltinLetExpression {
+			b.popState()
 		}
 
 		if td == stateCommandIndex {
@@ -247,15 +263,17 @@ func (b *bashTokeniser) main(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	} else if t.Accept("#") {
 		if td == stateBraceExpansion || td == stateCommandIndex {
 			return b.word(t)
-		} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex {
+		} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex || td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		t.ExceptRun(newline)
 
 		return t.Return(TokenComment, b.main)
-	} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex || td == stateCommandIndex {
+	} else if td == stateArithmeticExpansion || td == stateArithmeticParens || td == stateTernary || td == stateForArithmetic || td == stateArrayIndex || td == stateCommandIndex || td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
 		return b.arithmeticExpansion(t)
+	} else if td == stateBuiltinLet {
+		return b.letExpressionOrWord(t)
 	}
 
 	return b.operatorOrWord(t)
@@ -340,11 +358,16 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		t.Next()
 	case '?':
 		t.Next()
-		b.pushState(stateTernary)
+
+		if td := b.lastState(); td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
+			b.pushState(stateBuiltinLetTernary)
+		} else {
+			b.pushState(stateTernary)
+		}
 	case ':':
 		t.Next()
 
-		if b.lastState() != stateTernary {
+		if td := b.lastState(); td != stateTernary && td != stateBuiltinLetTernary {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
@@ -362,26 +385,45 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 	case ')':
 		t.Next()
 
-		if td := b.lastState(); (td != stateArithmeticExpansion && td != stateForArithmetic || !t.Accept(")")) && td != stateArithmeticParens {
+		if td := b.lastState(); (td != stateArithmeticExpansion && td != stateForArithmetic || !t.Accept(")")) && td != stateArithmeticParens && td != stateBuiltinLetParens {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		b.popState()
 	case '(':
 		t.Next()
-		b.pushState(stateArithmeticParens)
+
+		if td := b.lastState(); td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
+			b.pushState(stateBuiltinLetParens)
+		} else {
+			b.pushState(stateArithmeticParens)
+		}
 	case '0':
 		return b.zero(t)
 	case ';':
-		if b.lastState() != stateForArithmetic {
+		if td := b.lastState(); td == stateBuiltinLetExpression {
+			b.endCommand()
+		} else if td != stateForArithmetic {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
 
 		t.Next()
-	case '{', '}':
-		t.Next()
+	case '{':
+		if td := b.lastState(); td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
+			t.Next()
 
-		if td := b.lastState(); td == stateCommandIndex {
+			if tk, fn := b.braceExpansion(t); tk.Type == TokenBraceExpansion {
+				return tk, fn
+			}
+
+			return t.ReturnError(ErrInvalidCharacter)
+		}
+
+		fallthrough
+	case '}':
+		if b.lastState() == stateCommandIndex {
+			t.Next()
+
 			return t.Return(TokenPunctuator, b.main)
 		}
 
@@ -1081,6 +1123,10 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 
 			if !isWordSeperator(t) {
 				t.Reset()
+			} else if bn == "let" {
+				b.pushState(stateBuiltinLet)
+
+				return t.Return(TokenBuiltin, b.main)
 			} else if bn != "" {
 				return b.builtin(t, bn)
 			}
@@ -1754,6 +1800,16 @@ Loop:
 	return b.test(t)
 }
 
+func (b *bashTokeniser) letExpressionOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	tk, fn := b.identOrWord(t)
+
+	if tk.Type == TokenIdentifierAssign {
+		b.pushState(stateBuiltinLetExpression)
+	}
+
+	return tk, fn
+}
+
 func (b *bashTokeniser) builtin(t *parser.Tokeniser, bn string) (parser.Token, parser.TokenFunc) {
 	switch bn {
 	case "export":
@@ -1881,6 +1937,10 @@ func (b *bashTokeniser) startArrayAssign(t *parser.Tokeniser) (parser.Token, par
 func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	t.Accept("+")
 	t.Accept("=")
+
+	if b.lastState() == stateBuiltinLetExpression {
+		return t.Return(TokenPunctuator, b.main)
+	}
 
 	return t.Return(TokenPunctuator, b.value)
 }
