@@ -71,8 +71,29 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	pp.Print("\nAssignment: ")
 	f.Assignment.printType(&pp, v)
 
-	pp.Print("\nValue: ")
-	f.Value.printType(&pp, v)
+	if f.Expression == nil {
+		pp.Print("\nExpression: nil")
+	} else if len(f.Expression) > 0 {
+		pp.Print("\nExpression: [")
+
+		ipp := indentPrinter{&pp}
+
+		for n, e := range f.Expression {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.Print("\n]")
+	} else if v {
+		pp.Print("\nExpression: []")
+	}
+
+	if f.Value != nil {
+		pp.Print("\nValue: ")
+		f.Value.printType(&pp, v)
+	} else if v {
+		pp.Print("\nValue: nil")
+	}
 
 	pp.Print("\nTokens: ")
 	f.Tokens.printType(&pp, v)

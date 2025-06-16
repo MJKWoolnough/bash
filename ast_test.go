@@ -11024,7 +11024,7 @@ func TestAssignmentOrWord(t *testing.T) {
 						Tokens:     tk[:1],
 					},
 					Assignment: AssignmentAssign,
-					Value: Value{
+					Value: &Value{
 						Word: &Word{
 							Parts: []WordPart{
 								{
@@ -11173,7 +11173,7 @@ func TestCommand(t *testing.T) {
 							Identifier: &tk[0],
 							Tokens:     tk[:1],
 						},
-						Value: Value{
+						Value: &Value{
 							Word: &Word{
 								Tokens: tk[2:2],
 							},
@@ -11193,7 +11193,7 @@ func TestCommand(t *testing.T) {
 							Identifier: &tk[0],
 							Tokens:     tk[:1],
 						},
-						Value: Value{
+						Value: &Value{
 							Word: &Word{
 								Parts: []WordPart{
 									{
@@ -11233,7 +11233,7 @@ func TestCommand(t *testing.T) {
 							Identifier: &tk[0],
 							Tokens:     tk[:1],
 						},
-						Value: Value{
+						Value: &Value{
 							Word: &Word{
 								Parts: []WordPart{
 									{
@@ -11288,7 +11288,7 @@ func TestCommand(t *testing.T) {
 							Identifier: &tk[0],
 							Tokens:     tk[:1],
 						},
-						Value: Value{
+						Value: &Value{
 							Word: &Word{
 								Parts: []WordPart{
 									{
@@ -11307,7 +11307,7 @@ func TestCommand(t *testing.T) {
 							Identifier: &tk[4],
 							Tokens:     tk[4:5],
 						},
-						Value: Value{
+						Value: &Value{
 							Word: &Word{
 								Parts: []WordPart{
 									{
@@ -11371,7 +11371,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[13:14],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11456,7 +11456,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[4:5],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11522,7 +11522,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[6:7],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11545,7 +11545,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[10:11],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11599,7 +11599,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[4:5],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11622,7 +11622,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[8:9],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11688,7 +11688,7 @@ func TestCommand(t *testing.T) {
 								Tokens:     tk[6:7],
 							},
 							Assignment: AssignmentAssign,
-							Value: Value{
+							Value: &Value{
 								Word: &Word{
 									Parts: []WordPart{
 										{
@@ -11976,7 +11976,7 @@ func TestAssignment(t *testing.T) {
 					Identifier: &tk[0],
 					Tokens:     tk[:1],
 				},
-				Value: Value{
+				Value: &Value{
 					Word: &Word{
 						Tokens: tk[2:2],
 					},
@@ -11992,7 +11992,7 @@ func TestAssignment(t *testing.T) {
 					Tokens:     tk[:1],
 				},
 				Assignment: AssignmentAppend,
-				Value: Value{
+				Value: &Value{
 					Word: &Word{
 						Parts: []WordPart{
 							{
