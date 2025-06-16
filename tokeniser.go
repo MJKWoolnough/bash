@@ -54,6 +54,7 @@ const (
 	TokenIdentifier
 	TokenFunctionIdentifier
 	TokenIdentifierAssign
+	TokenLetIdentifierAssign
 	TokenKeyword
 	TokenBuiltin
 	TokenWord
@@ -1804,6 +1805,8 @@ func (b *bashTokeniser) letExpressionOrWord(t *parser.Tokeniser) (parser.Token, 
 	tk, fn := b.identOrWord(t)
 
 	if tk.Type == TokenIdentifierAssign {
+		tk.Type = TokenLetIdentifierAssign
+
 		b.pushState(stateBuiltinLetExpression)
 	}
 

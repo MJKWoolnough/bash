@@ -3517,7 +3517,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenLetIdentifierAssign, Data: "a"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenNumberLiteral, Data: "1"},
 				{Type: parser.TokenDone, Data: ""},
@@ -3528,7 +3528,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenLetIdentifierAssign, Data: "a"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenPunctuator, Data: "("},
 				{Type: TokenNumberLiteral, Data: "1"},
@@ -3541,7 +3541,7 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenLetIdentifierAssign, Data: "a"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenPunctuator, Data: "("},
 				{Type: TokenWhitespace, Data: " "},
@@ -3557,13 +3557,13 @@ func TestTokeniser(t *testing.T) {
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenLetIdentifierAssign, Data: "a"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenNumberLiteral, Data: "1"},
 				{Type: TokenPunctuator, Data: "+"},
 				{Type: TokenNumberLiteral, Data: "2"},
 				{Type: TokenWhitespace, Data: " "},
-				{Type: TokenIdentifierAssign, Data: "b"},
+				{Type: TokenLetIdentifierAssign, Data: "b"},
 				{Type: TokenPunctuator, Data: "="},
 				{Type: TokenNumberLiteral, Data: "2"},
 				{Type: TokenPunctuator, Data: "*"},
