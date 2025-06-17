@@ -721,7 +721,7 @@ func (t TestConsequence) printSource(w io.Writer, v bool) {
 
 func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
-		ve.printSource(w, v)
+		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
 		if v || len(ve.Comments[0]) > 0 {
 			io.WriteString(w, "( ")
