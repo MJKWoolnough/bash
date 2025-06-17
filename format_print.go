@@ -53,7 +53,14 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 
 	a.Identifier.printSource(w, v)
 	a.Assignment.printSource(w, v)
-	a.Value.printSource(w, v)
+
+	if a.Value != nil {
+		a.Value.printSource(w, v)
+	} else {
+		for _, e := range a.Expression {
+			e.printSource(w, v)
+		}
+	}
 }
 
 func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
