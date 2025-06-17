@@ -1524,6 +1524,10 @@ func (a *Assignment) parse(b *bashParser) error {
 			a.Expression = append(a.Expression, w)
 
 			b.Score(c)
+
+			if parens > 0 {
+				b.AcceptRunWhitespace()
+			}
 		}
 	} else {
 		c := b.NewGoal()
