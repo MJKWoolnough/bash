@@ -12036,6 +12036,61 @@ func TestCommand(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
+		{"let a=$(||)", func(t *test, tk Tokens) { // 17
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err: Error{
+															Err: Error{
+																Err:     ErrMissingWord,
+																Parsing: "Command",
+																Token:   tk[5],
+															},
+															Parsing: "CommandOrCompound",
+															Token:   tk[5],
+														},
+														Parsing: "Pipeline",
+														Token:   tk[5],
+													},
+													Parsing: "Statement",
+													Token:   tk[5],
+												},
+												Parsing: "Line",
+												Token:   tk[5],
+											},
+											Parsing: "File",
+											Token:   tk[5],
+										},
+										Parsing: "CommandSubstitution",
+										Token:   tk[5],
+									},
+									Parsing: "WordPart",
+									Token:   tk[4],
+								},
+								Parsing: "Word",
+								Token:   tk[4],
+							},
+							Parsing: "WordOrOperator",
+							Token:   tk[4],
+						},
+						Parsing: "Assignment",
+						Token:   tk[4],
+					},
+					Parsing: "AssignmentOrWord",
+					Token:   tk[2],
+				},
+				Parsing: "Command",
+				Token:   tk[2],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c Command
 
