@@ -2215,7 +2215,6 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 
 		b.Score(c)
 		b.AcceptRunAllWhitespace()
-
 	}
 
 	a.Tokens = b.ToTokens()
