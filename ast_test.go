@@ -11708,7 +11708,84 @@ func TestCommand(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
-		{"a[$(||)]=", func(t *test, tk Tokens) { // 11
+		{"let a=b c=(d)", func(t *test, tk Tokens) { // 11
+			t.Output = Command{
+				AssignmentsOrWords: []AssignmentOrWord{
+					{
+						Word: &Word{
+							Parts: []WordPart{
+								{
+									Part:   &tk[0],
+									Tokens: tk[:1],
+								},
+							},
+							Tokens: tk[:1],
+						},
+						Tokens: tk[:1],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[2],
+								Tokens:     tk[2:3],
+							},
+							Assignment: AssignmentAssign,
+							Expression: []WordOrOperator{
+								{
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[4],
+												Tokens: tk[4:5],
+											},
+										},
+										Tokens: tk[4:5],
+									},
+									Tokens: tk[4:5],
+								},
+							},
+							Tokens: tk[2:5],
+						},
+						Tokens: tk[2:5],
+					},
+					{
+						Assignment: &Assignment{
+							Identifier: ParameterAssign{
+								Identifier: &tk[6],
+								Tokens:     tk[6:7],
+							},
+							Assignment: AssignmentAssign,
+							Expression: []WordOrOperator{
+								{
+									Operator: &tk[8],
+									Tokens:   tk[8:9],
+								},
+								{
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part:   &tk[9],
+												Tokens: tk[9:10],
+											},
+										},
+										Tokens: tk[9:10],
+									},
+									Tokens: tk[9:10],
+								},
+								{
+									Operator: &tk[10],
+									Tokens:   tk[10:11],
+								},
+							},
+							Tokens: tk[6:11],
+						},
+						Tokens: tk[6:11],
+					},
+				},
+				Tokens: tk[:11],
+			}
+		}},
+		{"a[$(||)]=", func(t *test, tk Tokens) { // 12
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -11763,7 +11840,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{">$(||)", func(t *test, tk Tokens) { // 12
+		{">$(||)", func(t *test, tk Tokens) { // 13
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -11810,7 +11887,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 13
+		{"$(||)", func(t *test, tk Tokens) { // 14
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -11857,7 +11934,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"a >$(||)", func(t *test, tk Tokens) { // 14
+		{"a >$(||)", func(t *test, tk Tokens) { // 15
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -11904,7 +11981,7 @@ func TestCommand(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"export a=$(||)", func(t *test, tk Tokens) { // 15
+		{"export a=$(||)", func(t *test, tk Tokens) { // 16
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
