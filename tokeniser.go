@@ -1869,7 +1869,7 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		wb = wordBreakIndex
 	case stateCommandIndex:
 		wb = wordBreakCommandIndex
-	case stateArithmeticExpansion, stateArithmeticParens, stateTernary, stateForArithmetic:
+	case stateArithmeticExpansion, stateArithmeticParens, stateTernary, stateForArithmetic, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
 		wb = wordBreakArithmetic
 	case stateTest, stateTestBinary:
 		wb = testWordBreak
