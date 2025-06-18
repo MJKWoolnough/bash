@@ -25,6 +25,11 @@ func TestPrintSource(t *testing.T) {
 			"a=(1);",
 			"a=( 1 );",
 		},
+		{ // 3
+			"a=(\n# word comment\nb # post-word comment\n)",
+			"a=(\n\t# word comment\n\tb # post-word comment\n);",
+			"a=(\n\t# word comment\n\tb # post-word comment\n);",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
