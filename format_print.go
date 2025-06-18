@@ -47,18 +47,16 @@ func (a ArrayWord) printSource(w io.Writer, v bool) {
 }
 
 func (a Assignment) printSource(w io.Writer, v bool) {
-	if a.Assignment != AssignmentAssign && a.Assignment != AssignmentAppend {
-		return
-	}
+	if a.Assignment == AssignmentAssign || a.Assignment == AssignmentAppend {
+		a.Identifier.printSource(w, v)
+		a.Assignment.printSource(w, v)
 
-	a.Identifier.printSource(w, v)
-	a.Assignment.printSource(w, v)
-
-	if a.Value != nil {
-		a.Value.printSource(w, v)
-	} else {
-		for _, e := range a.Expression {
-			e.printSource(w, v)
+		if a.Value != nil {
+			a.Value.printSource(w, v)
+		} else {
+			for _, e := range a.Expression {
+				e.printSource(w, v)
+			}
 		}
 	}
 }
