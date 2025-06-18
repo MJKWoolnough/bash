@@ -34,15 +34,15 @@ func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 
 func (a ArrayWord) printSource(w io.Writer, v bool) {
 	if len(a.Comments[0]) > 0 {
-		io.WriteString(w, " ")
-		a.Comments[0].printSource(w, v)
+		io.WriteString(w, "\n")
+		a.Comments[0].printSource(w, true)
 	}
 
 	a.Word.printSource(w, v)
 
 	if len(a.Comments[1]) > 0 {
 		io.WriteString(w, " ")
-		a.Comments[1].printSource(w, v)
+		a.Comments[1].printSource(w, true)
 	}
 }
 
@@ -723,29 +723,33 @@ func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
-		if v || len(ve.Comments[0]) > 0 {
-			io.WriteString(w, "( ")
+		if len(ve.Comments[0]) > 0 {
+			io.WriteString(w, "(")
 			ve.Comments[0].printSource(w, true)
 		} else {
 			io.WriteString(w, "(")
 		}
 
 		if len(ve.Array) > 0 {
-			ve.Array[0].printSource(w, v)
+			var lastHadComment bool
 
-			for _, word := range ve.Array[1:] {
-				io.WriteString(w, " ")
+			for _, word := range ve.Array {
+				if v && len(word.Comments[0]) == 0 {
+					io.WriteString(w, " ")
+				}
+
 				word.printSource(w, v)
+
+				lastHadComment = len(word.Comments[1]) != 0
+			}
+
+			if v && !lastHadComment {
+				io.WriteString(w, " ")
 			}
 		}
 
 		ve.Comments[1].printSource(w, true)
-
-		if v && len(ve.Comments[1]) == 0 {
-			io.WriteString(w, " )")
-		} else {
-			io.WriteString(w, ")")
-		}
+		io.WriteString(w, ")")
 	}
 }
 
