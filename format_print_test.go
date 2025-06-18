@@ -20,6 +20,11 @@ func TestPrintSource(t *testing.T) {
 			"$((a+b));",
 			"$(( a + b ));",
 		},
+		{ // 3
+			"a=(1)",
+			"a=(1);",
+			"a=( 1 );",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
