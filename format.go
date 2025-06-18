@@ -84,10 +84,16 @@ func (t Token) printType(w io.Writer, v bool) {
 		typ = "TokenComment"
 	case TokenIdentifier:
 		typ = "TokenIdentifier"
+	case TokenFunctionIdentifier:
+		typ = "TokenFunctionIdentifier"
 	case TokenIdentifierAssign:
 		typ = "TokenIdentifierAssign"
+	case TokenLetIdentifierAssign:
+		typ = "TokenLetIdentifierAssign"
 	case TokenKeyword:
 		typ = "TokenKeyword"
+	case TokenBuiltin:
+		typ = "TokenBuiltin"
 	case TokenWord:
 		typ = "TokenWord"
 	case TokenNumberLiteral:
@@ -108,6 +114,8 @@ func (t Token) printType(w io.Writer, v bool) {
 		typ = "TokenPunctuator"
 	case TokenHeredoc:
 		typ = "TokenHeredoc"
+	case TokenHeredocIndent:
+		typ = "TokenHeredocIndent"
 	case TokenHeredocEnd:
 		typ = "TokenHeredocEnd"
 	case TokenOpenBacktick:
@@ -116,6 +124,8 @@ func (t Token) printType(w io.Writer, v bool) {
 		typ = "TokenCloseBacktick"
 	case TokenPattern:
 		typ = "TokenPattern"
+	case TokenOperator:
+		typ = "TokenOperator"
 	default:
 		typ = "Unknown"
 	}
