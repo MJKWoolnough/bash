@@ -42,7 +42,7 @@ func (a ArrayWord) printSource(w io.Writer, v bool) {
 
 	if len(a.Comments[1]) > 0 {
 		io.WriteString(w, " ")
-		a.Comments[1].printSource(w, true)
+		a.Comments[1].printSource(w, false)
 	}
 }
 
@@ -723,22 +723,27 @@ func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
+		ip := indentPrinter{w}
+
 		if len(ve.Comments[0]) > 0 {
 			io.WriteString(w, "(")
-			ve.Comments[0].printSource(w, true)
+			ve.Comments[0].printSource(&ip, true)
 		} else {
 			io.WriteString(w, "(")
 		}
 
+		var lastHadComment bool
+
 		if len(ve.Array) > 0 {
-			var lastHadComment bool
 
 			for _, word := range ve.Array {
-				if v && len(word.Comments[0]) == 0 {
+				if lastHadComment {
+					io.WriteString(&ip, "\n")
+				} else if v && len(word.Comments[0]) == 0 {
 					io.WriteString(w, " ")
 				}
 
-				word.printSource(w, v)
+				word.printSource(&ip, v)
 
 				lastHadComment = len(word.Comments[1]) != 0
 			}
@@ -748,7 +753,15 @@ func (ve Value) printSource(w io.Writer, v bool) {
 			}
 		}
 
-		ve.Comments[1].printSource(w, true)
+		if len(ve.Comments[1]) != 0 {
+			ve.Comments[1].printSource(&ip, false)
+			lastHadComment = true
+		}
+
+		if lastHadComment {
+			io.WriteString(w, "\n")
+		}
+
 		io.WriteString(w, ")")
 	}
 }
