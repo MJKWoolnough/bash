@@ -741,7 +741,7 @@ func (ve Value) printSource(w io.Writer, v bool) {
 
 		ve.Comments[1].printSource(w, true)
 
-		if v && len(ve.Comments) == 0 {
+		if v && len(ve.Comments[1]) == 0 {
 			io.WriteString(w, " )")
 		} else {
 			io.WriteString(w, ")")
