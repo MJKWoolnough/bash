@@ -9,7 +9,18 @@ import (
 )
 
 func TestPrintSource(t *testing.T) {
-	for n, test := range [...][3]string{} {
+	for n, test := range [...][3]string{
+		{ // 1
+			"(( a ))",
+			"((a));",
+			"(( a ));",
+		},
+		{ // 2
+			"$(( a + b ))",
+			"$((a+b));",
+			"$(( a + b ));",
+		},
+	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
 
