@@ -148,6 +148,7 @@ func (c Command) printSource(w io.Writer, v bool) {
 		c.Redirections[0].printSource(w, v)
 
 		for _, r := range c.Redirections[1:] {
+			io.WriteString(w, " ")
 			r.printSource(w, v)
 		}
 	}
