@@ -11785,7 +11785,7 @@ func TestCommand(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"let a=(b ? c : d)", func(t *test, tk Tokens) { // 12
+		{"let a=(b ? c : d);", func(t *test, tk Tokens) { // 12
 			t.Output = Command{
 				AssignmentsOrWords: []AssignmentOrWord{
 					{
