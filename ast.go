@@ -1505,7 +1505,7 @@ func (a *Assignment) parse(b *bashParser) error {
 		parens := 0
 
 		for {
-			if tk := b.Peek(); parens == 0 && (tk.Type == TokenWhitespace || tk.Type == TokenLineTerminator || tk.Type == TokenComment || isEnd(tk)) {
+			if tk := b.Peek(); parens == 0 && (tk.Type == TokenWhitespace || tk.Type == TokenLineTerminator || tk.Type == TokenComment || tk == (parser.Token{Type: TokenPunctuator, Data: ";"}) || isEnd(tk)) {
 				break
 			} else if tk == (parser.Token{Type: TokenPunctuator, Data: "("}) {
 				parens++
