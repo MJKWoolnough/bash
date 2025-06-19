@@ -246,11 +246,11 @@ func (c CaseTerminationType) printType(w io.Writer, v bool) {
 func (c CaseTerminationType) printSource(w io.Writer, v bool) {
 	switch c {
 	case CaseTerminationNone, CaseTerminationEnd:
-		io.WriteString(w, ";;")
+		io.WriteString(w, ";")
 	case CaseTerminationContinue:
-		io.WriteString(w, ";&")
+		io.WriteString(w, "&")
 	case CaseTerminationFallthrough:
-		io.WriteString(w, ";;&")
+		io.WriteString(w, ";&")
 	}
 }
 
