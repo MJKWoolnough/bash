@@ -1,6 +1,10 @@
 package bash
 
-import "io"
+import (
+	"io"
+
+	"vimagination.zapto.org/parser"
+)
 
 func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 	if a.Expression {
@@ -54,8 +58,22 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 		if a.Value != nil {
 			a.Value.printSource(w, v)
 		} else {
+			parens := 0
+
 			for _, e := range a.Expression {
+				if parens > 0 {
+					io.WriteString(w, " ")
+				}
+
 				e.printSource(w, v)
+
+				if v && e.Operator != nil {
+					if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: "("}) {
+						parens++
+					} else if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: "("}) {
+						parens--
+					}
+				}
 			}
 		}
 	}
