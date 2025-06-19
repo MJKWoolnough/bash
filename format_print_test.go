@@ -65,6 +65,26 @@ func TestPrintSource(t *testing.T) {
 			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
 			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
 		},
+		{ // 12
+			"a=1 b=2 c d >e <f",
+			"a=1 b=2 c d >e <f;",
+			"a=1 b=2 c d >e <f;",
+		},
+		{ // 13
+			"a b >c <d",
+			"a b >c <d;",
+			"a b >c <d;",
+		},
+		{ // 14
+			">a <b",
+			">a <b;",
+			">a <b;",
+		},
+		{ // 12
+			"a=1 b=2 >c <d",
+			"a=1 b=2 >c <d;",
+			"a=1 b=2 >c <d;",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
