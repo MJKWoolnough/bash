@@ -546,8 +546,14 @@ func (p PatternLines) printSource(w io.Writer, v bool) {
 	ip := indentPrinter{Writer: w}
 
 	io.WriteString(w, ")")
-	p.Lines.printSource(&ip, v)
-	io.WriteString(w, "\n")
+	io.WriteString(&ip, "\n")
+
+	if len(p.Lines.Lines) > 0 {
+		p.Lines.printSource(&ip, v)
+	} else {
+		io.WriteString(w, ";")
+	}
+
 	p.CaseTerminationType.printSource(w, v)
 }
 
