@@ -25,10 +25,30 @@ func TestPrintSource(t *testing.T) {
 			"a=(1);",
 			"a=( 1 );",
 		},
-		{ // 3
+		{ // 4
 			"a=(\n# word comment\nb # post-word comment\n)",
 			"a=(\n\t# word comment\n\tb # post-word comment\n);",
 			"a=(\n\t# word comment\n\tb # post-word comment\n);",
+		},
+		{ // 5
+			"a=1",
+			"a=1;",
+			"a=1;",
+		},
+		{ // 6
+			"let a=1+2",
+			"let a=1+2;",
+			"let a=1+2;",
+		},
+		{ // 7
+			"let a=1+(2+3)",
+			"let a=1+(2+3);",
+			"let a=1+( 2 + 3 );",
+		},
+		{ // 8
+			"let a=b?(c?d:e):f",
+			"let a=b?(c?d:e):f;",
+			"let a=b?( c ? d : e ):f;",
 		},
 	} {
 		for m, input := range test {

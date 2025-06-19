@@ -70,7 +70,7 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 				if v && e.Operator != nil {
 					if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: "("}) {
 						parens++
-					} else if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: "("}) {
+					} else if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: ")"}) {
 						parens--
 					}
 				}
