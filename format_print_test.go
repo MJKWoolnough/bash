@@ -50,6 +50,21 @@ func TestPrintSource(t *testing.T) {
 			"let a=b?(c?d:e):f;",
 			"let a=b?( c ? d : e ):f;",
 		},
+		{ // 9
+			"case a in b)c\nesac",
+			"case a in\nb)\n\tc;;\nesac;",
+			"case a in\nb)\n\tc;;\nesac;",
+		},
+		{ // 10
+			"case a in b);;& c) d;&\nesac",
+			"case a in\nb)\n\t;;&\nc)\n\td;&\nesac;",
+			"case a in\nb)\n\t;;&\nc)\n\td;&\nesac;",
+		},
+		{ // 11
+			"case a #A\nin #B\n#C\nb)c;;\n#D\nesac",
+			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
+			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
