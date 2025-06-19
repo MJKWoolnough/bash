@@ -94,12 +94,15 @@ func (c CaseCompound) printSource(w io.Writer, v bool) {
 	if len(c.Comments[0]) > 0 {
 		io.WriteString(w, " ")
 		c.Comments[0].printSource(w, false)
-		io.WriteString(w, "\nin ")
+		io.WriteString(w, "\nin")
 	} else {
-		io.WriteString(w, " in ")
+		io.WriteString(w, " in")
 	}
 
-	c.Comments[1].printSource(w, true)
+	if len(c.Comments[1]) > 0 {
+		io.WriteString(w, " ")
+		c.Comments[1].printSource(w, false)
+	}
 
 	for _, m := range c.Matches {
 		io.WriteString(w, "\n")
