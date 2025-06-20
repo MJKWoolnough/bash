@@ -110,6 +110,26 @@ func TestPrintSource(t *testing.T) {
 			"case a in\nesac <a 2>&1;",
 			"case a in\nesac <a 2>&1;",
 		},
+		{ // 21
+			"for a;do c\nd\ndone",
+			"for a; do\n\tc;\n\td;\ndone;",
+			"for a; do\n\tc;\n\td;\ndone;",
+		},
+		{ // 22
+			"for a in b\ndo c\ndone",
+			"for a in b; do\n\tc;\ndone;",
+			"for a in b; do\n\tc;\ndone;",
+		},
+		{ // 23
+			"for a in b c\ndo d\ndone",
+			"for a in b c; do\n\td;\ndone;",
+			"for a in b c; do\n\td;\ndone;",
+		},
+		{ // 24
+			"for ((a=0;a<1;a++));do b\ndone",
+			"for ((a=0;a<1;a++)); do\n\tb;\ndone;",
+			"for (( a = 0; a < 1; a ++ )); do\n\tb;\ndone;",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
