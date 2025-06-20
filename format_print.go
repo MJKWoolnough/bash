@@ -178,7 +178,16 @@ func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
 
 func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
-	c.Command.printSource(w, v)
+
+	if c.Command.isMultiline(v) {
+		ip := indentPrinter{w}
+
+		io.WriteString(&ip, "\n")
+		c.Command.printSource(&ip, v)
+		io.WriteString(w, "\n")
+	} else {
+		c.Command.printSource(w, v)
+	}
 	io.WriteString(w, ")")
 }
 
