@@ -188,6 +188,7 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	} else {
 		c.Command.printSourceEnd(w, v, false)
 	}
+
 	io.WriteString(w, ")")
 }
 

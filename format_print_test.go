@@ -95,6 +95,16 @@ func TestPrintSource(t *testing.T) {
 			"a <<-b;\nheredoc\ncontents\nb",
 			"a <<-b;\nheredoc\ncontents\nb",
 		},
+		{ // 18
+			"$(a)",
+			"$(a);",
+			"$(a);",
+		},
+		{ // 19
+			"$(a\nb)",
+			"$(\n\ta;\n\tb;\n);",
+			"$(\n\ta;\n\tb;\n);",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
