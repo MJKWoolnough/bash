@@ -105,6 +105,11 @@ func TestPrintSource(t *testing.T) {
 			"$(\n\ta;\n\tb;\n);",
 			"$(\n\ta;\n\tb;\n);",
 		},
+		{ // 20
+			"case a in\nesac <a 2>&1;",
+			"case a in\nesac <a 2>&1;",
+			"case a in\nesac <a 2>&1;",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
