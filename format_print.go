@@ -21,7 +21,7 @@ func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 		a.WordsAndOperators[0].printSource(w, v)
 
 		for _, wo := range a.WordsAndOperators[1:] {
-			if v {
+			if v && !wo.operatorIsToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
 				io.WriteString(w, " ")
 			}
 
