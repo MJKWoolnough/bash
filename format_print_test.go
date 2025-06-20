@@ -80,10 +80,20 @@ func TestPrintSource(t *testing.T) {
 			">a <b;",
 			">a <b;",
 		},
-		{ // 12
+		{ // 15
 			"a=1 b=2 >c <d",
 			"a=1 b=2 >c <d;",
 			"a=1 b=2 >c <d;",
+		},
+		{ // 16
+			"a <<b\nheredoc\ncontents\nb",
+			"a <<b;\nheredoc\ncontents\nb",
+			"a <<b;\nheredoc\ncontents\nb",
+		},
+		{ // 17
+			"a <<-b\n\theredoc\n\tcontents\nb",
+			"a <<-b;\nheredoc\ncontents\nb",
+			"a <<-b;\nheredoc\ncontents\nb",
 		},
 	} {
 		for m, input := range test {
