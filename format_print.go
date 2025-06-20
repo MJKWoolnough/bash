@@ -274,7 +274,7 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 	f.Comments[1].printSource(&ip, true)
 	io.WriteString(&ip, "do\n")
 	f.File.printSource(&ip, v)
-	io.WriteString(&ip, "\ndone")
+	io.WriteString(w, "\ndone")
 }
 
 func (f FunctionCompound) printSource(w io.Writer, v bool) {
