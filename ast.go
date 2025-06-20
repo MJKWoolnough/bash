@@ -62,6 +62,20 @@ func (f *File) parse(b *bashParser) error {
 	return nil
 }
 
+func (f *File) isMultiline(v bool) bool {
+	if len(f.Lines) > 1 || len(f.Comments[0]) > 0 || len(f.Comments[1]) > 0 {
+		return true
+	}
+
+	for _, l := range f.Lines {
+		if l.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func isEnd(tk parser.Token) bool {
 	return tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}")
 }
@@ -111,6 +125,20 @@ func (l *Line) parse(b *bashParser) error {
 	l.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (l *Line) isMultiline(v bool) bool {
+	if len(l.Comments[0]) > 0 || len(l.Comments[1]) > 0 || v && len(l.Statements) > 0 {
+		return true
+	}
+
+	for _, s := range l.Statements {
+		if s.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (l *Line) parseHeredocs(b *bashParser) error {
@@ -209,6 +237,16 @@ func (s *Statement) parse(b *bashParser, first bool) error {
 	s.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (s *Statement) isMultiline(v bool) bool {
+	if s.Pipeline.isMultiline(v) {
+		return true
+	} else if s.Statement != nil {
+		return s.Statement.isMultiline(v)
+	}
+
+	return false
 }
 
 func (s *Statement) parseHeredocs(b *bashParser) error {
@@ -311,6 +349,16 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 	return nil
 }
 
+func (p *Pipeline) isMultiline(v bool) bool {
+	if p.CommandOrCompound.isMultiline(v) {
+		return true
+	} else if p.Pipeline != nil {
+		return p.isMultiline(v)
+	}
+
+	return false
+}
+
 func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	c := b.NewGoal()
 
@@ -361,6 +409,16 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 	cc.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (cc *CommandOrCompound) isMultiline(v bool) bool {
+	if cc.Command != nil {
+		return cc.Command.isMultiline(v)
+	} else if cc.Compound != nil {
+		return cc.Compound.isMultiline(v)
+	}
+
+	return false
 }
 
 func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
@@ -486,6 +544,28 @@ func (cc *Compound) parse(b *bashParser) error {
 	cc.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (cc *Compound) isMultiline(v bool) bool {
+	if cc.IfCompound != nil || cc.CaseCompound != nil || cc.LoopCompound != nil || cc.ForCompound != nil || cc.SelectCompound != nil {
+		return true
+	} else if cc.GroupingCompound != nil {
+		return cc.GroupingCompound.isMultiline(v)
+	} else if cc.TestCompound != nil {
+		return cc.TestCompound.isMultiline(v)
+	} else if cc.ArithmeticCompound != nil {
+		return cc.ArithmeticCompound.isMultiline(v)
+	} else if cc.FunctionCompound != nil {
+		return cc.FunctionCompound.isMultiline(v)
+	}
+
+	for _, r := range cc.Redirections {
+		if r.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (cc *Compound) parseHeredocs(b *bashParser) error {
@@ -955,6 +1035,10 @@ func (t *TestCompound) parse(b *bashParser) error {
 	return nil
 }
 
+func (t *TestCompound) isMultiline(v bool) bool {
+	return t.Tests.isMultiline(v)
+}
+
 type TestOperator uint8
 
 const (
@@ -1220,6 +1304,26 @@ func (t *Tests) parse(b *bashParser) error {
 	return nil
 }
 
+func (t *Tests) isMultiline(v bool) bool {
+	if t.Parens != nil && t.Parens.isMultiline(v) {
+		return true
+	}
+
+	if t.Word != nil && t.Word.isMultiline(v) {
+		return true
+	}
+
+	if t.Pattern != nil && t.Pattern.isMultiline(v) {
+		return true
+	}
+
+	if t.Tests != nil {
+		return t.Tests.isMultiline(v)
+	}
+
+	return false
+}
+
 type Pattern struct {
 	Parts  []WordPart
 	Tokens Tokens
@@ -1243,6 +1347,16 @@ func (p *Pattern) parse(b *bashParser) error {
 	p.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (p *Pattern) isMultiline(v bool) bool {
+	for _, pt := range p.Parts {
+		if pt.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func nextIsPatternPart(b *bashParser) bool {
@@ -1331,6 +1445,10 @@ func (f *FunctionCompound) parse(b *bashParser) error {
 	return nil
 }
 
+func (f *FunctionCompound) isMultiline(v bool) bool {
+	return len(f.Comments) > 0 || f.Body.isMultiline(v)
+}
+
 type AssignmentOrWord struct {
 	Assignment *Assignment
 	Word       *Word
@@ -1358,6 +1476,16 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 	a.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (a *AssignmentOrWord) isMultiline(v bool) bool {
+	if a.Assignment != nil {
+		return a.Assignment.isMultiline(v)
+	} else if a.Word != nil {
+		return a.Word.isMultiline(v)
+	}
+
+	return false
 }
 
 type Command struct {
@@ -1433,6 +1561,28 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 	cc.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (cc *Command) isMultiline(v bool) bool {
+	for _, vs := range cc.Vars {
+		if vs.isMultiline(v) {
+			return true
+		}
+	}
+
+	for _, r := range cc.Redirections {
+		if r.isMultiline(v) {
+			return true
+		}
+	}
+
+	for _, a := range cc.AssignmentsOrWords {
+		if a.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (cc *Command) parseHeredocs(b *bashParser) error {
@@ -1545,6 +1695,24 @@ func (a *Assignment) parse(b *bashParser) error {
 	return nil
 }
 
+func (a *Assignment) isMultiline(v bool) bool {
+	if a.Identifier.isMultiline(v) {
+		return true
+	}
+
+	if a.Value != nil {
+		return a.Value.isMultiline(v)
+	}
+
+	for _, wo := range a.Expression {
+		if wo.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
+}
+
 type ParameterAssign struct {
 	Identifier *Token
 	Subscript  []WordOrOperator
@@ -1579,6 +1747,16 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 	p.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (p *ParameterAssign) isMultiline(v bool) bool {
+	for _, wo := range p.Subscript {
+		if wo.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 type Value struct {
@@ -1637,6 +1815,24 @@ func (v *Value) parse(b *bashParser) error {
 	return nil
 }
 
+func (v *Value) isMultiline(vs bool) bool {
+	if len(v.Comments[0]) > 0 || len(v.Comments[1]) > 0 {
+		return true
+	}
+
+	if v.Word != nil {
+		return v.Word.isMultiline(vs)
+	}
+
+	for _, ar := range v.Array {
+		if ar.isMultiline(vs) {
+			return true
+		}
+	}
+
+	return false
+}
+
 type ArrayWord struct {
 	Word     Word
 	Comments [2]Comments
@@ -1660,6 +1856,14 @@ func (a *ArrayWord) parse(b *bashParser) error {
 	a.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (a *ArrayWord) isMultiline(v bool) bool {
+	if len(a.Comments[0]) > 0 || len(a.Comments[1]) > 0 {
+		return true
+	}
+
+	return a.Word.isMultiline(v)
 }
 
 type Word struct {
@@ -1690,6 +1894,16 @@ func (w *Word) parse(b *bashParser, splitAssign bool) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (w *Word) isMultiline(v bool) bool {
+	for _, p := range w.Parts {
+		if p.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func nextIsWordPart(b *bashParser) bool {
@@ -1749,6 +1963,18 @@ func (w *WordPart) parse(b *bashParser) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (w *WordPart) isMultiline(v bool) bool {
+	if w.ParameterExpansion != nil {
+		return w.ParameterExpansion.isMultiline(v)
+	} else if w.ArithmeticExpansion != nil {
+		return w.ArithmeticExpansion.isMultiline(v)
+	} else if w.CommandSubstitution != nil {
+		return w.CommandSubstitution.isMultiline(v)
+	}
+
+	return false
 }
 
 type ParameterType uint8
@@ -1952,6 +2178,16 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 	return nil
 }
 
+func (p *ParameterExpansion) isMultiline(v bool) bool {
+	if p.Word != nil {
+		return p.Word.isMultiline(v)
+	} else if p.String != nil {
+		return p.String.isMultiline(v)
+	}
+
+	return false
+}
+
 type Parameter struct {
 	Parameter *Token
 	Array     []WordOrOperator
@@ -2017,6 +2253,16 @@ func (s *String) parse(b *bashParser) error {
 	return nil
 }
 
+func (s *String) isMultiline(v bool) bool {
+	for _, wt := range s.WordsOrTokens {
+		if wt.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
+}
+
 type WordOrToken struct {
 	Token  *Token
 	Word   *Word
@@ -2042,6 +2288,14 @@ func (w *WordOrToken) parse(b *bashParser) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (w *WordOrToken) isMultiline(v bool) bool {
+	if w.Word != nil {
+		return w.Word.isMultiline(v)
+	}
+
+	return false
 }
 
 type SubstitutionType uint8
@@ -2082,6 +2336,10 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	return nil
 }
 
+func (cs *CommandSubstitution) isMultiline(v bool) bool {
+	return cs.Command.isMultiline(v)
+}
+
 type Redirection struct {
 	Input      *Token
 	Redirector *Token
@@ -2112,6 +2370,10 @@ func (r *Redirection) parse(b *bashParser) error {
 	r.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (r *Redirection) isMultiline(v bool) bool {
+	return r.Heredoc != nil || r.Output.isMultiline(v)
 }
 
 func (r *Redirection) isHeredoc() bool {
@@ -2226,6 +2488,16 @@ func (a *ArithmeticExpansion) parse(b *bashParser) error {
 	return nil
 }
 
+func (a *ArithmeticExpansion) isMultiline(v bool) bool {
+	for _, w := range a.WordsAndOperators {
+		if w.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
+}
+
 type WordOrOperator struct {
 	Word     *Word
 	Operator *Token
@@ -2287,4 +2559,12 @@ func (w *WordOrOperator) parse(b *bashParser) error {
 	w.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (w *WordOrOperator) isMultiline(v bool) bool {
+	if w.Word != nil {
+		return w.Word.isMultiline(v)
+	}
+
+	return false
 }
