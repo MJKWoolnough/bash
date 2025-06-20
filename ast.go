@@ -1,7 +1,9 @@
 // Package bash implements a bash tokeniser and AST.
 package bash // import "vimagination.zapto.org/bash"
 
-import "vimagination.zapto.org/parser"
+import (
+	"vimagination.zapto.org/parser"
+)
 
 // Parse parses Bash input into AST.
 func Parse(t Tokeniser) (*File, error) {
@@ -2564,6 +2566,14 @@ func (w *WordOrOperator) parse(b *bashParser) error {
 func (w *WordOrOperator) isMultiline(v bool) bool {
 	if w.Word != nil {
 		return w.Word.isMultiline(v)
+	}
+
+	return false
+}
+
+func (w *WordOrOperator) operatorIsToken(tk parser.Token) bool {
+	if w.Operator != nil {
+		return w.Operator.Token == tk
 	}
 
 	return false
