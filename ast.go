@@ -128,7 +128,7 @@ func (l *Line) parse(b *bashParser) error {
 }
 
 func (l *Line) isMultiline(v bool) bool {
-	if len(l.Comments[0]) > 0 || len(l.Comments[1]) > 0 || v && len(l.Statements) > 0 {
+	if len(l.Comments[0]) > 0 || len(l.Comments[1]) > 0 || v && len(l.Statements) > 1 {
 		return true
 	}
 

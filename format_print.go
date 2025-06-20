@@ -186,7 +186,7 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 		c.Command.printSource(&ip, v)
 		io.WriteString(w, "\n")
 	} else {
-		c.Command.printSource(w, v)
+		c.Command.printSourceEnd(w, v, false)
 	}
 	io.WriteString(w, ")")
 }
@@ -225,14 +225,18 @@ func (c Compound) printHeredoc(w io.Writer, v bool) {
 }
 
 func (f File) printSource(w io.Writer, v bool) {
+	f.printSourceEnd(w, v, true)
+}
+
+func (f File) printSourceEnd(w io.Writer, v, end bool) {
 	f.Comments[0].printSource(w, true)
 
 	if len(f.Lines) > 0 {
-		f.Lines[0].printSource(w, v)
+		f.Lines[0].printSourceEnd(w, v, end || len(f.Lines) > 1)
 
-		for _, l := range f.Lines[1:] {
+		for n, l := range f.Lines[1:] {
 			io.WriteString(w, "\n")
-			l.printSource(w, v)
+			l.printSourceEnd(w, v, end || len(f.Lines) > n+1)
 		}
 	}
 
@@ -342,13 +346,17 @@ func (i IfCompound) printSource(w io.Writer, v bool) {
 }
 
 func (l Line) printSource(w io.Writer, v bool) {
+	l.printSourceEnd(w, v, true)
+}
+
+func (l Line) printSourceEnd(w io.Writer, v, end bool) {
 	if len(l.Statements) > 0 {
 		l.Comments[0].printSource(w, true)
-		l.Statements[0].printSource(w, v)
+		l.Statements[0].printSourceEnd(w, v, end || len(l.Statements) > 1)
 
-		for _, s := range l.Statements[1:] {
+		for n, s := range l.Statements[1:] {
 			io.WriteString(w, " ")
-			s.printSource(w, v)
+			s.printSourceEnd(w, v, end || len(l.Statements) > n+1)
 		}
 
 		l.Comments[1].printSource(w, false)
@@ -652,6 +660,10 @@ func (s SelectCompound) printSource(w io.Writer, v bool) {
 }
 
 func (s Statement) printSource(w io.Writer, v bool) {
+	s.printSourceEnd(w, v, true)
+}
+
+func (s Statement) printSourceEnd(w io.Writer, v, end bool) {
 	s.Pipeline.printSource(w, v)
 
 	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.Statement != nil {
@@ -665,7 +677,7 @@ func (s Statement) printSource(w io.Writer, v bool) {
 		} else {
 			io.WriteString(w, "&")
 		}
-	} else {
+	} else if end {
 		io.WriteString(w, ";")
 	}
 }
