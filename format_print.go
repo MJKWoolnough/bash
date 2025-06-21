@@ -245,36 +245,34 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
-	if f.ArithmeticExpansion == nil && f.Identifier == nil {
-		return
-	}
+	if f.ArithmeticExpansion != nil || f.Identifier != nil {
+		io.WriteString(w, "for ")
 
-	io.WriteString(w, "for ")
+		if f.ArithmeticExpansion != nil {
+			f.ArithmeticExpansion.printSource(w, v)
+		} else {
+			io.WriteString(w, f.Identifier.Data)
 
-	if f.ArithmeticExpansion != nil {
-		f.ArithmeticExpansion.printSource(w, v)
-	} else {
-		io.WriteString(w, f.Identifier.Data)
-
-		if f.Words != nil {
-			io.WriteString(w, " ")
-			f.Comments[0].printSource(w, true)
-			io.WriteString(w, "in")
-
-			for _, wd := range f.Words {
+			if f.Words != nil {
 				io.WriteString(w, " ")
-				wd.printSource(w, v)
+				f.Comments[0].printSource(w, true)
+				io.WriteString(w, "in")
+
+				for _, wd := range f.Words {
+					io.WriteString(w, " ")
+					wd.printSource(w, v)
+				}
 			}
 		}
+
+		ip := indentPrinter{Writer: w}
+
+		io.WriteString(&ip, "; ")
+		f.Comments[1].printSource(&ip, true)
+		io.WriteString(&ip, "do\n")
+		f.File.printSource(&ip, v)
+		io.WriteString(w, "\ndone")
 	}
-
-	ip := indentPrinter{Writer: w}
-
-	io.WriteString(&ip, "; ")
-	f.Comments[1].printSource(&ip, true)
-	io.WriteString(&ip, "do\n")
-	f.File.printSource(&ip, v)
-	io.WriteString(w, "\ndone")
 }
 
 func (f FunctionCompound) printSource(w io.Writer, v bool) {
@@ -304,9 +302,9 @@ func (g GroupingCompound) printSource(w io.Writer, v bool) {
 	g.File.printSource(&ip, v)
 
 	if g.SubShell {
-		io.WriteString(&ip, "\n)")
+		io.WriteString(w, "\n)")
 	} else {
-		io.WriteString(&ip, "\n}")
+		io.WriteString(w, "\n}")
 	}
 }
 
