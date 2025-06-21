@@ -359,7 +359,10 @@ func (l Line) printSourceEnd(w io.Writer, v, end bool) {
 			s.printSourceEnd(w, v, end || len(l.Statements) > n+1)
 		}
 
-		l.Comments[1].printSource(w, false)
+		if len(l.Comments[1]) > 0 {
+			io.WriteString(w, " ")
+			l.Comments[1].printSource(w, false)
+		}
 
 		for _, s := range l.Statements {
 			s.printHeredoc(w, v)
