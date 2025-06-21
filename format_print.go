@@ -276,18 +276,16 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 }
 
 func (f FunctionCompound) printSource(w io.Writer, v bool) {
-	if f.Identifier == nil {
-		return
-	}
+	if f.Identifier != nil {
+		if f.HasKeyword {
+			io.WriteString(w, "function ")
+		}
 
-	if f.HasKeyword {
-		io.WriteString(w, "function ")
+		io.WriteString(w, f.Identifier.Data)
+		io.WriteString(w, "() ")
+		f.Comments.printSource(w, true)
+		f.Body.printSource(w, v)
 	}
-
-	io.WriteString(w, f.Identifier.Data)
-	io.WriteString(w, "() ")
-	f.Comments.printSource(w, true)
-	f.Body.printSource(w, v)
 }
 
 func (g GroupingCompound) printSource(w io.Writer, v bool) {
