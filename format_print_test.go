@@ -106,26 +106,31 @@ func TestPrintSource(t *testing.T) {
 			"$(\n\ta;\n\tb;\n);",
 		},
 		{ // 20
+			"# A\na # B\n# C\n\n# D",
+			"# A\na; # B\n# C\n\n# D",
+			"# A\na; # B\n# C\n\n# D",
+		},
+		{ // 21
 			"case a in\nesac <a 2>&1;",
 			"case a in\nesac <a 2>&1;",
 			"case a in\nesac <a 2>&1;",
 		},
-		{ // 21
+		{ // 22
 			"for a;do c\nd\ndone",
 			"for a; do\n\tc;\n\td;\ndone;",
 			"for a; do\n\tc;\n\td;\ndone;",
 		},
-		{ // 22
+		{ // 23
 			"for a in b\ndo c\ndone",
 			"for a in b; do\n\tc;\ndone;",
 			"for a in b; do\n\tc;\ndone;",
 		},
-		{ // 23
+		{ // 24
 			"for a in b c\ndo d\ndone",
 			"for a in b c; do\n\td;\ndone;",
 			"for a in b c; do\n\td;\ndone;",
 		},
-		{ // 24
+		{ // 25
 			"for ((a=0;a<1;a++));do b\ndone",
 			"for ((a=0;a<1;a++)); do\n\tb;\ndone;",
 			"for (( a = 0; a < 1; a ++ )); do\n\tb;\ndone;",
