@@ -685,7 +685,7 @@ func (s Statement) printSourceEnd(w io.Writer, v, end bool) {
 
 	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.Statement != nil {
 		s.LogicalOperator.printSource(w, v)
-		s.Statement.printSource(w, v)
+		s.Statement.printSourceEnd(w, v, false)
 	}
 
 	if s.JobControl == JobControlBackground {
