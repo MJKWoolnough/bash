@@ -137,27 +137,27 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 26
 			"function a() { b; }",
-			"function a() {\n\tb;\n};",
+			"function a() { b; };",
 			"function a() {\n\tb;\n};",
 		},
 		{ // 27
 			"function a { b; }",
-			"function a() {\n\tb;\n};",
+			"function a() { b; };",
 			"function a() {\n\tb;\n};",
 		},
 		{ // 28
 			"a() { b; }",
-			"a() {\n\tb;\n};",
+			"a() { b; };",
 			"a() {\n\tb;\n};",
 		},
 		{ // 29
 			"function a() # A\n# B\n{ b; }",
-			"function a() # A\n# B\n{\n\tb;\n};",
+			"function a() # A\n# B\n{ b; };",
 			"function a() # A\n# B\n{\n\tb;\n};",
 		},
 		{ // 30
 			"a() # A\n# B\n{ b; }",
-			"a() # A\n# B\n{\n\tb;\n};",
+			"a() # A\n# B\n{ b; };",
 			"a() # A\n# B\n{\n\tb;\n};",
 		},
 	} {

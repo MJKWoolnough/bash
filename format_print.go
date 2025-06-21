@@ -292,20 +292,34 @@ func (f FunctionCompound) printSource(w io.Writer, v bool) {
 }
 
 func (g GroupingCompound) printSource(w io.Writer, v bool) {
+	if g.SubShell {
+		io.WriteString(w, "(")
+	} else {
+		io.WriteString(w, "{")
+	}
+
 	ip := indentPrinter{Writer: w}
 
-	if g.SubShell {
-		io.WriteString(&ip, "(\n")
+	multiline := v || g.File.isMultiline(v)
+
+	if len(g.File.Comments[0]) > 0 || !multiline {
+		io.WriteString(w, " ")
 	} else {
-		io.WriteString(&ip, "{\n")
+		io.WriteString(&ip, "\n")
 	}
 
 	g.File.printSource(&ip, v)
 
-	if g.SubShell {
-		io.WriteString(w, "\n)")
+	if multiline {
+		io.WriteString(w, "\n")
 	} else {
-		io.WriteString(w, "\n}")
+		io.WriteString(w, " ")
+	}
+
+	if g.SubShell {
+		io.WriteString(w, ")")
+	} else {
+		io.WriteString(w, "}")
 	}
 }
 
