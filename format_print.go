@@ -620,7 +620,7 @@ func (p Pipeline) printHeredoc(w io.Writer, v bool) {
 	p.CommandOrCompound.printHeredoc(w, v)
 
 	if p.Pipeline != nil {
-		p.printHeredoc(w, v)
+		p.Pipeline.printHeredoc(w, v)
 	}
 }
 
