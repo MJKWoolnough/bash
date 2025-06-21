@@ -160,6 +160,31 @@ func TestPrintSource(t *testing.T) {
 			"a() # A\n# B\n{ b; };",
 			"a() # A\n# B\n{\n\tb;\n};",
 		},
+		{ // 31
+			"{ a; }",
+			"{ a; };",
+			"{\n\ta;\n};",
+		},
+		{ // 32
+			"( a; )",
+			"( a; );",
+			"(\n\ta;\n);",
+		},
+		{ // 33
+			"{ a; b; }",
+			"{ a; b; };",
+			"{\n\ta; b;\n};",
+		},
+		{ // 34
+			"( a;\nb; )",
+			"(\n\ta;\n\tb;\n);",
+			"(\n\ta;\n\tb;\n);",
+		},
+		{ // 35
+			"{ # A\na; # B\n}",
+			"{ # A\n\ta; # B\n};",
+			"{ # A\n\ta; # B\n};",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
