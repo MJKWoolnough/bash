@@ -241,7 +241,10 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 		}
 	}
 
-	f.Comments[1].printSource(w, true)
+	if len(f.Comments[1]) > 0 {
+		io.WriteString(w, "\n\n")
+		f.Comments[1].printSource(w, false)
+	}
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
