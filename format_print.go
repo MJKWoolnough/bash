@@ -356,7 +356,7 @@ func (i IfCompound) printSource(w io.Writer, v bool) {
 		i.Else.printSource(&ip, v)
 	}
 
-	io.WriteString(w, "fi")
+	io.WriteString(w, "\nfi")
 }
 
 func (l Line) printSource(w io.Writer, v bool) {
