@@ -209,6 +209,21 @@ func TestPrintSource(t *testing.T) {
 			"a && b <<c;\nc",
 			"a && b <<c;\nc",
 		},
+		{ // 41
+			"if a; then b;fi",
+			"if a; then\n\tb;\nfi;",
+			"if a; then\n\tb;\nfi;",
+		},
+		{ // 42
+			"if a||b; then b\nc\nelif d\nthen\ne\nelse if f\nthen\ng\nfi\nfi",
+			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
+			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
+		},
+		{ // 43
+			"if a; then b;elif c; then d;elif e\nthen f;fi",
+			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
+			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && n == 32 {
