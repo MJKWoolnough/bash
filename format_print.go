@@ -235,9 +235,17 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 	if len(f.Lines) > 0 {
 		f.Lines[0].printSourceEnd(w, v, end || len(f.Lines) > 1)
 
+		lastLine := lastTokenPos(f.Lines[0].Tokens)
+
 		for n, l := range f.Lines[1:] {
+			if lastTokenPos(l.Tokens) > lastLine+1 {
+				io.WriteString(w, "\n")
+			}
+
 			io.WriteString(w, "\n")
 			l.printSourceEnd(w, v, end || len(f.Lines) > n+1)
+
+			lastLine = lastTokenPos(l.Tokens)
 		}
 	}
 
@@ -245,6 +253,22 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 		io.WriteString(w, "\n\n")
 		f.Comments[1].printSource(w, false)
 	}
+}
+
+func firstTokenPos(tk Tokens) uint64 {
+	if len(tk) == 0 {
+		return 0
+	}
+
+	return tk[0].Line
+}
+
+func lastTokenPos(tk Tokens) uint64 {
+	if len(tk) == 0 {
+		return 0
+	}
+
+	return tk[len(tk)-1].Line
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
