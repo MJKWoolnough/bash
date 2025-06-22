@@ -399,10 +399,17 @@ func (l LoopCompound) printSource(w io.Writer, v bool) {
 
 	l.Statement.printSource(w, v)
 
+	if len(l.Comments) > 0 {
+		io.WriteString(w, " ")
+		l.Comments.printSource(w, true)
+		io.WriteString(w, "do")
+	} else {
+		io.WriteString(w, " do")
+	}
+
 	ip := indentPrinter{Writer: w}
 
-	l.Comments.printSource(&ip, true)
-	io.WriteString(&ip, " do\n")
+	io.WriteString(&ip, "\n")
 	l.File.printSource(&ip, v)
 	io.WriteString(w, "\ndone")
 }
