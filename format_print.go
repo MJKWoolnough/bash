@@ -368,8 +368,14 @@ func (l Line) printSourceEnd(w io.Writer, v, end bool) {
 		l.Comments[0].printSource(w, true)
 		l.Statements[0].printSourceEnd(w, v, end || len(l.Statements) > 1)
 
+		eos := " "
+
+		if v {
+			eos = "\n"
+		}
+
 		for n, s := range l.Statements[1:] {
-			io.WriteString(w, " ")
+			io.WriteString(w, eos)
 			s.printSourceEnd(w, v, end || len(l.Statements) > n+1)
 		}
 
