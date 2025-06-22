@@ -185,6 +185,31 @@ func TestPrintSource(t *testing.T) {
 			"{ # A\n\ta; # B\n};",
 			"{ # A\n\ta; # B\n};",
 		},
+		{ // 36
+			"<<a\nb$c\na",
+			"<<a;\nb$c\na",
+			"<<a;\nb$c\na",
+		},
+		{ // 37
+			"{\n<<a\nb$c\na\n}",
+			"{\n\t<<a;\nb$c\na\n};",
+			"{\n\t<<a;\nb$c\na\n};",
+		},
+		{ // 38
+			"{\n<<-a\nb$c\na\n}",
+			"{\n\t<<-a;\n\tb$c\n\ta\n};",
+			"{\n\t<<-a;\n\tb$c\n\ta\n};",
+		},
+		{ // 39
+			"a | b <<c\nc",
+			"a | b <<c;\nc",
+			"a | b <<c;\nc",
+		},
+		{ // 40
+			"a && b <<c\nc",
+			"a && b <<c;\nc",
+			"a && b <<c;\nc",
+		},
 	} {
 		for m, input := range test {
 			tk := parser.NewStringTokeniser(input)
