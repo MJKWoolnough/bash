@@ -350,6 +350,14 @@ func (p ParameterType) String() string {
 		return "ParameterMessage"
 	case ParameterSetAssign:
 		return "ParameterSetAssign"
+	case ParameterUnsetSubstitution:
+		return "ParameterUnsetSubstitution"
+	case ParameterUnsetAssignment:
+		return "ParameterUnsetAssignment"
+	case ParameterUnsetMessage:
+		return "ParameterUnsetMessage"
+	case ParameterUnsetSetAssign:
+		return "ParameterUnsetSetAssign"
 	case ParameterSubstring:
 		return "ParameterSubstring"
 	case ParameterPrefix:
