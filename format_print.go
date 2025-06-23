@@ -479,6 +479,18 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 		case ParameterSetAssign:
 			io.WriteString(w, ":-")
 			p.Word.printSource(w, v)
+		case ParameterUnsetSubstitution:
+			io.WriteString(w, "=")
+			p.Word.printSource(w, v)
+		case ParameterUnsetAssignment:
+			io.WriteString(w, "?")
+			p.Word.printSource(w, v)
+		case ParameterUnsetMessage:
+			io.WriteString(w, "+")
+			p.Word.printSource(w, v)
+		case ParameterUnsetSetAssign:
+			io.WriteString(w, "-")
+			p.Word.printSource(w, v)
 		case ParameterRemoveStartShortest:
 			io.WriteString(w, "#")
 			p.Word.printSource(w, v)
