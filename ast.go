@@ -1988,6 +1988,10 @@ const (
 	ParameterAssignment
 	ParameterMessage
 	ParameterSetAssign
+	ParameterUnsetSubstitution
+	ParameterUnsetAssignment
+	ParameterUnsetMessage
+	ParameterUnsetSetAssign
 	ParameterSubstring
 	ParameterPrefix
 	ParameterPrefixSeperate
@@ -2058,6 +2062,18 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":-"}) {
 			p.Type = ParameterSetAssign
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "="}) {
+			p.Type = ParameterUnsetSubstitution
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "?"}) {
+			p.Type = ParameterUnsetAssignment
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+"}) {
+			p.Type = ParameterUnsetMessage
+			parseWord = true
+		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "-"}) {
+			p.Type = ParameterUnsetSetAssign
 			parseWord = true
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
 			p.Type = ParameterSubstring
