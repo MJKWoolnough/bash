@@ -920,6 +920,8 @@ func (b *bashTokeniser) parameterExpansionOperation(t *parser.Tokeniser) (parser
 		}
 
 		return t.Return(TokenPunctuator, b.parameterExpansionSubstringStart)
+	} else if t.Accept("-=?+") {
+		return t.Return(TokenPunctuator, b.main)
 	} else if t.Accept("/") {
 		t.Accept("/#%")
 
