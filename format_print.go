@@ -238,7 +238,7 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 		lastLine := lastTokenPos(f.Lines[0].Tokens)
 
 		for n, l := range f.Lines[1:] {
-			if lastTokenPos(l.Tokens) > lastLine+1 {
+			if firstTokenPos(l.Tokens) > lastLine+1 {
 				io.WriteString(w, "\n")
 			}
 
