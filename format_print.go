@@ -558,39 +558,39 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 		case ParameterPrefixSeperate:
 			io.WriteString(w, "@")
 		}
-	} else {
-		switch p.Type {
-		case ParameterSubstring:
-			if p.SubstringStart != nil {
-				io.WriteString(w, ":")
-				io.WriteString(w, p.SubstringStart.Data)
+	}
 
-				if p.SubstringEnd != nil {
-					io.WriteString(w, ":")
-					io.WriteString(w, p.SubstringEnd.Data)
-				}
+	switch p.Type {
+	case ParameterSubstring:
+		if p.SubstringStart != nil {
+			io.WriteString(w, ":")
+			io.WriteString(w, p.SubstringStart.Data)
+
+			if p.SubstringEnd != nil {
+				io.WriteString(w, ":")
+				io.WriteString(w, p.SubstringEnd.Data)
 			}
-		case ParameterUppercase:
-			io.WriteString(w, "@U")
-		case ParameterUppercaseFirst:
-			io.WriteString(w, "@u")
-		case ParameterLowercase:
-			io.WriteString(w, "@L")
-		case ParameterQuoted:
-			io.WriteString(w, "@Q")
-		case ParameterEscaped:
-			io.WriteString(w, "@E")
-		case ParameterPrompt:
-			io.WriteString(w, "@P")
-		case ParameterDeclare:
-			io.WriteString(w, "@A")
-		case ParameterQuotedArrays:
-			io.WriteString(w, "@K")
-		case ParameterAttributes:
-			io.WriteString(w, "@a")
-		case ParameterQuotedArraysSeperate:
-			io.WriteString(w, "@k")
 		}
+	case ParameterUppercase:
+		io.WriteString(w, "@U")
+	case ParameterUppercaseFirst:
+		io.WriteString(w, "@u")
+	case ParameterLowercase:
+		io.WriteString(w, "@L")
+	case ParameterQuoted:
+		io.WriteString(w, "@Q")
+	case ParameterEscaped:
+		io.WriteString(w, "@E")
+	case ParameterPrompt:
+		io.WriteString(w, "@P")
+	case ParameterDeclare:
+		io.WriteString(w, "@A")
+	case ParameterQuotedArrays:
+		io.WriteString(w, "@K")
+	case ParameterAttributes:
+		io.WriteString(w, "@a")
+	case ParameterQuotedArraysSeperate:
+		io.WriteString(w, "@k")
 	}
 
 	io.WriteString(w, "}")
