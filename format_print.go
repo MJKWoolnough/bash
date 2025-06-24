@@ -534,16 +534,16 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 			io.WriteString(w, "/%")
 			io.WriteString(w, p.Pattern.Data)
 		case ParameterLowercaseFirstMatch:
-			io.WriteString(w, "^")
-			io.WriteString(w, p.Pattern.Data)
-		case ParameterLowercaseAllMatches:
-			io.WriteString(w, "^^")
-			io.WriteString(w, p.Pattern.Data)
-		case ParameterUppercaseFirstMatch:
 			io.WriteString(w, ",")
 			io.WriteString(w, p.Pattern.Data)
-		case ParameterUppercaseAllMatches:
+		case ParameterLowercaseAllMatches:
 			io.WriteString(w, ",,")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterUppercaseFirstMatch:
+			io.WriteString(w, "^")
+			io.WriteString(w, p.Pattern.Data)
+		case ParameterUppercaseAllMatches:
+			io.WriteString(w, "^^")
 			io.WriteString(w, p.Pattern.Data)
 		}
 
