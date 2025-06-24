@@ -444,8 +444,13 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 
 		if len(p.Subscript) > 0 {
 			io.WriteString(w, "[")
+			p.Subscript[0].printSource(w, v)
 
-			for _, s := range p.Subscript {
+			for _, s := range p.Subscript[1:] {
+				if v {
+					io.WriteString(w, " ")
+				}
+
 				s.printSource(w, v)
 			}
 
