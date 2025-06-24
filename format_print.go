@@ -2,6 +2,7 @@ package bash
 
 import (
 	"io"
+	"strings"
 
 	"vimagination.zapto.org/parser"
 )
@@ -564,6 +565,11 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 	case ParameterSubstring:
 		if p.SubstringStart != nil {
 			io.WriteString(w, ":")
+
+			if strings.HasPrefix(p.SubstringStart.Data, "-") {
+				io.WriteString(w, " ")
+			}
+
 			io.WriteString(w, p.SubstringStart.Data)
 
 			if p.SubstringEnd != nil {
