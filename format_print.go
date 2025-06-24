@@ -586,9 +586,9 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 			io.WriteString(w, "@A")
 		case ParameterQuotedArrays:
 			io.WriteString(w, "@K")
-		case ParameterQuotedArraysSeperate:
-			io.WriteString(w, "@a")
 		case ParameterAttributes:
+			io.WriteString(w, "@a")
+		case ParameterQuotedArraysSeperate:
 			io.WriteString(w, "@k")
 		}
 	}
