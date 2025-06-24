@@ -255,20 +255,20 @@ func (f File) printSourceEnd(w io.Writer, v, end bool) {
 	}
 }
 
-func firstTokenPos(tk Tokens) uint64 {
-	if len(tk) == 0 {
-		return 0
+func firstTokenPos(tk Tokens) (pos uint64) {
+	if len(tk) > 0 {
+		pos = tk[0].Line
 	}
 
-	return tk[0].Line
+	return pos
 }
 
-func lastTokenPos(tk Tokens) uint64 {
-	if len(tk) == 0 {
-		return 0
+func lastTokenPos(tk Tokens) (pos uint64) {
+	if len(tk) > 0 {
+		pos = tk[len(tk)-1].Line
 	}
 
-	return tk[len(tk)-1].Line
+	return pos
 }
 
 func (f ForCompound) printSource(w io.Writer, v bool) {
