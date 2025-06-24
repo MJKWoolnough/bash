@@ -244,6 +244,11 @@ func TestPrintSource(t *testing.T) {
 			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 		},
+		{ // 48
+			"a[b]=",
+			"a[b]=;",
+			"a[b]=;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && n == 34 {
