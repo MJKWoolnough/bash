@@ -120,128 +120,133 @@ func TestPrintSource(t *testing.T) {
 			"a;\nb;\n\nc;\nd;\n\ne;",
 		},
 		{ // 23
+			"a\nfor b; do\nc\ndone",
+			"a;\nfor b; do\n\tc;\ndone;",
+			"a;\nfor b; do\n\tc;\ndone;",
+		},
+		{ // 24
 			"for a;do c\nd\ndone",
 			"for a; do\n\tc;\n\td;\ndone;",
 			"for a; do\n\tc;\n\td;\ndone;",
 		},
-		{ // 24
+		{ // 25
 			"for a in b\ndo c\ndone",
 			"for a in b; do\n\tc;\ndone;",
 			"for a in b; do\n\tc;\ndone;",
 		},
-		{ // 25
+		{ // 26
 			"for a in b c\ndo d\ndone",
 			"for a in b c; do\n\td;\ndone;",
 			"for a in b c; do\n\td;\ndone;",
 		},
-		{ // 26
+		{ // 27
 			"for ((a=0;a<1;a++));do b\ndone",
 			"for ((a=0;a<1;a++)); do\n\tb;\ndone;",
 			"for (( a = 0; a < 1; a ++ )); do\n\tb;\ndone;",
 		},
-		{ // 27
+		{ // 28
 			"function a() { b; }",
 			"function a() { b; };",
 			"function a() {\n\tb;\n};",
 		},
-		{ // 28
+		{ // 29
 			"function a { b; }",
 			"function a() { b; };",
 			"function a() {\n\tb;\n};",
 		},
-		{ // 29
+		{ // 30
 			"a() { b; }",
 			"a() { b; };",
 			"a() {\n\tb;\n};",
 		},
-		{ // 30
+		{ // 31
 			"function a() # A\n# B\n{ b; }",
 			"function a() # A\n# B\n{ b; };",
 			"function a() # A\n# B\n{\n\tb;\n};",
 		},
-		{ // 31
+		{ // 32
 			"a() # A\n# B\n{ b; }",
 			"a() # A\n# B\n{ b; };",
 			"a() # A\n# B\n{\n\tb;\n};",
 		},
-		{ // 32
+		{ // 33
 			"{ a; }",
 			"{ a; };",
 			"{\n\ta;\n};",
 		},
-		{ // 33
+		{ // 34
 			"( a; )",
 			"( a; );",
 			"(\n\ta;\n);",
 		},
-		{ // 34
+		{ // 35
 			"{ a; b; }",
 			"{ a; b; };",
 			"{\n\ta;\n\tb;\n};",
 		},
-		{ // 35
+		{ // 36
 			"( a;\nb; )",
 			"(\n\ta;\n\tb;\n);",
 			"(\n\ta;\n\tb;\n);",
 		},
-		{ // 36
+		{ // 37
 			"{ # A\na; # B\n}",
 			"{ # A\n\ta; # B\n};",
 			"{ # A\n\ta; # B\n};",
 		},
-		{ // 37
+		{ // 38
 			"<<a\nb$c\na",
 			"<<a;\nb$c\na",
 			"<<a;\nb$c\na",
 		},
-		{ // 38
+		{ // 39
 			"{\n<<a\nb$c\na\n}",
 			"{\n\t<<a;\nb$c\na\n};",
 			"{\n\t<<a;\nb$c\na\n};",
 		},
-		{ // 39
+		{ // 40
 			"{\n<<-a\nb$c\na\n}",
 			"{\n\t<<-a;\n\tb$c\n\ta\n};",
 			"{\n\t<<-a;\n\tb$c\n\ta\n};",
 		},
-		{ // 40
+		{ // 41
 			"a | b <<c\nc",
 			"a | b <<c;\nc",
 			"a | b <<c;\nc",
 		},
-		{ // 41
+		{ // 42
 			"a && b <<c\nc",
 			"a && b <<c;\nc",
 			"a && b <<c;\nc",
 		},
-		{ // 42
+		{ // 43
 			"if a; then b;fi",
 			"if a; then\n\tb;\nfi;",
 			"if a; then\n\tb;\nfi;",
 		},
-		{ // 43
+		{ // 44
 			"if a||b; then b\nc\nelif d\nthen\ne\nelse if f\nthen\ng\nfi\nfi",
 			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
 			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
 		},
-		{ // 44
+		{ // 45
 			"if a; then b;elif c; then d;elif e\nthen f;fi",
 			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
 			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
 		},
-		{ // 45
+		{ // 46
 			"while a\ndo\nb\ndone",
 			"while a; do\n\tb;\ndone;",
 			"while a; do\n\tb;\ndone;",
 		},
-		{ // 46
+		{ // 47
 			"until a&&b; # A\n# B\ndo\n# C\nb\nc\ndone",
 			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 		},
 	} {
 		for m, input := range test {
-			if m == 2 && n == 33 {
+			if m == 2 && n == 34 {
 				continue
 			}
 
