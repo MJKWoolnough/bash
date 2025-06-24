@@ -249,6 +249,11 @@ func TestPrintSource(t *testing.T) {
 			"a[b]=;",
 			"a[b]=;",
 		},
+		{ // 49
+			"a[b+c]=",
+			"a[b+c]=;",
+			"a[b + c]=;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && n == 34 {
