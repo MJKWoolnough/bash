@@ -807,6 +807,8 @@ func (b *bashTokeniser) heredocEnd(t *parser.Tokeniser) (parser.Token, parser.To
 }
 
 func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	state := t.State()
+
 	t.Next()
 
 	if t.Accept(decimalDigit) {
@@ -826,7 +828,7 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 
 		return t.Return(TokenPunctuator, b.parameterExpansionIdentifierOrPreOperator)
 	} else if td := b.lastState(); td != stateStringDouble && td != stateHeredocIdentifier && t.Accept("'\"") {
-		t.Reset()
+		state.Reset()
 
 		return b.stringStart(t)
 	} else if t.Accept("$!?@*") {
@@ -1110,6 +1112,7 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	if !b.isInCommand() {
 		if td := b.lastState(); td != stateTest && td != stateTestBinary {
+			state := t.State()
 			kw := t.AcceptWord(keywords, false)
 
 			if !isWordSeperator(t) {
@@ -1117,7 +1120,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 					return t.ReturnError(ErrInvalidKeyword)
 				}
 
-				t.Reset()
+				state.Reset()
 			} else if kw != "" {
 				return b.keyword(t, kw)
 			}
@@ -1125,7 +1128,7 @@ func (b *bashTokeniser) keywordIdentOrWord(t *parser.Tokeniser) (parser.Token, p
 			bn := t.AcceptWord(builtins, false)
 
 			if !isWordSeperator(t) {
-				t.Reset()
+				state.Reset()
 			} else if bn == "let" {
 				b.pushState(stateBuiltinLet)
 
@@ -1352,11 +1355,13 @@ func (b *bashTokeniser) time(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return t.Return(TokenWhitespace, b.time)
 	}
 
+	state := t.State()
+
 	if t.AcceptString("-p", false) == 2 && isWordSeperator(t) {
 		return t.Return(TokenWord, b.main)
 	}
 
-	t.Reset()
+	state.Reset()
 
 	return b.main(t)
 }
@@ -1478,13 +1483,15 @@ func (b *bashTokeniser) forInDo(t *parser.Tokeniser) (parser.Token, parser.Token
 
 	b.pushState(stateLoopCondition)
 
+	state := t.State()
+
 	if t.AcceptString("in", false) == 2 && isWordSeperator(t) {
 		b.setInCommand()
 
 		return t.Return(TokenKeyword, b.main)
 	}
 
-	t.Reset()
+	state.Reset()
 
 	return b.main(t)
 }
@@ -1494,14 +1501,16 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		return t.Return(TokenWhitespace, b.coproc)
 	}
 
+	state := t.State()
+
 	if t.AcceptWord(keywords, false) != "" {
 		if isWordSeperator(t) {
-			t.Reset()
+			state.Reset()
 
 			return b.main(t)
 		}
 
-		t.Reset()
+		state.Reset()
 	}
 
 	if t.Accept(identStart) {
@@ -1520,7 +1529,7 @@ func (b *bashTokeniser) coproc(t *parser.Tokeniser) (parser.Token, parser.TokenF
 		}
 	}
 
-	t.Reset()
+	state.Reset()
 
 	return b.main(t)
 }
@@ -1580,11 +1589,13 @@ func (b *bashTokeniser) test(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 		return t.Return(TokenPunctuator, b.test)
 	}
 
+	state := t.State()
+
 	if t.Accept("-") && t.Accept("abcdefghknoprstuvwxzGLNORS") && isWhitespace(t) {
 		return t.Return(TokenKeyword, b.testWordStart)
 	}
 
-	t.Reset()
+	state.Reset()
 
 	return b.testWordOrPunctuator(t)
 }
@@ -1638,6 +1649,8 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 
 		return b.stringStart(t)
 	case ']':
+		state := t.State()
+
 		t.Next()
 
 		if t.Accept("]") && isWordSeperator(t) {
@@ -1650,7 +1663,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 			return t.Return(TokenKeyword, b.main)
 		}
 
-		t.Reset()
+		state.Reset()
 
 		fallthrough
 	default:
