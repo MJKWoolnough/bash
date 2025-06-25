@@ -259,6 +259,11 @@ func TestPrintSource(t *testing.T) {
 			"a[b+c]=;",
 			"a[b + c]=;",
 		},
+		{ // 50
+			"a[$(b\nc)]=",
+			"a[$(\n\tb;\n\tc;\n)]=;",
+			"a[$(\n\tb;\n\tc;\n)]=;",
+		},
 		{ // 51
 			"${a}",
 			"${a};",
