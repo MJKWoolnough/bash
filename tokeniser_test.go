@@ -4113,6 +4113,19 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 286
+			"a[$(b)]=",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenPunctuator, Data: "["},
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenPunctuator, Data: "]"},
+				{Type: TokenPunctuator, Data: "="},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
