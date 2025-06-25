@@ -355,7 +355,7 @@ func (p *Pipeline) isMultiline(v bool) bool {
 	if p.CommandOrCompound.isMultiline(v) {
 		return true
 	} else if p.Pipeline != nil {
-		return p.isMultiline(v)
+		return p.Pipeline.isMultiline(v)
 	}
 
 	return false
