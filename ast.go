@@ -2197,7 +2197,7 @@ func (p *ParameterExpansion) isMultiline(v bool) bool {
 		return p.String.isMultiline(v)
 	}
 
-	return false
+	return p.Parameter.isMultiline(v)
 }
 
 type Parameter struct {
@@ -2238,6 +2238,16 @@ func (p *Parameter) parse(b *bashParser) error {
 	p.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (p *Parameter) isMultiline(v bool) bool {
+	for _, wo := range p.Array {
+		if wo.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 type String struct {
