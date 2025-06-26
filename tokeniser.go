@@ -555,6 +555,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 
 		if td := b.lastState(); td == stateBrace || td == stateBraceExpansion {
 			b.popState()
+			b.endCommand()
 		}
 	case '$':
 		b.setInCommand()
