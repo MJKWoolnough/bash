@@ -1481,13 +1481,7 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 }
 
 func (a *AssignmentOrWord) isMultiline(v bool) bool {
-	if a.Assignment != nil {
-		return a.Assignment.isMultiline(v)
-	} else if a.Word != nil {
-		return a.Word.isMultiline(v)
-	}
-
-	return false
+	return a.Assignment != nil && a.Assignment.isMultiline(v) || a.Word != nil && a.Word.isMultiline(v)
 }
 
 type Command struct {
