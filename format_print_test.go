@@ -249,6 +249,11 @@ func TestPrintSource(t *testing.T) {
 			"{\n\tlet a=$(\n\t\tb;\n\t\tc;\n\t);\n};",
 			"{\n\tlet a=$(\n\t\tb;\n\t\tc;\n\t);\n};",
 		},
+		{ // 48
+			"{ ${a[$(b\nc)]}; }",
+			"{\n\t${a[$(\n\t\tb;\n\t\tc;\n\t)]};\n};",
+			"{\n\t${a[$(\n\t\tb;\n\t\tc;\n\t)]};\n};",
+		},
 		{ // 49
 			"<<a\nb$c\na",
 			"<<a;\nb$c\na",
