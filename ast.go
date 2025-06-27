@@ -414,13 +414,7 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 }
 
 func (cc *CommandOrCompound) isMultiline(v bool) bool {
-	if cc.Command != nil {
-		return cc.Command.isMultiline(v)
-	} else if cc.Compound != nil {
-		return cc.Compound.isMultiline(v)
-	}
-
-	return false
+	return cc.Command != nil && cc.Command.isMultiline(v) || cc.Compound != nil && cc.Compound.isMultiline(v)
 }
 
 func (cc *CommandOrCompound) parseHeredoc(b *bashParser) error {
