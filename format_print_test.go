@@ -564,6 +564,16 @@ func TestPrintSource(t *testing.T) {
 			"[[ a == b\"c\" ]];",
 			"[[ a == b\"c\" ]];",
 		},
+		{ // 111
+			"case a in a|b) a;\nb\nesac",
+			"case a in\na|b)\n\ta;\n\tb;;\nesac;",
+			"case a in\na|b)\n\ta;\n\tb;;\nesac;",
+		},
+		{ // 112
+			"case a in a|b|\"c\") a;\nb\nesac",
+			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
+			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
