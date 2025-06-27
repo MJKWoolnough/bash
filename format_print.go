@@ -726,7 +726,7 @@ func (s SelectCompound) printSource(w io.Writer, v bool) {
 		s.Comments[1].printSource(w, true)
 		io.WriteString(&ip, "do\n")
 		s.File.printSource(&ip, v)
-		io.WriteString(&ip, "\ndone")
+		io.WriteString(w, "\ndone")
 	}
 }
 
