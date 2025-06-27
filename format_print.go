@@ -463,7 +463,7 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "${")
 
-	if p.Indirect {
+	if p.Indirect || p.Type == ParameterPrefix || p.Type == ParameterPrefixSeperate {
 		io.WriteString(w, "!")
 	} else if p.Type == ParameterLength {
 		io.WriteString(w, "#")
