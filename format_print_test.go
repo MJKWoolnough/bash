@@ -574,6 +574,21 @@ func TestPrintSource(t *testing.T) {
 			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
 			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
 		},
+		{ // 113
+			"! a",
+			"! a;",
+			"! a;",
+		},
+		{ // 114
+			"coproc a",
+			"coproc a;",
+			"coproc a;",
+		},
+		{ // 115
+			"coproc a if b; then c\nfi",
+			"coproc a if b; then\n\tc;\nfi;",
+			"coproc a if b; then\n\tc;\nfi;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
