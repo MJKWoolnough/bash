@@ -683,16 +683,14 @@ func (p Pipeline) printHeredoc(w io.Writer, v bool) {
 }
 
 func (r Redirection) printSource(w io.Writer, v bool) {
-	if r.Redirector == nil {
-		return
-	}
+	if r.Redirector != nil {
+		if r.Input != nil {
+			io.WriteString(w, r.Input.Data)
+		}
 
-	if r.Input != nil {
-		io.WriteString(w, r.Input.Data)
+		io.WriteString(w, r.Redirector.Data)
+		r.Output.printSource(w, v)
 	}
-
-	io.WriteString(w, r.Redirector.Data)
-	r.Output.printSource(w, v)
 }
 
 func (r Redirection) printHeredoc(w io.Writer, v bool) {
