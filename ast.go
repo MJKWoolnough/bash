@@ -1301,6 +1301,13 @@ func (t *Tests) parse(b *bashParser) error {
 }
 
 func (t *Tests) isMultiline(v bool) bool {
+	if len(t.Comments[0]) > 0 || len(t.Comments[4]) > 0 ||
+		t.Not && len(t.Comments[1]) > 0 ||
+		t.Parens != nil && (len(t.Comments[2]) > 0 || len(t.Comments[3]) > 0) ||
+		len(t.Comments[2]) > 0 && t.Word != nil && (t.Pattern != nil && t.Test >= TestOperatorStringsEqual || t.Test >= TestOperatorFileExists && t.Test <= TestOperatorVarnameIsRef) {
+		return true
+	}
+
 	if t.Parens != nil && t.Parens.isMultiline(v) {
 		return true
 	}
