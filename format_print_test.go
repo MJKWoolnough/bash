@@ -589,6 +589,16 @@ func TestPrintSource(t *testing.T) {
 			"coproc a if b; then\n\tc;\nfi;",
 			"coproc a if b; then\n\tc;\nfi;",
 		},
+		{ // 116
+			"select a; do b; done",
+			"select a; do\n\tb;\ndone;",
+			"select a; do\n\tb;\ndone;",
+		},
+		{ // 117
+			"select a in b c; do b; done",
+			"select a in b c; do\n\tb;\ndone;",
+			"select a in b c; do\n\tb;\ndone;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
