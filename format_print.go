@@ -769,10 +769,29 @@ func (s String) printSource(w io.Writer, v bool) {
 
 func (t TestCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "[[ ")
-	t.Comments[0].printSource(w, true)
-	t.Tests.printSource(w, v)
-	io.WriteString(w, " ")
-	t.Comments[1].printSource(w, true)
+
+	iw := w
+	multi := false
+
+	if len(t.Comments[0]) > 0 {
+		iw = &indentPrinter{w}
+		multi = true
+
+		t.Comments[0].printSource(w, false)
+		io.WriteString(iw, "\n")
+	}
+
+	t.Tests.printSource(iw, v)
+
+	if len(t.Comments[1]) > 0 {
+		io.WriteString(w, "\n")
+		t.Comments[1].printSource(w, true)
+	} else if multi {
+		io.WriteString(w, "\n")
+	} else {
+		io.WriteString(w, " ")
+	}
+
 	io.WriteString(w, "]]")
 }
 
