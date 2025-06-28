@@ -811,10 +811,32 @@ func (t Tests) printSource(w io.Writer, v bool) {
 	}
 
 	if t.Parens != nil {
-		io.WriteString(w, "( ")
-		t.Comments[2].printSource(w, true)
-		t.Parens.printSource(w, v)
-		io.WriteString(w, " ")
+		io.WriteString(w, "(")
+
+		multi := t.Parens.isMultiline(v) || len(t.Comments[2]) > 0 || len(t.Comments[3]) > 0
+		iw := w
+
+		if multi {
+			iw = &indentPrinter{w}
+
+			if len(t.Comments[2]) > 0 {
+				io.WriteString(w, " ")
+				t.Comments[2].printSource(w, false)
+			}
+
+			io.WriteString(iw, "\n")
+		} else {
+			io.WriteString(w, " ")
+		}
+
+		t.Parens.printSource(iw, v)
+
+		if multi {
+			io.WriteString(w, "\n")
+		} else {
+			io.WriteString(w, " ")
+		}
+
 		t.Comments[3].printSource(w, true)
 		io.WriteString(w, ")")
 	} else if t.Word != nil && t.Test == TestOperatorNone {
