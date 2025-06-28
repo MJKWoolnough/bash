@@ -604,6 +604,16 @@ func TestPrintSource(t *testing.T) {
 			"a&",
 			"a &",
 		},
+		{ // 119
+			"[[ # A\na == b\n# B\n]]",
+			"[[ # A\n\ta == b\n# B\n]];",
+			"[[ # A\n\ta == b\n# B\n]];",
+		},
+		{ // 120
+			"[[ # A\na == b\n]]",
+			"[[ # A\n\ta == b\n]];",
+			"[[ # A\n\ta == b\n]];",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
