@@ -1032,7 +1032,7 @@ func (t *TestCompound) parse(b *bashParser) error {
 }
 
 func (t *TestCompound) isMultiline(v bool) bool {
-	return t.Tests.isMultiline(v)
+	return len(t.Comments[0]) > 0 || len(t.Comments[1]) > 0 || t.Tests.isMultiline(v)
 }
 
 type TestOperator uint8
