@@ -599,6 +599,11 @@ func TestPrintSource(t *testing.T) {
 			"select a in b c; do\n\tb;\ndone;",
 			"select a in b c; do\n\tb;\ndone;",
 		},
+		{ // 118
+			"a&",
+			"a&",
+			"a &",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
