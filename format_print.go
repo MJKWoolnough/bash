@@ -768,17 +768,23 @@ func (s String) printSource(w io.Writer, v bool) {
 }
 
 func (t TestCompound) printSource(w io.Writer, v bool) {
-	io.WriteString(w, "[[ ")
+	io.WriteString(w, "[[")
 
 	iw := w
-	multi := false
+	multi := t.isMultiline(v)
 
-	if len(t.Comments[0]) > 0 {
+	if multi {
 		iw = &indentPrinter{w}
 		multi = true
 
-		t.Comments[0].printSource(w, false)
+		if len(t.Comments[0]) > 0 {
+			io.WriteString(w, " ")
+			t.Comments[0].printSource(w, false)
+		}
+
 		io.WriteString(iw, "\n")
+	} else {
+		io.WriteString(w, " ")
 	}
 
 	t.Tests.printSource(iw, v)
