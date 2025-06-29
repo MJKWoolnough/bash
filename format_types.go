@@ -5,7 +5,7 @@ package bash
 import "io"
 
 func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("ArithmeticExpansion {")
 
@@ -18,7 +18,7 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 	} else if len(f.WordsAndOperators) > 0 {
 		pp.Print("\nWordsAndOperators: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.WordsAndOperators {
 			ipp.Printf("\n%d: ", n)
@@ -37,7 +37,7 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 }
 
 func (f *ArrayWord) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("ArrayWord {")
 
@@ -45,7 +45,7 @@ func (f *ArrayWord) printType(w io.Writer, v bool) {
 	f.Word.printType(&pp, v)
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -61,7 +61,7 @@ func (f *ArrayWord) printType(w io.Writer, v bool) {
 }
 
 func (f *Assignment) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Assignment {")
 
@@ -76,7 +76,7 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	} else if len(f.Expression) > 0 {
 		pp.Print("\nExpression: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Expression {
 			ipp.Printf("\n%d: ", n)
@@ -102,7 +102,7 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 }
 
 func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("AssignmentOrWord {")
 
@@ -127,7 +127,7 @@ func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
 }
 
 func (f *CaseCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("CaseCompound {")
 
@@ -139,7 +139,7 @@ func (f *CaseCompound) printType(w io.Writer, v bool) {
 	} else if len(f.Matches) > 0 {
 		pp.Print("\nMatches: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Matches {
 			ipp.Printf("\n%d: ", n)
@@ -152,7 +152,7 @@ func (f *CaseCompound) printType(w io.Writer, v bool) {
 	}
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -168,7 +168,7 @@ func (f *CaseCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *Command) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Command {")
 
@@ -177,7 +177,7 @@ func (f *Command) printType(w io.Writer, v bool) {
 	} else if len(f.Vars) > 0 {
 		pp.Print("\nVars: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Vars {
 			ipp.Printf("\n%d: ", n)
@@ -194,7 +194,7 @@ func (f *Command) printType(w io.Writer, v bool) {
 	} else if len(f.Redirections) > 0 {
 		pp.Print("\nRedirections: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Redirections {
 			ipp.Printf("\n%d: ", n)
@@ -211,7 +211,7 @@ func (f *Command) printType(w io.Writer, v bool) {
 	} else if len(f.AssignmentsOrWords) > 0 {
 		pp.Print("\nAssignmentsOrWords: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.AssignmentsOrWords {
 			ipp.Printf("\n%d: ", n)
@@ -230,7 +230,7 @@ func (f *Command) printType(w io.Writer, v bool) {
 }
 
 func (f *CommandOrCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("CommandOrCompound {")
 
@@ -255,7 +255,7 @@ func (f *CommandOrCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *CommandSubstitution) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("CommandSubstitution {")
 
@@ -272,7 +272,7 @@ func (f *CommandSubstitution) printType(w io.Writer, v bool) {
 }
 
 func (f *Compound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Compound {")
 
@@ -344,7 +344,7 @@ func (f *Compound) printType(w io.Writer, v bool) {
 	} else if len(f.Redirections) > 0 {
 		pp.Print("\nRedirections: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Redirections {
 			ipp.Printf("\n%d: ", n)
@@ -363,7 +363,7 @@ func (f *Compound) printType(w io.Writer, v bool) {
 }
 
 func (f *File) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("File {")
 
@@ -372,7 +372,7 @@ func (f *File) printType(w io.Writer, v bool) {
 	} else if len(f.Lines) > 0 {
 		pp.Print("\nLines: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Lines {
 			ipp.Printf("\n%d: ", n)
@@ -385,7 +385,7 @@ func (f *File) printType(w io.Writer, v bool) {
 	}
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -401,7 +401,7 @@ func (f *File) printType(w io.Writer, v bool) {
 }
 
 func (f *ForCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("ForCompound {")
 
@@ -417,7 +417,7 @@ func (f *ForCompound) printType(w io.Writer, v bool) {
 	} else if len(f.Words) > 0 {
 		pp.Print("\nWords: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Words {
 			ipp.Printf("\n%d: ", n)
@@ -440,7 +440,7 @@ func (f *ForCompound) printType(w io.Writer, v bool) {
 	f.File.printType(&pp, v)
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -456,7 +456,7 @@ func (f *ForCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *FunctionCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("FunctionCompound {")
 
@@ -484,7 +484,7 @@ func (f *FunctionCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *GroupingCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("GroupingCompound {")
 
@@ -502,7 +502,7 @@ func (f *GroupingCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *Heredoc) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Heredoc {")
 
@@ -511,7 +511,7 @@ func (f *Heredoc) printType(w io.Writer, v bool) {
 	} else if len(f.HeredocPartsOrWords) > 0 {
 		pp.Print("\nHeredocPartsOrWords: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.HeredocPartsOrWords {
 			ipp.Printf("\n%d: ", n)
@@ -530,7 +530,7 @@ func (f *Heredoc) printType(w io.Writer, v bool) {
 }
 
 func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("HeredocPartOrWord {")
 
@@ -555,7 +555,7 @@ func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
 }
 
 func (f *IfCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("IfCompound {")
 
@@ -567,7 +567,7 @@ func (f *IfCompound) printType(w io.Writer, v bool) {
 	} else if len(f.ElIf) > 0 {
 		pp.Print("\nElIf: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.ElIf {
 			ipp.Printf("\n%d: ", n)
@@ -593,7 +593,7 @@ func (f *IfCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *Line) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Line {")
 
@@ -602,7 +602,7 @@ func (f *Line) printType(w io.Writer, v bool) {
 	} else if len(f.Statements) > 0 {
 		pp.Print("\nStatements: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Statements {
 			ipp.Printf("\n%d: ", n)
@@ -615,7 +615,7 @@ func (f *Line) printType(w io.Writer, v bool) {
 	}
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -631,7 +631,7 @@ func (f *Line) printType(w io.Writer, v bool) {
 }
 
 func (f *LoopCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("LoopCompound {")
 
@@ -655,7 +655,7 @@ func (f *LoopCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *Parameter) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Parameter {")
 
@@ -671,7 +671,7 @@ func (f *Parameter) printType(w io.Writer, v bool) {
 	} else if len(f.Array) > 0 {
 		pp.Print("\nArray: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Array {
 			ipp.Printf("\n%d: ", n)
@@ -690,7 +690,7 @@ func (f *Parameter) printType(w io.Writer, v bool) {
 }
 
 func (f *ParameterAssign) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("ParameterAssign {")
 
@@ -706,7 +706,7 @@ func (f *ParameterAssign) printType(w io.Writer, v bool) {
 	} else if len(f.Subscript) > 0 {
 		pp.Print("\nSubscript: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Subscript {
 			ipp.Printf("\n%d: ", n)
@@ -725,7 +725,7 @@ func (f *ParameterAssign) printType(w io.Writer, v bool) {
 }
 
 func (f *ParameterExpansion) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("ParameterExpansion {")
 
@@ -781,7 +781,7 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 }
 
 func (f *Pattern) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Pattern {")
 
@@ -790,7 +790,7 @@ func (f *Pattern) printType(w io.Writer, v bool) {
 	} else if len(f.Parts) > 0 {
 		pp.Print("\nParts: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Parts {
 			ipp.Printf("\n%d: ", n)
@@ -809,7 +809,7 @@ func (f *Pattern) printType(w io.Writer, v bool) {
 }
 
 func (f *PatternLines) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("PatternLines {")
 
@@ -818,7 +818,7 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 	} else if len(f.Patterns) > 0 {
 		pp.Print("\nPatterns: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Patterns {
 			ipp.Printf("\n%d: ", n)
@@ -846,7 +846,7 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 }
 
 func (f *Pipeline) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Pipeline {")
 
@@ -885,7 +885,7 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 }
 
 func (f *Redirection) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Redirection {")
 
@@ -920,7 +920,7 @@ func (f *Redirection) printType(w io.Writer, v bool) {
 }
 
 func (f *SelectCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("SelectCompound {")
 
@@ -936,7 +936,7 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 	} else if len(f.Words) > 0 {
 		pp.Print("\nWords: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Words {
 			ipp.Printf("\n%d: ", n)
@@ -952,7 +952,7 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 	f.File.printType(&pp, v)
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -968,7 +968,7 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *Statement) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Statement {")
 
@@ -995,7 +995,7 @@ func (f *Statement) printType(w io.Writer, v bool) {
 }
 
 func (f *String) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("String {")
 
@@ -1004,7 +1004,7 @@ func (f *String) printType(w io.Writer, v bool) {
 	} else if len(f.WordsOrTokens) > 0 {
 		pp.Print("\nWordsOrTokens: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.WordsOrTokens {
 			ipp.Printf("\n%d: ", n)
@@ -1023,7 +1023,7 @@ func (f *String) printType(w io.Writer, v bool) {
 }
 
 func (f *TestCompound) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("TestCompound {")
 
@@ -1031,7 +1031,7 @@ func (f *TestCompound) printType(w io.Writer, v bool) {
 	f.Tests.printType(&pp, v)
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -1047,7 +1047,7 @@ func (f *TestCompound) printType(w io.Writer, v bool) {
 }
 
 func (f *TestConsequence) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("TestConsequence {")
 
@@ -1067,7 +1067,7 @@ func (f *TestConsequence) printType(w io.Writer, v bool) {
 }
 
 func (f *Tests) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Tests {")
 
@@ -1110,7 +1110,7 @@ func (f *Tests) printType(w io.Writer, v bool) {
 	}
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -1126,7 +1126,7 @@ func (f *Tests) printType(w io.Writer, v bool) {
 }
 
 func (f *Value) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Value {")
 
@@ -1142,7 +1142,7 @@ func (f *Value) printType(w io.Writer, v bool) {
 	} else if len(f.Array) > 0 {
 		pp.Print("\nArray: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Array {
 			ipp.Printf("\n%d: ", n)
@@ -1155,7 +1155,7 @@ func (f *Value) printType(w io.Writer, v bool) {
 	}
 	pp.Print("\nComments: [")
 
-	ipp := indentPrinter{&pp}
+	ipp := indentPrinter{Writer: &pp}
 
 	for n, e := range f.Comments {
 		ipp.Printf("\n%d: ", n)
@@ -1171,7 +1171,7 @@ func (f *Value) printType(w io.Writer, v bool) {
 }
 
 func (f *Word) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("Word {")
 
@@ -1180,7 +1180,7 @@ func (f *Word) printType(w io.Writer, v bool) {
 	} else if len(f.Parts) > 0 {
 		pp.Print("\nParts: [")
 
-		ipp := indentPrinter{&pp}
+		ipp := indentPrinter{Writer: &pp}
 
 		for n, e := range f.Parts {
 			ipp.Printf("\n%d: ", n)
@@ -1199,7 +1199,7 @@ func (f *Word) printType(w io.Writer, v bool) {
 }
 
 func (f *WordOrOperator) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordOrOperator {")
 
@@ -1224,7 +1224,7 @@ func (f *WordOrOperator) printType(w io.Writer, v bool) {
 }
 
 func (f *WordOrToken) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordOrToken {")
 
@@ -1249,7 +1249,7 @@ func (f *WordOrToken) printType(w io.Writer, v bool) {
 }
 
 func (f *WordPart) printType(w io.Writer, v bool) {
-	pp := indentPrinter{w}
+	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordPart {")
 
