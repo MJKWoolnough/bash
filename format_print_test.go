@@ -60,9 +60,9 @@ func TestPrintSource(t *testing.T) {
 			"case a in\nb)\n\t;;&\nc)\n\td;&\nesac;",
 		},
 		{ // 11
-			"case a #A\nin #B\n#C\nb)c;;\n#D\nesac",
-			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
-			"case a #A\nin #B\n#C\nb)\n\tc;;\n#D\nesac;",
+			"case a #A\nin #B\n   #C\nb)c;;\n#D\nesac",
+			"case a #A\nin #B\n   #C\nb)\n\tc;;\n#D\nesac;",
+			"case a #A\nin #B\n   #C\nb)\n\tc;;\n#D\nesac;",
 		},
 		{ // 12
 			"a=1 b=2 c d >e <f",
@@ -105,9 +105,9 @@ func TestPrintSource(t *testing.T) {
 			"$(\n\ta;\n\tb;\n);",
 		},
 		{ // 20
-			"# A\na # B\n# C\n\n# D",
-			"# A\na; # B\n# C\n\n# D",
-			"# A\na; # B\n# C\n\n# D",
+			"# A\na # B\n  # C\n\n# D",
+			"# A\na; # B\n   # C\n\n# D",
+			"# A\na; # B\n   # C\n\n# D",
 		},
 		{ // 21
 			"case a in\nesac <a 2>&1;",
@@ -161,13 +161,13 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 31
 			"function a() # A\n# B\n{ b; }",
-			"function a() # A\n# B\n{ b; };",
-			"function a() # A\n# B\n{\n\tb;\n};",
+			"function a() # A\n             # B\n{ b; };",
+			"function a() # A\n             # B\n{\n\tb;\n};",
 		},
 		{ // 32
 			"a() # A\n# B\n{ b; }",
-			"a() # A\n# B\n{ b; };",
-			"a() # A\n# B\n{\n\tb;\n};",
+			"a() # A\n    # B\n{ b; };",
+			"a() # A\n    # B\n{\n\tb;\n};",
 		},
 		{ // 33
 			"{ a; }",
@@ -311,8 +311,8 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 61
 			"until a&&b; # A\n# B\ndo\n# C\nb\nc\ndone",
-			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
-			"until a && b; # A\n# B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
+			"until a && b; # A\n              # B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
+			"until a && b; # A\n              # B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 		},
 		{ // 62
 			"a[b]=",
