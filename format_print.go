@@ -673,6 +673,10 @@ func (p Pipeline) printSource(w writer, v bool) {
 	}
 }
 
+func (p Pipeline) endsWithGrouping() bool {
+	return p.CommandOrCompound.Compound != nil && len(p.CommandOrCompound.Compound.Redirections) == 0 && (p.CommandOrCompound.Compound.GroupingCompound != nil || p.CommandOrCompound.Compound.FunctionCompound != nil && p.CommandOrCompound.Compound.FunctionCompound.Body.GroupingCompound != nil)
+}
+
 func (p Pipeline) printHeredoc(w writer, v bool) {
 	p.CommandOrCompound.printHeredoc(w, v)
 
@@ -747,9 +751,17 @@ func (s Statement) printSourceEnd(w writer, v, end bool) {
 		} else {
 			w.WriteString("&")
 		}
-	} else if end {
+	} else if end && !s.endsWithGrouping() {
 		w.WriteString(";")
 	}
+}
+
+func (s Statement) endsWithGrouping() bool {
+	if s.Statement != nil {
+		return s.Statement.endsWithGrouping()
+	}
+
+	return s.Pipeline.endsWithGrouping()
 }
 
 func (s Statement) printHeredoc(w writer, v bool) {
