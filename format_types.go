@@ -4,7 +4,7 @@ package bash
 
 import "io"
 
-func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
+func (f *ArithmeticExpansion) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("ArithmeticExpansion {")
@@ -36,7 +36,7 @@ func (f *ArithmeticExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *ArrayWord) printType(w io.Writer, v bool) {
+func (f *ArrayWord) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("ArrayWord {")
@@ -60,7 +60,7 @@ func (f *ArrayWord) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Assignment) printType(w io.Writer, v bool) {
+func (f *Assignment) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Assignment {")
@@ -101,7 +101,7 @@ func (f *Assignment) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
+func (f *AssignmentOrWord) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("AssignmentOrWord {")
@@ -126,7 +126,7 @@ func (f *AssignmentOrWord) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *CaseCompound) printType(w io.Writer, v bool) {
+func (f *CaseCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("CaseCompound {")
@@ -167,7 +167,7 @@ func (f *CaseCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Command) printType(w io.Writer, v bool) {
+func (f *Command) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Command {")
@@ -229,7 +229,7 @@ func (f *Command) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *CommandOrCompound) printType(w io.Writer, v bool) {
+func (f *CommandOrCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("CommandOrCompound {")
@@ -254,7 +254,7 @@ func (f *CommandOrCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *CommandSubstitution) printType(w io.Writer, v bool) {
+func (f *CommandSubstitution) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("CommandSubstitution {")
@@ -271,7 +271,7 @@ func (f *CommandSubstitution) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Compound) printType(w io.Writer, v bool) {
+func (f *Compound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Compound {")
@@ -362,7 +362,7 @@ func (f *Compound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *File) printType(w io.Writer, v bool) {
+func (f *File) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("File {")
@@ -400,7 +400,7 @@ func (f *File) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *ForCompound) printType(w io.Writer, v bool) {
+func (f *ForCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("ForCompound {")
@@ -455,7 +455,7 @@ func (f *ForCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *FunctionCompound) printType(w io.Writer, v bool) {
+func (f *FunctionCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("FunctionCompound {")
@@ -483,7 +483,7 @@ func (f *FunctionCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *GroupingCompound) printType(w io.Writer, v bool) {
+func (f *GroupingCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("GroupingCompound {")
@@ -501,7 +501,7 @@ func (f *GroupingCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Heredoc) printType(w io.Writer, v bool) {
+func (f *Heredoc) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Heredoc {")
@@ -529,7 +529,7 @@ func (f *Heredoc) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
+func (f *HeredocPartOrWord) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("HeredocPartOrWord {")
@@ -554,7 +554,7 @@ func (f *HeredocPartOrWord) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *IfCompound) printType(w io.Writer, v bool) {
+func (f *IfCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("IfCompound {")
@@ -592,7 +592,7 @@ func (f *IfCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Line) printType(w io.Writer, v bool) {
+func (f *Line) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Line {")
@@ -630,7 +630,7 @@ func (f *Line) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *LoopCompound) printType(w io.Writer, v bool) {
+func (f *LoopCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("LoopCompound {")
@@ -654,7 +654,7 @@ func (f *LoopCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Parameter) printType(w io.Writer, v bool) {
+func (f *Parameter) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Parameter {")
@@ -689,7 +689,7 @@ func (f *Parameter) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *ParameterAssign) printType(w io.Writer, v bool) {
+func (f *ParameterAssign) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("ParameterAssign {")
@@ -724,7 +724,7 @@ func (f *ParameterAssign) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *ParameterExpansion) printType(w io.Writer, v bool) {
+func (f *ParameterExpansion) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("ParameterExpansion {")
@@ -780,7 +780,7 @@ func (f *ParameterExpansion) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Pattern) printType(w io.Writer, v bool) {
+func (f *Pattern) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Pattern {")
@@ -808,7 +808,7 @@ func (f *Pattern) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *PatternLines) printType(w io.Writer, v bool) {
+func (f *PatternLines) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("PatternLines {")
@@ -845,7 +845,7 @@ func (f *PatternLines) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Pipeline) printType(w io.Writer, v bool) {
+func (f *Pipeline) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Pipeline {")
@@ -884,7 +884,7 @@ func (f *Pipeline) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Redirection) printType(w io.Writer, v bool) {
+func (f *Redirection) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Redirection {")
@@ -919,7 +919,7 @@ func (f *Redirection) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *SelectCompound) printType(w io.Writer, v bool) {
+func (f *SelectCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("SelectCompound {")
@@ -967,7 +967,7 @@ func (f *SelectCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Statement) printType(w io.Writer, v bool) {
+func (f *Statement) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Statement {")
@@ -994,7 +994,7 @@ func (f *Statement) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *String) printType(w io.Writer, v bool) {
+func (f *String) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("String {")
@@ -1022,7 +1022,7 @@ func (f *String) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *TestCompound) printType(w io.Writer, v bool) {
+func (f *TestCompound) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("TestCompound {")
@@ -1046,7 +1046,7 @@ func (f *TestCompound) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *TestConsequence) printType(w io.Writer, v bool) {
+func (f *TestConsequence) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("TestConsequence {")
@@ -1066,7 +1066,7 @@ func (f *TestConsequence) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Tests) printType(w io.Writer, v bool) {
+func (f *Tests) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Tests {")
@@ -1125,7 +1125,7 @@ func (f *Tests) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Value) printType(w io.Writer, v bool) {
+func (f *Value) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Value {")
@@ -1170,7 +1170,7 @@ func (f *Value) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *Word) printType(w io.Writer, v bool) {
+func (f *Word) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("Word {")
@@ -1198,7 +1198,7 @@ func (f *Word) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *WordOrOperator) printType(w io.Writer, v bool) {
+func (f *WordOrOperator) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordOrOperator {")
@@ -1223,7 +1223,7 @@ func (f *WordOrOperator) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *WordOrToken) printType(w io.Writer, v bool) {
+func (f *WordOrToken) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordOrToken {")
@@ -1248,7 +1248,7 @@ func (f *WordOrToken) printType(w io.Writer, v bool) {
 	io.WriteString(w, "\n}")
 }
 
-func (f *WordPart) printType(w io.Writer, v bool) {
+func (f *WordPart) printType(w writer, v bool) {
 	pp := indentPrinter{Writer: w}
 
 	pp.Print("WordPart {")

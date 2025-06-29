@@ -7,7 +7,7 @@ import (
 	"vimagination.zapto.org/parser"
 )
 
-func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
+func (a ArithmeticExpansion) printSource(w writer, v bool) {
 	if a.Expression {
 		io.WriteString(w, "((")
 	} else {
@@ -37,7 +37,7 @@ func (a ArithmeticExpansion) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "))")
 }
 
-func (a ArrayWord) printSource(w io.Writer, v bool) {
+func (a ArrayWord) printSource(w writer, v bool) {
 	if len(a.Comments[0]) > 0 {
 		io.WriteString(w, "\n")
 		a.Comments[0].printSource(w, true)
@@ -51,7 +51,7 @@ func (a ArrayWord) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (a Assignment) printSource(w io.Writer, v bool) {
+func (a Assignment) printSource(w writer, v bool) {
 	if a.Assignment == AssignmentAssign || a.Assignment == AssignmentAppend {
 		a.Identifier.printSource(w, v)
 		a.Assignment.printSource(w, v)
@@ -80,7 +80,7 @@ func (a Assignment) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
+func (a AssignmentOrWord) printSource(w writer, v bool) {
 	if a.Assignment != nil {
 		a.Assignment.printSource(w, v)
 	} else if a.Word != nil {
@@ -88,7 +88,7 @@ func (a AssignmentOrWord) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c CaseCompound) printSource(w io.Writer, v bool) {
+func (c CaseCompound) printSource(w writer, v bool) {
 	io.WriteString(w, "case ")
 	c.Word.printSource(w, v)
 
@@ -118,7 +118,7 @@ func (c CaseCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "\nesac")
 }
 
-func (c Command) printSource(w io.Writer, v bool) {
+func (c Command) printSource(w writer, v bool) {
 	if len(c.Vars) > 0 {
 		c.Vars[0].printSource(w, v)
 
@@ -155,13 +155,13 @@ func (c Command) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c Command) printHeredoc(w io.Writer, v bool) {
+func (c Command) printHeredoc(w writer, v bool) {
 	for _, r := range c.Redirections {
 		r.printHeredoc(w, v)
 	}
 }
 
-func (c CommandOrCompound) printSource(w io.Writer, v bool) {
+func (c CommandOrCompound) printSource(w writer, v bool) {
 	if c.Command != nil {
 		c.Command.printSource(w, v)
 	} else if c.Compound != nil {
@@ -169,7 +169,7 @@ func (c CommandOrCompound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
+func (c CommandOrCompound) printHeredoc(w writer, v bool) {
 	if c.Command != nil {
 		c.Command.printHeredoc(w, v)
 	} else if c.Compound != nil {
@@ -177,7 +177,7 @@ func (c CommandOrCompound) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (c CommandSubstitution) printSource(w io.Writer, v bool) {
+func (c CommandSubstitution) printSource(w writer, v bool) {
 	io.WriteString(w, "$(")
 
 	if c.Command.isMultiline(v) {
@@ -193,7 +193,7 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, ")")
 }
 
-func (c Compound) printSource(w io.Writer, v bool) {
+func (c Compound) printSource(w writer, v bool) {
 	if c.IfCompound != nil {
 		c.IfCompound.printSource(w, v)
 	} else if c.CaseCompound != nil {
@@ -220,17 +220,17 @@ func (c Compound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (c Compound) printHeredoc(w io.Writer, v bool) {
+func (c Compound) printHeredoc(w writer, v bool) {
 	for _, r := range c.Redirections {
 		r.printHeredoc(w, v)
 	}
 }
 
-func (f File) printSource(w io.Writer, v bool) {
+func (f File) printSource(w writer, v bool) {
 	f.printSourceEnd(w, v, true)
 }
 
-func (f File) printSourceEnd(w io.Writer, v, end bool) {
+func (f File) printSourceEnd(w writer, v, end bool) {
 	f.Comments[0].printSource(w, true)
 
 	if len(f.Lines) > 0 {
@@ -272,7 +272,7 @@ func lastTokenPos(tk Tokens) (pos uint64) {
 	return pos
 }
 
-func (f ForCompound) printSource(w io.Writer, v bool) {
+func (f ForCompound) printSource(w writer, v bool) {
 	if f.ArithmeticExpansion != nil || f.Identifier != nil {
 		io.WriteString(w, "for ")
 
@@ -303,7 +303,7 @@ func (f ForCompound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (f FunctionCompound) printSource(w io.Writer, v bool) {
+func (f FunctionCompound) printSource(w writer, v bool) {
 	if f.Identifier != nil {
 		if f.HasKeyword {
 			io.WriteString(w, "function ")
@@ -316,7 +316,7 @@ func (f FunctionCompound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (g GroupingCompound) printSource(w io.Writer, v bool) {
+func (g GroupingCompound) printSource(w writer, v bool) {
 	if g.SubShell {
 		io.WriteString(w, "(")
 	} else {
@@ -348,7 +348,7 @@ func (g GroupingCompound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (h Heredoc) printSource(w io.Writer, v bool) {
+func (h Heredoc) printSource(w writer, v bool) {
 	io.WriteString(w, "\n")
 
 	for _, p := range h.HeredocPartsOrWords {
@@ -356,7 +356,7 @@ func (h Heredoc) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
+func (h HeredocPartOrWord) printSource(w writer, v bool) {
 	if h.HeredocPart != nil {
 		io.WriteString(w, h.HeredocPart.Data)
 	} else if h.Word != nil {
@@ -364,7 +364,7 @@ func (h HeredocPartOrWord) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (i IfCompound) printSource(w io.Writer, v bool) {
+func (i IfCompound) printSource(w writer, v bool) {
 	io.WriteString(w, "if ")
 	i.If.printSource(w, v)
 
@@ -384,11 +384,11 @@ func (i IfCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "\nfi")
 }
 
-func (l Line) printSource(w io.Writer, v bool) {
+func (l Line) printSource(w writer, v bool) {
 	l.printSourceEnd(w, v, true)
 }
 
-func (l Line) printSourceEnd(w io.Writer, v, end bool) {
+func (l Line) printSourceEnd(w writer, v, end bool) {
 	if len(l.Statements) > 0 {
 		l.Comments[0].printSource(w, true)
 		l.Statements[0].printSourceEnd(w, v, end || len(l.Statements) > 1)
@@ -415,7 +415,7 @@ func (l Line) printSourceEnd(w io.Writer, v, end bool) {
 	}
 }
 
-func (l LoopCompound) printSource(w io.Writer, v bool) {
+func (l LoopCompound) printSource(w writer, v bool) {
 	if l.Until {
 		io.WriteString(w, "until ")
 	} else {
@@ -439,7 +439,7 @@ func (l LoopCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "\ndone")
 }
 
-func (p ParameterAssign) printSource(w io.Writer, v bool) {
+func (p ParameterAssign) printSource(w writer, v bool) {
 	if p.Identifier != nil {
 		io.WriteString(w, p.Identifier.Data)
 
@@ -460,7 +460,7 @@ func (p ParameterAssign) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p ParameterExpansion) printSource(w io.Writer, v bool) {
+func (p ParameterExpansion) printSource(w writer, v bool) {
 	io.WriteString(w, "${")
 
 	if p.Indirect || p.Type == ParameterPrefix || p.Type == ParameterPrefixSeperate {
@@ -602,7 +602,7 @@ func (p ParameterExpansion) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "}")
 }
 
-func (p Parameter) printSource(w io.Writer, v bool) {
+func (p Parameter) printSource(w writer, v bool) {
 	if p.Parameter != nil {
 		io.WriteString(w, p.Parameter.Data)
 
@@ -618,13 +618,13 @@ func (p Parameter) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p Pattern) printSource(w io.Writer, v bool) {
+func (p Pattern) printSource(w writer, v bool) {
 	for _, word := range p.Parts {
 		word.printSource(w, v)
 	}
 }
 
-func (p PatternLines) printSource(w io.Writer, v bool) {
+func (p PatternLines) printSource(w writer, v bool) {
 	if len(p.Patterns) > 0 {
 		p.Comments.printSource(w, true)
 
@@ -650,7 +650,7 @@ func (p PatternLines) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p Pipeline) printSource(w io.Writer, v bool) {
+func (p Pipeline) printSource(w writer, v bool) {
 	p.PipelineTime.printSource(w, v)
 
 	if p.Not {
@@ -674,7 +674,7 @@ func (p Pipeline) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (p Pipeline) printHeredoc(w io.Writer, v bool) {
+func (p Pipeline) printHeredoc(w writer, v bool) {
 	p.CommandOrCompound.printHeredoc(w, v)
 
 	if p.Pipeline != nil {
@@ -682,7 +682,7 @@ func (p Pipeline) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (r Redirection) printSource(w io.Writer, v bool) {
+func (r Redirection) printSource(w writer, v bool) {
 	if r.Redirector != nil {
 		if r.Input != nil {
 			io.WriteString(w, r.Input.Data)
@@ -693,10 +693,10 @@ func (r Redirection) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (r Redirection) printHeredoc(w io.Writer, v bool) {
+func (r Redirection) printHeredoc(w writer, v bool) {
 	if r.Redirector != nil && r.Heredoc != nil && (r.Redirector.Data == "<<" || r.Redirector.Data == "<<-") {
 		if r.Redirector.Data == "<<" {
-			w = unwrapIndentPrinter(w)
+			w = w.Underlying()
 		}
 
 		r.Heredoc.printSource(w, v)
@@ -704,7 +704,7 @@ func (r Redirection) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (s SelectCompound) printSource(w io.Writer, v bool) {
+func (s SelectCompound) printSource(w writer, v bool) {
 	if s.Identifier != nil {
 		io.WriteString(w, "select ")
 		io.WriteString(w, s.Identifier.Data)
@@ -730,11 +730,11 @@ func (s SelectCompound) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (s Statement) printSource(w io.Writer, v bool) {
+func (s Statement) printSource(w writer, v bool) {
 	s.printSourceEnd(w, v, true)
 }
 
-func (s Statement) printSourceEnd(w io.Writer, v, end bool) {
+func (s Statement) printSourceEnd(w writer, v, end bool) {
 	s.Pipeline.printSource(w, v)
 
 	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.Statement != nil {
@@ -753,7 +753,7 @@ func (s Statement) printSourceEnd(w io.Writer, v, end bool) {
 	}
 }
 
-func (s Statement) printHeredoc(w io.Writer, v bool) {
+func (s Statement) printHeredoc(w writer, v bool) {
 	s.Pipeline.printHeredoc(w, v)
 
 	if s.Statement != nil {
@@ -761,13 +761,13 @@ func (s Statement) printHeredoc(w io.Writer, v bool) {
 	}
 }
 
-func (s String) printSource(w io.Writer, v bool) {
+func (s String) printSource(w writer, v bool) {
 	for _, p := range s.WordsOrTokens {
 		p.printSource(w, v)
 	}
 }
 
-func (t TestCompound) printSource(w io.Writer, v bool) {
+func (t TestCompound) printSource(w writer, v bool) {
 	io.WriteString(w, "[[")
 
 	iw := w
@@ -801,7 +801,7 @@ func (t TestCompound) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "]]")
 }
 
-func (t Tests) printSource(w io.Writer, v bool) {
+func (t Tests) printSource(w writer, v bool) {
 	t.Comments[0].printSource(w, true)
 
 	if t.Not {
@@ -868,7 +868,7 @@ func (t Tests) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (t TestConsequence) printSource(w io.Writer, v bool) {
+func (t TestConsequence) printSource(w writer, v bool) {
 	t.Test.printSource(w, v)
 
 	ip := indentPrinter{Writer: w}
@@ -884,7 +884,7 @@ func (t TestConsequence) printSource(w io.Writer, v bool) {
 	t.Consequence.printSource(&ip, v)
 }
 
-func (ve Value) printSource(w io.Writer, v bool) {
+func (ve Value) printSource(w writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
@@ -931,7 +931,7 @@ func (ve Value) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (wo WordOrOperator) printSource(w io.Writer, v bool) {
+func (wo WordOrOperator) printSource(w writer, v bool) {
 	if wo.Operator != nil {
 		io.WriteString(w, wo.Operator.Data)
 	} else if wo.Word != nil {
@@ -939,7 +939,7 @@ func (wo WordOrOperator) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (wt WordOrToken) printSource(w io.Writer, v bool) {
+func (wt WordOrToken) printSource(w writer, v bool) {
 	if wt.Word != nil {
 		wt.Word.printSource(w, v)
 	} else if wt.Token != nil {
@@ -947,7 +947,7 @@ func (wt WordOrToken) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (wp WordPart) printSource(w io.Writer, v bool) {
+func (wp WordPart) printSource(w writer, v bool) {
 	if wp.Part != nil {
 		io.WriteString(w, wp.Part.Data)
 	} else if wp.ArithmeticExpansion != nil {
@@ -959,7 +959,7 @@ func (wp WordPart) printSource(w io.Writer, v bool) {
 	}
 }
 
-func (wd Word) printSource(w io.Writer, v bool) {
+func (wd Word) printSource(w writer, v bool) {
 	for _, word := range wd.Parts {
 		word.printSource(w, v)
 	}

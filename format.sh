@@ -14,7 +14,7 @@ import "io"
 HEREDOC
 
 	while read type; do
-		echo -e "\nfunc (f *$type) printType(w io.Writer, v bool) {";
+		echo -e "\nfunc (f *$type) printType(w writer, v bool) {";
 		echo "	pp := indentPrinter{Writer: w}";
 		echo;
 		echo "	pp.Print(\"$type {\")";

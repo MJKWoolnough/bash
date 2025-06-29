@@ -8,11 +8,21 @@ import (
 	"unsafe"
 )
 
-var indent = []byte{'\t'}
+var (
+	indent = []byte{'\t'}
+	space  = []byte{' '}
+)
+
+type writer interface {
+	io.Writer
+	io.StringWriter
+	Pos() int
+	Underlying() writer
+}
 
 type indentPrinter struct {
-	io.Writer
-	pos int
+	Writer writer
+	pos    int
 }
 
 func (i *indentPrinter) Write(p []byte) (int, error) {
@@ -69,15 +79,8 @@ func (i *indentPrinter) Pos() int {
 	return i.pos
 }
 
-func unwrapIndentPrinter(w io.Writer) io.Writer {
-	for {
-		switch ip := w.(type) {
-		case *indentPrinter:
-			w = ip.Writer
-		default:
-			return w
-		}
-	}
+func (i *indentPrinter) Underlying() writer {
+	return i.Writer
 }
 
 type countPrinter struct {
@@ -102,8 +105,16 @@ func (c *countPrinter) Write(p []byte) (int, error) {
 	return c.Writer.Write(p)
 }
 
+func (c *countPrinter) WriteString(s string) (int, error) {
+	return c.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
+}
+
 func (c *countPrinter) Pos() int {
 	return c.pos
+}
+
+func (c *countPrinter) Underlying() writer {
+	return c
 }
 
 func (t Token) printType(w io.Writer, v bool) {
@@ -186,7 +197,7 @@ func (t Tokens) printType(w io.Writer, v bool) {
 
 	io.WriteString(w, "[")
 
-	ipp := indentPrinter{Writer: w}
+	ipp := indentPrinter{Writer: &countPrinter{Writer: w}}
 
 	for n, t := range t {
 		ipp.Printf("\n%d: ", n)
@@ -200,7 +211,7 @@ func (c Comments) printType(w io.Writer, v bool) {
 	Tokens(c).printType(w, v)
 }
 
-func (c Comments) printSource(w io.Writer, v bool) {
+func (c Comments) printSource(w writer, v bool) {
 	if len(c) > 0 {
 		pos := w.(interface{ Pos() int }).Pos()
 
@@ -228,8 +239,6 @@ func (c Comments) printSource(w io.Writer, v bool) {
 	}
 }
 
-var space = []byte{' '}
-
 func printComment(w io.Writer, c string, indent int) {
 	w.Write(bytes.Repeat(space, indent))
 	if !strings.HasPrefix(c, "#") {
@@ -250,7 +259,7 @@ func (a AssignmentType) String() string {
 	}
 }
 
-func (a AssignmentType) printSource(w io.Writer, v bool) {
+func (a AssignmentType) printSource(w writer, v bool) {
 	switch a {
 	case AssignmentAssign:
 		io.WriteString(w, "=")
@@ -282,7 +291,7 @@ func (c CaseTerminationType) printType(w io.Writer, v bool) {
 	io.WriteString(w, c.String())
 }
 
-func (c CaseTerminationType) printSource(w io.Writer, v bool) {
+func (c CaseTerminationType) printSource(w writer, v bool) {
 	switch c {
 	case CaseTerminationNone, CaseTerminationEnd:
 		io.WriteString(w, ";")
@@ -321,7 +330,7 @@ func (p PipelineTime) String() string {
 	}
 }
 
-func (p PipelineTime) printSource(w io.Writer, v bool) {
+func (p PipelineTime) printSource(w writer, v bool) {
 	switch p {
 	case PipelineTimeBash:
 		io.WriteString(w, "time ")
@@ -347,7 +356,7 @@ func (l LogicalOperator) String() string {
 	}
 }
 
-func (l LogicalOperator) printSource(w io.Writer, v bool) {
+func (l LogicalOperator) printSource(w writer, v bool) {
 	switch l {
 	case LogicalOperatorAnd:
 		io.WriteString(w, " && ")
@@ -456,7 +465,7 @@ func (p ParameterType) printType(w io.Writer, v bool) {
 	io.WriteString(w, p.String())
 }
 
-func (t TestOperator) printSource(w io.Writer, v bool) {
+func (t TestOperator) printSource(w writer, v bool) {
 	switch t {
 	case TestOperatorFileExists:
 		io.WriteString(w, "-e")
@@ -627,14 +636,14 @@ func (t TestOperator) printType(w io.Writer, v bool) {
 }
 
 type formatter interface {
-	printType(io.Writer, bool)
-	printSource(io.Writer, bool)
+	printType(writer, bool)
+	printSource(writer, bool)
 }
 
 func format(f formatter, s fmt.State, v rune) {
 	switch v {
 	case 'v':
-		f.printType(s, s.Flag('+'))
+		f.printType(&countPrinter{Writer: s}, s.Flag('+'))
 	case 's':
 		f.printSource(&countPrinter{Writer: s}, s.Flag('+'))
 	}
