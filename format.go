@@ -1,6 +1,7 @@
 package bash
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strings"
@@ -11,6 +12,7 @@ var indent = []byte{'\t'}
 
 type indentPrinter struct {
 	io.Writer
+	pos int
 }
 
 func (i *indentPrinter) Write(p []byte) (int, error) {
@@ -34,12 +36,14 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 			}
 
 			last = n + 1
+			i.pos = 0
 		}
 	}
 
 	if last != len(p) {
 		m, err := i.Writer.Write(p[last:])
 		total += m
+		i.pos += m
 
 		if err != nil {
 			return total, err
@@ -61,6 +65,10 @@ func (i *indentPrinter) WriteString(s string) (int, error) {
 	return i.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
+func (i *indentPrinter) Pos() int {
+	return i.pos
+}
+
 func unwrapIndentPrinter(w io.Writer) io.Writer {
 	for {
 		switch ip := w.(type) {
@@ -70,6 +78,32 @@ func unwrapIndentPrinter(w io.Writer) io.Writer {
 			return w
 		}
 	}
+}
+
+type countPrinter struct {
+	io.Writer
+	pos int
+}
+
+func (c *countPrinter) Write(p []byte) (int, error) {
+	hasNewline := false
+
+	for n, b := range p {
+		if b == '\n' {
+			c.pos = len(p) - n - 1
+			hasNewline = true
+		}
+	}
+
+	if !hasNewline {
+		c.pos += len(p)
+	}
+
+	return c.Writer.Write(p)
+}
+
+func (c *countPrinter) Pos() int {
+	return c.pos
 }
 
 func (t Token) printType(w io.Writer, v bool) {
@@ -152,7 +186,7 @@ func (t Tokens) printType(w io.Writer, v bool) {
 
 	io.WriteString(w, "[")
 
-	ipp := indentPrinter{w}
+	ipp := indentPrinter{Writer: w}
 
 	for n, t := range t {
 		ipp.Printf("\n%d: ", n)
@@ -168,7 +202,9 @@ func (c Comments) printType(w io.Writer, v bool) {
 
 func (c Comments) printSource(w io.Writer, v bool) {
 	if len(c) > 0 {
-		printComment(w, c[0].Data)
+		pos := w.(interface{ Pos() int }).Pos()
+
+		printComment(w, c[0].Data, 0)
 
 		line := c[0].Line
 
@@ -183,7 +219,7 @@ func (c Comments) printSource(w io.Writer, v bool) {
 				line = c.Line
 			}
 
-			printComment(w, c.Data)
+			printComment(w, c.Data, pos)
 		}
 
 		if v {
@@ -192,7 +228,10 @@ func (c Comments) printSource(w io.Writer, v bool) {
 	}
 }
 
-func printComment(w io.Writer, c string) {
+var space = []byte{' '}
+
+func printComment(w io.Writer, c string, indent int) {
+	w.Write(bytes.Repeat(space, indent))
 	if !strings.HasPrefix(c, "#") {
 		io.WriteString(w, "#")
 	}
@@ -597,6 +636,6 @@ func format(f formatter, s fmt.State, v rune) {
 	case 'v':
 		f.printType(s, s.Flag('+'))
 	case 's':
-		f.printSource(s, s.Flag('+'))
+		f.printSource(&countPrinter{Writer: s}, s.Flag('+'))
 	}
 }
