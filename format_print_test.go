@@ -619,6 +619,31 @@ func TestPrintSource(t *testing.T) {
 			"[[\n\t! # A\n\ta == b\n]];",
 			"[[\n\t! # A\n\ta == b\n]];",
 		},
+		{ // 123
+			"[[\n\t! # A\n\ta == b ]]",
+			"[[\n\t! # A\n\ta == b\n]];",
+			"[[\n\t! # A\n\ta == b\n]];",
+		},
+		{ // 124
+			"[[ (a == b) ]]",
+			"[[ ( a == b ) ]];",
+			"[[ ( a == b ) ]];",
+		},
+		{ // 125
+			"[[ (# A\na == b) ]]",
+			"[[\n\t( # A\n\t\ta == b\n\t)\n]];",
+			"[[\n\t( # A\n\t\ta == b\n\t)\n]];",
+		},
+		{ // 126
+			"[[ (a == b\n# A\n) ]]",
+			"[[\n\t(\n\t\ta == b\n\t# A\n\t)\n]];",
+			"[[\n\t(\n\t\ta == b\n\t# A\n\t)\n]];",
+		},
+		{ // 127
+			"[[ (\n# A\na == b # B\n) ]]",
+			"[[\n\t(\n\t\t# A\n\t\ta == b # B\n\t)\n]];",
+			"[[\n\t(\n\t\t# A\n\t\ta == b # B\n\t)\n]];",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 41 || n == 34) {
