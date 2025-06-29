@@ -117,7 +117,7 @@ func (c *countPrinter) Underlying() writer {
 	return c
 }
 
-func (t Token) printType(w io.Writer, v bool) {
+func (t Token) printType(w writer, v bool) {
 	var typ string
 
 	switch t.Type {
@@ -182,20 +182,20 @@ func (t Token) printType(w io.Writer, v bool) {
 	}
 }
 
-func (t Tokens) printType(w io.Writer, v bool) {
+func (t Tokens) printType(w writer, v bool) {
 	if t == nil {
-		io.WriteString(w, "nil")
+		w.WriteString("nil")
 
 		return
 	}
 
 	if len(t) == 0 {
-		io.WriteString(w, "[]")
+		w.WriteString("[]")
 
 		return
 	}
 
-	io.WriteString(w, "[")
+	w.WriteString("[")
 
 	ipp := indentPrinter{Writer: &countPrinter{Writer: w}}
 
@@ -204,10 +204,10 @@ func (t Tokens) printType(w io.Writer, v bool) {
 		t.printType(w, v)
 	}
 
-	io.WriteString(w, "\n]")
+	w.WriteString("\n]")
 }
 
-func (c Comments) printType(w io.Writer, v bool) {
+func (c Comments) printType(w writer, v bool) {
 	Tokens(c).printType(w, v)
 }
 
@@ -220,12 +220,12 @@ func (c Comments) printSource(w writer, v bool) {
 		line := c[0].Line
 
 		for _, c := range c[1:] {
-			io.WriteString(w, "\n")
+			w.WriteString("\n")
 
 			line++
 
 			if line < c.Line {
-				io.WriteString(w, "\n")
+				w.WriteString("\n")
 
 				line = c.Line
 			}
@@ -234,18 +234,18 @@ func (c Comments) printSource(w writer, v bool) {
 		}
 
 		if v {
-			io.WriteString(w, "\n")
+			w.WriteString("\n")
 		}
 	}
 }
 
-func printComment(w io.Writer, c string, indent int) {
+func printComment(w writer, c string, indent int) {
 	w.Write(bytes.Repeat(space, indent))
 	if !strings.HasPrefix(c, "#") {
-		io.WriteString(w, "#")
+		w.WriteString("#")
 	}
 
-	io.WriteString(w, c)
+	w.WriteString(c)
 }
 
 func (a AssignmentType) String() string {
@@ -262,14 +262,14 @@ func (a AssignmentType) String() string {
 func (a AssignmentType) printSource(w writer, v bool) {
 	switch a {
 	case AssignmentAssign:
-		io.WriteString(w, "=")
+		w.WriteString("=")
 	case AssignmentAppend:
-		io.WriteString(w, "+=")
+		w.WriteString("+=")
 	}
 }
 
-func (a AssignmentType) printType(w io.Writer, v bool) {
-	io.WriteString(w, a.String())
+func (a AssignmentType) printType(w writer, v bool) {
+	w.WriteString(a.String())
 }
 
 func (c CaseTerminationType) String() string {
@@ -287,18 +287,18 @@ func (c CaseTerminationType) String() string {
 	}
 }
 
-func (c CaseTerminationType) printType(w io.Writer, v bool) {
-	io.WriteString(w, c.String())
+func (c CaseTerminationType) printType(w writer, v bool) {
+	w.WriteString(c.String())
 }
 
 func (c CaseTerminationType) printSource(w writer, v bool) {
 	switch c {
 	case CaseTerminationNone, CaseTerminationEnd:
-		io.WriteString(w, ";")
+		w.WriteString(";")
 	case CaseTerminationContinue:
-		io.WriteString(w, "&")
+		w.WriteString("&")
 	case CaseTerminationFallthrough:
-		io.WriteString(w, ";&")
+		w.WriteString(";&")
 	}
 }
 
@@ -313,8 +313,8 @@ func (s SubstitutionType) String() string {
 	}
 }
 
-func (s SubstitutionType) printType(w io.Writer, v bool) {
-	io.WriteString(w, s.String())
+func (s SubstitutionType) printType(w writer, v bool) {
+	w.WriteString(s.String())
 }
 
 func (p PipelineTime) String() string {
@@ -333,14 +333,14 @@ func (p PipelineTime) String() string {
 func (p PipelineTime) printSource(w writer, v bool) {
 	switch p {
 	case PipelineTimeBash:
-		io.WriteString(w, "time ")
+		w.WriteString("time ")
 	case PipelineTimePosix:
-		io.WriteString(w, "time -p ")
+		w.WriteString("time -p ")
 	}
 }
 
-func (p PipelineTime) printType(w io.Writer, v bool) {
-	io.WriteString(w, p.String())
+func (p PipelineTime) printType(w writer, v bool) {
+	w.WriteString(p.String())
 }
 
 func (l LogicalOperator) String() string {
@@ -359,14 +359,14 @@ func (l LogicalOperator) String() string {
 func (l LogicalOperator) printSource(w writer, v bool) {
 	switch l {
 	case LogicalOperatorAnd:
-		io.WriteString(w, " && ")
+		w.WriteString(" && ")
 	case LogicalOperatorOr:
-		io.WriteString(w, " || ")
+		w.WriteString(" || ")
 	}
 }
 
-func (l LogicalOperator) printType(w io.Writer, v bool) {
-	io.WriteString(w, l.String())
+func (l LogicalOperator) printType(w writer, v bool) {
+	w.WriteString(l.String())
 }
 
 func (j JobControl) String() string {
@@ -380,8 +380,8 @@ func (j JobControl) String() string {
 	}
 }
 
-func (j JobControl) printType(w io.Writer, v bool) {
-	io.WriteString(w, j.String())
+func (j JobControl) printType(w writer, v bool) {
+	w.WriteString(j.String())
 }
 
 func (p ParameterType) String() string {
@@ -461,88 +461,88 @@ func (p ParameterType) String() string {
 	}
 }
 
-func (p ParameterType) printType(w io.Writer, v bool) {
-	io.WriteString(w, p.String())
+func (p ParameterType) printType(w writer, v bool) {
+	w.WriteString(p.String())
 }
 
 func (t TestOperator) printSource(w writer, v bool) {
 	switch t {
 	case TestOperatorFileExists:
-		io.WriteString(w, "-e")
+		w.WriteString("-e")
 	case TestOperatorFileIsBlock:
-		io.WriteString(w, "-b")
+		w.WriteString("-b")
 	case TestOperatorFileIsCharacter:
-		io.WriteString(w, "-c")
+		w.WriteString("-c")
 	case TestOperatorDirectoryExists:
-		io.WriteString(w, "-d")
+		w.WriteString("-d")
 	case TestOperatorFileIsRegular:
-		io.WriteString(w, "-f")
+		w.WriteString("-f")
 	case TestOperatorFileHasSetGroupID:
-		io.WriteString(w, "-g")
+		w.WriteString("-g")
 	case TestOperatorFileIsSymbolic:
-		io.WriteString(w, "-L")
+		w.WriteString("-L")
 	case TestOperatorFileHasStickyBit:
-		io.WriteString(w, "-k")
+		w.WriteString("-k")
 	case TestOperatorFileIsPipe:
-		io.WriteString(w, "-p")
+		w.WriteString("-p")
 	case TestOperatorFileIsReadable:
-		io.WriteString(w, "-r")
+		w.WriteString("-r")
 	case TestOperatorFileIsNonZero:
-		io.WriteString(w, "-s")
+		w.WriteString("-s")
 	case TestOperatorFileIsTerminal:
-		io.WriteString(w, "-t")
+		w.WriteString("-t")
 	case TestOperatorFileHasSetUserID:
-		io.WriteString(w, "-u")
+		w.WriteString("-u")
 	case TestOperatorFileIsWritable:
-		io.WriteString(w, "-w")
+		w.WriteString("-w")
 	case TestOperatorFileIsExecutable:
-		io.WriteString(w, "-x")
+		w.WriteString("-x")
 	case TestOperatorFileIsOwnedByEffectiveGroup:
-		io.WriteString(w, "-G")
+		w.WriteString("-G")
 	case TestOperatorFileWasModifiedSinceLastRead:
-		io.WriteString(w, "-N")
+		w.WriteString("-N")
 	case TestOperatorFileIsOwnedByEffectiveUser:
-		io.WriteString(w, "-O")
+		w.WriteString("-O")
 	case TestOperatorFileIsSocket:
-		io.WriteString(w, "-S")
+		w.WriteString("-S")
 	case TestOperatorFilesAreSameInode:
-		io.WriteString(w, "-ef")
+		w.WriteString("-ef")
 	case TestOperatorFileIsNewerThan:
-		io.WriteString(w, "-nt")
+		w.WriteString("-nt")
 	case TestOperatorFileIsOlderThan:
-		io.WriteString(w, "-ot")
+		w.WriteString("-ot")
 	case TestOperatorOptNameIsEnabled:
-		io.WriteString(w, "-o")
+		w.WriteString("-o")
 	case TestOperatorVarNameIsSet:
-		io.WriteString(w, "-v")
+		w.WriteString("-v")
 	case TestOperatorVarnameIsRef:
-		io.WriteString(w, "-R")
+		w.WriteString("-R")
 	case TestOperatorStringIsZero:
-		io.WriteString(w, "-z")
+		w.WriteString("-z")
 	case TestOperatorStringIsNonZero:
-		io.WriteString(w, "-n")
+		w.WriteString("-n")
 	case TestOperatorStringsEqual:
-		io.WriteString(w, "==")
+		w.WriteString("==")
 	case TestOperatorStringsMatch:
-		io.WriteString(w, "~=")
+		w.WriteString("~=")
 	case TestOperatorStringsNotEqual:
-		io.WriteString(w, "!=")
+		w.WriteString("!=")
 	case TestOperatorStringBefore:
-		io.WriteString(w, "<")
+		w.WriteString("<")
 	case TestOperatorStringAfter:
-		io.WriteString(w, ">")
+		w.WriteString(">")
 	case TestOperatorEqual:
-		io.WriteString(w, "-eq")
+		w.WriteString("-eq")
 	case TestOperatorNotEqual:
-		io.WriteString(w, "-ne")
+		w.WriteString("-ne")
 	case TestOperatorLessThan:
-		io.WriteString(w, "-lt")
+		w.WriteString("-lt")
 	case TestOperatorLessThanEqual:
-		io.WriteString(w, "-le")
+		w.WriteString("-le")
 	case TestOperatorGreaterThan:
-		io.WriteString(w, "-gt")
+		w.WriteString("-gt")
 	case TestOperatorGreaterThanEqual:
-		io.WriteString(w, "-ge")
+		w.WriteString("-ge")
 	}
 }
 
@@ -631,8 +631,8 @@ func (t TestOperator) String() string {
 	}
 }
 
-func (t TestOperator) printType(w io.Writer, v bool) {
-	io.WriteString(w, t.String())
+func (t TestOperator) printType(w writer, v bool) {
+	w.WriteString(t.String())
 }
 
 type formatter interface {

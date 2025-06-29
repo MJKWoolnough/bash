@@ -9,8 +9,6 @@ types() {
 package bash
 
 // File automatically generated with format.sh.
-
-import "io"
 HEREDOC
 
 	while read type; do
@@ -75,7 +73,7 @@ HEREDOC
 		done < <(sed '/^type '$type' struct {$/,/^}$/!d;//d' "ast.go");
 
 		echo;
-		echo "	io.WriteString(w, \"\n}\")";
+		echo "	w.WriteString(\"\n}\")";
 		echo "}";
 	done < <(types);
 } > "format_types.go";

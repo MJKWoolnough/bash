@@ -1,7 +1,6 @@
 package bash
 
 import (
-	"io"
 	"strings"
 
 	"vimagination.zapto.org/parser"
@@ -9,44 +8,44 @@ import (
 
 func (a ArithmeticExpansion) printSource(w writer, v bool) {
 	if a.Expression {
-		io.WriteString(w, "((")
+		w.WriteString("((")
 	} else {
-		io.WriteString(w, "$((")
+		w.WriteString("$((")
 	}
 
 	if len(a.WordsAndOperators) > 0 {
 		if v {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 
 		a.WordsAndOperators[0].printSource(w, v)
 
 		for _, wo := range a.WordsAndOperators[1:] {
 			if v && !wo.operatorIsToken(parser.Token{Type: TokenPunctuator, Data: ";"}) {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 			}
 
 			wo.printSource(w, v)
 		}
 
 		if v {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 	}
 
-	io.WriteString(w, "))")
+	w.WriteString("))")
 }
 
 func (a ArrayWord) printSource(w writer, v bool) {
 	if len(a.Comments[0]) > 0 {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 		a.Comments[0].printSource(w, true)
 	}
 
 	a.Word.printSource(w, v)
 
 	if len(a.Comments[1]) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		a.Comments[1].printSource(w, false)
 	}
 }
@@ -63,7 +62,7 @@ func (a Assignment) printSource(w writer, v bool) {
 
 			for _, e := range a.Expression {
 				if parens > 0 {
-					io.WriteString(w, " ")
+					w.WriteString(" ")
 				}
 
 				e.printSource(w, v)
@@ -89,33 +88,33 @@ func (a AssignmentOrWord) printSource(w writer, v bool) {
 }
 
 func (c CaseCompound) printSource(w writer, v bool) {
-	io.WriteString(w, "case ")
+	w.WriteString("case ")
 	c.Word.printSource(w, v)
 
 	if len(c.Comments[0]) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		c.Comments[0].printSource(w, false)
-		io.WriteString(w, "\nin")
+		w.WriteString("\nin")
 	} else {
-		io.WriteString(w, " in")
+		w.WriteString(" in")
 	}
 
 	if len(c.Comments[1]) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		c.Comments[1].printSource(w, false)
 	}
 
 	for _, m := range c.Matches {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 		m.printSource(w, v)
 	}
 
 	if len(c.Comments[2]) > 0 {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 		c.Comments[2].printSource(w, false)
 	}
 
-	io.WriteString(w, "\nesac")
+	w.WriteString("\nesac")
 }
 
 func (c Command) printSource(w writer, v bool) {
@@ -123,33 +122,33 @@ func (c Command) printSource(w writer, v bool) {
 		c.Vars[0].printSource(w, v)
 
 		for _, vr := range c.Vars[1:] {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			vr.printSource(w, v)
 		}
 	}
 
 	if len(c.AssignmentsOrWords) > 0 {
 		if len(c.Vars) > 0 {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 
 		c.AssignmentsOrWords[0].printSource(w, v)
 
 		for _, wd := range c.AssignmentsOrWords[1:] {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			wd.printSource(w, v)
 		}
 	}
 
 	if len(c.Redirections) > 0 {
 		if len(c.Vars) > 0 || len(c.AssignmentsOrWords) > 0 {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 
 		c.Redirections[0].printSource(w, v)
 
 		for _, r := range c.Redirections[1:] {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			r.printSource(w, v)
 		}
 	}
@@ -178,19 +177,19 @@ func (c CommandOrCompound) printHeredoc(w writer, v bool) {
 }
 
 func (c CommandSubstitution) printSource(w writer, v bool) {
-	io.WriteString(w, "$(")
+	w.WriteString("$(")
 
 	if c.Command.isMultiline(v) {
 		ip := indentPrinter{Writer: w}
 
-		io.WriteString(&ip, "\n")
+		ip.WriteString("\n")
 		c.Command.printSource(&ip, v)
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 	} else {
 		c.Command.printSourceEnd(w, v, false)
 	}
 
-	io.WriteString(w, ")")
+	w.WriteString(")")
 }
 
 func (c Compound) printSource(w writer, v bool) {
@@ -215,7 +214,7 @@ func (c Compound) printSource(w writer, v bool) {
 	}
 
 	for _, r := range c.Redirections {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		r.printSource(w, v)
 	}
 }
@@ -240,10 +239,10 @@ func (f File) printSourceEnd(w writer, v, end bool) {
 
 		for n, l := range f.Lines[1:] {
 			if firstTokenPos(l.Tokens) > lastLine+1 {
-				io.WriteString(w, "\n")
+				w.WriteString("\n")
 			}
 
-			io.WriteString(w, "\n")
+			w.WriteString("\n")
 			l.printSourceEnd(w, v, end || len(f.Lines) > n+1)
 
 			lastLine = lastTokenPos(l.Tokens)
@@ -251,7 +250,7 @@ func (f File) printSourceEnd(w writer, v, end bool) {
 	}
 
 	if len(f.Comments[1]) > 0 {
-		io.WriteString(w, "\n\n")
+		w.WriteString("\n\n")
 		f.Comments[1].printSource(w, false)
 	}
 }
@@ -274,20 +273,20 @@ func lastTokenPos(tk Tokens) (pos uint64) {
 
 func (f ForCompound) printSource(w writer, v bool) {
 	if f.ArithmeticExpansion != nil || f.Identifier != nil {
-		io.WriteString(w, "for ")
+		w.WriteString("for ")
 
 		if f.ArithmeticExpansion != nil {
 			f.ArithmeticExpansion.printSource(w, v)
 		} else {
-			io.WriteString(w, f.Identifier.Data)
+			w.WriteString(f.Identifier.Data)
 
 			if f.Words != nil {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 				f.Comments[0].printSource(w, true)
-				io.WriteString(w, "in")
+				w.WriteString("in")
 
 				for _, wd := range f.Words {
-					io.WriteString(w, " ")
+					w.WriteString(" ")
 					wd.printSource(w, v)
 				}
 			}
@@ -295,22 +294,22 @@ func (f ForCompound) printSource(w writer, v bool) {
 
 		ip := indentPrinter{Writer: w}
 
-		io.WriteString(&ip, "; ")
+		ip.WriteString("; ")
 		f.Comments[1].printSource(&ip, true)
-		io.WriteString(&ip, "do\n")
+		ip.WriteString("do\n")
 		f.File.printSource(&ip, v)
-		io.WriteString(w, "\ndone")
+		w.WriteString("\ndone")
 	}
 }
 
 func (f FunctionCompound) printSource(w writer, v bool) {
 	if f.Identifier != nil {
 		if f.HasKeyword {
-			io.WriteString(w, "function ")
+			w.WriteString("function ")
 		}
 
-		io.WriteString(w, f.Identifier.Data)
-		io.WriteString(w, "() ")
+		w.WriteString(f.Identifier.Data)
+		w.WriteString("() ")
 		f.Comments.printSource(w, true)
 		f.Body.printSource(w, v)
 	}
@@ -318,9 +317,9 @@ func (f FunctionCompound) printSource(w writer, v bool) {
 
 func (g GroupingCompound) printSource(w writer, v bool) {
 	if g.SubShell {
-		io.WriteString(w, "(")
+		w.WriteString("(")
 	} else {
-		io.WriteString(w, "{")
+		w.WriteString("{")
 	}
 
 	ip := indentPrinter{Writer: w}
@@ -328,28 +327,28 @@ func (g GroupingCompound) printSource(w writer, v bool) {
 	multiline := v || g.File.isMultiline(v)
 
 	if len(g.File.Comments[0]) > 0 || !multiline {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 	} else {
-		io.WriteString(&ip, "\n")
+		ip.WriteString("\n")
 	}
 
 	g.File.printSource(&ip, v)
 
 	if multiline {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 	} else {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 	}
 
 	if g.SubShell {
-		io.WriteString(w, ")")
+		w.WriteString(")")
 	} else {
-		io.WriteString(w, "}")
+		w.WriteString("}")
 	}
 }
 
 func (h Heredoc) printSource(w writer, v bool) {
-	io.WriteString(w, "\n")
+	w.WriteString("\n")
 
 	for _, p := range h.HeredocPartsOrWords {
 		p.printSource(w, v)
@@ -358,30 +357,30 @@ func (h Heredoc) printSource(w writer, v bool) {
 
 func (h HeredocPartOrWord) printSource(w writer, v bool) {
 	if h.HeredocPart != nil {
-		io.WriteString(w, h.HeredocPart.Data)
+		w.WriteString(h.HeredocPart.Data)
 	} else if h.Word != nil {
 		h.Word.printSource(w, v)
 	}
 }
 
 func (i IfCompound) printSource(w writer, v bool) {
-	io.WriteString(w, "if ")
+	w.WriteString("if ")
 	i.If.printSource(w, v)
 
 	for _, e := range i.ElIf {
-		io.WriteString(w, "\nelif ")
+		w.WriteString("\nelif ")
 		e.printSource(w, v)
 	}
 
 	if i.Else != nil {
 		ip := indentPrinter{Writer: w}
 
-		io.WriteString(w, "\nelse")
-		io.WriteString(&ip, "\n")
+		w.WriteString("\nelse")
+		ip.WriteString("\n")
 		i.Else.printSource(&ip, v)
 	}
 
-	io.WriteString(w, "\nfi")
+	w.WriteString("\nfi")
 }
 
 func (l Line) printSource(w writer, v bool) {
@@ -400,12 +399,12 @@ func (l Line) printSourceEnd(w writer, v, end bool) {
 		}
 
 		for n, s := range l.Statements[1:] {
-			io.WriteString(w, eos)
+			w.WriteString(eos)
 			s.printSourceEnd(w, v, end || len(l.Statements) > n+1)
 		}
 
 		if len(l.Comments[1]) > 0 {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			l.Comments[1].printSource(w, false)
 		}
 
@@ -417,56 +416,56 @@ func (l Line) printSourceEnd(w writer, v, end bool) {
 
 func (l LoopCompound) printSource(w writer, v bool) {
 	if l.Until {
-		io.WriteString(w, "until ")
+		w.WriteString("until ")
 	} else {
-		io.WriteString(w, "while ")
+		w.WriteString("while ")
 	}
 
 	l.Statement.printSource(w, v)
 
 	if len(l.Comments) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		l.Comments.printSource(w, true)
-		io.WriteString(w, "do")
+		w.WriteString("do")
 	} else {
-		io.WriteString(w, " do")
+		w.WriteString(" do")
 	}
 
 	ip := indentPrinter{Writer: w}
 
-	io.WriteString(&ip, "\n")
+	ip.WriteString("\n")
 	l.File.printSource(&ip, v)
-	io.WriteString(w, "\ndone")
+	w.WriteString("\ndone")
 }
 
 func (p ParameterAssign) printSource(w writer, v bool) {
 	if p.Identifier != nil {
-		io.WriteString(w, p.Identifier.Data)
+		w.WriteString(p.Identifier.Data)
 
 		if len(p.Subscript) > 0 {
-			io.WriteString(w, "[")
+			w.WriteString("[")
 			p.Subscript[0].printSource(w, v)
 
 			for _, s := range p.Subscript[1:] {
 				if v {
-					io.WriteString(w, " ")
+					w.WriteString(" ")
 				}
 
 				s.printSource(w, v)
 			}
 
-			io.WriteString(w, "]")
+			w.WriteString("]")
 		}
 	}
 }
 
 func (p ParameterExpansion) printSource(w writer, v bool) {
-	io.WriteString(w, "${")
+	w.WriteString("${")
 
 	if p.Indirect || p.Type == ParameterPrefix || p.Type == ParameterPrefixSeperate {
-		io.WriteString(w, "!")
+		w.WriteString("!")
 	} else if p.Type == ParameterLength {
-		io.WriteString(w, "#")
+		w.WriteString("#")
 	}
 
 	p.Parameter.printSource(w, v)
@@ -474,40 +473,40 @@ func (p ParameterExpansion) printSource(w writer, v bool) {
 	if p.Word != nil {
 		switch p.Type {
 		case ParameterSubstitution:
-			io.WriteString(w, ":=")
+			w.WriteString(":=")
 			p.Word.printSource(w, v)
 		case ParameterAssignment:
-			io.WriteString(w, ":?")
+			w.WriteString(":?")
 			p.Word.printSource(w, v)
 		case ParameterMessage:
-			io.WriteString(w, ":+")
+			w.WriteString(":+")
 			p.Word.printSource(w, v)
 		case ParameterSetAssign:
-			io.WriteString(w, ":-")
+			w.WriteString(":-")
 			p.Word.printSource(w, v)
 		case ParameterUnsetSubstitution:
-			io.WriteString(w, "=")
+			w.WriteString("=")
 			p.Word.printSource(w, v)
 		case ParameterUnsetAssignment:
-			io.WriteString(w, "?")
+			w.WriteString("?")
 			p.Word.printSource(w, v)
 		case ParameterUnsetMessage:
-			io.WriteString(w, "+")
+			w.WriteString("+")
 			p.Word.printSource(w, v)
 		case ParameterUnsetSetAssign:
-			io.WriteString(w, "-")
+			w.WriteString("-")
 			p.Word.printSource(w, v)
 		case ParameterRemoveStartShortest:
-			io.WriteString(w, "#")
+			w.WriteString("#")
 			p.Word.printSource(w, v)
 		case ParameterRemoveStartLongest:
-			io.WriteString(w, "##")
+			w.WriteString("##")
 			p.Word.printSource(w, v)
 		case ParameterRemoveEndShortest:
-			io.WriteString(w, "%")
+			w.WriteString("%")
 			p.Word.printSource(w, v)
 		case ParameterRemoveEndLongest:
-			io.WriteString(w, "%%")
+			w.WriteString("%%")
 			p.Word.printSource(w, v)
 		}
 	} else if p.Pattern != nil {
@@ -517,103 +516,103 @@ func (p ParameterExpansion) printSource(w writer, v bool) {
 		case ParameterReplace:
 			isReplacement = true
 
-			io.WriteString(w, "/")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("/")
+			w.WriteString(p.Pattern.Data)
 		case ParameterReplaceAll:
 			isReplacement = true
 
-			io.WriteString(w, "//")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("//")
+			w.WriteString(p.Pattern.Data)
 		case ParameterReplaceStart:
 			isReplacement = true
 
-			io.WriteString(w, "/#")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("/#")
+			w.WriteString(p.Pattern.Data)
 		case ParameterReplaceEnd:
 			isReplacement = true
 
-			io.WriteString(w, "/%")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("/%")
+			w.WriteString(p.Pattern.Data)
 		case ParameterLowercaseFirstMatch:
-			io.WriteString(w, ",")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString(",")
+			w.WriteString(p.Pattern.Data)
 		case ParameterLowercaseAllMatches:
-			io.WriteString(w, ",,")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString(",,")
+			w.WriteString(p.Pattern.Data)
 		case ParameterUppercaseFirstMatch:
-			io.WriteString(w, "^")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("^")
+			w.WriteString(p.Pattern.Data)
 		case ParameterUppercaseAllMatches:
-			io.WriteString(w, "^^")
-			io.WriteString(w, p.Pattern.Data)
+			w.WriteString("^^")
+			w.WriteString(p.Pattern.Data)
 		}
 
 		if isReplacement && p.String != nil {
-			io.WriteString(w, "/")
+			w.WriteString("/")
 			p.String.printSource(w, v)
 		}
 	} else if !p.Indirect {
 		switch p.Type {
 		case ParameterPrefix:
-			io.WriteString(w, "*")
+			w.WriteString("*")
 		case ParameterPrefixSeperate:
-			io.WriteString(w, "@")
+			w.WriteString("@")
 		}
 	}
 
 	switch p.Type {
 	case ParameterSubstring:
 		if p.SubstringStart != nil {
-			io.WriteString(w, ":")
+			w.WriteString(":")
 
 			if strings.HasPrefix(p.SubstringStart.Data, "-") {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 			}
 
-			io.WriteString(w, p.SubstringStart.Data)
+			w.WriteString(p.SubstringStart.Data)
 
 			if p.SubstringEnd != nil {
-				io.WriteString(w, ":")
-				io.WriteString(w, p.SubstringEnd.Data)
+				w.WriteString(":")
+				w.WriteString(p.SubstringEnd.Data)
 			}
 		}
 	case ParameterUppercase:
-		io.WriteString(w, "@U")
+		w.WriteString("@U")
 	case ParameterUppercaseFirst:
-		io.WriteString(w, "@u")
+		w.WriteString("@u")
 	case ParameterLowercase:
-		io.WriteString(w, "@L")
+		w.WriteString("@L")
 	case ParameterQuoted:
-		io.WriteString(w, "@Q")
+		w.WriteString("@Q")
 	case ParameterEscaped:
-		io.WriteString(w, "@E")
+		w.WriteString("@E")
 	case ParameterPrompt:
-		io.WriteString(w, "@P")
+		w.WriteString("@P")
 	case ParameterDeclare:
-		io.WriteString(w, "@A")
+		w.WriteString("@A")
 	case ParameterQuotedArrays:
-		io.WriteString(w, "@K")
+		w.WriteString("@K")
 	case ParameterAttributes:
-		io.WriteString(w, "@a")
+		w.WriteString("@a")
 	case ParameterQuotedArraysSeperate:
-		io.WriteString(w, "@k")
+		w.WriteString("@k")
 	}
 
-	io.WriteString(w, "}")
+	w.WriteString("}")
 }
 
 func (p Parameter) printSource(w writer, v bool) {
 	if p.Parameter != nil {
-		io.WriteString(w, p.Parameter.Data)
+		w.WriteString(p.Parameter.Data)
 
 		if p.Array != nil {
-			io.WriteString(w, "[")
+			w.WriteString("[")
 
 			for _, a := range p.Array {
 				a.printSource(w, v)
 			}
 
-			io.WriteString(w, "]")
+			w.WriteString("]")
 		}
 	}
 }
@@ -631,19 +630,19 @@ func (p PatternLines) printSource(w writer, v bool) {
 		p.Patterns[0].printSource(w, v)
 
 		for _, pattern := range p.Patterns[1:] {
-			io.WriteString(w, "|")
+			w.WriteString("|")
 			pattern.printSource(w, v)
 		}
 
 		ip := indentPrinter{Writer: w}
 
-		io.WriteString(w, ")")
-		io.WriteString(&ip, "\n")
+		w.WriteString(")")
+		ip.WriteString("\n")
 
 		if len(p.Lines.Lines) > 0 {
 			p.Lines.printSource(&ip, v)
 		} else {
-			io.WriteString(w, ";")
+			w.WriteString(";")
 		}
 
 		p.CaseTerminationType.printSource(w, v)
@@ -654,22 +653,22 @@ func (p Pipeline) printSource(w writer, v bool) {
 	p.PipelineTime.printSource(w, v)
 
 	if p.Not {
-		io.WriteString(w, "! ")
+		w.WriteString("! ")
 	}
 
 	if p.Coproc {
-		io.WriteString(w, "coproc ")
+		w.WriteString("coproc ")
 
 		if p.CoprocIdentifier != nil {
-			io.WriteString(w, p.CoprocIdentifier.Data)
-			io.WriteString(w, " ")
+			w.WriteString(p.CoprocIdentifier.Data)
+			w.WriteString(" ")
 		}
 	}
 
 	p.CommandOrCompound.printSource(w, v)
 
 	if p.Pipeline != nil {
-		io.WriteString(w, " | ")
+		w.WriteString(" | ")
 		p.Pipeline.printSource(w, v)
 	}
 }
@@ -685,10 +684,10 @@ func (p Pipeline) printHeredoc(w writer, v bool) {
 func (r Redirection) printSource(w writer, v bool) {
 	if r.Redirector != nil {
 		if r.Input != nil {
-			io.WriteString(w, r.Input.Data)
+			w.WriteString(r.Input.Data)
 		}
 
-		io.WriteString(w, r.Redirector.Data)
+		w.WriteString(r.Redirector.Data)
 		r.Output.printSource(w, v)
 	}
 }
@@ -706,27 +705,27 @@ func (r Redirection) printHeredoc(w writer, v bool) {
 
 func (s SelectCompound) printSource(w writer, v bool) {
 	if s.Identifier != nil {
-		io.WriteString(w, "select ")
-		io.WriteString(w, s.Identifier.Data)
+		w.WriteString("select ")
+		w.WriteString(s.Identifier.Data)
 
 		if s.Words != nil {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			s.Comments[0].printSource(w, true)
-			io.WriteString(w, "in")
+			w.WriteString("in")
 
 			for _, wd := range s.Words {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 				wd.printSource(w, v)
 			}
 		}
 
 		ip := indentPrinter{Writer: w}
 
-		io.WriteString(&ip, "; ")
+		ip.WriteString("; ")
 		s.Comments[1].printSource(w, true)
-		io.WriteString(&ip, "do\n")
+		ip.WriteString("do\n")
 		s.File.printSource(&ip, v)
-		io.WriteString(w, "\ndone")
+		w.WriteString("\ndone")
 	}
 }
 
@@ -744,12 +743,12 @@ func (s Statement) printSourceEnd(w writer, v, end bool) {
 
 	if s.JobControl == JobControlBackground {
 		if v {
-			io.WriteString(w, " &")
+			w.WriteString(" &")
 		} else {
-			io.WriteString(w, "&")
+			w.WriteString("&")
 		}
 	} else if end {
-		io.WriteString(w, ";")
+		w.WriteString(";")
 	}
 }
 
@@ -768,7 +767,7 @@ func (s String) printSource(w writer, v bool) {
 }
 
 func (t TestCompound) printSource(w writer, v bool) {
-	io.WriteString(w, "[[")
+	w.WriteString("[[")
 
 	iw := w
 	multi := t.isMultiline(v)
@@ -778,40 +777,40 @@ func (t TestCompound) printSource(w writer, v bool) {
 		multi = true
 
 		if len(t.Comments[0]) > 0 {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 			t.Comments[0].printSource(w, false)
 		}
 
-		io.WriteString(iw, "\n")
+		iw.WriteString("\n")
 	} else {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 	}
 
 	t.Tests.printSource(iw, v)
 
 	if len(t.Comments[1]) > 0 {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 		t.Comments[1].printSource(w, true)
 	} else if multi {
-		io.WriteString(w, "\n")
+		w.WriteString("\n")
 	} else {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 	}
 
-	io.WriteString(w, "]]")
+	w.WriteString("]]")
 }
 
 func (t Tests) printSource(w writer, v bool) {
 	t.Comments[0].printSource(w, true)
 
 	if t.Not {
-		io.WriteString(w, "! ")
+		w.WriteString("! ")
 
 		t.Comments[1].printSource(w, true)
 	}
 
 	if t.Parens != nil {
-		io.WriteString(w, "(")
+		w.WriteString("(")
 
 		multi := t.Parens.isMultiline(v) || len(t.Comments[2]) > 0 || len(t.Comments[3]) > 0
 		iw := w
@@ -820,37 +819,37 @@ func (t Tests) printSource(w writer, v bool) {
 			iw = &indentPrinter{Writer: w}
 
 			if len(t.Comments[2]) > 0 {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 				t.Comments[2].printSource(w, false)
 			}
 
-			io.WriteString(iw, "\n")
+			iw.WriteString("\n")
 		} else {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 
 		t.Parens.printSource(iw, v)
 
 		if multi {
-			io.WriteString(w, "\n")
+			w.WriteString("\n")
 		} else {
-			io.WriteString(w, " ")
+			w.WriteString(" ")
 		}
 
 		t.Comments[3].printSource(w, true)
-		io.WriteString(w, ")")
+		w.WriteString(")")
 	} else if t.Word != nil && t.Test == TestOperatorNone {
 		t.Word.printSource(w, v)
 	} else if t.Word != nil && t.Pattern != nil && t.Test >= TestOperatorStringsEqual {
 		t.Word.printSource(w, v)
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Test.printSource(w, v)
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Comments[2].printSource(w, true)
 		t.Pattern.printSource(w, v)
 	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorVarnameIsRef {
 		t.Test.printSource(w, v)
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Comments[2].printSource(w, true)
 		t.Word.printSource(w, v)
 	} else {
@@ -858,12 +857,12 @@ func (t Tests) printSource(w writer, v bool) {
 	}
 
 	if t.Tests != nil && (t.LogicalOperator == LogicalOperatorOr || t.LogicalOperator == LogicalOperatorAnd) {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Comments[4].printSource(w, true)
 		t.LogicalOperator.printSource(w, v)
 		t.Tests.printSource(w, v)
 	} else if len(t.Comments[4]) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Comments[4].printSource(w, false)
 	}
 }
@@ -874,11 +873,11 @@ func (t TestConsequence) printSource(w writer, v bool) {
 	ip := indentPrinter{Writer: w}
 
 	if len(t.Comments) > 0 {
-		io.WriteString(w, " ")
+		w.WriteString(" ")
 		t.Comments.printSource(&ip, true)
-		io.WriteString(&ip, "then\n")
+		ip.WriteString("then\n")
 	} else {
-		io.WriteString(&ip, " then\n")
+		ip.WriteString(" then\n")
 	}
 
 	t.Consequence.printSource(&ip, v)
@@ -891,10 +890,10 @@ func (ve Value) printSource(w writer, v bool) {
 		ip := indentPrinter{Writer: w}
 
 		if len(ve.Comments[0]) > 0 {
-			io.WriteString(w, "(")
+			w.WriteString("(")
 			ve.Comments[0].printSource(&ip, true)
 		} else {
-			io.WriteString(w, "(")
+			w.WriteString("(")
 		}
 
 		var lastHadComment bool
@@ -903,9 +902,9 @@ func (ve Value) printSource(w writer, v bool) {
 
 			for _, word := range ve.Array {
 				if lastHadComment {
-					io.WriteString(&ip, "\n")
+					ip.WriteString("\n")
 				} else if v && len(word.Comments[0]) == 0 {
-					io.WriteString(w, " ")
+					w.WriteString(" ")
 				}
 
 				word.printSource(&ip, v)
@@ -914,7 +913,7 @@ func (ve Value) printSource(w writer, v bool) {
 			}
 
 			if v && !lastHadComment {
-				io.WriteString(w, " ")
+				w.WriteString(" ")
 			}
 		}
 
@@ -924,16 +923,16 @@ func (ve Value) printSource(w writer, v bool) {
 		}
 
 		if lastHadComment {
-			io.WriteString(w, "\n")
+			w.WriteString("\n")
 		}
 
-		io.WriteString(w, ")")
+		w.WriteString(")")
 	}
 }
 
 func (wo WordOrOperator) printSource(w writer, v bool) {
 	if wo.Operator != nil {
-		io.WriteString(w, wo.Operator.Data)
+		w.WriteString(wo.Operator.Data)
 	} else if wo.Word != nil {
 		wo.Word.printSource(w, v)
 	}
@@ -943,13 +942,13 @@ func (wt WordOrToken) printSource(w writer, v bool) {
 	if wt.Word != nil {
 		wt.Word.printSource(w, v)
 	} else if wt.Token != nil {
-		io.WriteString(w, wt.Token.Data)
+		w.WriteString(wt.Token.Data)
 	}
 }
 
 func (wp WordPart) printSource(w writer, v bool) {
 	if wp.Part != nil {
-		io.WriteString(w, wp.Part.Data)
+		w.WriteString(wp.Part.Data)
 	} else if wp.ArithmeticExpansion != nil {
 		wp.ArithmeticExpansion.printSource(w, v)
 	} else if wp.CommandSubstitution != nil {
