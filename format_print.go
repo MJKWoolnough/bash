@@ -864,7 +864,7 @@ func (t Tests) printSource(w io.Writer, v bool) {
 		t.Tests.printSource(w, v)
 	} else if len(t.Comments[4]) > 0 {
 		io.WriteString(w, " ")
-		t.Comments[4].printSource(w, true)
+		t.Comments[4].printSource(w, false)
 	}
 }
 
