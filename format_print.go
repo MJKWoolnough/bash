@@ -181,7 +181,7 @@ func (c CommandSubstitution) printSource(w io.Writer, v bool) {
 	io.WriteString(w, "$(")
 
 	if c.Command.isMultiline(v) {
-		ip := indentPrinter{w}
+		ip := indentPrinter{Writer: w}
 
 		io.WriteString(&ip, "\n")
 		c.Command.printSource(&ip, v)
@@ -774,7 +774,7 @@ func (t TestCompound) printSource(w io.Writer, v bool) {
 	multi := t.isMultiline(v)
 
 	if multi {
-		iw = &indentPrinter{w}
+		iw = &indentPrinter{Writer: w}
 		multi = true
 
 		if len(t.Comments[0]) > 0 {
@@ -817,7 +817,7 @@ func (t Tests) printSource(w io.Writer, v bool) {
 		iw := w
 
 		if multi {
-			iw = &indentPrinter{w}
+			iw = &indentPrinter{Writer: w}
 
 			if len(t.Comments[2]) > 0 {
 				io.WriteString(w, " ")
@@ -888,7 +888,7 @@ func (ve Value) printSource(w io.Writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
-		ip := indentPrinter{w}
+		ip := indentPrinter{Writer: w}
 
 		if len(ve.Comments[0]) > 0 {
 			io.WriteString(w, "(")
