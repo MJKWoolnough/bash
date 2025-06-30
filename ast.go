@@ -545,14 +545,14 @@ func (cc *Compound) parse(b *bashParser) error {
 func (cc *Compound) isMultiline(v bool) bool {
 	if cc.IfCompound != nil || cc.CaseCompound != nil || cc.LoopCompound != nil || cc.ForCompound != nil || cc.SelectCompound != nil {
 		return true
-	} else if cc.GroupingCompound != nil {
-		return cc.GroupingCompound.isMultiline(v)
-	} else if cc.TestCompound != nil {
-		return cc.TestCompound.isMultiline(v)
-	} else if cc.ArithmeticCompound != nil {
-		return cc.ArithmeticCompound.isMultiline(v)
-	} else if cc.FunctionCompound != nil {
-		return cc.FunctionCompound.isMultiline(v)
+	} else if cc.GroupingCompound != nil && cc.GroupingCompound.isMultiline(v) {
+		return true
+	} else if cc.TestCompound != nil && cc.TestCompound.isMultiline(v) {
+		return true
+	} else if cc.ArithmeticCompound != nil && cc.ArithmeticCompound.isMultiline(v) {
+		return true
+	} else if cc.FunctionCompound != nil && cc.FunctionCompound.isMultiline(v) {
+		return true
 	}
 
 	for _, r := range cc.Redirections {
