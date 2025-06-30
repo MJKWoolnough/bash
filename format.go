@@ -213,7 +213,7 @@ func (c Comments) printType(w writer, v bool) {
 
 func (c Comments) printSource(w writer, v bool) {
 	if len(c) > 0 {
-		pos := w.(interface{ Pos() int }).Pos()
+		pos := w.Pos()
 
 		printComment(w, c[0].Data, 0)
 
