@@ -21,8 +21,7 @@ type writer interface {
 }
 
 type indentPrinter struct {
-	Writer writer
-	pos    int
+	writer
 }
 
 func (i *indentPrinter) Write(p []byte) (int, error) {
@@ -33,27 +32,25 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 
 	for n, c := range p {
 		if c == '\n' {
-			m, err := i.Writer.Write(p[last : n+1])
+			m, err := i.writer.Write(p[last : n+1])
 			total += m
 
 			if err != nil {
 				return total, err
 			}
 
-			_, err = i.Writer.Write(indent)
+			_, err = i.writer.Write(indent)
 			if err != nil {
 				return total, err
 			}
 
 			last = n + 1
-			i.pos = 0
 		}
 	}
 
 	if last != len(p) {
-		m, err := i.Writer.Write(p[last:])
+		m, err := i.writer.Write(p[last:])
 		total += m
-		i.pos += m
 
 		if err != nil {
 			return total, err
@@ -75,31 +72,18 @@ func (i *indentPrinter) WriteString(s string) (int, error) {
 	return i.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
-func (i *indentPrinter) Pos() int {
-	return i.pos
-}
-
-func (i *indentPrinter) Underlying() writer {
-	return i.Writer
-}
-
 type countPrinter struct {
 	io.Writer
 	pos int
 }
 
 func (c *countPrinter) Write(p []byte) (int, error) {
-	hasNewline := false
-
-	for n, b := range p {
+	for _, b := range p {
 		if b == '\n' {
-			c.pos = len(p) - n - 1
-			hasNewline = true
+			c.pos = 0
+		} else if b != '\t' || c.pos > 0 {
+			c.pos++
 		}
-	}
-
-	if !hasNewline {
-		c.pos += len(p)
 	}
 
 	return c.Writer.Write(p)
@@ -197,7 +181,7 @@ func (t Tokens) printType(w writer, v bool) {
 
 	w.WriteString("[")
 
-	ipp := indentPrinter{Writer: &countPrinter{Writer: w}}
+	ipp := indentPrinter{&countPrinter{Writer: w}}
 
 	for n, t := range t {
 		ipp.Printf("\n%d: ", n)
