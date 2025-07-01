@@ -13,7 +13,7 @@ HEREDOC
 
 	while read type; do
 		echo -e "\nfunc (f *$type) printType(w writer, v bool) {";
-		echo "	pp := indentPrinter{Writer: w}";
+		echo "	pp := indentPrinter{w}";
 		echo;
 		echo "	pp.Print(\"$type {\")";
 
@@ -35,7 +35,7 @@ HEREDOC
 				echo "	} else if len(f.$fieldName) > 0 {";
 				echo "		pp.Print(\"\\n$fieldName: [\")";
 				echo;
-				echo "		ipp := indentPrinter{Writer: &pp}";
+				echo "		ipp := indentPrinter{&pp}";
 				echo;
 				echo "		for n, e := range f.$fieldName {";
 				echo "			ipp.Printf(\"\n%d: \", n)";
@@ -49,7 +49,7 @@ HEREDOC
 			elif [ "${fieldType:0:1}" = "[" ]; then
 				echo "	pp.Print(\"\\n$fieldName: [\")";
 				echo;
-				echo "	ipp := indentPrinter{Writer: &pp}";
+				echo "	ipp := indentPrinter{&pp}";
 				echo;
 				echo "	for n, e := range f.$fieldName {";
 				echo "		ipp.Printf(\"\n%d: \", n)";
