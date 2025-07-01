@@ -741,7 +741,9 @@ func (s Statement) printSourceEnd(w writer, v, end bool) {
 	s.Pipeline.printSource(w, v)
 
 	if (s.LogicalOperator == LogicalOperatorAnd || s.LogicalOperator == LogicalOperatorOr) && s.Statement != nil {
+		w.WriteString(" ")
 		s.LogicalOperator.printSource(w, v)
+		w.WriteString(" ")
 		s.Statement.printSourceEnd(w, v, false)
 	}
 
@@ -872,6 +874,7 @@ func (t Tests) printSource(w writer, v bool) {
 		w.WriteString(" ")
 		t.Comments[4].printSource(w, true)
 		t.LogicalOperator.printSource(w, v)
+		w.WriteString(" ")
 		t.Tests.printSource(w, v)
 	} else if len(t.Comments[4]) > 0 {
 		w.WriteString(" ")
