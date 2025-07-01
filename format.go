@@ -60,10 +60,6 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 	return total, nil
 }
 
-func (i *indentPrinter) Print(args ...interface{}) {
-	fmt.Fprint(i, args...)
-}
-
 func (i *indentPrinter) Printf(format string, args ...interface{}) {
 	fmt.Fprintf(i, format, args...)
 }
