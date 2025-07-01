@@ -180,7 +180,7 @@ func (c CommandSubstitution) printSource(w writer, v bool) {
 	w.WriteString("$(")
 
 	if c.Command.isMultiline(v) {
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		ip.WriteString("\n")
 		c.Command.printSource(&ip, v)
@@ -292,7 +292,7 @@ func (f ForCompound) printSource(w writer, v bool) {
 			}
 		}
 
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		ip.WriteString("; ")
 		f.Comments[1].printSource(&ip, true)
@@ -322,7 +322,7 @@ func (g GroupingCompound) printSource(w writer, v bool) {
 		w.WriteString("{")
 	}
 
-	ip := indentPrinter{Writer: w}
+	ip := indentPrinter{w}
 
 	multiline := v || g.File.isMultiline(v)
 
@@ -373,7 +373,7 @@ func (i IfCompound) printSource(w writer, v bool) {
 	}
 
 	if i.Else != nil {
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		w.WriteString("\nelse")
 		ip.WriteString("\n")
@@ -431,7 +431,7 @@ func (l LoopCompound) printSource(w writer, v bool) {
 		w.WriteString(" do")
 	}
 
-	ip := indentPrinter{Writer: w}
+	ip := indentPrinter{w}
 
 	ip.WriteString("\n")
 	l.File.printSource(&ip, v)
@@ -634,7 +634,7 @@ func (p PatternLines) printSource(w writer, v bool) {
 			pattern.printSource(w, v)
 		}
 
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		w.WriteString(")")
 		ip.WriteString("\n")
@@ -723,7 +723,7 @@ func (s SelectCompound) printSource(w writer, v bool) {
 			}
 		}
 
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		ip.WriteString("; ")
 		s.Comments[1].printSource(w, true)
@@ -785,7 +785,7 @@ func (t TestCompound) printSource(w writer, v bool) {
 	multi := t.isMultiline(v)
 
 	if multi {
-		iw = &indentPrinter{Writer: w}
+		iw = &indentPrinter{w}
 		multi = true
 
 		if len(t.Comments[0]) > 0 {
@@ -828,7 +828,7 @@ func (t Tests) printSource(w writer, v bool) {
 		iw := w
 
 		if multi {
-			iw = &indentPrinter{Writer: w}
+			iw = &indentPrinter{w}
 
 			if len(t.Comments[2]) > 0 {
 				w.WriteString(" ")
@@ -882,7 +882,7 @@ func (t Tests) printSource(w writer, v bool) {
 func (t TestConsequence) printSource(w writer, v bool) {
 	t.Test.printSource(w, v)
 
-	ip := indentPrinter{Writer: w}
+	ip := indentPrinter{w}
 
 	if len(t.Comments) > 0 {
 		w.WriteString(" ")
@@ -899,7 +899,7 @@ func (ve Value) printSource(w writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
-		ip := indentPrinter{Writer: w}
+		ip := indentPrinter{w}
 
 		if len(ve.Comments[0]) > 0 {
 			w.WriteString("(")
