@@ -902,19 +902,28 @@ func (ve Value) printSource(w writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
+		var lastHadComment bool
+
 		ip := indentPrinter{w}
 
 		if len(ve.Comments[0]) > 0 {
 			w.WriteString("(")
-			ve.Comments[0].printSource(&ip, true)
+
+			if len(ve.Comments[0]) > 0 {
+				w.WriteString(" ")
+				ve.Comments[0].printSource(w, false)
+
+				if len(ve.Array) > 0 {
+					w.WriteString("\n")
+				}
+
+				lastHadComment = true
+			}
 		} else {
 			w.WriteString("(")
 		}
 
-		var lastHadComment bool
-
 		if len(ve.Array) > 0 {
-
 			for _, word := range ve.Array {
 				if lastHadComment {
 					ip.WriteString("\n")
@@ -927,13 +936,20 @@ func (ve Value) printSource(w writer, v bool) {
 				lastHadComment = len(word.Comments[1]) != 0
 			}
 
-			if v && !lastHadComment {
+			if v && !lastHadComment && len(ve.Comments[1]) == 0 {
 				w.WriteString(" ")
 			}
 		}
 
 		if len(ve.Comments[1]) != 0 {
-			ve.Comments[1].printSource(&ip, false)
+			w.WriteString("\n")
+
+			if lastHadComment {
+				w.WriteString("\n")
+			}
+
+			ve.Comments[1].printSource(w, false)
+
 			lastHadComment = true
 		}
 
