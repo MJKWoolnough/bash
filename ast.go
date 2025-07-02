@@ -2196,10 +2196,10 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 }
 
 func (p *ParameterExpansion) isMultiline(v bool) bool {
-	if p.Word != nil {
-		return p.Word.isMultiline(v)
-	} else if p.String != nil {
-		return p.String.isMultiline(v)
+	if p.Word != nil && p.Word.isMultiline(v) {
+		return true
+	} else if p.String != nil && p.String.isMultiline(v) {
+		return true
 	}
 
 	return p.Parameter.isMultiline(v)
