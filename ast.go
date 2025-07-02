@@ -1767,8 +1767,6 @@ func (v *Value) parse(b *bashParser) error {
 	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "("}) {
 		v.Comments[0] = b.AcceptRunWhitespaceComments()
 
-		b.AcceptRunAllWhitespaceNoComments()
-
 		v.Array = []ArrayWord{}
 		c := b.NewGoal()
 
@@ -1847,6 +1845,10 @@ func (a *ArrayWord) parse(b *bashParser) error {
 
 	if err := a.Word.parse(c, false); err != nil {
 		return b.Error("ArrayWord", err)
+	}
+
+	if len(a.Word.Parts) == 0 {
+		return b.Error("ArrayWord", ErrMissingWord)
 	}
 
 	b.Score(c)
