@@ -12770,6 +12770,13 @@ func TestArrayWord(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
+		{"", func(t *test, tk Tokens) { // 5
+			t.Err = Error{
+				Err:     ErrMissingWord,
+				Parsing: "ArrayWord",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var a ArrayWord
 
