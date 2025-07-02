@@ -1772,6 +1772,8 @@ func (v *Value) parse(b *bashParser) error {
 		v.Array = []ArrayWord{}
 		c := b.NewGoal()
 
+		c.AcceptRunAllWhitespace()
+
 		for !c.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ")"}) {
 			b.AcceptRunAllWhitespaceNoComments()
 
