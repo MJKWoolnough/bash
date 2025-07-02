@@ -12525,7 +12525,28 @@ func TestValue(t *testing.T) {
 				Tokens: tk[2:9],
 			}
 		}},
-		{"a=( # comment A\nb\n# comment B\n)", func(t *test, tk Tokens) { // 6
+		{"a=( # comment\n)", func(t *test, tk Tokens) { // 6
+			t.Output = Value{
+				Array:    []ArrayWord{},
+				Comments: [2]Comments{{tk[4]}},
+				Tokens:   tk[2:7],
+			}
+		}},
+		{"a=( # comment A\n\n# b comment B\n)", func(t *test, tk Tokens) { // 7
+			t.Output = Value{
+				Array:    []ArrayWord{},
+				Comments: [2]Comments{{tk[4]}, {tk[6]}},
+				Tokens:   tk[2:9],
+			}
+		}},
+		{"a=(\n# comment\n)", func(t *test, tk Tokens) { // 8
+			t.Output = Value{
+				Array:    []ArrayWord{},
+				Comments: [2]Comments{nil, {tk[4]}},
+				Tokens:   tk[2:7],
+			}
+		}},
+		{"a=( # comment A\nb\n# comment B\n)", func(t *test, tk Tokens) { // 9
 			t.Output = Value{
 				Array: []ArrayWord{
 					{
@@ -12545,7 +12566,7 @@ func TestValue(t *testing.T) {
 				Tokens:   tk[2:11],
 			}
 		}},
-		{"a=$(||)", func(t *test, tk Tokens) { // 7
+		{"a=$(||)", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -12588,7 +12609,7 @@ func TestValue(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"a=($(||))", func(t *test, tk Tokens) { // 8
+		{"a=($(||))", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
