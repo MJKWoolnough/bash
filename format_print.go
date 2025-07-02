@@ -38,7 +38,6 @@ func (a ArithmeticExpansion) printSource(w writer, v bool) {
 
 func (a ArrayWord) printSource(w writer, v bool) {
 	if len(a.Comments[0]) > 0 {
-		w.WriteString("\n")
 		a.Comments[0].printSource(w, true)
 	}
 
@@ -902,20 +901,20 @@ func (ve Value) printSource(w writer, v bool) {
 	if ve.Word != nil {
 		ve.Word.printSource(w, v)
 	} else if ve.Array != nil {
-		var lastHadComment bool
+		iw := w
+		ml := ve.isMultiline(v)
+		lastHadComment := ml
 
-		ip := indentPrinter{w}
+		if ml {
+			iw = &indentPrinter{w}
+		}
 
 		if len(ve.Comments[0]) > 0 {
 			w.WriteString("(")
 
 			if len(ve.Comments[0]) > 0 {
 				w.WriteString(" ")
-				ve.Comments[0].printSource(w, false)
-
-				if len(ve.Array) > 0 {
-					w.WriteString("\n")
-				}
+				ve.Comments[0].printSource(w, len(ve.Array) > 0)
 
 				lastHadComment = true
 			}
@@ -924,20 +923,22 @@ func (ve Value) printSource(w writer, v bool) {
 		}
 
 		if len(ve.Array) > 0 {
+			lastHadComment = lastHadComment || len(ve.Array[0].Comments[0]) > 0
+
 			for _, word := range ve.Array {
 				if lastHadComment {
-					ip.WriteString("\n")
+					iw.WriteString("\n")
 				} else if v && len(word.Comments[0]) == 0 {
-					w.WriteString(" ")
+					iw.WriteString(" ")
 				}
 
-				word.printSource(&ip, v)
+				word.printSource(iw, v)
 
 				lastHadComment = len(word.Comments[1]) != 0
 			}
 
-			if v && !lastHadComment && len(ve.Comments[1]) == 0 {
-				w.WriteString(" ")
+			if v && !ml {
+				iw.WriteString(" ")
 			}
 		}
 
@@ -953,7 +954,7 @@ func (ve Value) printSource(w writer, v bool) {
 			lastHadComment = true
 		}
 
-		if lastHadComment {
+		if lastHadComment || ml {
 			w.WriteString("\n")
 		}
 
