@@ -791,7 +791,7 @@ func (t TestCompound) printSource(w writer, v bool) {
 
 		if len(t.Comments[0]) > 0 {
 			w.WriteString(" ")
-			t.Comments[0].printSource(w, false)
+			t.Comments[0].printSource(w, len(t.Tests.Comments[0]) > 0)
 		}
 
 		iw.WriteString("\n")
