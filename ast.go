@@ -2318,11 +2318,7 @@ func (w *WordOrToken) parse(b *bashParser) error {
 }
 
 func (w *WordOrToken) isMultiline(v bool) bool {
-	if w.Word != nil {
-		return w.Word.isMultiline(v)
-	}
-
-	return false
+	return w.Word != nil && w.Word.isMultiline(v)
 }
 
 type SubstitutionType uint8
