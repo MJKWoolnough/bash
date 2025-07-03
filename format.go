@@ -151,6 +151,8 @@ func (t Token) printType(w writer, v bool) {
 		typ = "TokenPattern"
 	case TokenOperator:
 		typ = "TokenOperator"
+	case TokenBinaryOperator:
+		typ = "TokenBinaryOperator"
 	default:
 		typ = "Unknown"
 	}
