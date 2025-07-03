@@ -9052,6 +9052,30 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
+		{"[[ a>b ]]", func(t *test, tk Tokens) { // 6
+			t.Output = Tests{
+				Test: TestOperatorStringAfter,
+				Word: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Pattern: &Pattern{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[2:5],
+			}
+		}},
 		{"[[ a -ef b ]]", func(t *test, tk Tokens) { // 7
 			t.Output = Tests{
 				Test: TestOperatorFilesAreSameInode,
