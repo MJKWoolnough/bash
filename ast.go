@@ -1236,7 +1236,7 @@ func (t *Tests) parse(b *bashParser) error {
 			}
 
 			b.Score(c)
-		} else if tk.Type == TokenOperator {
+		} else if tk.Type == TokenBinaryOperator {
 			b.Score(c)
 
 			switch tk.Data {
@@ -1909,7 +1909,7 @@ func (w *Word) isMultiline(v bool) bool {
 
 func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
-	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenHeredoc, TokenHeredocEnd, parser.TokenDone:
+	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenHeredoc, TokenBinaryOperator, TokenHeredocEnd, parser.TokenDone:
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
