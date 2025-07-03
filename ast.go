@@ -1280,7 +1280,7 @@ func (t *Tests) parse(b *bashParser) error {
 	}
 
 	if t.LogicalOperator != LogicalOperatorNone {
-		c.AcceptRunAllWhitespace()
+		c.AcceptRunAllWhitespaceNoComments()
 		b.Score(c)
 
 		c = b.NewGoal()
