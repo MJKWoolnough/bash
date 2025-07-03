@@ -504,7 +504,7 @@ func (t TestOperator) printSource(w writer, v bool) {
 	case TestOperatorStringsEqual:
 		w.WriteString("==")
 	case TestOperatorStringsMatch:
-		w.WriteString("~=")
+		w.WriteString("=~")
 	case TestOperatorStringsNotEqual:
 		w.WriteString("!=")
 	case TestOperatorStringBefore:
