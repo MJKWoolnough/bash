@@ -73,6 +73,7 @@ const (
 	TokenCloseBacktick
 	TokenPattern
 	TokenOperator
+	TokenBinaryOperator
 )
 
 type state uint8
@@ -1735,7 +1736,7 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 		return b.test(t)
 	}
 
-	return t.Return(TokenOperator, b.testPatternStart)
+	return t.Return(TokenBinaryOperator, b.testPatternStart)
 }
 
 func (b *bashTokeniser) testWordStart(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
