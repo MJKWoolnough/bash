@@ -802,6 +802,10 @@ func (t TestCompound) printSource(w writer, v bool) {
 	t.Tests.printSource(iw, v)
 
 	if len(t.Comments[1]) > 0 {
+		if t.Tests.lastIsComment() {
+			w.WriteString("\n")
+		}
+
 		w.WriteString("\n")
 		t.Comments[1].printSource(w, true)
 	} else if multi {
@@ -879,6 +883,14 @@ func (t Tests) printSource(w writer, v bool) {
 		w.WriteString(" ")
 		t.Comments[4].printSource(w, false)
 	}
+}
+
+func (t Tests) lastIsComment() bool {
+	if t.Tests != nil {
+		return t.Tests.lastIsComment()
+	}
+
+	return len(t.Comments[4]) > 0
 }
 
 func (t TestConsequence) printSource(w writer, v bool) {
