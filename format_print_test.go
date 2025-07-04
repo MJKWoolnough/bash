@@ -745,19 +745,39 @@ func TestPrintSource(t *testing.T) {
 			"[[ ( a == b ) ]];",
 		},
 		{ // 148
-			"[[ (# A\na == b) ]]",
-			"[[\n\t( # A\n\t\ta == b\n\t)\n]];",
-			"[[\n\t( # A\n\t\ta == b\n\t)\n]];",
+			"[[ (# A\na -ge b) ]]",
+			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
+			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
 		},
 		{ // 149
-			"[[ (a == b\n# A\n) ]]",
-			"[[\n\t(\n\t\ta == b\n\t# A\n\t)\n]];",
-			"[[\n\t(\n\t\ta == b\n\t# A\n\t)\n]];",
+			"[[ (a -gt b\n# A\n) ]]",
+			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
+			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
 		},
 		{ // 150
-			"[[ (\n# A\na == b # B\n) ]]",
-			"[[\n\t(\n\t\t# A\n\t\ta == b # B\n\t)\n]];",
-			"[[\n\t(\n\t\t# A\n\t\ta == b # B\n\t)\n]];",
+			"[[ (\n# A\na -le b # B\n) ]]",
+			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
+			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
+		},
+		{ // 151
+			"[[\n# A\na =~ b #B\n]]",
+			"[[\n\t# A\n\ta =~ b #B\n]];",
+			"[[\n\t# A\n\ta =~ b #B\n]];",
+		},
+		{ // 152
+			"[[ # A\n\n# B\na != b # C\n\n# D\n]]",
+			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
+			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
+		},
+		{ // 153
+			"[[ # A\n\n# B\na < b # C\n||# D\n\n# E\nd>e # F\n\n# G\n]]",
+			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\t\n\t   # E\n\td > e # F\n\n# G\n]];",
+			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\t\n\t   # E\n\td > e # F\n\n# G\n]];",
+		},
+		{ // 154
+			"[[ # A\n# B\n\n# C\n# D\n( # E\n# F\n\n# G\n# H\na -eq b # I\n# J\n&& # K\n# L\nc -ne d # M\n# N\n\n# O\n\n# P\n) # Q\n# R\n\n# S\n# T\n&& # U\n# V\n\n# W\n# X\ne -lt f # Y\n# Z\n]]",
+			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\t\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\t\n\t# O\n\t\n\t# P\n\t) # Q\n\t  # R\n\t\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\t\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
+			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\t\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\t\n\t# O\n\t\n\t# P\n\t) # Q\n\t  # R\n\t\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\t\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 		},
 	} {
 		for m, input := range test {
