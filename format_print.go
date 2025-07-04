@@ -641,10 +641,10 @@ func (p PatternLines) printSource(w writer, v bool) {
 		if len(p.Lines.Lines) > 0 {
 			p.Lines.printSource(&ip, v)
 		} else {
-			w.WriteString(";")
+			ip.WriteString(";")
 		}
 
-		p.CaseTerminationType.printSource(w, v)
+		p.CaseTerminationType.printSource(&ip, v)
 	}
 }
 
