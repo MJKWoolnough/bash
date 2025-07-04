@@ -179,7 +179,7 @@ func (t Tokens) printType(w writer, v bool) {
 
 	w.WriteString("[")
 
-	ipp := indentPrinter{&countPrinter{Writer: w}}
+	ipp := indentPrinter{writer: &countPrinter{Writer: w}}
 
 	for n, t := range t {
 		ipp.Printf("\n%d: ", n)
