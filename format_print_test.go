@@ -351,13 +351,13 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 69
 			"{ a=( # A\n# B\n\n# C\n); }",
-			"{\n\ta=( # A\n\t    # B\n\t\n\t# C\n\t);\n}",
-			"{\n\ta=( # A\n\t    # B\n\t\n\t# C\n\t);\n}",
+			"{\n\ta=( # A\n\t    # B\n\n\t# C\n\t);\n}",
+			"{\n\ta=( # A\n\t    # B\n\n\t# C\n\t);\n}",
 		},
 		{ // 70
 			"{ a=( # A\n# B\n\nb\n# C\n); }",
-			"{\n\ta=( # A\n\t    # B\n\t\n\t\tb\n\t# C\n\t);\n}",
-			"{\n\ta=( # A\n\t    # B\n\t\n\t\tb\n\t# C\n\t);\n}",
+			"{\n\ta=( # A\n\t    # B\n\n\t\tb\n\t# C\n\t);\n}",
+			"{\n\ta=( # A\n\t    # B\n\n\t\tb\n\t# C\n\t);\n}",
 		},
 		{ // 71
 			"{ a=(b); }",
@@ -771,13 +771,13 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 153
 			"[[ # A\n\n# B\na < b # C\n||# D\n\n# E\nd>e # F\n\n# G\n]]",
-			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\t\n\t   # E\n\td > e # F\n\n# G\n]];",
-			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\t\n\t   # E\n\td > e # F\n\n# G\n]];",
+			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
+			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
 		},
 		{ // 154
 			"[[ # A\n# B\n\n# C\n# D\n( # E\n# F\n\n# G\n# H\na -eq b # I\n# J\n&& # K\n# L\nc -ne d # M\n# N\n\n# O\n\n# P\n) # Q\n# R\n\n# S\n# T\n&& # U\n# V\n\n# W\n# X\ne -lt f # Y\n# Z\n]]",
-			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\t\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\t\n\t# O\n\t\n\t# P\n\t) # Q\n\t  # R\n\t\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\t\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
-			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\t\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\t\n\t# O\n\t\n\t# P\n\t) # Q\n\t  # R\n\t\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\t\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
+			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
+			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 		},
 	} {
 		for m, input := range test {

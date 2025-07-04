@@ -22,6 +22,7 @@ type writer interface {
 
 type indentPrinter struct {
 	writer
+	hadNewline bool
 }
 
 func (i *indentPrinter) Write(p []byte) (int, error) {
@@ -32,6 +33,12 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 
 	for n, c := range p {
 		if c == '\n' {
+			if last != n {
+				if err := i.printIndent(); err != nil {
+					return total, err
+				}
+			}
+
 			m, err := i.writer.Write(p[last : n+1])
 			total += m
 
@@ -39,16 +46,16 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 				return total, err
 			}
 
-			_, err = i.writer.Write(indent)
-			if err != nil {
-				return total, err
-			}
-
+			i.hadNewline = true
 			last = n + 1
 		}
 	}
 
 	if last != len(p) {
+		if err := i.printIndent(); err != nil {
+			return total, err
+		}
+
 		m, err := i.writer.Write(p[last:])
 		total += m
 
@@ -58,6 +65,18 @@ func (i *indentPrinter) Write(p []byte) (int, error) {
 	}
 
 	return total, nil
+}
+
+func (i *indentPrinter) printIndent() error {
+	if i.hadNewline {
+		if _, err := i.writer.Write(indent); err != nil {
+			return err
+		}
+
+		i.hadNewline = false
+	}
+
+	return nil
 }
 
 func (i *indentPrinter) Printf(format string, args ...interface{}) {
