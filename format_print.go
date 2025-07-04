@@ -837,7 +837,7 @@ func (t Tests) printSource(w writer, v bool) {
 
 			if len(t.Comments[2]) > 0 {
 				w.WriteString(" ")
-				t.Comments[2].printSource(w, false)
+				t.Comments[2].printSource(w, len(t.Parens.Comments[0]) > 0)
 			}
 
 			iw.WriteString("\n")
@@ -848,7 +848,11 @@ func (t Tests) printSource(w writer, v bool) {
 		t.Parens.printSource(iw, v)
 
 		if multi {
-			w.WriteString("\n")
+			if len(t.Comments[3]) > 0 && len(t.Parens.Comments[4]) > 0 {
+				w.WriteString("\n\n")
+			} else {
+				w.WriteString("\n")
+			}
 		} else {
 			w.WriteString(" ")
 		}
