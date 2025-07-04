@@ -1612,7 +1612,7 @@ func (b *bashTokeniser) testWordOrPunctuator(t *parser.Tokeniser) (parser.Token,
 	} else if t.Accept("#") {
 		t.ExceptRun("\n")
 
-		return t.Return(TokenComment, b.test)
+		return t.Return(TokenComment, b.testWordOrPunctuator)
 	}
 
 	switch c := t.Peek(); c {
@@ -1685,7 +1685,9 @@ func (b *bashTokeniser) testBinaryOperator(t *parser.Tokeniser) (parser.Token, p
 
 		return t.Return(TokenLineTerminator, b.testBinaryOperator)
 	} else if t.Accept("#") {
-		return t.ReturnError(ErrInvalidCharacter)
+		t.ExceptRun(newline)
+
+		return t.Return(TokenComment, b.testBinaryOperator)
 	}
 
 	b.popState()
