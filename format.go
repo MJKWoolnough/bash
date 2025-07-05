@@ -260,7 +260,7 @@ func (a AssignmentType) String() string {
 	}
 }
 
-func (a AssignmentType) printSource(w writer, v bool) {
+func (a AssignmentType) printSource(w writer, _ bool) {
 	switch a {
 	case AssignmentAssign:
 		w.WriteString("=")
@@ -269,7 +269,7 @@ func (a AssignmentType) printSource(w writer, v bool) {
 	}
 }
 
-func (a AssignmentType) printType(w writer, v bool) {
+func (a AssignmentType) printType(w writer, _ bool) {
 	w.WriteString(a.String())
 }
 
@@ -288,11 +288,11 @@ func (c CaseTerminationType) String() string {
 	}
 }
 
-func (c CaseTerminationType) printType(w writer, v bool) {
+func (c CaseTerminationType) printType(w writer, _ bool) {
 	w.WriteString(c.String())
 }
 
-func (c CaseTerminationType) printSource(w writer, v bool) {
+func (c CaseTerminationType) printSource(w writer, _ bool) {
 	switch c {
 	case CaseTerminationNone, CaseTerminationEnd:
 		w.WriteString(";")
@@ -314,7 +314,7 @@ func (s SubstitutionType) String() string {
 	}
 }
 
-func (s SubstitutionType) printType(w writer, v bool) {
+func (s SubstitutionType) printType(w writer, _ bool) {
 	w.WriteString(s.String())
 }
 
@@ -331,7 +331,7 @@ func (p PipelineTime) String() string {
 	}
 }
 
-func (p PipelineTime) printSource(w writer, v bool) {
+func (p PipelineTime) printSource(w writer, _ bool) {
 	switch p {
 	case PipelineTimeBash:
 		w.WriteString("time ")
@@ -340,7 +340,7 @@ func (p PipelineTime) printSource(w writer, v bool) {
 	}
 }
 
-func (p PipelineTime) printType(w writer, v bool) {
+func (p PipelineTime) printType(w writer, _ bool) {
 	w.WriteString(p.String())
 }
 
@@ -357,7 +357,7 @@ func (l LogicalOperator) String() string {
 	}
 }
 
-func (l LogicalOperator) printSource(w writer, v bool) {
+func (l LogicalOperator) printSource(w writer, _ bool) {
 	switch l {
 	case LogicalOperatorAnd:
 		w.WriteString("&&")
@@ -366,7 +366,7 @@ func (l LogicalOperator) printSource(w writer, v bool) {
 	}
 }
 
-func (l LogicalOperator) printType(w writer, v bool) {
+func (l LogicalOperator) printType(w writer, _ bool) {
 	w.WriteString(l.String())
 }
 
@@ -381,7 +381,7 @@ func (j JobControl) String() string {
 	}
 }
 
-func (j JobControl) printType(w writer, v bool) {
+func (j JobControl) printType(w writer, _ bool) {
 	w.WriteString(j.String())
 }
 
@@ -462,11 +462,11 @@ func (p ParameterType) String() string {
 	}
 }
 
-func (p ParameterType) printType(w writer, v bool) {
+func (p ParameterType) printType(w writer, _ bool) {
 	w.WriteString(p.String())
 }
 
-func (t TestOperator) printSource(w writer, v bool) {
+func (t TestOperator) printSource(w writer, _ bool) {
 	switch t {
 	case TestOperatorFileExists:
 		w.WriteString("-e")
@@ -632,7 +632,7 @@ func (t TestOperator) String() string {
 	}
 }
 
-func (t TestOperator) printType(w writer, v bool) {
+func (t TestOperator) printType(w writer, _ bool) {
 	w.WriteString(t.String())
 }
 
