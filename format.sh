@@ -88,7 +88,7 @@ import "fmt"
 HEREDOC
 
 	while read type; do
-		echo -e "\n// Format implements the fmt.Formatter interface";
+		echo -e "\n// Format implements the fmt.Formatter interface.";
 		echo "func (f $type) Format(s fmt.State, v rune) {";
 		echo "	if v == 'v' && s.Flag('#') {";
 		echo "		type X = $type";
