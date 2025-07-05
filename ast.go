@@ -1737,7 +1737,6 @@ func (p *ParameterAssign) parse(b *bashParser) error {
 
 			b.Score(c)
 			b.AcceptRunAllWhitespace()
-
 		}
 	}
 
@@ -2231,7 +2230,6 @@ func (p *Parameter) parse(b *bashParser) error {
 
 				b.Score(c)
 				b.AcceptRunAllWhitespace()
-
 			}
 		}
 	} else {
