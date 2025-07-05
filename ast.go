@@ -1462,6 +1462,7 @@ func (a *AssignmentOrWord) parse(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
+
 	if tk := b.Peek().Type; tk == TokenIdentifierAssign || tk == TokenLetIdentifierAssign {
 		a.Assignment = new(Assignment)
 		err = a.Assignment.parse(c)
