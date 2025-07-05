@@ -4,7 +4,7 @@ package bash
 
 import "fmt"
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f ArithmeticExpansion) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = ArithmeticExpansion
@@ -16,7 +16,7 @@ func (f ArithmeticExpansion) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f ArrayWord) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = ArrayWord
@@ -28,7 +28,7 @@ func (f ArrayWord) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Assignment) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Assignment
@@ -40,7 +40,7 @@ func (f Assignment) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f AssignmentOrWord) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = AssignmentOrWord
@@ -52,7 +52,7 @@ func (f AssignmentOrWord) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f CaseCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CaseCompound
@@ -64,7 +64,7 @@ func (f CaseCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Command) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Command
@@ -76,7 +76,7 @@ func (f Command) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f CommandOrCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CommandOrCompound
@@ -88,7 +88,7 @@ func (f CommandOrCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f CommandSubstitution) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CommandSubstitution
@@ -100,7 +100,7 @@ func (f CommandSubstitution) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Compound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Compound
@@ -112,7 +112,7 @@ func (f Compound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f File) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = File
@@ -124,7 +124,7 @@ func (f File) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f ForCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = ForCompound
@@ -136,7 +136,7 @@ func (f ForCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f FunctionCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = FunctionCompound
@@ -148,7 +148,7 @@ func (f FunctionCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f GroupingCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = GroupingCompound
@@ -160,7 +160,7 @@ func (f GroupingCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Heredoc) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Heredoc
@@ -172,7 +172,7 @@ func (f Heredoc) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f HeredocPartOrWord) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = HeredocPartOrWord
@@ -184,7 +184,7 @@ func (f HeredocPartOrWord) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f IfCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = IfCompound
@@ -196,7 +196,7 @@ func (f IfCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Line) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Line
@@ -208,7 +208,7 @@ func (f Line) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f LoopCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = LoopCompound
@@ -220,7 +220,7 @@ func (f LoopCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Parameter) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Parameter
@@ -232,7 +232,7 @@ func (f Parameter) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f ParameterAssign) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = ParameterAssign
@@ -244,7 +244,7 @@ func (f ParameterAssign) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f ParameterExpansion) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = ParameterExpansion
@@ -256,7 +256,7 @@ func (f ParameterExpansion) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Pattern) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Pattern
@@ -268,7 +268,7 @@ func (f Pattern) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f PatternLines) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = PatternLines
@@ -280,7 +280,7 @@ func (f PatternLines) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Pipeline) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Pipeline
@@ -292,7 +292,7 @@ func (f Pipeline) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Redirection) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Redirection
@@ -304,7 +304,7 @@ func (f Redirection) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f SelectCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = SelectCompound
@@ -316,7 +316,7 @@ func (f SelectCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Statement) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Statement
@@ -328,7 +328,7 @@ func (f Statement) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f String) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = String
@@ -340,7 +340,7 @@ func (f String) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f TestCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = TestCompound
@@ -352,7 +352,7 @@ func (f TestCompound) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f TestConsequence) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = TestConsequence
@@ -364,7 +364,7 @@ func (f TestConsequence) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Tests) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Tests
@@ -376,7 +376,7 @@ func (f Tests) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Value) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Value
@@ -388,7 +388,7 @@ func (f Value) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f Word) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = Word
@@ -400,7 +400,7 @@ func (f Word) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f WordOrOperator) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = WordOrOperator
@@ -412,7 +412,7 @@ func (f WordOrOperator) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f WordOrToken) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = WordOrToken
@@ -424,7 +424,7 @@ func (f WordOrToken) Format(s fmt.State, v rune) {
 	}
 }
 
-// Format implements the fmt.Formatter interface
+// Format implements the fmt.Formatter interface.
 func (f WordPart) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = WordPart
