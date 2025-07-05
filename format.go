@@ -215,10 +215,9 @@ func (c Comments) printType(w writer, v bool) {
 func (c Comments) printSource(w writer, v bool) {
 	if len(c) > 0 {
 		pos := w.Pos()
+		line := c[0].Line
 
 		printComment(w, c[0].Data, 0)
-
-		line := c[0].Line
 
 		for _, c := range c[1:] {
 			w.WriteString("\n")
@@ -242,6 +241,7 @@ func (c Comments) printSource(w writer, v bool) {
 
 func printComment(w writer, c string, indent int) {
 	w.Write(bytes.Repeat(space, indent))
+
 	if !strings.HasPrefix(c, "#") {
 		w.WriteString("#")
 	}
