@@ -1228,7 +1228,7 @@ func (t *Tests) parse(b *bashParser) error {
 
 			b.AcceptRunWhitespace()
 
-			c := b.NewGoal()
+			c = b.NewGoal()
 			t.Pattern = new(Pattern)
 
 			if err := t.Pattern.parse(c); err != nil {
@@ -1256,7 +1256,7 @@ func (t *Tests) parse(b *bashParser) error {
 
 			b.AcceptRunWhitespace()
 
-			c := b.NewGoal()
+			c = b.NewGoal()
 			t.Pattern = new(Pattern)
 
 			if err := t.Pattern.parse(c); err != nil {
