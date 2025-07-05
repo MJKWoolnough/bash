@@ -188,8 +188,8 @@ func (b *bashParser) AcceptRunWhitespaceComments() Comments {
 	return c
 }
 
-func (b *bashParser) AcceptRunAllWhitespace() parser.TokenType {
-	return b.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
+func (b *bashParser) AcceptRunAllWhitespace() {
+	b.AcceptRun(TokenWhitespace, TokenComment, TokenLineTerminator)
 }
 
 func (b *bashParser) AcceptRunAllWhitespaceNoComments() parser.TokenType {
