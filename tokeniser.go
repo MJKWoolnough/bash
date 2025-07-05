@@ -2055,7 +2055,6 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 
 					return t.Return(TokenBraceExpansion, b.main)
 				}
-
 			}
 		}
 	}
