@@ -2077,6 +2077,13 @@ func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, p
 
 	for {
 		switch t.ExceptRun(braceWordBreak) {
+		case '\\':
+			t.Next()
+			t.Next()
+		case ',':
+			t.Next()
+
+			hasComma = true
 		case '}':
 			if hasComma {
 				t.Next()
@@ -2087,13 +2094,6 @@ func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, p
 			fallthrough
 		default:
 			return b.word(t)
-		case '\\':
-			t.Next()
-			t.Next()
-		case ',':
-			t.Next()
-
-			hasComma = true
 		}
 	}
 }
