@@ -868,7 +868,7 @@ func (t Tests) printSource(w writer, v bool) {
 		w.WriteString(" ")
 		t.Comments[2].printSource(w, true)
 		t.Pattern.printSource(w, v)
-	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorVarnameIsRef {
+	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorStringIsNonZero {
 		t.Test.printSource(w, v)
 		w.WriteString(" ")
 		t.Comments[2].printSource(w, true)
