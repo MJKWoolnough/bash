@@ -10,7 +10,7 @@ func (f ArithmeticExpansion) Format(s fmt.State, v rune) {
 		type X = ArithmeticExpansion
 		type ArithmeticExpansion X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", ArithmeticExpansion(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -22,7 +22,7 @@ func (f ArrayWord) Format(s fmt.State, v rune) {
 		type X = ArrayWord
 		type ArrayWord X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", ArrayWord(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -34,7 +34,7 @@ func (f Assignment) Format(s fmt.State, v rune) {
 		type X = Assignment
 		type Assignment X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Assignment(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -46,7 +46,7 @@ func (f AssignmentOrWord) Format(s fmt.State, v rune) {
 		type X = AssignmentOrWord
 		type AssignmentOrWord X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", AssignmentOrWord(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -58,7 +58,7 @@ func (f CaseCompound) Format(s fmt.State, v rune) {
 		type X = CaseCompound
 		type CaseCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", CaseCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -70,7 +70,7 @@ func (f Command) Format(s fmt.State, v rune) {
 		type X = Command
 		type Command X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Command(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -82,7 +82,7 @@ func (f CommandOrCompound) Format(s fmt.State, v rune) {
 		type X = CommandOrCompound
 		type CommandOrCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", CommandOrCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -94,7 +94,7 @@ func (f CommandSubstitution) Format(s fmt.State, v rune) {
 		type X = CommandSubstitution
 		type CommandSubstitution X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", CommandSubstitution(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -106,7 +106,7 @@ func (f Compound) Format(s fmt.State, v rune) {
 		type X = Compound
 		type Compound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Compound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -118,7 +118,7 @@ func (f File) Format(s fmt.State, v rune) {
 		type X = File
 		type File X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", File(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -130,7 +130,7 @@ func (f ForCompound) Format(s fmt.State, v rune) {
 		type X = ForCompound
 		type ForCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", ForCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -142,7 +142,7 @@ func (f FunctionCompound) Format(s fmt.State, v rune) {
 		type X = FunctionCompound
 		type FunctionCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", FunctionCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -154,7 +154,7 @@ func (f GroupingCompound) Format(s fmt.State, v rune) {
 		type X = GroupingCompound
 		type GroupingCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", GroupingCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -166,7 +166,7 @@ func (f Heredoc) Format(s fmt.State, v rune) {
 		type X = Heredoc
 		type Heredoc X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Heredoc(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -178,7 +178,7 @@ func (f HeredocPartOrWord) Format(s fmt.State, v rune) {
 		type X = HeredocPartOrWord
 		type HeredocPartOrWord X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", HeredocPartOrWord(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -190,7 +190,7 @@ func (f IfCompound) Format(s fmt.State, v rune) {
 		type X = IfCompound
 		type IfCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", IfCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -202,7 +202,7 @@ func (f Line) Format(s fmt.State, v rune) {
 		type X = Line
 		type Line X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Line(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -214,7 +214,7 @@ func (f LoopCompound) Format(s fmt.State, v rune) {
 		type X = LoopCompound
 		type LoopCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", LoopCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -226,7 +226,7 @@ func (f Parameter) Format(s fmt.State, v rune) {
 		type X = Parameter
 		type Parameter X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Parameter(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -238,7 +238,7 @@ func (f ParameterAssign) Format(s fmt.State, v rune) {
 		type X = ParameterAssign
 		type ParameterAssign X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", ParameterAssign(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -250,7 +250,7 @@ func (f ParameterExpansion) Format(s fmt.State, v rune) {
 		type X = ParameterExpansion
 		type ParameterExpansion X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", ParameterExpansion(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -262,7 +262,7 @@ func (f Pattern) Format(s fmt.State, v rune) {
 		type X = Pattern
 		type Pattern X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Pattern(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -274,7 +274,7 @@ func (f PatternLines) Format(s fmt.State, v rune) {
 		type X = PatternLines
 		type PatternLines X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", PatternLines(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -286,7 +286,7 @@ func (f Pipeline) Format(s fmt.State, v rune) {
 		type X = Pipeline
 		type Pipeline X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Pipeline(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -298,7 +298,7 @@ func (f Redirection) Format(s fmt.State, v rune) {
 		type X = Redirection
 		type Redirection X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Redirection(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -310,7 +310,7 @@ func (f SelectCompound) Format(s fmt.State, v rune) {
 		type X = SelectCompound
 		type SelectCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", SelectCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -322,7 +322,7 @@ func (f Statement) Format(s fmt.State, v rune) {
 		type X = Statement
 		type Statement X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Statement(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -334,7 +334,7 @@ func (f String) Format(s fmt.State, v rune) {
 		type X = String
 		type String X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", String(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -346,7 +346,7 @@ func (f TestCompound) Format(s fmt.State, v rune) {
 		type X = TestCompound
 		type TestCompound X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", TestCompound(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -358,7 +358,7 @@ func (f TestConsequence) Format(s fmt.State, v rune) {
 		type X = TestConsequence
 		type TestConsequence X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", TestConsequence(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -370,7 +370,7 @@ func (f Tests) Format(s fmt.State, v rune) {
 		type X = Tests
 		type Tests X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Tests(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -382,7 +382,7 @@ func (f Value) Format(s fmt.State, v rune) {
 		type X = Value
 		type Value X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Value(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -394,7 +394,7 @@ func (f Word) Format(s fmt.State, v rune) {
 		type X = Word
 		type Word X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", Word(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -406,7 +406,7 @@ func (f WordOrOperator) Format(s fmt.State, v rune) {
 		type X = WordOrOperator
 		type WordOrOperator X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", WordOrOperator(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -418,7 +418,7 @@ func (f WordOrToken) Format(s fmt.State, v rune) {
 		type X = WordOrToken
 		type WordOrToken X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", WordOrToken(f))
 	} else {
 		format(&f, s, v)
 	}
@@ -430,7 +430,7 @@ func (f WordPart) Format(s fmt.State, v rune) {
 		type X = WordPart
 		type WordPart X
 
-		fmt.Fprintf(s, "%#v", (f))
+		fmt.Fprintf(s, "%#v", WordPart(f))
 	} else {
 		format(&f, s, v)
 	}
