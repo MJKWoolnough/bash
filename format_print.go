@@ -871,7 +871,6 @@ func (t Tests) printSource(w writer, v bool) {
 	} else if t.Word != nil && t.Test >= TestOperatorFileExists && t.Test <= TestOperatorStringIsNonZero {
 		t.Test.printSource(w, v)
 		w.WriteString(" ")
-		t.Comments[2].printSource(w, true)
 		t.Word.printSource(w, v)
 	}
 
