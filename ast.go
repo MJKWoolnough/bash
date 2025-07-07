@@ -1058,9 +1058,6 @@ const (
 	TestOperatorFileWasModifiedSinceLastRead
 	TestOperatorFileIsOwnedByEffectiveUser
 	TestOperatorFileIsSocket
-	TestOperatorFilesAreSameInode
-	TestOperatorFileIsNewerThan
-	TestOperatorFileIsOlderThan
 	TestOperatorOptNameIsEnabled
 	TestOperatorVarNameIsSet
 	TestOperatorVarnameIsRef
@@ -1077,6 +1074,9 @@ const (
 	TestOperatorLessThanEqual
 	TestOperatorGreaterThan
 	TestOperatorGreaterThanEqual
+	TestOperatorFilesAreSameInode
+	TestOperatorFileIsNewerThan
+	TestOperatorFileIsOlderThan
 )
 
 type Tests struct {

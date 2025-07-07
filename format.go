@@ -506,12 +506,6 @@ func (t TestOperator) printSource(w writer, _ bool) {
 		w.WriteString("-O")
 	case TestOperatorFileIsSocket:
 		w.WriteString("-S")
-	case TestOperatorFilesAreSameInode:
-		w.WriteString("-ef")
-	case TestOperatorFileIsNewerThan:
-		w.WriteString("-nt")
-	case TestOperatorFileIsOlderThan:
-		w.WriteString("-ot")
 	case TestOperatorOptNameIsEnabled:
 		w.WriteString("-o")
 	case TestOperatorVarNameIsSet:
@@ -544,6 +538,12 @@ func (t TestOperator) printSource(w writer, _ bool) {
 		w.WriteString("-gt")
 	case TestOperatorGreaterThanEqual:
 		w.WriteString("-ge")
+	case TestOperatorFilesAreSameInode:
+		w.WriteString("-ef")
+	case TestOperatorFileIsNewerThan:
+		w.WriteString("-nt")
+	case TestOperatorFileIsOlderThan:
+		w.WriteString("-ot")
 	}
 }
 
