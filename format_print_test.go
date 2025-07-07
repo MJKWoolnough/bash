@@ -705,81 +705,116 @@ func TestPrintSource(t *testing.T) {
 			"coproc a;",
 		},
 		{ // 140
+			"! coproc a",
+			"! coproc a;",
+			"! coproc a;",
+		},
+		{ // 141
+			"time a",
+			"time a;",
+			"time a;",
+		},
+		{ // 142
+			"time -p a",
+			"time -p a;",
+			"time -p a;",
+		},
+		{ // 143
+			"time coproc a",
+			"time coproc a;",
+			"time coproc a;",
+		},
+		{ // 144
+			"time -p coproc a",
+			"time -p coproc a;",
+			"time -p coproc a;",
+		},
+		{ // 145
+			"time ! coproc a",
+			"time ! coproc a;",
+			"time ! coproc a;",
+		},
+		{ // 146
+			"time -p ! coproc a",
+			"time -p ! coproc a;",
+			"time -p ! coproc a;",
+		},
+		{ // 147
 			"coproc a if b; then c\nfi",
 			"coproc a if b; then\n\tc;\nfi;",
 			"coproc a if b; then\n\tc;\nfi;",
 		},
-		{ // 141
+		{ // 148
 			"select a; do b; done",
 			"select a; do\n\tb;\ndone;",
 			"select a; do\n\tb;\ndone;",
 		},
-		{ // 142
+		{ // 149
 			"select a in b c; do b; done",
 			"select a in b c; do\n\tb;\ndone;",
 			"select a in b c; do\n\tb;\ndone;",
 		},
-		{ // 143
+		{ // 150
 			"a&",
 			"a&",
 			"a &",
 		},
-		{ // 144
+		{ // 151
 			"[[ # A\na == b\n# B\n]]",
 			"[[ # A\n\ta == b\n# B\n]];",
 			"[[ # A\n\ta == b\n# B\n]];",
 		},
-		{ // 145
+		{ // 152
 			"[[ # A\na == b\n]]",
 			"[[ # A\n\ta == b\n]];",
 			"[[ # A\n\ta == b\n]];",
 		},
-		{ // 146
+		{ // 153
 			"[[\n\t! # A\n\ta == b ]]",
 			"[[\n\t! # A\n\ta == b\n]];",
 			"[[\n\t! # A\n\ta == b\n]];",
 		},
-		{ // 147
+		{ // 154
 			"[[\n\t! # A\n\ta == b ]]",
 			"[[\n\t! # A\n\ta == b\n]];",
 			"[[\n\t! # A\n\ta == b\n]];",
 		},
-		{ // 148
+		{ // 155
 			"[[ (a == b) ]]",
 			"[[ ( a == b ) ]];",
 			"[[ ( a == b ) ]];",
 		},
-		{ // 149
+		{ // 156
 			"[[ (# A\na -ge b) ]]",
 			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
 			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
 		},
-		{ // 150
+		{ // 157
 			"[[ (a -gt b\n# A\n) ]]",
 			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
 			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
 		},
-		{ // 151
+		{ // 158
 			"[[ (\n# A\na -le b # B\n) ]]",
 			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
 			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
 		},
-		{ // 152
+		{ // 159
 			"[[\n# A\na =~ b #B\n]]",
 			"[[\n\t# A\n\ta =~ b #B\n]];",
 			"[[\n\t# A\n\ta =~ b #B\n]];",
 		},
-		{ // 153
+		{ // 160
 			"[[ # A\n\n# B\na != b # C\n\n# D\n]]",
 			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
 			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
 		},
-		{ // 154
+		{ // 161
 			"[[ # A\n\n# B\na < b # C\n||# D\n\n# E\nd>e # F\n\n# G\n]]",
 			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
 			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
 		},
-		{ // 155
+		{ // 162
 			"[[ # A\n# B\n\n# C\n# D\n( # E\n# F\n\n# G\n# H\na -eq b # I\n# J\n&& # K\n# L\nc -ne d # M\n# N\n\n# O\n\n# P\n) # Q\n# R\n\n# S\n# T\n&& # U\n# V\n\n# W\n# X\ne -lt f # Y\n# Z\n]]",
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
