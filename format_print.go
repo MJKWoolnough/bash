@@ -901,7 +901,7 @@ func (t TestConsequence) printSource(w writer, v bool) {
 
 	if len(t.Comments) > 0 {
 		w.WriteString(" ")
-		t.Comments.printSource(&ip, true)
+		t.Comments.printSource(w, true)
 		ip.WriteString("then\n")
 	} else {
 		ip.WriteString(" then\n")
