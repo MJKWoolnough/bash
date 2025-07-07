@@ -819,6 +819,41 @@ func TestPrintSource(t *testing.T) {
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 		},
+		{ // 163
+			"[[ -e a ]]",
+			"[[ -e a ]];",
+			"[[ -e a ]];",
+		},
+		{ // 164
+			"[[ -b a || -c b ]]",
+			"[[ -b a || -c b ]];",
+			"[[ -b a || -c b ]];",
+		},
+		{ // 165
+			"[[ -d a && -f b ]]",
+			"[[ -d a && -f b ]];",
+			"[[ -d a && -f b ]];",
+		},
+		{ // 166
+			"[[ (-g a && -L b) || -k c ]]",
+			"[[ ( -g a && -L b ) || -k c ]];",
+			"[[ ( -g a && -L b ) || -k c ]];",
+		},
+		{ // 167
+			"[[ (-p a && -r b) || (-s c && (-t d || -u e)) ]]",
+			"[[ ( -p a && -r b ) || ( -s c && ( -t d || -u e ) ) ]];",
+			"[[ ( -p a && -r b ) || ( -s c && ( -t d || -u e ) ) ]];",
+		},
+		{ // 168
+			"[[ (-w a && -x b) || (-G c && (-N d || -O e)) ]]",
+			"[[ ( -w a && -x b ) || ( -G c && ( -N d || -O e ) ) ]];",
+			"[[ ( -w a && -x b ) || ( -G c && ( -N d || -O e ) ) ]];",
+		},
+		{ // 169
+			"[[ (-S a && -o b) || (-v c && (-R d || -z e || -n f)) ]]",
+			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
+			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 42 || n == 35) {
