@@ -770,19 +770,19 @@ func TestPrintSource(t *testing.T) {
 			"[[ # A\n\ta == b\n]];",
 		},
 		{ // 153
-			"[[\n\t! # A\n\ta == b ]]",
-			"[[\n\t! # A\n\ta == b\n]];",
-			"[[\n\t! # A\n\ta == b\n]];",
+			"[[\n\t! # A\n\ta -ot b ]]",
+			"[[\n\t! # A\n\ta -ot b\n]];",
+			"[[\n\t! # A\n\ta -ot b\n]];",
 		},
 		{ // 154
-			"[[\n\t! # A\n\ta == b ]]",
-			"[[\n\t! # A\n\ta == b\n]];",
-			"[[\n\t! # A\n\ta == b\n]];",
+			"[[\n\t! # A\n\ta -nt b ]]",
+			"[[\n\t! # A\n\ta -nt b\n]];",
+			"[[\n\t! # A\n\ta -nt b\n]];",
 		},
 		{ // 155
-			"[[ (a == b) ]]",
-			"[[ ( a == b ) ]];",
-			"[[ ( a == b ) ]];",
+			"[[ (a -ef b) ]]",
+			"[[ ( a -ef b ) ]];",
+			"[[ ( a -ef b ) ]];",
 		},
 		{ // 156
 			"[[ (# A\na -ge b) ]]",
