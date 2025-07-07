@@ -873,8 +873,6 @@ func (t Tests) printSource(w writer, v bool) {
 		w.WriteString(" ")
 		t.Comments[2].printSource(w, true)
 		t.Word.printSource(w, v)
-	} else {
-		return
 	}
 
 	if t.Tests != nil && (t.LogicalOperator == LogicalOperatorOr || t.LogicalOperator == LogicalOperatorAnd) {
