@@ -115,6 +115,7 @@ func (l *Line) parse(b *bashParser) error {
 		b.Score(c)
 
 		c = b.NewGoal()
+
 		c.AcceptRunWhitespace()
 	}
 
