@@ -28,39 +28,30 @@ func (cc *Compound) parse(b *bashParser) error {
 		switch c.Peek() {
 		case parser.Token{Type: TokenKeyword, Data: "if"}:
 			cc.IfCompound = new(IfCompound)
-
 			err = cc.IfCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "case"}:
 			cc.CaseCompound = new(CaseCompound)
-
 			err = cc.CaseCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "while"}, parser.Token{Type: TokenKeyword, Data: "until"}:
 			cc.LoopCompound = new(LoopCompound)
-
 			err = cc.LoopCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "for"}:
 			cc.ForCompound = new(ForCompound)
-
 			err = cc.ForCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "select"}:
 			cc.SelectCompound = new(SelectCompound)
-
 			err = cc.SelectCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "function"}:
 			cc.FunctionCompound = new(FunctionCompound)
-
 			err = cc.FunctionCompound.parse(c)
 		case parser.Token{Type: TokenKeyword, Data: "[["}:
 			cc.TestCompound = new(TestCompound)
-
 			err = cc.TestCompound.parse(c)
 		case parser.Token{Type: TokenPunctuator, Data: "(("}:
 			cc.ArithmeticCompound = new(ArithmeticExpansion)
-
 			err = cc.ArithmeticCompound.parse(c)
 		case parser.Token{Type: TokenPunctuator, Data: "("}, parser.Token{Type: TokenPunctuator, Data: "{"}:
 			cc.GroupingCompound = new(GroupingCompound)
-
 			err = cc.GroupingCompound.parse(c)
 		}
 	}
