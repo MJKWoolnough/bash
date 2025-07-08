@@ -624,7 +624,6 @@ func (p Pattern) printSource(w writer, v bool) {
 func (p PatternLines) printSource(w writer, v bool) {
 	if len(p.Patterns) > 0 {
 		p.Comments.printSource(w, true)
-
 		p.Patterns[0].printSource(w, v)
 
 		for _, pattern := range p.Patterns[1:] {
