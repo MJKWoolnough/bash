@@ -892,3 +892,66 @@ func TestPrintSource(t *testing.T) {
 		}
 	}
 }
+
+func TestLineSource(t *testing.T) {
+	l := Line{
+		Statements: []Statement{
+			{
+				Pipeline: Pipeline{
+					CommandOrCompound: CommandOrCompound{
+						Command: &Command{
+							AssignmentsOrWords: []AssignmentOrWord{
+								{
+									Word: &Word{
+										Parts: []WordPart{
+											{
+												Part: &Token{
+													Token: parser.Token{
+														Data: "a",
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+							Redirections: []Redirection{
+								{
+									Redirector: &Token{
+										Token: parser.Token{
+											Data: "<",
+										},
+									},
+									Output: Word{
+										Parts: []WordPart{
+											{
+												Part: &Token{
+													Token: parser.Token{
+														Data: "b",
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Comments: [2]Comments{nil, {
+			Token{
+				Token: parser.Token{
+					Data: "A",
+				},
+			},
+		}},
+	}
+
+	const expected = "a <b; #A"
+
+	if got := fmt.Sprintf("%+s", l); got != expected {
+		t.Errorf("test: expecting output %q, got %q", expected, got)
+	}
+}
