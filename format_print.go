@@ -322,7 +322,6 @@ func (g GroupingCompound) printSource(w writer, v bool) {
 	}
 
 	ip := indentPrinter{writer: w}
-
 	multiline := v || g.File.isMultiline(v)
 
 	if len(g.File.Comments[0]) > 0 || !multiline {
