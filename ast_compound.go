@@ -23,7 +23,6 @@ func (cc *Compound) parse(b *bashParser) error {
 
 	if c.Peek().Type == TokenFunctionIdentifier {
 		cc.FunctionCompound = new(FunctionCompound)
-
 		err = cc.FunctionCompound.parse(c)
 	} else {
 		switch c.Peek() {
