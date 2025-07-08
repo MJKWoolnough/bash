@@ -869,6 +869,11 @@ func TestPrintSource(t *testing.T) {
 			"if a; # A\n      # B\nthen\n\tb;\nfi;",
 			"if a; # A\n      # B\nthen\n\tb;\nfi;",
 		},
+		{ // 173
+			"${a/b/ }",
+			"${a/b/ };",
+			"${a/b/ };",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 42 || n == 35) {
