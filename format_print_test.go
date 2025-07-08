@@ -854,6 +854,21 @@ func TestPrintSource(t *testing.T) {
 			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
 			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
 		},
+		{ // 170
+			"if a; then b; fi",
+			"if a; then\n\tb;\nfi;",
+			"if a; then\n\tb;\nfi;",
+		},
+		{ // 171
+			"if a # A\nthen b; fi",
+			"if a; # A\nthen\n\tb;\nfi;",
+			"if a; # A\nthen\n\tb;\nfi;",
+		},
+		{ // 172
+			"if a # A\n# B\nthen b; fi",
+			"if a; # A\n      # B\nthen\n\tb;\nfi;",
+			"if a; # A\n      # B\nthen\n\tb;\nfi;",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 42 || n == 35) {
