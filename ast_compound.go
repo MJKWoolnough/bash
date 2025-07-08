@@ -200,9 +200,11 @@ func (t *TestConsequence) parse(b *bashParser) error {
 	b.Score(c)
 
 	t.Comments = b.AcceptRunAllWhitespaceComments()
+
 	b.AcceptRunAllWhitespace()
 
 	b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "then"})
+
 	c = b.NewFileGoal()
 
 	if err := t.Consequence.parse(c); err != nil {
