@@ -410,466 +410,476 @@ func TestPrintSource(t *testing.T) {
 			"a && b <<c;\nc",
 		},
 		{ // 81
+			"a <<b\nb\n\nc;",
+			"a <<b;\nb\n\nc;",
+			"a <<b;\nb\n\nc;",
+		},
+		{ // 82
 			"if a; then b;fi",
 			"if a; then\n\tb;\nfi;",
 			"if a; then\n\tb;\nfi;",
 		},
-		{ // 82
+		{ // 83
 			"if a||b; then b\nc\nelif d\nthen\ne\nelse if f\nthen\ng\nfi\nfi",
 			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
 			"if a || b; then\n\tb;\n\tc;\nelif d; then\n\te;\nelse\n\tif f; then\n\t\tg;\n\tfi;\nfi;",
 		},
-		{ // 83
+		{ // 84
 			"if a; then b;elif c; then d;elif e\nthen f;fi",
 			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
 			"if a; then\n\tb;\nelif c; then\n\td;\nelif e; then\n\tf;\nfi;",
 		},
-		{ // 84
+		{ // 85
+			"if [ \"$a\" = \"b\" ]; then c;fi",
+			"if [ \"$a\" = \"b\" ]; then\n\tc;\nfi;",
+			"if [ \"$a\" = \"b\" ]; then\n\tc;\nfi;",
+		},
+		{ // 86
 			"while a\ndo\nb\ndone",
 			"while a; do\n\tb;\ndone;",
 			"while a; do\n\tb;\ndone;",
 		},
-		{ // 85
+		{ // 87
 			"until a&&b; # A\n# B\ndo\n# C\nb\nc\ndone",
 			"until a && b; # A\n              # B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 			"until a && b; # A\n              # B\ndo\n\t# C\n\tb;\n\tc;\ndone;",
 		},
-		{ // 86
+		{ // 88
 			"a[b]=",
 			"a[b]=;",
 			"a[b]=;",
 		},
-		{ // 87
+		{ // 89
 			"a[b+c]=",
 			"a[b+c]=;",
 			"a[b + c]=;",
 		},
-		{ // 88
+		{ // 90
 			"a[$(b\nc)]=",
 			"a[$(\n\tb;\n\tc;\n)]=;",
 			"a[$(\n\tb;\n\tc;\n)]=;",
 		},
-		{ // 89
+		{ // 91
 			"${a}",
 			"${a};",
 			"${a};",
 		},
-		{ // 90
+		{ // 92
 			"${!a}",
 			"${!a};",
 			"${!a};",
 		},
-		{ // 91
+		{ // 93
 			"${#a}",
 			"${#a};",
 			"${#a};",
 		},
-		{ // 92
+		{ // 94
 			"${a:=b}",
 			"${a:=b};",
 			"${a:=b};",
 		},
-		{ // 93
+		{ // 95
 			"${a=b}",
 			"${a=b};",
 			"${a=b};",
 		},
-		{ // 94
+		{ // 96
 			"${a:?b}",
 			"${a:?b};",
 			"${a:?b};",
 		},
-		{ // 95
+		{ // 97
 			"${a?b}",
 			"${a?b};",
 			"${a?b};",
 		},
-		{ // 96
+		{ // 98
 			"${a:+b}",
 			"${a:+b};",
 			"${a:+b};",
 		},
-		{ // 97
+		{ // 99
 			"${a+b}",
 			"${a+b};",
 			"${a+b};",
 		},
-		{ // 98
+		{ // 100
 			"${a:-b}",
 			"${a:-b};",
 			"${a:-b};",
 		},
-		{ // 99
+		{ // 101
 			"${a-b}",
 			"${a-b};",
 			"${a-b};",
 		},
-		{ // 100
+		{ // 102
 			"${a#b}",
 			"${a#b};",
 			"${a#b};",
 		},
-		{ // 101
+		{ // 103
 			"${a##b}",
 			"${a##b};",
 			"${a##b};",
 		},
-		{ // 102
+		{ // 104
 			"${a%b}",
 			"${a%b};",
 			"${a%b};",
 		},
-		{ // 103
+		{ // 105
 			"${a%%b}",
 			"${a%%b};",
 			"${a%%b};",
 		},
-		{ // 104
+		{ // 106
 			"${a/b}",
 			"${a/b};",
 			"${a/b};",
 		},
-		{ // 105
+		{ // 107
 			"${a/b/c}",
 			"${a/b/c};",
 			"${a/b/c};",
 		},
-		{ // 106
+		{ // 108
 			"${a//b}",
 			"${a//b};",
 			"${a//b};",
 		},
-		{ // 107
+		{ // 109
 			"${a//b/c}",
 			"${a//b/c};",
 			"${a//b/c};",
 		},
-		{ // 108
+		{ // 110
 			"${a/%b}",
 			"${a/%b};",
 			"${a/%b};",
 		},
-		{ // 109
+		{ // 111
 			"${a/%b/c}",
 			"${a/%b/c};",
 			"${a/%b/c};",
 		},
-		{ // 110
+		{ // 112
 			"${a/#b}",
 			"${a/#b};",
 			"${a/#b};",
 		},
-		{ // 111
+		{ // 113
 			"${a/#b/c}",
 			"${a/#b/c};",
 			"${a/#b/c};",
 		},
-		{ // 112
+		{ // 114
 			"${a^b}",
 			"${a^b};",
 			"${a^b};",
 		},
-		{ // 113
+		{ // 115
 			"${a^^b}",
 			"${a^^b};",
 			"${a^^b};",
 		},
-		{ // 114
+		{ // 116
 			"${a,b}",
 			"${a,b};",
 			"${a,b};",
 		},
-		{ // 115
+		{ // 117
 			"${a,,b}",
 			"${a,,b};",
 			"${a,,b};",
 		},
-		{ // 116
+		{ // 118
 			"${*}",
 			"${*};",
 			"${*};",
 		},
-		{ // 117
+		{ // 119
 			"${@}",
 			"${@};",
 			"${@};",
 		},
-		{ // 118
+		{ // 120
 			"${a:1}",
 			"${a:1};",
 			"${a:1};",
 		},
-		{ // 119
+		{ // 121
 			"${a:1:2}",
 			"${a:1:2};",
 			"${a:1:2};",
 		},
-		{ // 120
+		{ // 122
 			"${a: -1:2}",
 			"${a: -1:2};",
 			"${a: -1:2};",
 		},
-		{ // 121
+		{ // 123
 			"${a@U}",
 			"${a@U};",
 			"${a@U};",
 		},
-		{ // 122
+		{ // 124
 			"${a@u}",
 			"${a@u};",
 			"${a@u};",
 		},
-		{ // 123
+		{ // 125
 			"${a@L}",
 			"${a@L};",
 			"${a@L};",
 		},
-		{ // 124
+		{ // 126
 			"${a@Q}",
 			"${a@Q};",
 			"${a@Q};",
 		},
-		{ // 125
+		{ // 127
 			"${a@E}",
 			"${a@E};",
 			"${a@E};",
 		},
-		{ // 126
+		{ // 128
 			"${a@P}",
 			"${a@P};",
 			"${a@P};",
 		},
-		{ // 127
+		{ // 129
 			"${a@A}",
 			"${a@A};",
 			"${a@A};",
 		},
-		{ // 128
+		{ // 130
 			"${a@K}",
 			"${a@K};",
 			"${a@K};",
 		},
-		{ // 129
+		{ // 131
 			"${a@a}",
 			"${a@a};",
 			"${a@a};",
 		},
-		{ // 130
+		{ // 132
 			"${a@k}",
 			"${a@k};",
 			"${a@k};",
 		},
-		{ // 131
+		{ // 133
 			"${!a@}",
 			"${!a@};",
 			"${!a@};",
 		},
-		{ // 132
+		{ // 134
 			"${!a*}",
 			"${!a*};",
 			"${!a*};",
 		},
-		{ // 133
+		{ // 135
 			"[[ a == b ]]",
 			"[[ a == b ]];",
 			"[[ a == b ]];",
 		},
-		{ // 134
+		{ // 136
 			"[[ a == b$c ]]",
 			"[[ a == b$c ]];",
 			"[[ a == b$c ]];",
 		},
-		{ // 135
+		{ // 137
 			"[[ a == b\"c\" ]]",
 			"[[ a == b\"c\" ]];",
 			"[[ a == b\"c\" ]];",
 		},
-		{ // 136
+		{ // 138
 			"case a in a|b) a;\nb\nesac",
 			"case a in\na|b)\n\ta;\n\tb;;\nesac;",
 			"case a in\na|b)\n\ta;\n\tb;;\nesac;",
 		},
-		{ // 137
+		{ // 139
 			"case a in a|b|\"c\") a;\nb\nesac",
 			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
 			"case a in\na|b|\"c\")\n\ta;\n\tb;;\nesac;",
 		},
-		{ // 138
+		{ // 140
 			"! a",
 			"! a;",
 			"! a;",
 		},
-		{ // 139
+		{ // 141
 			"coproc a",
 			"coproc a;",
 			"coproc a;",
 		},
-		{ // 140
+		{ // 142
 			"! coproc a",
 			"! coproc a;",
 			"! coproc a;",
 		},
-		{ // 141
+		{ // 143
 			"time a",
 			"time a;",
 			"time a;",
 		},
-		{ // 142
+		{ // 144
 			"time -p a",
 			"time -p a;",
 			"time -p a;",
 		},
-		{ // 143
+		{ // 145
 			"time coproc a",
 			"time coproc a;",
 			"time coproc a;",
 		},
-		{ // 144
+		{ // 146
 			"time -p coproc a",
 			"time -p coproc a;",
 			"time -p coproc a;",
 		},
-		{ // 145
+		{ // 147
 			"time ! coproc a",
 			"time ! coproc a;",
 			"time ! coproc a;",
 		},
-		{ // 146
+		{ // 148
 			"time -p ! coproc a",
 			"time -p ! coproc a;",
 			"time -p ! coproc a;",
 		},
-		{ // 147
+		{ // 149
 			"coproc a if b; then c\nfi",
 			"coproc a if b; then\n\tc;\nfi;",
 			"coproc a if b; then\n\tc;\nfi;",
 		},
-		{ // 148
+		{ // 150
 			"select a; do b; done",
 			"select a; do\n\tb;\ndone;",
 			"select a; do\n\tb;\ndone;",
 		},
-		{ // 149
+		{ // 151
 			"select a in b c; do b; done",
 			"select a in b c; do\n\tb;\ndone;",
 			"select a in b c; do\n\tb;\ndone;",
 		},
-		{ // 150
+		{ // 152
 			"a&",
 			"a&",
 			"a &",
 		},
-		{ // 151
+		{ // 153
 			"[[ # A\na == b\n# B\n]]",
 			"[[ # A\n\ta == b\n# B\n]];",
 			"[[ # A\n\ta == b\n# B\n]];",
 		},
-		{ // 152
+		{ // 154
 			"[[ # A\na == b\n]]",
 			"[[ # A\n\ta == b\n]];",
 			"[[ # A\n\ta == b\n]];",
 		},
-		{ // 153
+		{ // 155
 			"[[\n\t! # A\n\ta -ot b ]]",
 			"[[\n\t! # A\n\ta -ot b\n]];",
 			"[[\n\t! # A\n\ta -ot b\n]];",
 		},
-		{ // 154
+		{ // 156
 			"[[\n\t! # A\n\ta -nt b ]]",
 			"[[\n\t! # A\n\ta -nt b\n]];",
 			"[[\n\t! # A\n\ta -nt b\n]];",
 		},
-		{ // 155
+		{ // 157
 			"[[ (a -ef b) ]]",
 			"[[ ( a -ef b ) ]];",
 			"[[ ( a -ef b ) ]];",
 		},
-		{ // 156
+		{ // 158
 			"[[ (# A\na -ge b) ]]",
 			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
 			"[[\n\t( # A\n\t\ta -ge b\n\t)\n]];",
 		},
-		{ // 157
+		{ // 159
 			"[[ (a -gt b\n# A\n) ]]",
 			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
 			"[[\n\t(\n\t\ta -gt b\n\t# A\n\t)\n]];",
 		},
-		{ // 158
+		{ // 160
 			"[[ (\n# A\na -le b # B\n) ]]",
 			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
 			"[[\n\t(\n\t\t# A\n\t\ta -le b # B\n\t)\n]];",
 		},
-		{ // 159
+		{ // 161
 			"[[\n# A\na =~ b #B\n]]",
 			"[[\n\t# A\n\ta =~ b #B\n]];",
 			"[[\n\t# A\n\ta =~ b #B\n]];",
 		},
-		{ // 160
+		{ // 162
 			"[[ # A\n\n# B\na != b # C\n\n# D\n]]",
 			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
 			"[[ # A\n\n\t# B\n\ta != b # C\n\n# D\n]];",
 		},
-		{ // 161
+		{ // 163
 			"[[ # A\n\n# B\na < b # C\n||# D\n\n# E\nd>e # F\n\n# G\n]]",
 			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
 			"[[ # A\n\n\t# B\n\ta < b # C\n\t|| # D\n\n\t   # E\n\td > e # F\n\n# G\n]];",
 		},
-		{ // 162
+		{ // 164
 			"[[ # A\n# B\n\n# C\n# D\n( # E\n# F\n\n# G\n# H\na -eq b # I\n# J\n&& # K\n# L\nc -ne d # M\n# N\n\n# O\n\n# P\n) # Q\n# R\n\n# S\n# T\n&& # U\n# V\n\n# W\n# X\ne -lt f # Y\n# Z\n]]",
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 			"[[ # A\n   # B\n\n\t# C\n\t# D\n\t( # E\n\t  # F\n\n\t\t# G\n\t\t# H\n\t\ta -eq b # I\n\t\t        # J\n\t\t&& # K\n\t\t   # L\n\t\tc -ne d # M\n\t\t        # N\n\n\t# O\n\n\t# P\n\t) # Q\n\t  # R\n\n\t  # S\n\t  # T\n\t&& # U\n\t   # V\n\n\t   # W\n\t   # X\n\te -lt f # Y\n\t        # Z\n]];",
 		},
-		{ // 163
+		{ // 165
 			"[[ -e a ]]",
 			"[[ -e a ]];",
 			"[[ -e a ]];",
 		},
-		{ // 164
+		{ // 166
 			"[[ -b a || -c b ]]",
 			"[[ -b a || -c b ]];",
 			"[[ -b a || -c b ]];",
 		},
-		{ // 165
+		{ // 167
 			"[[ -d a && -f b ]]",
 			"[[ -d a && -f b ]];",
 			"[[ -d a && -f b ]];",
 		},
-		{ // 166
+		{ // 168
 			"[[ (-g a && -L b) || -k c ]]",
 			"[[ ( -g a && -L b ) || -k c ]];",
 			"[[ ( -g a && -L b ) || -k c ]];",
 		},
-		{ // 167
+		{ // 169
 			"[[ (-p a && -r b) || (-s c && (-t d || -u e)) ]]",
 			"[[ ( -p a && -r b ) || ( -s c && ( -t d || -u e ) ) ]];",
 			"[[ ( -p a && -r b ) || ( -s c && ( -t d || -u e ) ) ]];",
 		},
-		{ // 168
+		{ // 170
 			"[[ (-w a && -x b) || (-G c && (-N d || -O e)) ]]",
 			"[[ ( -w a && -x b ) || ( -G c && ( -N d || -O e ) ) ]];",
 			"[[ ( -w a && -x b ) || ( -G c && ( -N d || -O e ) ) ]];",
 		},
-		{ // 169
+		{ // 171
 			"[[ (-S a && -o b) || (-v c && (-R d || -z e || -n f)) ]]",
 			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
 			"[[ ( -S a && -o b ) || ( -v c && ( -R d || -z e || -n f ) ) ]];",
 		},
-		{ // 170
+		{ // 172
 			"if a; then b; fi",
 			"if a; then\n\tb;\nfi;",
 			"if a; then\n\tb;\nfi;",
 		},
-		{ // 171
+		{ // 173
 			"if a # A\nthen b; fi",
 			"if a; # A\nthen\n\tb;\nfi;",
 			"if a; # A\nthen\n\tb;\nfi;",
 		},
-		{ // 172
+		{ // 174
 			"if a # A\n# B\nthen b; fi",
 			"if a; # A\n      # B\nthen\n\tb;\nfi;",
 			"if a; # A\n      # B\nthen\n\tb;\nfi;",
 		},
-		{ // 173
+		{ // 175
 			"${a/b/ }",
 			"${a/b/ };",
 			"${a/b/ };",
