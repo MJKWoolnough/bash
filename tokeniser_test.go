@@ -1139,6 +1139,26 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 81
+			"<(a)",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "<("},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 82
+			"a >(b)",
+			[]parser.Token{
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: ">("},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 83
 			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set} ${#a} ${#} ${a#b} ${a##b} ${a%b} ${a%%b} ${a/b/c} ${a//b/c} ${a/#b/c} ${a/%b/c} ${a^b} ${a^^b} ${a,b} ${a,,b} ${a@Q} ${a@a} ${a@P}",
 			[]parser.Token{
 				{Type: TokenWord, Data: ":"},
@@ -1342,7 +1362,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 82
+		{ // 84
 			"${a[@@]}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1352,7 +1372,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 83
+		{ // 85
 			"${a/[/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1361,7 +1381,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 84
+		{ // 86
 			"${a/\\[/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1374,7 +1394,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 85
+		{ // 87
 			"${a/[b]/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1387,7 +1407,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 86
+		{ // 88
 			"${a/(/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1396,7 +1416,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 87
+		{ // 89
 			"${a/\\(/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1409,7 +1429,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 88
+		{ // 90
 			"${a/(b)/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1422,7 +1442,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 89
+		{ // 91
 			"${a@Z}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1431,7 +1451,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 90
+		{ // 92
 			"${@} ${*}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -1444,7 +1464,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 91
+		{ // 93
 			"$() $(()) `` ${}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$("},
@@ -1460,7 +1480,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 92
+		{ // 94
 			"case a in b)c;;esac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1477,7 +1497,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 93
+		{ // 95
 			"case a in b;;esac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1490,7 +1510,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 94
+		{ // 96
 			"case a in esac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1503,7 +1523,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 95
+		{ // 97
 			"case a in #comment\nesac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1518,7 +1538,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 96
+		{ // 98
 			"case a in b)c;;d)e;&f)g;;&h)i\nesac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1547,7 +1567,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 97
+		{ // 99
 			"case a in b) #comment\nc;; #comment\nd)e;&f)g\n#comment\nesac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1580,7 +1600,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 98
+		{ // 100
 			"case a b)c;;esac",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1590,7 +1610,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "missing in"},
 			},
 		},
-		{ // 99
+		{ // 101
 			"case a in b)c;;",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "case"},
@@ -1606,7 +1626,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 100
+		{ // 102
 			"if a; then b; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1623,7 +1643,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 101
+		{ // 103
 			"if a;\nthen\nb\nfi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1639,7 +1659,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 102
+		{ // 104
 			"if a && b || c & then d; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1665,7 +1685,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 103
+		{ // 105
 			"if a; then b; else c; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1687,7 +1707,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 104
+		{ // 106
 			"if a #comment\n then b; else #comment\nc; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1713,7 +1733,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 105
+		{ // 107
 			"if a\n#comment\n then b; else\n#comment\nc; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1739,7 +1759,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 106
+		{ // 108
 			"if a; then b; elif c; then d; else if e; then f; fi; fi",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "if"},
@@ -1781,7 +1801,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 107
+		{ // 109
 			"while a; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "while"},
@@ -1798,7 +1818,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 108
+		{ // 110
 			"while a; #comment\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "while"},
@@ -1817,7 +1837,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 109
+		{ // 111
 			"until a && b || c & do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "until"},
@@ -1843,7 +1863,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 110
+		{ // 112
 			"while a; do break; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "while"},
@@ -1860,7 +1880,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 111
+		{ // 113
 			"until a; do continue; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "until"},
@@ -1877,19 +1897,19 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 112
+		{ // 114
 			"break",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 113
+		{ // 115
 			"continue",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 114
+		{ // 116
 			"for a; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -1906,7 +1926,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 115
+		{ // 117
 			"for a #comment\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -1924,7 +1944,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 116
+		{ // 118
 			"for a do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -1940,7 +1960,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 117
+		{ // 119
 			"for a\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -1956,7 +1976,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 118
+		{ // 120
 			"for a in 1 2 3; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -1981,7 +2001,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 119
+		{ // 121
 			"for a in 1 2 3 #comment\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2007,7 +2027,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 120
+		{ // 122
 			"for a #comment\nin 1 2 3\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2033,7 +2053,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 121
+		{ // 123
 			"for % in 1 2 3; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2041,7 +2061,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid identifier"},
 			},
 		},
-		{ // 122
+		{ // 124
 			"for a in 1 2 3 do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2064,7 +2084,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "missing do"},
 			},
 		},
-		{ // 123
+		{ // 125
 			"for ((a=1;a<2;a++)) do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2091,7 +2111,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 124
+		{ // 126
 			"for ((a=1;a<2;a++)); do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2119,7 +2139,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 125
+		{ // 127
 			"for ( a=1;a<2;a++ ); do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "for"},
@@ -2127,7 +2147,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 126
+		{ // 128
 			"select a; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -2144,7 +2164,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 127
+		{ // 129
 			"select a do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -2160,7 +2180,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 128
+		{ // 130
 			"select a\ndo b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -2176,7 +2196,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 129
+		{ // 131
 			"select a in 1 2 3; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -2201,7 +2221,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 130
+		{ // 132
 			"select a in 1 2 3 do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -2224,7 +2244,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "missing do"},
 			},
 		},
-		{ // 131
+		{ // 133
 
 			"coproc a b",
 			[]parser.Token{
@@ -2236,7 +2256,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 132
+		{ // 134
 
 			"coproc fora b",
 			[]parser.Token{
@@ -2248,7 +2268,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 133
+		{ // 135
 			"coproc while a; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "coproc"},
@@ -2267,7 +2287,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 134
+		{ // 136
 			"coproc a while b; do c; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "coproc"},
@@ -2288,7 +2308,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 135
+		{ // 137
 			"echo }",
 			[]parser.Token{
 				{Type: TokenWord, Data: "echo"},
@@ -2297,7 +2317,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 136
+		{ // 138
 			"{ echo }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -2308,7 +2328,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 137
+		{ // 139
 			"{ echo };}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -2321,7 +2341,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 138
+		{ // 140
 			"function a{ b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2336,7 +2356,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 139
+		{ // 141
 			"function a{ b; }\nfunction a\n{ b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2362,7 +2382,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 140
+		{ // 142
 			"function a\n{ b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2378,7 +2398,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 141
+		{ // 143
 			"function a(){ b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2395,7 +2415,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 142
+		{ // 144
 			"function a ( ) { b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2415,7 +2435,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 143
+		{ // 145
 			"function a() b",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -2427,7 +2447,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 144
+		{ // 146
 			"a(){ b; }",
 			[]parser.Token{
 				{Type: TokenFunctionIdentifier, Data: "a"},
@@ -2442,7 +2462,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 145
+		{ // 147
 			"a( ) { b; }",
 			[]parser.Token{
 				{Type: TokenFunctionIdentifier, Data: "a"},
@@ -2459,27 +2479,27 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 146
-			"a() b",
-			[]parser.Token{
-				{Type: TokenFunctionIdentifier, Data: "a"},
-				{Type: TokenPunctuator, Data: "("},
-				{Type: TokenPunctuator, Data: ")"},
-				{Type: TokenWhitespace, Data: " "},
-				{Type: parser.TokenError, Data: "invalid keyword"},
-			},
-		},
-		{ // 147
-			"a() b",
-			[]parser.Token{
-				{Type: TokenFunctionIdentifier, Data: "a"},
-				{Type: TokenPunctuator, Data: "("},
-				{Type: TokenPunctuator, Data: ")"},
-				{Type: TokenWhitespace, Data: " "},
-				{Type: parser.TokenError, Data: "invalid keyword"},
-			},
-		},
 		{ // 148
+			"a() b",
+			[]parser.Token{
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 149
+			"a() b",
+			[]parser.Token{
+				{Type: TokenFunctionIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "("},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: parser.TokenError, Data: "invalid keyword"},
+			},
+		},
+		{ // 150
 			"[[ -f file ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2492,7 +2512,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 149
+		{ // 151
 			"[[ ! -e file\"str\" ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2508,7 +2528,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 150
+		{ // 152
 			"[[ -S \"str\"a || -g $b\"c\"d ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2530,7 +2550,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 151
+		{ // 153
 			"[[ a = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2545,7 +2565,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 152
+		{ // 154
 			"[[ a$b = c\"d\" && e\"f\"g != \"h\"$i ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2573,7 +2593,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 153
+		{ // 155
 			"[[ a -gt b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2588,7 +2608,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 154
+		{ // 156
 			"[[ # A\n# B\n\n# C\na -gt b # D\n]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2611,7 +2631,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 155
+		{ // 157
 			"[[ a$b -eq c\"d\" && e\"f\"g -ne \"h\"$i ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2639,7 +2659,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 156
+		{ // 158
 			"[[ (a = b || c = d) && $e -le $f ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2672,7 +2692,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 157
+		{ // 159
 			"[[ (a=b) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2685,7 +2705,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 158
+		{ // 160
 			"[[ a < b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2700,7 +2720,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 159
+		{ // 161
 			"[[ a<b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2713,7 +2733,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 160
+		{ // 162
 			"[[ (a = b) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2730,7 +2750,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 161
+		{ // 163
 			"[[ (a -gt b) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2747,7 +2767,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 162
+		{ // 164
 			"[[\na\n=\nb\n]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2762,7 +2782,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 163
+		{ // 165
 			"[[\n(a=b)\n]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2775,7 +2795,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 164
+		{ // 166
 			"[[ ",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2783,7 +2803,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 165
+		{ // 167
 			"[[ | = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2791,7 +2811,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 166
+		{ // 168
 			"[[ & = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2799,7 +2819,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 167
+		{ // 169
 			"[[ \"a\" = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2814,7 +2834,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 168
+		{ // 170
 			"[[ ]]a = ]]b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2829,7 +2849,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 169
+		{ // 171
 			"[[ ( a = ]]b ) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2848,7 +2868,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 170
+		{ // 172
 			"[[ ) = ) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2856,7 +2876,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 171
+		{ // 173
 			"[[ ( ]] ) ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2866,7 +2886,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 172
+		{ // 174
 			"[[ a \n= b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2882,7 +2902,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 173
+		{ // 175
 			"[[ a\n = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2898,7 +2918,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 174
+		{ // 176
 			"[[ a ",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2908,7 +2928,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 175
+		{ // 177
 			"[[ a ! b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2918,7 +2938,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 176
+		{ // 178
 			"[[ a -ez b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2928,7 +2948,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 177
+		{ // 179
 			"[[ a -nz b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2938,7 +2958,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 178
+		{ // 180
 			"[[ a -gz b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2948,7 +2968,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 179
+		{ // 181
 			"[[ a -lz b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2958,7 +2978,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 180
+		{ // 182
 			"[[ a -oz b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2968,7 +2988,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 181
+		{ // 183
 			"[[ a -z b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2978,7 +2998,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 182
+		{ // 184
 			"[[ -z < ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -2988,7 +3008,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 183
+		{ // 185
 			"[[ -z \n a ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3003,7 +3023,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 184
+		{ // 186
 			"[[ a = b\\nc ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3018,7 +3038,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 185
+		{ // 187
 			"[[ a = b",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3030,7 +3050,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 186
+		{ // 188
 			"[[ -z `a` ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3045,7 +3065,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 187
+		{ // 189
 			"[[ -z | ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3055,7 +3075,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 188
+		{ // 190
 			"[[ -z a",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3066,7 +3086,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 189
+		{ // 191
 			"[[ -z ",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3076,7 +3096,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 190
+		{ // 192
 			"[[ -z #comment\na ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3086,7 +3106,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 191
+		{ // 193
 			"[[ a -eq #comment\nb ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3098,7 +3118,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 192
+		{ // 194
 			"[[ #comment\na = b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3115,7 +3135,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 193
+		{ // 195
 			"[[ ( a = b ) #comment\n ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3137,7 +3157,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 194
+		{ // 196
 			"[[ a = #comment\nb ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3149,7 +3169,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 195
+		{ // 197
 			"[[ a -net b ]]",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3159,7 +3179,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid operator"},
 			},
 		},
-		{ // 196
+		{ // 198
 			"[[ -f file ]]\n[[ ! -e file\"str\" ]];[[ -S \"str\"a",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "[["},
@@ -3190,20 +3210,20 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 197
+		{ // 199
 			"\"",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 198
+		{ // 200
 			"$((",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 199
+		{ // 201
 			"$(( \"1\" ))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
@@ -3214,7 +3234,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 200
+		{ // 202
 			"$(( : ))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
@@ -3222,7 +3242,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 201
+		{ // 203
 			"$(( ; ))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
@@ -3230,28 +3250,28 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 202
+		{ // 204
 			"`\\",
 			[]parser.Token{
 				{Type: TokenOpenBacktick, Data: "`"},
 				{Type: parser.TokenError, Data: "incorrect backtick depth"},
 			},
 		},
-		{ // 203
+		{ // 205
 			"<<",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 204
+		{ // 206
 			"<<a",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 205
+		{ // 207
 			"<<a\\n\\tc\n123\na\n\tc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -3262,7 +3282,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 206
+		{ // 208
 			"<<abc\n123",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -3271,7 +3291,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 207
+		{ // 209
 			"<<abc\n123$\nabc",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "<<"},
@@ -3282,7 +3302,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 208
+		{ // 210
 			"${a!}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3290,7 +3310,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 209
+		{ // 211
 			"${a:b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3299,7 +3319,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 210
+		{ // 212
 			"${a:1:b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3310,7 +3330,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid parameter expansion"},
 			},
 		},
-		{ // 211
+		{ // 213
 			"${a/(}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3319,7 +3339,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 212
+		{ // 214
 			"${a/",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3328,7 +3348,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 213
+		{ // 215
 			"${a/)}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3337,7 +3357,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 214
+		{ // 216
 			"${a/b[\\t]+/c}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3350,7 +3370,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 215
+		{ // 217
 			"${a-b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3361,7 +3381,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 216
+		{ // 218
 			"${a+b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3372,7 +3392,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 217
+		{ // 219
 			"${a=b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3383,7 +3403,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 218
+		{ // 220
 			"${a?b}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "${"},
@@ -3394,7 +3414,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 219
+		{ // 221
 			"$(( 0x\"1\" ))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
@@ -3406,7 +3426,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 220
+		{ // 222
 			"$(( 2#, ))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "$(("},
@@ -3414,7 +3434,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid number"},
 			},
 		},
-		{ // 221
+		{ // 223
 			"function a time",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3424,55 +3444,55 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 222
+		{ // 224
 			"then",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 223
+		{ // 225
 			"in",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 224
+		{ // 226
 			"do",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 225
+		{ // 227
 			"elif",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 226
+		{ // 228
 			"else",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 227
+		{ // 229
 			"fi",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 228
+		{ // 230
 			"done",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 229
+		{ // 231
 			"esac",
 			[]parser.Token{
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 230
+		{ // 232
 			"function a coproc",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3482,7 +3502,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 231
+		{ // 233
 			"function a function",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3492,7 +3512,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid keyword"},
 			},
 		},
-		{ // 232
+		{ // 234
 			"function a(\n) { echo b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3502,7 +3522,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "missing closing paren"},
 			},
 		},
-		{ // 233
+		{ // 235
 			"function (\n) { echo b; }",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3510,7 +3530,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid identifier"},
 			},
 		},
-		{ // 234
+		{ // 236
 			"function a()",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "function"},
@@ -3521,7 +3541,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 235
+		{ // 237
 			"select %; do b; done",
 			[]parser.Token{
 				{Type: TokenKeyword, Data: "select"},
@@ -3529,7 +3549,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid identifier"},
 			},
 		},
-		{ // 236
+		{ // 238
 			"declare a=b",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "declare"},
@@ -3540,7 +3560,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 237
+		{ // 239
 			"local -a a=b c=d",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "local"},
@@ -3557,7 +3577,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 238
+		{ // 240
 			"typeset -aFx a=b",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "typeset"},
@@ -3570,7 +3590,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 239
+		{ // 241
 			"readonly -A -p -f a=b",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "readonly"},
@@ -3587,7 +3607,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 240
+		{ // 242
 			"export -n -1 a",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "export"},
@@ -3597,7 +3617,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 241
+		{ // 243
 			"let a=1",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3608,7 +3628,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 242
+		{ // 244
 			"let a=(1)",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3621,7 +3641,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 243
+		{ // 245
 			"let a=( 1 );",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3637,7 +3657,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 244
+		{ // 246
 			"let a=1+2 b=2*3",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3656,7 +3676,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 245
+		{ // 247
 			"let a=b?c:d",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3671,7 +3691,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 246
+		{ // 248
 			"let a=b ? c : d",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3690,7 +3710,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 247
+		{ // 249
 			"let a=( b ? c : d )",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3713,7 +3733,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 248
+		{ // 250
 			"let a={b",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3723,7 +3743,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 249
+		{ // 251
 			"let a={b..c}",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3734,7 +3754,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 250
+		{ // 252
 			"let a=(b + c{d..e})",
 			[]parser.Token{
 				{Type: TokenBuiltin, Data: "let"},
@@ -3752,7 +3772,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 251
+		{ // 253
 			"a=()",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3762,7 +3782,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 252
+		{ // 254
 			"a=(b c)",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3775,7 +3795,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 253
+		{ // 255
 			"a=([b]=c [d]=e)",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3788,7 +3808,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 254
+		{ // 256
 			"a[ b]=1 c",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3803,7 +3823,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 255
+		{ // 257
 			"a b[ c]=1",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3814,7 +3834,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 256
+		{ // 258
 			"( #comment\n)",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "("},
@@ -3825,7 +3845,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 257
+		{ // 259
 			"{ #comment\n}",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -3836,7 +3856,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 258
+		{ // 260
 			"(( #comment\n))",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "(("},
@@ -3844,7 +3864,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 259
+		{ // 261
 			"a[",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3852,7 +3872,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 260
+		{ // 262
 			"a[b]c[",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3863,7 +3883,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 261
+		{ // 263
 			"a[b]=c d[",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3878,7 +3898,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "unexpected EOF"},
 			},
 		},
-		{ // 262
+		{ // 264
 			"a[$b+1]=c",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3892,7 +3912,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 263
+		{ // 265
 			"a[b]=( 1 )",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3903,7 +3923,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 264
+		{ // 266
 			"a[ b ]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3915,7 +3935,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 265
+		{ // 267
 			"a[\nb\n]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3927,7 +3947,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 266
+		{ // 268
 			"a[ b ][ c ]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3944,7 +3964,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 267
+		{ // 269
 			"a b[",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3953,7 +3973,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 268
+		{ // 270
 			"a[b]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3963,7 +3983,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 269
+		{ // 271
 			"a[b;]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3973,7 +3993,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 270
+		{ // 272
 			"a[b;]=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -3982,7 +4002,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 271
+		{ // 273
 			"a[b{]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -3992,7 +4012,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 272
+		{ // 274
 			"a[b{]=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4001,7 +4021,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 273
+		{ // 275
 			"a[b}]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4012,7 +4032,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 274
+		{ // 276
 			"a[b}]=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4021,7 +4041,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 275
+		{ // 277
 			"a[b#]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4031,7 +4051,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 276
+		{ // 278
 			"a[b #]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4043,7 +4063,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 277
+		{ // 279
 			"a[b #]=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4053,7 +4073,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 278
+		{ // 280
 			"a[b #]+",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4066,7 +4086,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 279
+		{ // 281
 			"a[b #]+=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4076,7 +4096,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 280
+		{ // 282
 			"a b[",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4085,7 +4105,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 281
+		{ // 283
 			"a b[c]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4094,7 +4114,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 282
+		{ // 284
 			"a b[c ]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4105,7 +4125,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 283
+		{ // 285
 			"a b[c]=1",
 			[]parser.Token{
 				{Type: TokenWord, Data: "a"},
@@ -4119,7 +4139,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 284
+		{ // 286
 			"a=(( 1 ))",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4127,7 +4147,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenError, Data: "invalid character"},
 			},
 		},
-		{ // 285
+		{ // 287
 			"a=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4135,7 +4155,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 286
+		{ // 288
 			"a=;",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4144,7 +4164,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 287
+		{ // 289
 			"a= b",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4154,7 +4174,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 288
+		{ // 290
 			"a[$(b)]=",
 			[]parser.Token{
 				{Type: TokenIdentifierAssign, Data: "a"},
@@ -4167,7 +4187,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 289
+		{ // 291
 			"{ function a() { b; } }",
 			[]parser.Token{
 				{Type: TokenPunctuator, Data: "{"},
@@ -4189,7 +4209,7 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
-		{ // 289
+		{ // 292
 			"[ \"$a\" = \"b\" ]",
 			[]parser.Token{
 				{Type: TokenWord, Data: "["},
