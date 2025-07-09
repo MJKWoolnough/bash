@@ -439,8 +439,6 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 
 func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
 	switch c := t.Peek(); c {
-	default:
-		return b.keywordIdentOrWord(t)
 	case '<':
 		t.Next()
 
@@ -530,14 +528,6 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.setInCommand()
 			b.pushState(stateBrace)
 		}
-	case ']':
-		t.Next()
-
-		if b.lastState() == stateBraceExpansionArrayIndex {
-			b.popState()
-
-			return t.Return(TokenPunctuator, b.parameterExpansionOperation)
-		}
 	case ')':
 		b.endCommand()
 
@@ -566,6 +556,17 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		b.setInCommand()
 
 		return b.startBacktick(t)
+	case ']':
+		if b.lastState() == stateBraceExpansionArrayIndex {
+			t.Next()
+			b.popState()
+
+			return t.Return(TokenPunctuator, b.parameterExpansionOperation)
+		}
+
+		fallthrough
+	default:
+		return b.keywordIdentOrWord(t)
 	}
 
 	return t.Return(TokenPunctuator, b.main)
