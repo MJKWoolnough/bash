@@ -442,7 +442,9 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '<':
 		t.Next()
 
-		if t.Accept("<") {
+		if t.Accept("(") {
+			b.pushState(stateParens)
+		} else if t.Accept("<") {
 			if !t.Accept("<") {
 				b.nextHeredocIsStripped = t.Accept("-")
 
@@ -453,7 +455,12 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		}
 	case '>':
 		t.Next()
-		t.Accept(">&|")
+
+		if t.Accept("(") {
+			b.pushState(stateParens)
+		} else {
+			t.Accept(">&|")
+		}
 	case '|':
 		t.Next()
 		t.Accept("&|")
