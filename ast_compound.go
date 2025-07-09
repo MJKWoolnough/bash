@@ -1008,6 +1008,8 @@ type SubstitutionType uint8
 const (
 	SubstitutionNew SubstitutionType = iota
 	SubstitutionBacktick
+	SubstitutionProcessInput
+	SubstitutionProcessOutput
 )
 
 type CommandSubstitution struct {
@@ -1022,6 +1024,10 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	if tk := b.Next(); tk.Type == TokenOpenBacktick {
 		cs.SubstitutionType = SubstitutionBacktick
 		end = parser.Token{Type: TokenCloseBacktick, Data: tk.Data}
+	} else if tk.Data == "<(" {
+		cs.SubstitutionType = SubstitutionProcessInput
+	} else if tk.Data == ">(" {
+		cs.SubstitutionType = SubstitutionProcessOutput
 	}
 
 	b.AcceptRunAllWhitespace()
