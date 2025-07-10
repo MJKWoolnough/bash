@@ -7675,6 +7675,24 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
+		{"<()", func(t *test, tk Tokens) { // 1
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionProcessInput,
+				Command: File{
+					Tokens: tk[1:1],
+				},
+				Tokens: tk[:2],
+			}
+		}},
+		{">()", func(t *test, tk Tokens) { // 1
+			t.Output = CommandSubstitution{
+				SubstitutionType: SubstitutionProcessOutput,
+				Command: File{
+					Tokens: tk[1:1],
+				},
+				Tokens: tk[:2],
+			}
+		}},
 		{"$(``)", func(t *test, tk Tokens) { // 3
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionNew,
