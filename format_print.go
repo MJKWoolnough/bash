@@ -182,9 +182,15 @@ func (c CommandSubstitution) printSource(w writer, v bool) {
 	case SubstitutionNew:
 		w.WriteString("$(")
 	case SubstitutionBacktick:
-		w.WriteString("$(")
-
 		closing = "`"
+
+		if c.Backtick != nil {
+			closing = c.Backtick.Data
+		}
+
+		w.WriteString(closing)
+
+		closing = c.Backtick.Data
 	case SubstitutionProcessInput:
 		w.WriteString("<(")
 	case SubstitutionProcessOutput:
