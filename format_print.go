@@ -159,6 +159,16 @@ func (c Command) printHeredoc(w writer, v bool) {
 	}
 }
 
+func (c Command) hasHeredoc() bool {
+	for _, r := range c.Redirections {
+		if r.isHeredoc() {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (c CommandOrCompound) printSource(w writer, v bool) {
 	if c.Command != nil {
 		c.Command.printSource(w, v)
@@ -173,6 +183,18 @@ func (c CommandOrCompound) printHeredoc(w writer, v bool) {
 	} else if c.Compound != nil {
 		c.Compound.printHeredoc(w, v)
 	}
+}
+
+func (c CommandOrCompound) hasHeredoc() bool {
+	if c.Command != nil && c.Command.hasHeredoc() {
+		return true
+	}
+
+	if c.Compound != nil && c.Compound.hasHeredoc() {
+		return true
+	}
+
+	return false
 }
 
 func (c CommandSubstitution) printSource(w writer, v bool) {
@@ -241,6 +263,16 @@ func (c Compound) printHeredoc(w writer, v bool) {
 	for _, r := range c.Redirections {
 		r.printHeredoc(w, v)
 	}
+}
+
+func (c Compound) hasHeredoc() bool {
+	for _, r := range c.Redirections {
+		if r.isHeredoc() {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (f File) printSource(w writer, v bool) {
@@ -406,6 +438,8 @@ func (l Line) printSource(w writer, v bool) {
 
 func (l Line) printSourceEnd(w writer, v, end bool) {
 	if len(l.Statements) > 0 {
+		end = end && !l.hasHeredoc()
+
 		l.Comments[0].printSource(w, true)
 		l.Statements[0].printSourceEnd(w, v, end || len(l.Statements) > 1)
 
@@ -429,6 +463,16 @@ func (l Line) printSourceEnd(w writer, v, end bool) {
 			s.printHeredoc(w, v)
 		}
 	}
+}
+
+func (l Line) hasHeredoc() bool {
+	for _, s := range l.Statements {
+		if s.hasHeredoc() {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (l LoopCompound) printSource(w writer, v bool) {
@@ -701,6 +745,14 @@ func (p Pipeline) printHeredoc(w writer, v bool) {
 	}
 }
 
+func (p Pipeline) hasHeredoc() bool {
+	if p.Pipeline != nil && p.Pipeline.hasHeredoc() {
+		return true
+	}
+
+	return p.CommandOrCompound.hasHeredoc()
+}
+
 func (r Redirection) printSource(w writer, v bool) {
 	if r.Redirector != nil {
 		if r.Input != nil {
@@ -780,6 +832,14 @@ func (s Statement) endsWithGrouping() bool {
 	}
 
 	return s.Pipeline.endsWithGrouping()
+}
+
+func (s Statement) hasHeredoc() bool {
+	if s.Statement != nil && s.Statement.hasHeredoc() {
+		return true
+	}
+
+	return s.Pipeline.hasHeredoc()
 }
 
 func (s Statement) printHeredoc(w writer, v bool) {

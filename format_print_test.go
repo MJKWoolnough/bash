@@ -91,13 +91,13 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 17
 			"a <<b\nheredoc\ncontents\nb",
-			"a <<b;\nheredoc\ncontents\nb",
-			"a <<b;\nheredoc\ncontents\nb",
+			"a <<b\nheredoc\ncontents\nb",
+			"a <<b\nheredoc\ncontents\nb",
 		},
 		{ // 18
 			"a <<-b\n\theredoc\n\tcontents\nb",
-			"a <<-b;\nheredoc\ncontents\nb",
-			"a <<-b;\nheredoc\ncontents\nb",
+			"a <<-b\nheredoc\ncontents\nb",
+			"a <<-b\nheredoc\ncontents\nb",
 		},
 		{ // 19
 			"$(a)",
@@ -261,18 +261,18 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 51
 			"<<a\nb$c\na",
-			"<<a;\nb$c\na",
-			"<<a;\nb$c\na",
+			"<<a\nb$c\na",
+			"<<a\nb$c\na",
 		},
 		{ // 52
 			"{\n<<a\nb$c\na\n}",
-			"{\n\t<<a;\nb$c\na\n}",
-			"{\n\t<<a;\nb$c\na\n}",
+			"{\n\t<<a\nb$c\na\n}",
+			"{\n\t<<a\nb$c\na\n}",
 		},
 		{ // 53
 			"{\n<<-a\nb$c\na\n}",
-			"{\n\t<<-a;\n\tb$c\n\ta\n}",
-			"{\n\t<<-a;\n\tb$c\n\ta\n}",
+			"{\n\t<<-a\n\tb$c\n\ta\n}",
+			"{\n\t<<-a\n\tb$c\n\ta\n}",
 		},
 		{ // 54
 			"{ function a() { # A\nb; } }",
@@ -401,18 +401,18 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 79
 			"a | b <<c\nc",
-			"a | b <<c;\nc",
-			"a | b <<c;\nc",
+			"a | b <<c\nc",
+			"a | b <<c\nc",
 		},
 		{ // 80
 			"a && b <<c\nc",
-			"a && b <<c;\nc",
-			"a && b <<c;\nc",
+			"a && b <<c\nc",
+			"a && b <<c\nc",
 		},
 		{ // 81
 			"a <<b\nb\n\nc;",
-			"a <<b;\nb\n\nc;",
-			"a <<b;\nb\n\nc;",
+			"a <<b\nb\n\nc;",
+			"a <<b\nb\n\nc;",
 		},
 		{ // 82
 			"if a; then b;fi",
