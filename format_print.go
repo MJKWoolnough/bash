@@ -176,7 +176,20 @@ func (c CommandOrCompound) printHeredoc(w writer, v bool) {
 }
 
 func (c CommandSubstitution) printSource(w writer, v bool) {
-	w.WriteString("$(")
+	closing := ")"
+
+	switch c.SubstitutionType {
+	case SubstitutionNew:
+		w.WriteString("$(")
+	case SubstitutionBacktick:
+		w.WriteString("$(")
+
+		closing = "`"
+	case SubstitutionProcessInput:
+		w.WriteString("<(")
+	case SubstitutionProcessOutput:
+		w.WriteString(">(")
+	}
 
 	if c.Command.isMultiline(v) {
 		ip := indentPrinter{writer: w}
@@ -188,7 +201,7 @@ func (c CommandSubstitution) printSource(w writer, v bool) {
 		c.Command.printSourceEnd(w, v, false)
 	}
 
-	w.WriteString(")")
+	w.WriteString(closing)
 }
 
 func (c Compound) printSource(w writer, v bool) {
