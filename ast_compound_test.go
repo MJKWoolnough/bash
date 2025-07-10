@@ -7669,6 +7669,7 @@ func TestCommandSubstitution(t *testing.T) {
 		{"``", func(t *test, tk Tokens) { // 2
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionBacktick,
+				Backtick:         &tk[0],
 				Command: File{
 					Tokens: tk[1:1],
 				},
@@ -7711,6 +7712,7 @@ func TestCommandSubstitution(t *testing.T) {
 																{
 																	CommandSubstitution: &CommandSubstitution{
 																		SubstitutionType: SubstitutionBacktick,
+																		Backtick:         &tk[1],
 																		Command: File{
 																			Tokens: tk[2:2],
 																		},
@@ -7744,6 +7746,7 @@ func TestCommandSubstitution(t *testing.T) {
 		{"`\\`\\``", func(t *test, tk Tokens) { // 4
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionBacktick,
+				Backtick:         &tk[0],
 				Command: File{
 					Lines: []Line{
 						{
@@ -7759,6 +7762,7 @@ func TestCommandSubstitution(t *testing.T) {
 																{
 																	CommandSubstitution: &CommandSubstitution{
 																		SubstitutionType: SubstitutionBacktick,
+																		Backtick:         &tk[1],
 																		Command: File{
 																			Tokens: tk[2:2],
 																		},

@@ -1014,6 +1014,7 @@ const (
 
 type CommandSubstitution struct {
 	SubstitutionType SubstitutionType
+	Backtick         *Token
 	Command          File
 	Tokens           Tokens
 }
@@ -1024,6 +1025,7 @@ func (cs *CommandSubstitution) parse(b *bashParser) error {
 	if tk := b.Next(); tk.Type == TokenOpenBacktick {
 		cs.SubstitutionType = SubstitutionBacktick
 		end = parser.Token{Type: TokenCloseBacktick, Data: tk.Data}
+		cs.Backtick = b.GetLastToken()
 	} else if tk.Data == "<(" {
 		cs.SubstitutionType = SubstitutionProcessInput
 	} else if tk.Data == ">(" {

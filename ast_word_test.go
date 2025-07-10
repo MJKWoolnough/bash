@@ -700,6 +700,7 @@ func TestWordPart(t *testing.T) {
 			t.Output = WordPart{
 				CommandSubstitution: &CommandSubstitution{
 					SubstitutionType: SubstitutionBacktick,
+					Backtick:         &tk[0],
 					Command: File{
 						Tokens: tk[1:1],
 					},
