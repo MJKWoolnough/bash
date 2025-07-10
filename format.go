@@ -309,6 +309,10 @@ func (s SubstitutionType) String() string {
 		return "SubstitutionNew"
 	case SubstitutionBacktick:
 		return "SubstitutionBacktick"
+	case SubstitutionProcessInput:
+		return "SubstitutionProcessInput"
+	case SubstitutionProcessOutput:
+		return "SubstitutionProcessOutput"
 	default:
 		return "Unknown"
 	}
