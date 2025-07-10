@@ -193,7 +193,7 @@ func nextIsWordPart(b *bashParser) bool {
 		return false
 	case TokenPunctuator:
 		switch tk.Data {
-		case "$((", "$(", "${":
+		case "$((", "$(", "${", "<(", ">(":
 			return true
 		}
 
@@ -227,7 +227,7 @@ func (w *WordPart) parse(b *bashParser) error {
 		if err := w.ArithmeticExpansion.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
-	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}, tk.Type == TokenOpenBacktick:
+	case tk == parser.Token{Type: TokenPunctuator, Data: "$("}, tk.Type == TokenOpenBacktick, tk == parser.Token{Type: TokenPunctuator, Data: "<("}, tk == parser.Token{Type: TokenPunctuator, Data: ">("}:
 		w.CommandSubstitution = new(CommandSubstitution)
 
 		if err := w.CommandSubstitution.parse(c); err != nil {
