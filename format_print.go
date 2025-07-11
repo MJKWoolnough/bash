@@ -282,8 +282,10 @@ func (f File) printSource(w writer, v bool) {
 func (f File) printSourceEnd(w writer, v, end bool) {
 	f.Comments[0].printSource(w, true)
 
+	_, topLevel := w.(*countPrinter)
+
 	if len(f.Lines) > 0 {
-		if _, ok := w.(*countPrinter); ok && len(f.Comments[0]) > 0 {
+		if topLevel && len(f.Comments[0]) > 0 {
 			w.WriteString("\n")
 		}
 
@@ -306,6 +308,10 @@ func (f File) printSourceEnd(w writer, v, end bool) {
 	if len(f.Comments[1]) > 0 {
 		w.WriteString("\n\n")
 		f.Comments[1].printSource(w, false)
+	}
+
+	if topLevel && end {
+		w.WriteString("\n")
 	}
 }
 
