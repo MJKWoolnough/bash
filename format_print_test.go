@@ -72,22 +72,22 @@ func TestPrintSource(t *testing.T) {
 		{ // 13
 			"a=1 b=2 c d >e <f",
 			"a=1 b=2 c d >e <f;",
-			"a=1 b=2 c d >e <f;",
+			"a=1 b=2 c d > e < f;",
 		},
 		{ // 14
 			"a b >c <d",
 			"a b >c <d;",
-			"a b >c <d;",
+			"a b > c < d;",
 		},
 		{ // 15
 			">a <b",
 			">a <b;",
-			">a <b;",
+			"> a < b;",
 		},
 		{ // 16
 			"a=1 b=2 >c <d",
 			"a=1 b=2 >c <d;",
-			"a=1 b=2 >c <d;",
+			"a=1 b=2 > c < d;",
 		},
 		{ // 17
 			"a <<b\nheredoc\ncontents\nb",
@@ -115,9 +115,9 @@ func TestPrintSource(t *testing.T) {
 			"# A\na; # B\n   # C\n\n# D",
 		},
 		{ // 22
+			"case a in\nesac < a 2>&1;",
 			"case a in\nesac <a 2>&1;",
-			"case a in\nesac <a 2>&1;",
-			"case a in\nesac <a 2>&1;",
+			"case a in\nesac < a 2>&1;",
 		},
 		{ // 23
 			"a\nb\n\nc\nd\n\n\n\n\ne",
@@ -347,7 +347,7 @@ func TestPrintSource(t *testing.T) {
 		{ // 68
 			"{ ((a)) >$(a\nb); }",
 			"{\n\t((a)) >$(\n\t\ta;\n\t\tb;\n\t);\n}",
-			"{\n\t(( a )) >$(\n\t\ta;\n\t\tb;\n\t);\n}",
+			"{\n\t(( a )) > $(\n\t\ta;\n\t\tb;\n\t);\n}",
 		},
 		{ // 69
 			"{ a=( # A\n); }",
@@ -989,7 +989,7 @@ func TestLineSource(t *testing.T) {
 		}},
 	}
 
-	const expected = "a <b; #A"
+	const expected = "a < b; #A"
 
 	if got := fmt.Sprintf("%+s", l); got != expected {
 		t.Errorf("test: expecting output %q, got %q", expected, got)

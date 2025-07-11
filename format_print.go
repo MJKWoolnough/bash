@@ -760,6 +760,11 @@ func (r Redirection) printSource(w writer, v bool) {
 		}
 
 		w.WriteString(r.Redirector.Data)
+
+		if v && r.Redirector.Data != "<<" && r.Redirector.Data != "<<-" && r.Redirector.Data != ">&" {
+			w.WriteString(" ")
+		}
+
 		r.Output.printSource(w, v)
 	}
 }
