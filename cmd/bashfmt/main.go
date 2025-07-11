@@ -16,9 +16,10 @@ func main() {
 }
 
 func run() error {
-	var write bool
+	var write, concise bool
 
 	flag.BoolVar(&write, "w", false, "write formatted bash code to source file instead of stdout")
+	flag.BoolVar(&concise, "c", false, "print concise bash")
 	flag.Parse()
 
 	file := flag.CommandLine.Arg(0)
@@ -53,7 +54,11 @@ func run() error {
 		out = f
 	}
 
-	fmt.Fprintf(out, "%+s", b)
+	if concise {
+		fmt.Fprintf(out, "%s", b)
+	} else {
+		fmt.Fprintf(out, "%+s", b)
+	}
 
 	return nil
 }
