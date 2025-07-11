@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -15,10 +16,17 @@ func main() {
 }
 
 func run() error {
+	var write bool
+
+	flag.BoolVar(&write, "w", false, "write formatted bash code to source file instead of stdout")
+	flag.Parse()
+
+	file := flag.CommandLine.Arg(0)
+
 	r := os.Stdin
 
-	if len(os.Args) > 1 {
-		f, err := os.Open(os.Args[1])
+	if file != "" {
+		f, err := os.Open(file)
 		if err != nil {
 			return nil
 		}
@@ -33,7 +41,19 @@ func run() error {
 		return err
 	}
 
-	fmt.Fprintf(os.Stdout, "%+s", b)
+	out := os.Stdout
+
+	if write && r != os.Stdin {
+		f, err := os.Create(file)
+		if err != nil {
+			return nil
+		}
+		defer f.Close()
+
+		out = f
+	}
+
+	fmt.Fprintf(out, "%+s", b)
 
 	return nil
 }
