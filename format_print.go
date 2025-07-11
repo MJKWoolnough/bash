@@ -765,7 +765,7 @@ func (r Redirection) printSource(w writer, v bool) {
 
 		w.WriteString(r.Redirector.Data)
 
-		if v && r.Redirector.Data != "<<" && r.Redirector.Data != "<<-" && r.Redirector.Data != ">&" {
+		if v && r.Redirector.Data != "<<" && r.Redirector.Data != "<<-" && r.Redirector.Data != ">&" || r.Output.firstPartIsProcessSubstitution() {
 			w.WriteString(" ")
 		}
 
@@ -1093,4 +1093,8 @@ func (wd Word) printSource(w writer, v bool) {
 	for _, word := range wd.Parts {
 		word.printSource(w, v)
 	}
+}
+
+func (wd Word) firstPartIsProcessSubstitution() bool {
+	return len(wd.Parts) > 0 && wd.Parts[0].CommandSubstitution != nil && (wd.Parts[0].CommandSubstitution.SubstitutionType == SubstitutionProcessInput || wd.Parts[0].CommandSubstitution.SubstitutionType == SubstitutionProcessOutput)
 }
