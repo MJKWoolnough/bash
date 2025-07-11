@@ -914,6 +914,11 @@ func TestPrintSource(t *testing.T) {
 			"while read a; do\n\tb \"$a\";\ndone <<EOF\nA\nB\nC\nEOF",
 			"while read a; do\n\tb \"$a\";\ndone <<EOF\nA\nB\nC\nEOF",
 		},
+		{ // 182
+			"while read a; do\n\tb \"$a\";\ndone < <(c)",
+			"while read a; do\n\tb \"$a\";\ndone < <(c);",
+			"while read a; do\n\tb \"$a\";\ndone < <(c);",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 42 || n == 35 || n == 176) {
