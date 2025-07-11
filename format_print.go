@@ -283,6 +283,10 @@ func (f File) printSourceEnd(w writer, v, end bool) {
 	f.Comments[0].printSource(w, true)
 
 	if len(f.Lines) > 0 {
+		if _, ok := w.(*countPrinter); ok && len(f.Comments[0]) > 0 {
+			w.WriteString("\n")
+		}
+
 		f.Lines[0].printSourceEnd(w, v, end || len(f.Lines) > 1)
 
 		lastLine := lastTokenPos(f.Lines[0].Tokens)

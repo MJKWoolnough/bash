@@ -111,8 +111,8 @@ func TestPrintSource(t *testing.T) {
 		},
 		{ // 21
 			"# A\na # B\n  # C\n\n# D",
-			"# A\na; # B\n   # C\n\n# D",
-			"# A\na; # B\n   # C\n\n# D",
+			"# A\n\na; # B\n   # C\n\n# D",
+			"# A\n\na; # B\n   # C\n\n# D",
 		},
 		{ // 22
 			"case a in\nesac < a 2>&1;",
