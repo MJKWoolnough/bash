@@ -890,9 +890,9 @@ func TestPrintSource(t *testing.T) {
 			"<(a);",
 		},
 		{ // 177
-			"<(a;b)",
-			"<(a; b;);",
-			"<(\n\ta;\n\tb;\n);",
+			">(a;b)",
+			">(a; b;);",
+			">(\n\ta;\n\tb;\n);",
 		},
 		{ // 178
 			"`a`",
