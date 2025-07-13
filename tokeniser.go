@@ -2,6 +2,7 @@ package bash
 
 import (
 	"io"
+	"slices"
 	"strings"
 
 	"vimagination.zapto.org/parser"
@@ -1338,7 +1339,22 @@ func (b *bashTokeniser) keyword(t *parser.Tokeniser, kw string) (parser.Token, p
 
 		return t.Return(TokenKeyword, b.test)
 	case "continue", "break":
-		if b.lastState() != stateLoopBody {
+		var inLoop bool
+
+	Loop:
+		for _, state := range slices.Backward(b.state) {
+			switch state {
+			case stateIfBody, stateCaseBody:
+			case stateLoopBody:
+				inLoop = true
+
+				fallthrough
+			default:
+				break Loop
+			}
+		}
+
+		if !inLoop {
 			return t.ReturnError(ErrInvalidKeyword)
 		}
 
