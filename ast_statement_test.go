@@ -612,7 +612,56 @@ func TestPipeline(t *testing.T) {
 				Tokens: tk[:5],
 			}
 		}},
-		{"||", func(t *test, tk Tokens) { // 9
+		{"a | b=", func(t *test, tk Tokens) { // 9
+			t.Output = Pipeline{
+				CommandOrCompound: CommandOrCompound{
+					Command: &Command{
+						AssignmentsOrWords: []AssignmentOrWord{
+							{
+								Word: &Word{
+									Parts: []WordPart{
+										{
+											Part:   &tk[0],
+											Tokens: tk[:1],
+										},
+									},
+									Tokens: tk[:1],
+								},
+								Tokens: tk[:1],
+							},
+						},
+						Tokens: tk[:1],
+					},
+					Tokens: tk[:1],
+				},
+				Pipeline: &Pipeline{
+					CommandOrCompound: CommandOrCompound{
+						Command: &Command{
+							Vars: []Assignment{
+								{
+									Identifier: ParameterAssign{
+										Identifier: &tk[4],
+										Tokens:     tk[4:5],
+									},
+									Value: &Value{
+										Word: &Word{
+											Tokens: tk[6:6],
+										},
+										Tokens: tk[6:6],
+									},
+									Tokens: tk[4:6],
+								},
+							},
+							Tokens: tk[4:6],
+						},
+						Tokens: tk[4:6],
+					},
+					Tokens: tk[4:6],
+				},
+				Tokens: tk[:6],
+			}
+		}},
+		{"||", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -627,7 +676,7 @@ func TestPipeline(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"a | ||", func(t *test, tk Tokens) { // 10
+		{"a | ||", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -649,7 +698,7 @@ func TestPipeline(t *testing.T) {
 	}, func(t *test) (Type, error) {
 		var p Pipeline
 
-		err := p.parse(t.Parser, true)
+		err := p.parse(t.Parser)
 
 		return p, err
 	})
@@ -1438,7 +1487,7 @@ func TestCommandOrCompound(t *testing.T) {
 	}, func(t *test) (Type, error) {
 		var c CommandOrCompound
 
-		err := c.parse(t.Parser, true)
+		err := c.parse(t.Parser)
 
 		return c, err
 	})
@@ -2478,7 +2527,7 @@ func TestCommand(t *testing.T) {
 	}, func(t *test) (Type, error) {
 		var c Command
 
-		err := c.parse(t.Parser, false)
+		err := c.parse(t.Parser)
 
 		return c, err
 	})
