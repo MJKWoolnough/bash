@@ -28,7 +28,7 @@ type Statement struct {
 func (s *Statement) parse(b *bashParser, first bool) error {
 	c := b.NewGoal()
 
-	if err := s.Pipeline.parse(c, !first); err != nil {
+	if err := s.Pipeline.parse(c); err != nil {
 		return b.Error("Statement", err)
 	}
 
@@ -127,7 +127,7 @@ type Pipeline struct {
 	Tokens            Tokens
 }
 
-func (p *Pipeline) parse(b *bashParser, required bool) error {
+func (p *Pipeline) parse(b *bashParser) error {
 	if b.AcceptToken(parser.Token{Type: TokenKeyword, Data: "time"}) {
 		b.AcceptRunWhitespace()
 
@@ -158,7 +158,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 
 	c := b.NewGoal()
 
-	if err := p.CommandOrCompound.parse(c, required); err != nil {
+	if err := p.CommandOrCompound.parse(c); err != nil {
 		return b.Error("Pipeline", err)
 	}
 
@@ -175,7 +175,7 @@ func (p *Pipeline) parse(b *bashParser, required bool) error {
 		c = b.NewGoal()
 		p.Pipeline = new(Pipeline)
 
-		if err := p.Pipeline.parse(c, true); err != nil {
+		if err := p.Pipeline.parse(c); err != nil {
 			return b.Error("Pipeline", err)
 		}
 
@@ -225,7 +225,7 @@ type CommandOrCompound struct {
 	Tokens   Tokens
 }
 
-func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
+func (cc *CommandOrCompound) parse(b *bashParser) error {
 	var err error
 
 	c := b.NewGoal()
@@ -235,7 +235,7 @@ func (cc *CommandOrCompound) parse(b *bashParser, required bool) error {
 		err = cc.Compound.parse(c)
 	} else {
 		cc.Command = new(Command)
-		err = cc.Command.parse(c, required)
+		err = cc.Command.parse(c)
 	}
 
 	if err != nil {
@@ -286,7 +286,7 @@ type Command struct {
 	Tokens             Tokens
 }
 
-func (cc *Command) parse(b *bashParser, required bool) error {
+func (cc *Command) parse(b *bashParser) error {
 	for {
 		c := b.NewGoal()
 
@@ -345,7 +345,7 @@ func (cc *Command) parse(b *bashParser, required bool) error {
 		c.AcceptRunWhitespace()
 	}
 
-	if len(cc.AssignmentsOrWords) == 0 && (required || len(cc.Redirections) == 0 && len(cc.Vars) == 0) {
+	if len(cc.AssignmentsOrWords) == 0 && len(cc.Redirections) == 0 && len(cc.Vars) == 0 {
 		return b.Error("Command", ErrMissingWord)
 	}
 
