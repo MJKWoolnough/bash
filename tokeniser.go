@@ -1845,7 +1845,7 @@ Loop:
 }
 
 func (b *bashTokeniser) letExpressionOrWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	tk, fn := b.identOrWord(t)
+	tk, fn := b.operatorOrWord(t)
 
 	if tk.Type == TokenIdentifierAssign {
 		tk.Type = TokenLetIdentifierAssign
