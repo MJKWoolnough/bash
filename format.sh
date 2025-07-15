@@ -1,7 +1,11 @@
 #!/bin/bash
 
+files() {
+	echo ast{,_compound,_statement,_word}.go;
+}
+
 types() {
-	grep "type .* struct {" "ast.go" | cut -d' ' -f2 | sort;
+	grep "type .* struct {" $(files) | cut -d' ' -f2 | sort;
 }
 
 {
@@ -70,7 +74,7 @@ HEREDOC
 				echo "	pp.WriteString(\"\\n$fieldName: \")";
 				echo "	f.$fieldName.printType(&pp, v)";
 			fi;
-		done < <(sed '/^type '$type' struct {$/,/^}$/!d;//d' "ast.go");
+		done < <(sed '/^type '$type' struct {$/,/^}$/!d;//d' $(files));
 
 		echo;
 		echo "	w.WriteString(\"\n}\")";
