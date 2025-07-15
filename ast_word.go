@@ -208,6 +208,7 @@ type WordPart struct {
 	ParameterExpansion  *ParameterExpansion
 	CommandSubstitution *CommandSubstitution
 	ArithmeticExpansion *ArithmeticExpansion
+	BraceExpansion      *BraceExpansion
 	Tokens              Tokens
 }
 
@@ -233,6 +234,12 @@ func (w *WordPart) parse(b *bashParser) error {
 		if err := w.CommandSubstitution.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
+	case tk == parser.Token{Type: TokenBraceExpansion, Data: "{"}:
+		w.BraceExpansion = new(BraceExpansion)
+
+		if err := w.BraceExpansion.parse(c); err != nil {
+			return b.Error("WordPart", err)
+		}
 	default:
 		b.Next()
 
@@ -256,6 +263,14 @@ func (w *WordPart) isMultiline(v bool) bool {
 	}
 
 	return false
+}
+
+type BraceExpansion struct {
+	Tokens Tokens
+}
+
+func (be *BraceExpansion) parse(b *bashParser) error {
+	return nil
 }
 
 type ParameterType uint8

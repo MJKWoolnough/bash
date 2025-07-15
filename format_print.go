@@ -86,6 +86,9 @@ func (a AssignmentOrWord) printSource(w writer, v bool) {
 	}
 }
 
+func (b BraceExpansion) printSource(w writer, v bool) {
+}
+
 func (c CaseCompound) printSource(w writer, v bool) {
 	w.WriteString("case ")
 	c.Word.printSource(w, v)
