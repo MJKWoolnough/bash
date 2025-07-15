@@ -33,11 +33,11 @@ const (
 	ansiStops             = "'\\"
 	word                  = "\\\"'`(){}- \t\n"
 	wordBreak             = "\\\"'`() \t\n$|&;<>{"
+	wordBreakBrace        = "\\\"'`() \t\n$|&;,<>}"
 	wordBreakArithmetic   = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,;"
 	wordBreakNoBrace      = wordBreak + "#}]"
 	wordBreakIndex        = wordBreakArithmetic + "]"
 	wordBreakCommandIndex = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,]"
-	braceWordBreak        = " `\\\t\n|&;<>()={},"
 	testWordBreak         = " `\\\t\n\"'$|&;<>(){}!,"
 	hexDigit              = "0123456789ABCDEFabcdef"
 	octalDigit            = "012345678"
@@ -64,6 +64,7 @@ const (
 	TokenStringStart
 	TokenStringMid
 	TokenStringEnd
+	TokenBraceSequenceExpansion
 	TokenBraceExpansion
 	TokenBraceWord
 	TokenPunctuator
@@ -86,6 +87,7 @@ const (
 	stateArrayIndex
 	stateBrace
 	stateBraceExpansion
+	stateBraceExpansionWord
 	stateBraceExpansionArrayIndex
 	stateBuiltinDeclare
 	stateBuiltinExport
@@ -185,7 +187,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastState() {
-	case stateArrayIndex, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
+	case stateArrayIndex, stateBraceExpansionWord, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
 	default:
 		b.pushState(stateInCommand)
 	}
@@ -415,11 +417,7 @@ func (b *bashTokeniser) arithmeticExpansion(t *parser.Tokeniser) (parser.Token, 
 		if td := b.lastState(); td == stateBuiltinLetExpression || td == stateBuiltinLetParens || td == stateBuiltinLetTernary {
 			t.Next()
 
-			if tk, fn := b.braceExpansion(t); tk.Type == TokenBraceExpansion {
-				return tk, fn
-			}
-
-			return t.ReturnError(ErrInvalidCharacter)
+			return b.braceExpansion(t)
 		}
 
 		fallthrough
@@ -528,13 +526,13 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	case '{':
 		t.Next()
 
-		if tk := t.Peek(); !strings.ContainsRune(word, tk) || tk == '-' {
+		if strings.ContainsRune(whitespaceNewline, t.Peek()) && !b.isInCommand() {
+			b.setInCommand()
+			b.pushState(stateBrace)
+		} else {
 			b.setInCommand()
 
 			return b.braceExpansion(t)
-		} else if strings.ContainsRune(whitespaceNewline, tk) && !b.isInCommand() {
-			b.setInCommand()
-			b.pushState(stateBrace)
 		}
 	case ')':
 		b.endCommand()
@@ -555,6 +553,10 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		if td := b.lastState(); td == stateBrace || td == stateBraceExpansion {
 			b.popState()
 			b.endCommand()
+		} else if td == stateBraceExpansionWord {
+			b.popState()
+
+			return t.Return(TokenBraceExpansion, b.main)
 		}
 	case '$':
 		b.setInCommand()
@@ -564,6 +566,12 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		b.setInCommand()
 
 		return b.startBacktick(t)
+	case ',':
+		if b.lastState() != stateBraceExpansionWord {
+			return b.keywordIdentOrWord(t)
+		}
+
+		t.Next()
 	case ']':
 		if b.lastState() == stateBraceExpansionArrayIndex {
 			t.Next()
@@ -1908,6 +1916,8 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	switch td {
 	case stateBraceExpansion:
 		wb = wordBreakNoBrace
+	case stateBraceExpansionWord:
+		wb = wordBreakBrace
 	case stateArrayIndex, stateBraceExpansionArrayIndex:
 		wb = wordBreakIndex
 	case stateCommandIndex:
@@ -1950,7 +1960,12 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 
 				state.Reset()
 
-				if tk.Type == TokenBraceExpansion {
+				switch tk.Type {
+				case TokenBraceExpansion:
+					b.popState()
+
+					fallthrough
+				case TokenBraceSequenceExpansion:
 					return t.Return(TokenWord, b.main)
 				}
 			}
@@ -2018,106 +2033,72 @@ func (b *bashTokeniser) value(t *parser.Tokeniser) (parser.Token, parser.TokenFu
 }
 
 func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if t.Accept(letters) {
-		if t.AcceptWord(dotdot, false) != "" {
-			if !t.Accept(letters) {
-				return b.word(t)
-			}
+	state := t.State()
 
-			if t.AcceptWord(dotdot, false) != "" {
-				t.Accept("-")
+	if (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '.' && t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && (t.AcceptRun(decimalDigit) == '}' || (t.AcceptWord(dotdot, false) != "" && t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit) && t.AcceptRun(decimalDigit) == '}')) {
+		t.Next()
 
-				if !t.Accept(decimalDigit) {
-					return b.word(t)
-				}
-
-				t.AcceptRun(decimalDigit)
-			}
-
-			if !t.Accept("}") {
-				return b.word(t)
-			}
-
-			return t.Return(TokenBraceExpansion, b.main)
-		}
-
-		return b.braceWord(t)
-	} else if t.Accept("_") {
-		return b.braceWord(t)
-	} else {
-		t.Accept("-")
-
-		if t.Accept(decimalDigit) {
-			switch t.AcceptRun(decimalDigit) {
-			default:
-				return b.word(t)
-			case ',':
-				return b.braceExpansionWord(t)
-			case '.':
-				if t.AcceptWord(dotdot, false) != "" {
-					t.Accept("-")
-
-					if !t.Accept(decimalDigit) {
-						return b.word(t)
-					}
-
-					t.AcceptRun(decimalDigit)
-
-					if t.AcceptWord(dotdot, false) != "" {
-						t.Accept("-")
-
-						if !t.Accept(decimalDigit) {
-							return b.word(t)
-						}
-
-						t.AcceptRun(decimalDigit)
-					}
-
-					if !t.Accept("}") {
-						return b.word(t)
-					}
-
-					return t.Return(TokenBraceExpansion, b.main)
-				}
-			}
-		}
+		return t.Return(TokenBraceSequenceExpansion, b.main)
 	}
 
-	return b.braceExpansionWord(t)
-}
+	state.Reset()
 
-func (b *bashTokeniser) braceWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	t.AcceptRun(identCont)
+	if t.Accept(letters) && t.AcceptRun(letters) == '.' && t.AcceptWord(dotdot, false) != "" && t.Accept(letters) && (t.AcceptRun(letters) == '}' || t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '}') {
+		t.Next()
 
-	if !t.Accept("}") {
-		return b.braceExpansionWord(t)
+		return t.Return(TokenBraceSequenceExpansion, b.main)
 	}
 
-	return t.Return(TokenBraceWord, b.main)
+	state.Reset()
+
+	bew := b.isBraceExpansionWord(t)
+
+	state.Reset()
+
+	if bew {
+		b.pushState(stateBraceExpansionWord)
+
+		return t.Return(TokenBraceExpansion, b.main)
+	} else if b.lastState() == stateBuiltinLetExpression {
+		return t.ReturnError(ErrInvalidCharacter)
+	}
+
+	return b.word(t)
 }
 
-func (b *bashTokeniser) braceExpansionWord(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+func (b *bashTokeniser) isBraceExpansionWord(t *parser.Tokeniser) bool {
+	b.pushState(stateBraceExpansionWord)
+	defer b.popState()
+
 	var hasComma bool
 
+	sub := t.SubTokeniser()
+	c := &bashTokeniser{state: b.state}
+
+	sub.TokeniserState(c.main)
+
 	for {
-		switch t.ExceptRun(braceWordBreak) {
-		case '\\':
-			t.Next()
-			t.Next()
-		case ',':
-			t.Next()
+		tk, err := sub.GetToken()
+		if err != nil {
+			return false
+		}
 
-			hasComma = true
-		case '}':
-			if hasComma {
-				t.Next()
-
-				return t.Return(TokenBraceExpansion, b.main)
+		if len(c.state) <= len(b.state) {
+			switch tk {
+			case parser.Token{Type: TokenBraceExpansion, Data: "}"}:
+				return hasComma
+			case parser.Token{Type: TokenPunctuator, Data: ","}:
+				hasComma = true
+			case parser.Token{Type: TokenPunctuator, Data: ";"}:
+				return false
+			default:
+				switch tk.Type {
+				case TokenWhitespace, TokenLineTerminator:
+					return false
+				}
 			}
-
-			fallthrough
-		default:
-			return b.word(t)
+		} else if tk.Type == parser.TokenDone {
+			return false
 		}
 	}
 }
