@@ -124,6 +124,17 @@ func (f *AssignmentOrWord) printType(w writer, v bool) {
 	w.WriteString("\n}")
 }
 
+func (f *BraceExpansion) printType(w writer, v bool) {
+	pp := indentPrinter{writer: w}
+
+	pp.WriteString("BraceExpansion {")
+
+	pp.WriteString("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	w.WriteString("\n}")
+}
+
 func (f *CaseCompound) printType(w writer, v bool) {
 	pp := indentPrinter{writer: w}
 
@@ -259,6 +270,13 @@ func (f *CommandSubstitution) printType(w writer, v bool) {
 
 	pp.WriteString("\nSubstitutionType: ")
 	f.SubstitutionType.printType(&pp, v)
+
+	if f.Backtick != nil {
+		pp.WriteString("\nBacktick: ")
+		f.Backtick.printType(&pp, v)
+	} else if v {
+		pp.WriteString("\nBacktick: nil")
+	}
 
 	pp.WriteString("\nCommand: ")
 	f.Command.printType(&pp, v)
@@ -1277,6 +1295,13 @@ func (f *WordPart) printType(w writer, v bool) {
 		f.ArithmeticExpansion.printType(&pp, v)
 	} else if v {
 		pp.WriteString("\nArithmeticExpansion: nil")
+	}
+
+	if f.BraceExpansion != nil {
+		pp.WriteString("\nBraceExpansion: ")
+		f.BraceExpansion.printType(&pp, v)
+	} else if v {
+		pp.WriteString("\nBraceExpansion: nil")
 	}
 
 	pp.WriteString("\nTokens: ")

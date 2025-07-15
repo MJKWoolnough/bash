@@ -53,6 +53,18 @@ func (f AssignmentOrWord) Format(s fmt.State, v rune) {
 }
 
 // Format implements the fmt.Formatter interface.
+func (f BraceExpansion) Format(s fmt.State, v rune) {
+	if v == 'v' && s.Flag('#') {
+		type X = BraceExpansion
+		type BraceExpansion X
+
+		fmt.Fprintf(s, "%#v", BraceExpansion(f))
+	} else {
+		format(&f, s, v)
+	}
+}
+
+// Format implements the fmt.Formatter interface.
 func (f CaseCompound) Format(s fmt.State, v rune) {
 	if v == 'v' && s.Flag('#') {
 		type X = CaseCompound
