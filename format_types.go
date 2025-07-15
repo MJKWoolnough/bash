@@ -129,6 +129,23 @@ func (f *BraceExpansion) printType(w writer, v bool) {
 
 	pp.WriteString("BraceExpansion {")
 
+	if f.Words == nil {
+		pp.WriteString("\nWords: nil")
+	} else if len(f.Words) > 0 {
+		pp.WriteString("\nWords: [")
+
+		ipp := indentPrinter{writer: &pp}
+
+		for n, e := range f.Words {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.WriteString("\n]")
+	} else if v {
+		pp.WriteString("\nWords: []")
+	}
+
 	pp.WriteString("\nTokens: ")
 	f.Tokens.printType(&pp, v)
 
