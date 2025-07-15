@@ -150,6 +150,8 @@ func (t Token) printType(w writer, v bool) {
 		typ = "TokenStringMid"
 	case TokenStringEnd:
 		typ = "TokenStringEnd"
+	case TokenBraceSequenceExpansion:
+		typ = "TokenBraceSequenceExpansion"
 	case TokenBraceExpansion:
 		typ = "TokenBraceExpansion"
 	case TokenBraceWord:
