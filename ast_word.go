@@ -1,6 +1,8 @@
 package bash
 
-import "vimagination.zapto.org/parser"
+import (
+	"vimagination.zapto.org/parser"
+)
 
 type AssignmentOrWord struct {
 	Assignment *Assignment
@@ -191,6 +193,8 @@ func nextIsWordPart(b *bashParser) bool {
 	switch tk := b.Peek(); tk.Type {
 	case TokenWhitespace, TokenLineTerminator, TokenComment, TokenCloseBacktick, TokenHeredoc, TokenBinaryOperator, TokenHeredocEnd, parser.TokenDone:
 		return false
+	case TokenBraceExpansion:
+		return tk.Data != "}"
 	case TokenPunctuator:
 		switch tk.Data {
 		case "$((", "$(", "${", "<(", ">(":
@@ -266,10 +270,30 @@ func (w *WordPart) isMultiline(v bool) bool {
 }
 
 type BraceExpansion struct {
+	Words  []Word
 	Tokens Tokens
 }
 
 func (be *BraceExpansion) parse(b *bashParser) error {
+	b.Next()
+
+	for !b.AcceptToken(parser.Token{Type: TokenBraceExpansion, Data: "}"}) {
+		c := b.NewGoal()
+
+		var w Word
+
+		if err := w.parse(c, false); err != nil {
+			return b.Error("BraceExpansion", err)
+		}
+
+		be.Words = append(be.Words, w)
+
+		b.Score(c)
+		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","})
+	}
+
+	be.Tokens = b.ToTokens()
+
 	return nil
 }
 
