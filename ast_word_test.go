@@ -889,6 +889,53 @@ func TestWordPart(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
+		{"{\"$(||)\",}", func(t *test, tk Tokens) { // 10
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err: Error{
+														Err:     ErrMissingWord,
+														Parsing: "Command",
+														Token:   tk[3],
+													},
+													Parsing: "CommandOrCompound",
+													Token:   tk[3],
+												},
+												Parsing: "Pipeline",
+												Token:   tk[3],
+											},
+											Parsing: "Statement",
+											Token:   tk[3],
+										},
+										Parsing: "Line",
+										Token:   tk[3],
+									},
+									Parsing: "File",
+									Token:   tk[3],
+								},
+								Parsing: "CommandSubstitution",
+								Token:   tk[3],
+							},
+							Parsing: "WordPart",
+							Token:   tk[2],
+						},
+						Parsing: "Word",
+						Token:   tk[2],
+					},
+					Parsing: "BraceExpansion",
+					Token:   tk[1],
+				},
+				Parsing: "WordPart",
+				Token:   tk[0],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var wp WordPart
 
