@@ -264,6 +264,8 @@ func (w *WordPart) isMultiline(v bool) bool {
 		return w.ArithmeticExpansion.isMultiline(v)
 	} else if w.CommandSubstitution != nil {
 		return w.CommandSubstitution.isMultiline(v)
+	} else if w.BraceExpansion != nil {
+		return w.BraceExpansion.isMultiline(v)
 	}
 
 	return false
@@ -295,6 +297,16 @@ func (be *BraceExpansion) parse(b *bashParser) error {
 	be.Tokens = b.ToTokens()
 
 	return nil
+}
+
+func (b *BraceExpansion) isMultiline(v bool) bool {
+	for _, w := range b.Words {
+		if w.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 type ParameterType uint8
