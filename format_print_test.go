@@ -399,6 +399,11 @@ func TestPrintSource(t *testing.T) {
 			"{\n\t${a/b/$(\n\t\tc;\n\t\td;\n\t)};\n}\n",
 			"{\n\t${a/b/$(\n\t\tc;\n\t\td;\n\t)};\n}\n",
 		},
+		{ // 78
+			"{ {a,\"$(b\nc)\"}; }",
+			"{\n\t{a,\"$(\n\t\tb;\n\t\tc;\n\t)\"};\n}\n",
+			"{\n\t{a,\"$(\n\t\tb;\n\t\tc;\n\t)\"};\n}\n",
+		},
 		{ // 79
 			"a | b <<c\nc",
 			"a | b <<c\nc\n",
@@ -931,7 +936,7 @@ func TestPrintSource(t *testing.T) {
 		},
 	} {
 		for m, input := range test {
-			if m == 2 && (n == 42 || n == 35 || n == 176) {
+			if m == 2 && (n == 42 || n == 35 || n == 177) {
 				continue
 			}
 
