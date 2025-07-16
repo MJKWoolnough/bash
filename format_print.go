@@ -87,6 +87,18 @@ func (a AssignmentOrWord) printSource(w writer, v bool) {
 }
 
 func (b BraceExpansion) printSource(w writer, v bool) {
+	if len(b.Words) > 1 {
+		w.WriteString("{")
+
+		b.Words[0].printSource(w, v)
+
+		for _, wd := range b.Words[1:] {
+			w.WriteString(",")
+			wd.printSource(w, v)
+		}
+
+		w.WriteString("}")
+	}
 }
 
 func (c CaseCompound) printSource(w writer, v bool) {
