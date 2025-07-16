@@ -1095,6 +1095,8 @@ func (wp WordPart) printSource(w writer, v bool) {
 		wp.CommandSubstitution.printSource(w, v)
 	} else if wp.ParameterExpansion != nil {
 		wp.ParameterExpansion.printSource(w, v)
+	} else if wp.BraceExpansion != nil {
+		wp.BraceExpansion.printSource(w, v)
 	}
 }
 
