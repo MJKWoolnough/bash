@@ -867,6 +867,76 @@ func TestWordPart(t *testing.T) {
 	})
 }
 
+func TestBraceExpansion(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"{a,b}", func(t *test, tk Tokens) { // 1
+			t.Output = BraceExpansion{
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[1],
+								Tokens: tk[1:2],
+							},
+						},
+						Tokens: tk[1:2],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"{\"a\",bc,123}", func(t *test, tk Tokens) { // 2
+			t.Output = BraceExpansion{
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[1],
+								Tokens: tk[1:2],
+							},
+						},
+						Tokens: tk[1:2],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[5],
+								Tokens: tk[5:6],
+							},
+						},
+						Tokens: tk[5:6],
+					},
+				},
+				Tokens: tk[:7],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var b BraceExpansion
+
+		err := b.parse(t.Parser)
+
+		return b, err
+	})
+}
+
 func TestParameterExpansion(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"${a}", func(t *test, tk Tokens) { // 1
