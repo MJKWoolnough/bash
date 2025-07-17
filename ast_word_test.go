@@ -720,6 +720,7 @@ func TestWordPart(t *testing.T) {
 		{"{a,,\"b\"}", func(t *test, tk Tokens) { // 6
 			t.Output = WordPart{
 				BraceExpansion: &BraceExpansion{
+					BraceExpansionType: BraceExpansionWords,
 					Words: []Word{
 						{
 							Parts: []WordPart{
@@ -949,6 +950,7 @@ func TestBraceExpansion(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"{a,b}", func(t *test, tk Tokens) { // 1
 			t.Output = BraceExpansion{
+				BraceExpansionType: BraceExpansionWords,
 				Words: []Word{
 					{
 						Parts: []WordPart{
@@ -974,6 +976,7 @@ func TestBraceExpansion(t *testing.T) {
 		}},
 		{"{\"a\",bc,123}", func(t *test, tk Tokens) { // 2
 			t.Output = BraceExpansion{
+				BraceExpansionType: BraceExpansionWords,
 				Words: []Word{
 					{
 						Parts: []WordPart{

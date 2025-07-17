@@ -238,7 +238,7 @@ func (w *WordPart) parse(b *bashParser) error {
 		if err := w.CommandSubstitution.parse(c); err != nil {
 			return b.Error("WordPart", err)
 		}
-	case tk == parser.Token{Type: TokenBraceExpansion, Data: "{"}:
+	case tk == parser.Token{Type: TokenBraceExpansion, Data: "{"}, tk == parser.Token{Type: TokenBraceSequenceExpansion, Data: "{"}:
 		w.BraceExpansion = new(BraceExpansion)
 
 		if err := w.BraceExpansion.parse(c); err != nil {
@@ -271,13 +271,27 @@ func (w *WordPart) isMultiline(v bool) bool {
 	return false
 }
 
+type BraceExpansionType uint8
+
+const (
+	BraceExpansionWords BraceExpansionType = iota
+	BraceExpansionSequence
+)
+
 type BraceExpansion struct {
+	BraceExpansionType
 	Words  []Word
 	Tokens Tokens
 }
 
 func (be *BraceExpansion) parse(b *bashParser) error {
-	b.Next()
+	if b.Accept(TokenBraceExpansion) {
+		be.BraceExpansionType = BraceExpansionWords
+	} else {
+		b.Next()
+
+		be.BraceExpansionType = BraceExpansionSequence
+	}
 
 	for !b.AcceptToken(parser.Token{Type: TokenBraceExpansion, Data: "}"}) {
 		c := b.NewGoal()
@@ -291,7 +305,7 @@ func (be *BraceExpansion) parse(b *bashParser) error {
 		be.Words = append(be.Words, w)
 
 		b.Score(c)
-		b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ","})
+		b.Accept(TokenPunctuator)
 	}
 
 	be.Tokens = b.ToTokens()
