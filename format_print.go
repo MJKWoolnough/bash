@@ -87,13 +87,13 @@ func (a AssignmentOrWord) printSource(w writer, v bool) {
 }
 
 func (b BraceExpansion) printSource(w writer, v bool) {
-	if len(b.Words) > 1 {
+	if len(b.Words) > 1 && (b.BraceExpansionType == BraceExpansionWords || b.BraceExpansionType == BraceExpansionSequence) {
 		w.WriteString("{")
 
 		b.Words[0].printSource(w, v)
 
 		for _, wd := range b.Words[1:] {
-			w.WriteString(",")
+			b.BraceExpansionType.printSource(w, v)
 			wd.printSource(w, v)
 		}
 
