@@ -2036,17 +2036,17 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 	state := t.State()
 
 	if (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '.' && t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && (t.AcceptRun(decimalDigit) == '}' || (t.AcceptWord(dotdot, false) != "" && t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit) && t.AcceptRun(decimalDigit) == '}')) {
-		t.Next()
+		state.Reset()
 
-		return t.Return(TokenBraceSequenceExpansion, b.main)
+		return t.Return(TokenBraceSequenceExpansion, b.braceExpansionSequence)
 	}
 
 	state.Reset()
 
 	if t.Accept(letters) && t.AcceptRun(letters) == '.' && t.AcceptWord(dotdot, false) != "" && t.Accept(letters) && (t.AcceptRun(letters) == '}' || t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '}') {
-		t.Next()
+		state.Reset()
 
-		return t.Return(TokenBraceSequenceExpansion, b.main)
+		return t.Return(TokenBraceSequenceExpansion, b.braceExpansionSequence)
 	}
 
 	state.Reset()
@@ -2064,6 +2064,29 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 	}
 
 	return b.word(t)
+}
+
+func (b *bashTokeniser) braceExpansionSequence(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	typ := TokenNumberLiteral
+
+	if t.Accept(letters) {
+		typ = TokenWord
+	}
+
+	if t.ExceptRun(".}") == '}' {
+		b.pushState(stateBraceExpansionWord)
+
+		return t.Return(typ, b.operatorOrWord)
+	}
+
+	return t.Return(typ, b.braceExpansionDelimiter)
+}
+
+func (b *bashTokeniser) braceExpansionDelimiter(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	t.Accept(".")
+	t.Accept(".")
+
+	return t.Return(TokenPunctuator, b.braceExpansionSequence)
 }
 
 func (b *bashTokeniser) isBraceExpansionWord(t *parser.Tokeniser) bool {
