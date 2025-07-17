@@ -129,6 +129,9 @@ func (f *BraceExpansion) printType(w writer, v bool) {
 
 	pp.WriteString("BraceExpansion {")
 
+	pp.WriteString("\nBraceExpansionType: ")
+	f.BraceExpansionType.printType(&pp, v)
+
 	if f.Words == nil {
 		pp.WriteString("\nWords: nil")
 	} else if len(f.Words) > 0 {
