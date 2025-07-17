@@ -2097,8 +2097,6 @@ func (b *bashTokeniser) isBraceExpansionWord(t *parser.Tokeniser) bool {
 					return false
 				}
 			}
-		} else if tk.Type == parser.TokenDone {
-			return false
 		}
 	}
 }
