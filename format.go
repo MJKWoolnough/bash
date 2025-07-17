@@ -642,6 +642,30 @@ func (t TestOperator) printType(w writer, _ bool) {
 	w.WriteString(t.String())
 }
 
+func (b BraceExpansionType) String() string {
+	switch b {
+	case BraceExpansionWords:
+		return "BraceExpansionWords"
+	case BraceExpansionSequence:
+		return "BraceExpansionSequence"
+	default:
+		return ""
+	}
+}
+
+func (b BraceExpansionType) printSource(w writer, _ bool) {
+	switch b {
+	case BraceExpansionWords:
+		w.WriteString(",")
+	case BraceExpansionSequence:
+		w.WriteString("..")
+	}
+}
+
+func (b BraceExpansionType) printType(w writer, _ bool) {
+	w.WriteString(b.String())
+}
+
 type formatter interface {
 	printType(writer, bool)
 	printSource(writer, bool)
