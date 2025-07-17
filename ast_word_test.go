@@ -749,7 +749,36 @@ func TestWordPart(t *testing.T) {
 				Tokens: tk[:6],
 			}
 		}},
-		{"${a[$(||)]}", func(t *test, tk Tokens) { // 7
+		{"{a..e}", func(t *test, tk Tokens) { // 7
+			t.Output = WordPart{
+				BraceExpansion: &BraceExpansion{
+					BraceExpansionType: BraceExpansionSequence,
+					Words: []Word{
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[1],
+									Tokens: tk[1:2],
+								},
+							},
+							Tokens: tk[1:2],
+						},
+						{
+							Parts: []WordPart{
+								{
+									Part:   &tk[3],
+									Tokens: tk[3:4],
+								},
+							},
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[:5],
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"${a[$(||)]}", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -804,7 +833,7 @@ func TestWordPart(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"$(($(||)))", func(t *test, tk Tokens) { // 8
+		{"$(($(||)))", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -855,7 +884,7 @@ func TestWordPart(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 9
+		{"$(||)", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -890,7 +919,7 @@ func TestWordPart(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"{\"$(||)\",}", func(t *test, tk Tokens) { // 10
+		{"{\"$(||)\",}", func(t *test, tk Tokens) { // 11
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
