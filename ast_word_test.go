@@ -482,7 +482,7 @@ func TestArrayWord(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"", func(t *test, tk Tokens) { // 5
+		{"", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err:     ErrMissingWord,
 				Parsing: "ArrayWord",
@@ -804,7 +804,7 @@ func TestWordPart(t *testing.T) {
 				Token:   tk[0],
 			}
 		}},
-		{"$(($(||)))", func(t *test, tk Tokens) { // 7
+		{"$(($(||)))", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1009,7 +1009,68 @@ func TestBraceExpansion(t *testing.T) {
 				Tokens: tk[:7],
 			}
 		}},
-		{"{\"$(||)\",bc,123}", func(t *test, tk Tokens) { // 3
+		{"{a..e}", func(t *test, tk Tokens) { // 3
+			t.Output = BraceExpansion{
+				BraceExpansionType: BraceExpansionSequence,
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[1],
+								Tokens: tk[1:2],
+							},
+						},
+						Tokens: tk[1:2],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[:5],
+			}
+		}},
+		{"{100..10..-1}", func(t *test, tk Tokens) { // 4
+			t.Output = BraceExpansion{
+				BraceExpansionType: BraceExpansionSequence,
+				Words: []Word{
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[1],
+								Tokens: tk[1:2],
+							},
+						},
+						Tokens: tk[1:2],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[3],
+								Tokens: tk[3:4],
+							},
+						},
+						Tokens: tk[3:4],
+					},
+					{
+						Parts: []WordPart{
+							{
+								Part:   &tk[5],
+								Tokens: tk[5:6],
+							},
+						},
+						Tokens: tk[5:6],
+					},
+				},
+				Tokens: tk[:7],
+			}
+		}},
+		{"{\"$(||)\",bc,123}", func(t *test, tk Tokens) { // 5
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
