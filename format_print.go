@@ -87,7 +87,7 @@ func (a AssignmentOrWord) printSource(w writer, v bool) {
 }
 
 func (b BraceExpansion) printSource(w writer, v bool) {
-	if len(b.Words) > 1 && (b.BraceExpansionType == BraceExpansionWords || b.BraceExpansionType == BraceExpansionSequence) {
+	if b.BraceExpansionType == BraceExpansionWords && len(b.Words) > 1 || (b.BraceExpansionType == BraceExpansionSequence && (len(b.Words) == 2 || len(b.Words) == 3)) {
 		w.WriteString("{")
 
 		b.Words[0].printSource(w, v)
