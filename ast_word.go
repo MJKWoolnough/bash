@@ -4,6 +4,9 @@ import (
 	"vimagination.zapto.org/parser"
 )
 
+// AssignmentOrWord represents either an Assignment or a Word in a command.
+//
+// One, and only one, of Assignment or Word must be set.
 type AssignmentOrWord struct {
 	Assignment *Assignment
 	Word       *Word
@@ -38,6 +41,13 @@ func (a *AssignmentOrWord) isMultiline(v bool) bool {
 	return a.Assignment != nil && a.Assignment.isMultiline(v) || a.Word != nil && a.Word.isMultiline(v)
 }
 
+// Value represents the value to be assigned in an Assignment.
+//
+// One, and only one, of Word or Array must be used.
+//
+// When assigning an array, the first set of comments are from just after the
+// opening paren, and the second set of comments are from just before the
+// closing paren.
 type Value struct {
 	Word     *Word
 	Array    []ArrayWord
@@ -112,6 +122,10 @@ func (v *Value) isMultiline(vs bool) bool {
 	return false
 }
 
+// ArrayWord a word in a Values array value.
+//
+// The first set of comments are from just beofre the word, and the second set
+// are from just after.
 type ArrayWord struct {
 	Word     Word
 	Comments [2]Comments
@@ -149,6 +163,7 @@ func (a *ArrayWord) isMultiline(v bool) bool {
 	return a.Word.isMultiline(v)
 }
 
+// Word represents a collection of WordParts that make up a single word.
 type Word struct {
 	Parts  []WordPart
 	Tokens Tokens
@@ -207,6 +222,10 @@ func nextIsWordPart(b *bashParser) bool {
 	return true
 }
 
+// WordPart represents a single part of a word.
+//
+// One and only one of Part, ParameterExpansion, CommandSubstitution,
+// ArithmeticExpansion, or BraceExpansion must be set.
 type WordPart struct {
 	Part                *Token
 	ParameterExpansion  *ParameterExpansion
@@ -271,13 +290,18 @@ func (w *WordPart) isMultiline(v bool) bool {
 	return false
 }
 
+// BraceExpansionType represents which type of BraceExpansion is being
+// represented.
 type BraceExpansionType uint8
 
+// Brace Expansion types.
 const (
 	BraceExpansionWords BraceExpansionType = iota
 	BraceExpansionSequence
 )
 
+// BraceExpansion represents either a sequence expansion
+// ('{a..b}', '{1..10..2}'), or a group of words ('{ab,cd,12}').
 type BraceExpansion struct {
 	BraceExpansionType
 	Words  []Word
@@ -323,8 +347,10 @@ func (b *BraceExpansion) isMultiline(v bool) bool {
 	return false
 }
 
+// ParameterType represents the type of a ParameterExpansion.
 type ParameterType uint8
 
+// ParameterExpansion types.
 const (
 	ParameterValue ParameterType = iota
 	ParameterLength
@@ -363,6 +389,7 @@ const (
 	ParameterAttributes
 )
 
+// ParameterExpansion represents the expansion of a parameter.
 type ParameterExpansion struct {
 	Indirect       bool
 	Parameter      Parameter
@@ -550,6 +577,8 @@ func (p *ParameterExpansion) isMultiline(v bool) bool {
 	return p.Parameter.isMultiline(v)
 }
 
+// Parameter represents the Parameter, an Identifier with a possible Array
+// subscript, used in a ParameterExpansion.
 type Parameter struct {
 	Parameter *Token
 	Array     []WordOrOperator
@@ -599,6 +628,7 @@ func (p *Parameter) isMultiline(v bool) bool {
 	return false
 }
 
+// String represents a collection of string or word parts that make up string.
 type String struct {
 	WordsOrTokens []WordOrToken
 	Tokens        Tokens
@@ -634,6 +664,8 @@ func (s *String) isMultiline(v bool) bool {
 	return false
 }
 
+// WordOrToken represents either a string token or a Word, one and only one of
+// which must be set.
 type WordOrToken struct {
 	Token  *Token
 	Word   *Word
@@ -665,6 +697,8 @@ func (w *WordOrToken) isMultiline(v bool) bool {
 	return w.Word != nil && w.Word.isMultiline(v)
 }
 
+// WordOrOperator represents either a Word or an Arithmetic Operator, one, and
+// only one of which must be set.
 type WordOrOperator struct {
 	Word     *Word
 	Operator *Token
