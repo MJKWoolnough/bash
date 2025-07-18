@@ -2043,7 +2043,7 @@ func (b *bashTokeniser) braceExpansion(t *parser.Tokeniser) (parser.Token, parse
 
 	state.Reset()
 
-	if t.Accept(letters) && t.AcceptRun(letters) == '.' && t.AcceptWord(dotdot, false) != "" && t.Accept(letters) && (t.AcceptRun(letters) == '}' || t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '}') {
+	if t.Accept(letters) && t.AcceptWord(dotdot, false) != "" && t.Accept(letters) && (t.Accept("}") || t.AcceptWord(dotdot, false) != "" && (t.Accept("-") && t.Accept(decimalDigit) || t.Accept(decimalDigit)) && t.AcceptRun(decimalDigit) == '}') {
 		state.Reset()
 
 		return t.Return(TokenBraceSequenceExpansion, b.braceExpansionSequence)
