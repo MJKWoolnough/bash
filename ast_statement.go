@@ -2,14 +2,17 @@ package bash
 
 import "vimagination.zapto.org/parser"
 
+// LogicalOperator represents how two statements are joined.
 type LogicalOperator uint8
 
+// Logical Operators.
 const (
 	LogicalOperatorNone LogicalOperator = iota
 	LogicalOperatorAnd
 	LogicalOperatorOr
 )
 
+// JobControl determines whether a job starts in the foreground or background.
 type JobControl uint8
 
 const (
@@ -17,6 +20,11 @@ const (
 	JobControlBackground
 )
 
+// Statement represents a statement or statements joined by '||' or '&&'
+// operators.
+//
+// With a LogicalOperator set to either LogicalOperatorAnd or LogicalOperatorOr,
+// the Statement must be set.
 type Statement struct {
 	Pipeline        Pipeline
 	LogicalOperator LogicalOperator
@@ -109,14 +117,18 @@ func (s *Statement) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
+// PipelineTime represents a potential 'time' keyword prefixed to a pipeline.
 type PipelineTime uint8
 
+// Pipeline Time options.
 const (
 	PipelineTimeNone PipelineTime = iota
 	PipelineTimeBash
 	PipelineTimePosix
 )
 
+// Pipeline represents a command or compound, possibly connected to another
+// pipeline by a pipe ('|').
 type Pipeline struct {
 	PipelineTime      PipelineTime
 	Not               bool
@@ -219,6 +231,8 @@ func (p *Pipeline) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
+// CommandOrCompound represents either a Command or a Compound; one, and only
+// one of which must be set.
 type CommandOrCompound struct {
 	Command  *Command
 	Compound *Compound
@@ -279,6 +293,9 @@ func isCompoundNext(b *bashParser) bool {
 	return tk.Type == TokenKeyword && (tk.Data == "function" || tk.Data == "if" || tk.Data == "case" || tk.Data == "while" || tk.Data == "for" || tk.Data == "until" || tk.Data == "select" || tk.Data == "[[") || tk.Type == TokenPunctuator && (tk.Data == "((" || tk.Data == "(" || tk.Data == "{") || tk.Type == TokenFunctionIdentifier
 }
 
+// Command represents an assignment or a call to a command or builtin.
+//
+// At least one Var, Redirection, or Word must be set.
 type Command struct {
 	Vars               []Assignment
 	Redirections       []Redirection
@@ -410,13 +427,20 @@ func isRedirection(b *bashParser) bool {
 	return false
 }
 
+// AssignmentType represents the type of assignment, either a simple set or and
+// append.
 type AssignmentType uint8
 
+// Assignment types.
 const (
 	AssignmentAssign AssignmentType = iota
 	AssignmentAppend
 )
 
+// Assignment represents a value assignment.
+//
+// If Assignment is AssignmentAppend, Expression should be used, otherwise
+// Value should be set.
 type Assignment struct {
 	Identifier ParameterAssign
 	Assignment AssignmentType
@@ -504,6 +528,10 @@ func (a *Assignment) isMultiline(v bool) bool {
 	return false
 }
 
+// ParameterAssign represents an identifier being assigned to, with a possible
+// subscript.
+//
+// Identifier must be set.
 type ParameterAssign struct {
 	Identifier *Token
 	Subscript  []WordOrOperator
@@ -549,6 +577,9 @@ func (p *ParameterAssign) isMultiline(v bool) bool {
 	return false
 }
 
+// Redirection presents input/output redirection.
+//
+// Redirector must be set to the redirection operator.
 type Redirection struct {
 	Input      *Token
 	Redirector *Token
@@ -608,6 +639,7 @@ func (r *Redirection) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
+// Heredoc represents the parts of a Here Document.
 type Heredoc struct {
 	HeredocPartsOrWords []HeredocPartOrWord
 	Tokens              Tokens
@@ -636,6 +668,10 @@ func (h *Heredoc) parse(b *bashParser) error {
 	return nil
 }
 
+// HeredocPartOrWord represents either the string of Word part of a Here
+// Document.
+//
+// One of HeredocPart or Word must be set.
 type HeredocPartOrWord struct {
 	HeredocPart *Token
 	Word        *Word
