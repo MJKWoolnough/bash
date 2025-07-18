@@ -1,0 +1,82 @@
+package bash
+
+func (s state) String() string {
+	switch s {
+	case stateNone:
+		return "stateNone"
+	case stateArithmeticExpansion:
+		return "stateArithmeticExpansion"
+	case stateArithmeticParens:
+		return "stateArithmeticParens"
+	case stateArrayIndex:
+		return "stateArrayIndex"
+	case stateBrace:
+		return "stateBrace"
+	case stateBraceExpansion:
+		return "stateBraceExpansion"
+	case stateBraceExpansionWord:
+		return "stateBraceExpansionWord"
+	case stateBraceExpansionArrayIndex:
+		return "stateBraceExpansionArrayIndex"
+	case stateBuiltinDeclare:
+		return "stateBuiltinDeclare"
+	case stateBuiltinExport:
+		return "stateBuiltinExport"
+	case stateBuiltinLet:
+		return "stateBuiltinLet"
+	case stateBuiltinLetExpression:
+		return "stateBuiltinLetExpression"
+	case stateBuiltinLetTernary:
+		return "stateBuiltinLetTernary"
+	case stateBuiltinReadonly:
+		return "stateBuiltinReadonly"
+	case stateBuiltinTypeset:
+		return "stateBuiltinTypeset"
+	case stateCaseBody:
+		return "stateCaseBody"
+	case stateCaseEnd:
+		return "stateCaseEnd"
+	case stateCaseParam:
+		return "stateCaseParam"
+	case stateCommandIndex:
+		return "stateCommandIndex"
+	case stateForArithmetic:
+		return "stateForArithmetic"
+	case stateFunctionBody:
+		return "stateFunctionBody"
+	case stateHeredoc:
+		return "stateHeredoc"
+	case stateHeredocIdentifier:
+		return "stateHeredocIdentifier"
+	case stateIfBody:
+		return "stateIfBody"
+	case stateIfTest:
+		return "stateIfTest"
+	case stateInCommand:
+		return "stateInCommand"
+	case stateLoopBody:
+		return "stateLoopBody"
+	case stateLoopCondition:
+		return "stateLoopCondition"
+	case stateParens:
+		return "stateParens"
+	case stateStringDouble:
+		return "stateStringDouble"
+	case stateStringSingle:
+		return "stateStringSingle"
+	case stateStringSpecial:
+		return "stateStringSpecial"
+	case stateTernary:
+		return "stateTernary"
+	case stateTest:
+		return "stateTest"
+	case stateTestBinary:
+		return "stateTestBinary"
+	case stateTestPattern:
+		return "stateTestPattern"
+	case stateValue:
+		return "stateValue"
+	}
+
+	return "unknown"
+}
