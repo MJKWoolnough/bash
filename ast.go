@@ -20,7 +20,10 @@ func Parse(t Tokeniser) (*File, error) {
 	return f, nil
 }
 
-// Parse parses Bash input into AST.
+// File represents a parsed Bash file, a subshell, or a compound body.
+//
+// The first set of comments are from the start of the file/body, the second set
+// from the end.
 type File struct {
 	Lines    []Line
 	Comments [2]Comments
@@ -82,6 +85,11 @@ func isEnd(tk parser.Token) bool {
 	return tk.Type == parser.TokenDone || tk.Type == TokenCloseBacktick || tk.Type == TokenKeyword && (tk.Data == "then" || tk.Data == "elif" || tk.Data == "else" || tk.Data == "fi" || tk.Data == "esac" || tk.Data == "done") || tk.Type == TokenPunctuator && (tk.Data == ";;" || tk.Data == ";&" || tk.Data == ";;&" || tk.Data == ")" || tk.Data == "}")
 }
 
+// Line represents a logical bash line; it may contain multiple statements.
+//
+// The first set of Comments are from just before the line, the second set from
+// the end of the line, and those on following lines not preceded by an empty
+// line.
 type Line struct {
 	Statements []Statement
 	Comments   [2]Comments
