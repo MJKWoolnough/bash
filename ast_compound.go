@@ -2,6 +2,8 @@ package bash
 
 import "vimagination.zapto.org/parser"
 
+// Compound represents one of the Bash compound statements. One,
+// and only of the compounds must be set.
 type Compound struct {
 	IfCompound         *IfCompound
 	CaseCompound       *CaseCompound
@@ -127,6 +129,7 @@ func (cc *Compound) parseHeredocs(b *bashParser) error {
 	return nil
 }
 
+// IfCompound represents and if compound with optional elif and else sections.
 type IfCompound struct {
 	If     TestConsequence
 	ElIf   []TestConsequence
@@ -183,6 +186,10 @@ func (i *IfCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// TestConsequence represents the conditional test and body of an if or elif
+// section.
+//
+// The Consequence must contain at least one statement.
 type TestConsequence struct {
 	Test        Statement
 	Consequence File
@@ -218,6 +225,11 @@ func (t *TestConsequence) parse(b *bashParser) error {
 	return nil
 }
 
+// CaseCompound represents a case select compound.
+//
+// The first two comment groups represent comments on either side on the 'in'
+// keyword, and the third group represents comments from just before the
+// closing 'esac' keyword.
 type CaseCompound struct {
 	Word     Word
 	Matches  []PatternLines
@@ -280,8 +292,13 @@ func (cc *CaseCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// CaseTerminationType represents the final punctuation of a case match.
+//
+// Must be one of CaseTerminationNone, CaseTerminationEnd,
+// CaseTerminationContinue, or CaseTerminationFallthrough.
 type CaseTerminationType uint8
 
+// CaseTermination types.
 const (
 	CaseTerminationNone CaseTerminationType = iota
 	CaseTerminationEnd
@@ -289,6 +306,10 @@ const (
 	CaseTerminationFallthrough
 )
 
+// PatternLines represents a CaseCompound pattern and the code to run for that
+// match.
+//
+// The Comments are parsed from just before the pattern.
 type PatternLines struct {
 	Patterns []Word
 	Lines    File
@@ -356,6 +377,11 @@ func (pl *PatternLines) parse(b *bashParser) error {
 	return nil
 }
 
+// LoopCompound represents either While or Until loops.
+//
+// The File must contain at least one statement.
+//
+// The Comments are from just before the 'do' keyword.
 type LoopCompound struct {
 	Until     bool
 	Statement Statement
@@ -401,6 +427,14 @@ func (l *LoopCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// ForCompound represents a For loop.
+//
+// One, and only one, of Identifier and ArithmeticExpansion must be set.
+//
+// The File must contain at least one statement.
+//
+// The first set of comments are from after an Identifier; the second set of
+// comments are from just before the 'do' keyword.
 type ForCompound struct {
 	Identifier          *Token
 	Words               []Word
@@ -484,6 +518,12 @@ func (f *ForCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// SelectCompound represents a Select loop.
+//
+// The Identifier must be set and the File must contain at least one statement.
+//
+// The first set of Comments is from just after the Identifier and the second
+// are from just before the 'do' keyword.
 type SelectCompound struct {
 	Identifier *Token
 	Words      []Word
@@ -551,6 +591,10 @@ func (s *SelectCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// TestCompound represents the wrapping of a '[[ ... ]]' compound.
+//
+// The first set of comments are from just after the opening '[[' and the second
+// set are from just before the closing ']]'.
 type TestCompound struct {
 	Tests    Tests
 	Comments [2]Comments
@@ -586,6 +630,7 @@ func (t *TestCompound) isMultiline(v bool) bool {
 	return len(t.Comments[0]) > 0 || len(t.Comments[1]) > 0 || t.Tests.isMultiline(v)
 }
 
+// TestOperator represnets the type of test being represented.
 type TestOperator uint8
 
 const (
@@ -630,6 +675,7 @@ const (
 	TestOperatorFileIsOlderThan
 )
 
+// Tests represents the actual test conditions of a TestCompound.
 type Tests struct {
 	Not             bool
 	Test            TestOperator
@@ -878,6 +924,9 @@ func (t *Tests) isMultiline(v bool) bool {
 	return false
 }
 
+// Pattern represents a pattern being matched against in a TestCompound test.
+//
+// Must contain at least one WordPart.
 type Pattern struct {
 	Parts  []WordPart
 	Tokens Tokens
@@ -927,6 +976,10 @@ func nextIsPatternPart(b *bashParser) bool {
 	return true
 }
 
+// GroupingCompound represents either a brace or parenthesized set of
+// statements.
+//
+// File must contain at least one statement.
 type GroupingCompound struct {
 	SubShell bool
 	File
@@ -955,6 +1008,10 @@ func (g *GroupingCompound) parse(b *bashParser) error {
 	return nil
 }
 
+// Function compound represents a defined function, either with or without the
+// 'function' keyword.
+//
+// The Comments are from just before the Body.
 type FunctionCompound struct {
 	HasKeyword bool
 	Identifier *Token
@@ -1003,8 +1060,10 @@ func (f *FunctionCompound) isMultiline(v bool) bool {
 	return len(f.Comments) > 0 || f.Body.isMultiline(v)
 }
 
+// SubstitutionType represents the type of a CommandSubstitution.
 type SubstitutionType uint8
 
+// Substitution types.
 const (
 	SubstitutionNew SubstitutionType = iota
 	SubstitutionBacktick
@@ -1012,6 +1071,16 @@ const (
 	SubstitutionProcessOutput
 )
 
+// CommandSubstitution represents a subshell that returns some value.
+//
+// For a SubstitutionNew or SubstitutionBacktick, the Standard Out is returned;
+// for a SubstitutionProcessInput or SubstitutionProcessOutput a path is
+// return.
+//
+// For a SubstitutionBacktick, the Backtick must be set to the escaped backtick
+// being used for the subshell.
+//
+// The Command must contain at least one statement.
 type CommandSubstitution struct {
 	SubstitutionType SubstitutionType
 	Backtick         *Token
@@ -1053,6 +1122,11 @@ func (cs *CommandSubstitution) isMultiline(v bool) bool {
 	return cs.Command.isMultiline(v)
 }
 
+// ArithmeticExpansion represents either an expression ('((') or a compound
+// ('$((').
+//
+// For the expression, the returned number is the exit code, for the compound
+// the returned value is a word.
 type ArithmeticExpansion struct {
 	Expression        bool
 	WordsAndOperators []WordOrOperator
