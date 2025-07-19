@@ -1268,7 +1268,102 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"if\na\nthen\nb\nfi", func(t *test, tk Tokens) { // 2
+		{"if { a; } then b; fi", func(t *test, tk Tokens) { // 2
+			t.Output = IfCompound{
+				If: TestConsequence{
+					Test: Statement{
+						Pipeline: Pipeline{
+							CommandOrCompound: CommandOrCompound{
+								Compound: &Compound{
+									GroupingCompound: &GroupingCompound{
+										File: File{
+											Lines: []Line{
+												{
+													Statements: []Statement{
+														{
+															Pipeline: Pipeline{
+																CommandOrCompound: CommandOrCompound{
+																	Command: &Command{
+																		AssignmentsOrWords: []AssignmentOrWord{
+																			{
+																				Word: &Word{
+																					Parts: []WordPart{
+																						{
+																							Part:   &tk[4],
+																							Tokens: tk[4:5],
+																						},
+																					},
+																					Tokens: tk[4:5],
+																				},
+																				Tokens: tk[4:5],
+																			},
+																		},
+																		Tokens: tk[4:5],
+																	},
+																	Tokens: tk[4:5],
+																},
+																Tokens: tk[4:5],
+															},
+															Tokens: tk[4:6],
+														},
+													},
+													Tokens: tk[4:6],
+												},
+											},
+											Tokens: tk[4:6],
+										},
+										Tokens: tk[2:8],
+									},
+									Tokens: tk[2:8],
+								},
+								Tokens: tk[2:8],
+							},
+							Tokens: tk[2:8],
+						},
+						Tokens: tk[2:8],
+					},
+					Consequence: File{
+						Lines: []Line{
+							{
+								Statements: []Statement{
+									{
+										Pipeline: Pipeline{
+											CommandOrCompound: CommandOrCompound{
+												Command: &Command{
+													AssignmentsOrWords: []AssignmentOrWord{
+														{
+															Word: &Word{
+																Parts: []WordPart{
+																	{
+																		Part:   &tk[11],
+																		Tokens: tk[11:12],
+																	},
+																},
+																Tokens: tk[11:12],
+															},
+															Tokens: tk[11:12],
+														},
+													},
+													Tokens: tk[11:12],
+												},
+												Tokens: tk[11:12],
+											},
+											Tokens: tk[11:12],
+										},
+										Tokens: tk[11:13],
+									},
+								},
+								Tokens: tk[11:13],
+							},
+						},
+						Tokens: tk[11:13],
+					},
+					Tokens: tk[2:13],
+				},
+				Tokens: tk[:15],
+			}
+		}},
+		{"if\na\nthen\nb\nfi", func(t *test, tk Tokens) { // 3
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -1338,7 +1433,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
-		{"if a; then b; else c; fi", func(t *test, tk Tokens) { // 3
+		{"if a; then b; else c; fi", func(t *test, tk Tokens) { // 4
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -1444,7 +1539,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:16],
 			}
 		}},
-		{"if a; then b; elif c; then d; fi", func(t *test, tk Tokens) { // 4
+		{"if a; then b; elif c; then d; fi", func(t *test, tk Tokens) { // 5
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -1581,7 +1676,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:21],
 			}
 		}},
-		{"if a; then b; else\n# comment\nc; fi", func(t *test, tk Tokens) { // 5
+		{"if a; then b; else\n# comment\nc; fi", func(t *test, tk Tokens) { // 6
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -1688,7 +1783,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
-		{"if a; then b; else # comment\nc; fi", func(t *test, tk Tokens) { // 6
+		{"if a; then b; else # comment\nc; fi", func(t *test, tk Tokens) { // 7
 			t.Output = IfCompound{
 				If: TestConsequence{
 					Test: Statement{
@@ -1795,7 +1890,7 @@ func TestIfCompound(t *testing.T) {
 				Tokens: tk[:18],
 			}
 		}},
-		{"if ||;then b;fi", func(t *test, tk Tokens) { // 7
+		{"if ||;then b;fi", func(t *test, tk Tokens) { // 8
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1822,7 +1917,7 @@ func TestIfCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"if a;then b;elif ||;then d;fi", func(t *test, tk Tokens) { // 8
+		{"if a;then b;elif ||;then d;fi", func(t *test, tk Tokens) { // 9
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -1849,7 +1944,7 @@ func TestIfCompound(t *testing.T) {
 				Token:   tk[10],
 			}
 		}},
-		{"if a;then b;else ||;fi", func(t *test, tk Tokens) { // 9
+		{"if a;then b;else ||;fi", func(t *test, tk Tokens) { // 10
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -3736,7 +3831,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
-		{"while (a) do\nb\ndone", func(t *test, tk Tokens) { // 1
+		{"while (a) do\nb\ndone", func(t *test, tk Tokens) { // 2
 			t.Output = LoopCompound{
 				Statement: Statement{
 					Pipeline: Pipeline{
@@ -3829,7 +3924,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"until a; do b; done", func(t *test, tk Tokens) { // 2
+		{"until a; do b; done", func(t *test, tk Tokens) { // 3
 			t.Output = LoopCompound{
 				Until: true,
 				Statement: Statement{
@@ -3897,7 +3992,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:11],
 			}
 		}},
-		{"while a # comment\ndo b; done", func(t *test, tk Tokens) { // 3
+		{"while a # comment\ndo b; done", func(t *test, tk Tokens) { // 4
 			t.Output = LoopCompound{
 				Statement: Statement{
 					Pipeline: Pipeline{
@@ -3965,7 +4060,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens:   tk[:12],
 			}
 		}},
-		{"until a; do # comment\nb; done", func(t *test, tk Tokens) { // 4
+		{"until a; do # comment\nb; done", func(t *test, tk Tokens) { // 5
 			t.Output = LoopCompound{
 				Until: true,
 				Statement: Statement{
@@ -4034,7 +4129,7 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:13],
 			}
 		}},
-		{"while ||; do b; done", func(t *test, tk Tokens) { // 5
+		{"while ||; do b; done", func(t *test, tk Tokens) { // 6
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -4057,7 +4152,7 @@ func TestLoopCompound(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"until a; do ||; done", func(t *test, tk Tokens) { // 6
+		{"until a; do ||; done", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -5776,7 +5871,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a>b ]]", func(t *test, tk Tokens) { // 6
+		{"[[ a>b ]]", func(t *test, tk Tokens) { // 7
 			t.Output = Tests{
 				Test: TestOperatorStringAfter,
 				Word: &Word{
@@ -5800,7 +5895,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ a -ef b ]]", func(t *test, tk Tokens) { // 7
+		{"[[ a -ef b ]]", func(t *test, tk Tokens) { // 8
 			t.Output = Tests{
 				Test: TestOperatorFilesAreSameInode,
 				Word: &Word{
@@ -5824,7 +5919,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -nt b ]]", func(t *test, tk Tokens) { // 8
+		{"[[ a -nt b ]]", func(t *test, tk Tokens) { // 9
 			t.Output = Tests{
 				Test: TestOperatorFileIsNewerThan,
 				Word: &Word{
@@ -5848,7 +5943,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -ot b ]]", func(t *test, tk Tokens) { // 9
+		{"[[ a -ot b ]]", func(t *test, tk Tokens) { // 10
 			t.Output = Tests{
 				Test: TestOperatorFileIsOlderThan,
 				Word: &Word{
@@ -5872,7 +5967,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -eq b ]]", func(t *test, tk Tokens) { // 10
+		{"[[ a -eq b ]]", func(t *test, tk Tokens) { // 11
 			t.Output = Tests{
 				Test: TestOperatorEqual,
 				Word: &Word{
@@ -5896,7 +5991,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -ne b ]]", func(t *test, tk Tokens) { // 11
+		{"[[ a -ne b ]]", func(t *test, tk Tokens) { // 12
 			t.Output = Tests{
 				Test: TestOperatorNotEqual,
 				Word: &Word{
@@ -5920,7 +6015,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -le b ]]", func(t *test, tk Tokens) { // 12
+		{"[[ a -le b ]]", func(t *test, tk Tokens) { // 13
 			t.Output = Tests{
 				Test: TestOperatorLessThanEqual,
 				Word: &Word{
@@ -5944,7 +6039,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -lt b ]]", func(t *test, tk Tokens) { // 13
+		{"[[ a -lt b ]]", func(t *test, tk Tokens) { // 14
 			t.Output = Tests{
 				Test: TestOperatorLessThan,
 				Word: &Word{
@@ -5968,7 +6063,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -ge b ]]", func(t *test, tk Tokens) { // 14
+		{"[[ a -ge b ]]", func(t *test, tk Tokens) { // 15
 			t.Output = Tests{
 				Test: TestOperatorGreaterThanEqual,
 				Word: &Word{
@@ -5992,7 +6087,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a -gt b ]]", func(t *test, tk Tokens) { // 15
+		{"[[ a -gt b ]]", func(t *test, tk Tokens) { // 16
 			t.Output = Tests{
 				Test: TestOperatorGreaterThan,
 				Word: &Word{
@@ -6016,7 +6111,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ -a a ]]", func(t *test, tk Tokens) { // 16
+		{"[[ -a a ]]", func(t *test, tk Tokens) { // 17
 			t.Output = Tests{
 				Test: TestOperatorFileExists,
 				Word: &Word{
@@ -6031,7 +6126,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -e a ]]", func(t *test, tk Tokens) { // 17
+		{"[[ -e a ]]", func(t *test, tk Tokens) { // 18
 			t.Output = Tests{
 				Test: TestOperatorFileExists,
 				Word: &Word{
@@ -6046,7 +6141,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -b a ]]", func(t *test, tk Tokens) { // 18
+		{"[[ -b a ]]", func(t *test, tk Tokens) { // 19
 			t.Output = Tests{
 				Test: TestOperatorFileIsBlock,
 				Word: &Word{
@@ -6061,7 +6156,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -c a ]]", func(t *test, tk Tokens) { // 19
+		{"[[ -c a ]]", func(t *test, tk Tokens) { // 20
 			t.Output = Tests{
 				Test: TestOperatorFileIsCharacter,
 				Word: &Word{
@@ -6076,7 +6171,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -d a ]]", func(t *test, tk Tokens) { // 20
+		{"[[ -d a ]]", func(t *test, tk Tokens) { // 21
 			t.Output = Tests{
 				Test: TestOperatorDirectoryExists,
 				Word: &Word{
@@ -6091,7 +6186,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -f a ]]", func(t *test, tk Tokens) { // 21
+		{"[[ -f a ]]", func(t *test, tk Tokens) { // 22
 			t.Output = Tests{
 				Test: TestOperatorFileIsRegular,
 				Word: &Word{
@@ -6106,7 +6201,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -g a ]]", func(t *test, tk Tokens) { // 22
+		{"[[ -g a ]]", func(t *test, tk Tokens) { // 23
 			t.Output = Tests{
 				Test: TestOperatorFileHasSetGroupID,
 				Word: &Word{
@@ -6121,7 +6216,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -h a ]]", func(t *test, tk Tokens) { // 23
+		{"[[ -h a ]]", func(t *test, tk Tokens) { // 24
 			t.Output = Tests{
 				Test: TestOperatorFileIsSymbolic,
 				Word: &Word{
@@ -6136,7 +6231,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -L a ]]", func(t *test, tk Tokens) { // 24
+		{"[[ -L a ]]", func(t *test, tk Tokens) { // 25
 			t.Output = Tests{
 				Test: TestOperatorFileIsSymbolic,
 				Word: &Word{
@@ -6151,7 +6246,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -k a ]]", func(t *test, tk Tokens) { // 25
+		{"[[ -k a ]]", func(t *test, tk Tokens) { // 26
 			t.Output = Tests{
 				Test: TestOperatorFileHasStickyBit,
 				Word: &Word{
@@ -6166,7 +6261,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -p a ]]", func(t *test, tk Tokens) { // 26
+		{"[[ -p a ]]", func(t *test, tk Tokens) { // 27
 			t.Output = Tests{
 				Test: TestOperatorFileIsPipe,
 				Word: &Word{
@@ -6181,7 +6276,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -r a ]]", func(t *test, tk Tokens) { // 27
+		{"[[ -r a ]]", func(t *test, tk Tokens) { // 28
 			t.Output = Tests{
 				Test: TestOperatorFileIsReadable,
 				Word: &Word{
@@ -6196,7 +6291,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -s a ]]", func(t *test, tk Tokens) { // 28
+		{"[[ -s a ]]", func(t *test, tk Tokens) { // 29
 			t.Output = Tests{
 				Test: TestOperatorFileIsNonZero,
 				Word: &Word{
@@ -6211,7 +6306,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -t a ]]", func(t *test, tk Tokens) { // 29
+		{"[[ -t a ]]", func(t *test, tk Tokens) { // 30
 			t.Output = Tests{
 				Test: TestOperatorFileIsTerminal,
 				Word: &Word{
@@ -6226,7 +6321,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -u a ]]", func(t *test, tk Tokens) { // 30
+		{"[[ -u a ]]", func(t *test, tk Tokens) { // 31
 			t.Output = Tests{
 				Test: TestOperatorFileHasSetUserID,
 				Word: &Word{
@@ -6241,7 +6336,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -w a ]]", func(t *test, tk Tokens) { // 31
+		{"[[ -w a ]]", func(t *test, tk Tokens) { // 32
 			t.Output = Tests{
 				Test: TestOperatorFileIsWritable,
 				Word: &Word{
@@ -6256,7 +6351,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -x a ]]", func(t *test, tk Tokens) { // 32
+		{"[[ -x a ]]", func(t *test, tk Tokens) { // 33
 			t.Output = Tests{
 				Test: TestOperatorFileIsExecutable,
 				Word: &Word{
@@ -6271,7 +6366,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -G a ]]", func(t *test, tk Tokens) { // 33
+		{"[[ -G a ]]", func(t *test, tk Tokens) { // 34
 			t.Output = Tests{
 				Test: TestOperatorFileIsOwnedByEffectiveGroup,
 				Word: &Word{
@@ -6286,7 +6381,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -N a ]]", func(t *test, tk Tokens) { // 34
+		{"[[ -N a ]]", func(t *test, tk Tokens) { // 35
 			t.Output = Tests{
 				Test: TestOperatorFileWasModifiedSinceLastRead,
 				Word: &Word{
@@ -6301,7 +6396,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -O a ]]", func(t *test, tk Tokens) { // 35
+		{"[[ -O a ]]", func(t *test, tk Tokens) { // 36
 			t.Output = Tests{
 				Test: TestOperatorFileIsOwnedByEffectiveUser,
 				Word: &Word{
@@ -6316,7 +6411,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -S a ]]", func(t *test, tk Tokens) { // 36
+		{"[[ -S a ]]", func(t *test, tk Tokens) { // 37
 			t.Output = Tests{
 				Test: TestOperatorFileIsSocket,
 				Word: &Word{
@@ -6331,7 +6426,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -o a ]]", func(t *test, tk Tokens) { // 37
+		{"[[ -o a ]]", func(t *test, tk Tokens) { // 38
 			t.Output = Tests{
 				Test: TestOperatorOptNameIsEnabled,
 				Word: &Word{
@@ -6346,7 +6441,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -v a ]]", func(t *test, tk Tokens) { // 38
+		{"[[ -v a ]]", func(t *test, tk Tokens) { // 39
 			t.Output = Tests{
 				Test: TestOperatorVarNameIsSet,
 				Word: &Word{
@@ -6361,7 +6456,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -R a ]]", func(t *test, tk Tokens) { // 39
+		{"[[ -R a ]]", func(t *test, tk Tokens) { // 40
 			t.Output = Tests{
 				Test: TestOperatorVarnameIsRef,
 				Word: &Word{
@@ -6376,7 +6471,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -z a ]]", func(t *test, tk Tokens) { // 40
+		{"[[ -z a ]]", func(t *test, tk Tokens) { // 41
 			t.Output = Tests{
 				Test: TestOperatorStringIsZero,
 				Word: &Word{
@@ -6391,7 +6486,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ -n a ]]", func(t *test, tk Tokens) { // 41
+		{"[[ -n a ]]", func(t *test, tk Tokens) { // 42
 			t.Output = Tests{
 				Test: TestOperatorStringIsNonZero,
 				Word: &Word{
@@ -6406,7 +6501,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:5],
 			}
 		}},
-		{"[[ ! -z a ]]", func(t *test, tk Tokens) { // 42
+		{"[[ ! -z a ]]", func(t *test, tk Tokens) { // 43
 			t.Output = Tests{
 				Not:  true,
 				Test: TestOperatorStringIsZero,
@@ -6422,7 +6517,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ (a = b) ]]", func(t *test, tk Tokens) { // 43
+		{"[[ (a = b) ]]", func(t *test, tk Tokens) { // 44
 			t.Output = Tests{
 				Parens: &Tests{
 					Test: TestOperatorStringsEqual,
@@ -6449,7 +6544,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:9],
 			}
 		}},
-		{"[[ a ]]", func(t *test, tk Tokens) { // 44
+		{"[[ a ]]", func(t *test, tk Tokens) { // 45
 			t.Output = Tests{
 				Test: TestOperatorNone,
 				Word: &Word{
@@ -6464,7 +6559,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:3],
 			}
 		}},
-		{"[[ a || b ]]", func(t *test, tk Tokens) { // 45
+		{"[[ a || b ]]", func(t *test, tk Tokens) { // 46
 			t.Output = Tests{
 				Test: TestOperatorNone,
 				Word: &Word{
@@ -6492,7 +6587,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[ a && b ]]", func(t *test, tk Tokens) { // 46
+		{"[[ a && b ]]", func(t *test, tk Tokens) { // 47
 			t.Output = Tests{
 				Test: TestOperatorNone,
 				Word: &Word{
@@ -6520,7 +6615,7 @@ func TestTests(t *testing.T) {
 				Tokens: tk[2:7],
 			}
 		}},
-		{"[[\n#comment\na = b ]]", func(t *test, tk Tokens) { // 47
+		{"[[\n#comment\na = b ]]", func(t *test, tk Tokens) { // 48
 			t.Output = Tests{
 				Test: TestOperatorStringsEqual,
 				Word: &Word{
@@ -6545,7 +6640,7 @@ func TestTests(t *testing.T) {
 				Tokens:   tk[2:9],
 			}
 		}},
-		{"[[ a = b # comment\n ]]", func(t *test, tk Tokens) { // 48
+		{"[[ a = b # comment\n ]]", func(t *test, tk Tokens) { // 49
 			t.Output = Tests{
 				Test: TestOperatorStringsEqual,
 				Word: &Word{
@@ -6570,7 +6665,7 @@ func TestTests(t *testing.T) {
 				Tokens:   tk[2:9],
 			}
 		}},
-		{"[[ #comment A\n! #comment B\n-z a ]]", func(t *test, tk Tokens) { // 49
+		{"[[ #comment A\n! #comment B\n-z a ]]", func(t *test, tk Tokens) { // 50
 			t.Output = Tests{
 				Not:  true,
 				Test: TestOperatorStringIsZero,
@@ -6587,7 +6682,7 @@ func TestTests(t *testing.T) {
 				Tokens:   tk[2:11],
 			}
 		}},
-		{"[[ ( #comment A\n\n#comment B\na = b #comment C\n\n#comment D\n) ]]", func(t *test, tk Tokens) { // 50
+		{"[[ ( #comment A\n\n#comment B\na = b #comment C\n\n#comment D\n) ]]", func(t *test, tk Tokens) { // 51
 			t.Output = Tests{
 				Parens: &Tests{
 					Test: TestOperatorStringsEqual,
@@ -6616,7 +6711,7 @@ func TestTests(t *testing.T) {
 				Tokens:   tk[2:19],
 			}
 		}},
-		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 51
+		{"[[ -a $(||) ]]", func(t *test, tk Tokens) { // 52
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6659,7 +6754,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[4],
 			}
 		}},
-		{"[[ $(||) = a ]]", func(t *test, tk Tokens) { // 52
+		{"[[ $(||) = a ]]", func(t *test, tk Tokens) { // 53
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6702,7 +6797,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[2],
 			}
 		}},
-		{"[[ a = $(||) ]]", func(t *test, tk Tokens) { // 53
+		{"[[ a = $(||) ]]", func(t *test, tk Tokens) { // 54
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6745,7 +6840,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"[[ a -eq $(||) ]]", func(t *test, tk Tokens) { // 54
+		{"[[ a -eq $(||) ]]", func(t *test, tk Tokens) { // 55
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6788,7 +6883,7 @@ func TestTests(t *testing.T) {
 				Token:   tk[6],
 			}
 		}},
-		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 55
+		{"[[ ( $(||) ) ]]", func(t *test, tk Tokens) { // 56
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -6835,14 +6930,14 @@ func TestTests(t *testing.T) {
 				Token:   tk[4],
 			}
 		}},
-		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 56
+		{"[[ ( a b ) ]]", func(t *test, tk Tokens) { // 57
 			t.Err = Error{
 				Err:     ErrMissingClosingParen,
 				Parsing: "Tests",
 				Token:   tk[6],
 			}
 		}},
-		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 57
+		{"[[ a || $(||) ]]", func(t *test, tk Tokens) { // 58
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
@@ -7769,7 +7864,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
-		{"<()", func(t *test, tk Tokens) { // 1
+		{"<()", func(t *test, tk Tokens) { // 3
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionProcessInput,
 				Command: File{
@@ -7778,7 +7873,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
-		{">()", func(t *test, tk Tokens) { // 1
+		{">()", func(t *test, tk Tokens) { // 4
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionProcessOutput,
 				Command: File{
@@ -7787,7 +7882,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
-		{"$(``)", func(t *test, tk Tokens) { // 3
+		{"$(``)", func(t *test, tk Tokens) { // 5
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionNew,
 				Command: File{
@@ -7836,7 +7931,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:4],
 			}
 		}},
-		{"`\\`\\``", func(t *test, tk Tokens) { // 4
+		{"`\\`\\``", func(t *test, tk Tokens) { // 6
 			t.Output = CommandSubstitution{
 				SubstitutionType: SubstitutionBacktick,
 				Backtick:         &tk[0],
@@ -7886,7 +7981,7 @@ func TestCommandSubstitution(t *testing.T) {
 				Tokens: tk[:4],
 			}
 		}},
-		{"$(||)", func(t *test, tk Tokens) { // 5
+		{"$(||)", func(t *test, tk Tokens) { // 7
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
