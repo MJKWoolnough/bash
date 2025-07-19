@@ -509,6 +509,10 @@ func (l LoopCompound) printSource(w writer, v bool) {
 
 	l.Statement.printSource(w, v)
 
+	if l.Statement.endsWithGrouping() {
+		w.WriteString(";")
+	}
+
 	if len(l.Comments) > 0 {
 		w.WriteString(" ")
 		l.Comments.printSource(w, true)
@@ -759,6 +763,10 @@ func (p Pipeline) printSource(w writer, v bool) {
 }
 
 func (p Pipeline) endsWithGrouping() bool {
+	if p.Pipeline != nil {
+		return p.Pipeline.endsWithGrouping()
+	}
+
 	return p.CommandOrCompound.Compound != nil && len(p.CommandOrCompound.Compound.Redirections) == 0 && (p.CommandOrCompound.Compound.GroupingCompound != nil || p.CommandOrCompound.Compound.FunctionCompound != nil && p.CommandOrCompound.Compound.FunctionCompound.Body.GroupingCompound != nil)
 }
 
