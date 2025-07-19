@@ -3736,6 +3736,99 @@ func TestLoopCompound(t *testing.T) {
 				Tokens: tk[:9],
 			}
 		}},
+		{"while (a) do\nb\ndone", func(t *test, tk Tokens) { // 1
+			t.Output = LoopCompound{
+				Statement: Statement{
+					Pipeline: Pipeline{
+						CommandOrCompound: CommandOrCompound{
+							Compound: &Compound{
+								GroupingCompound: &GroupingCompound{
+									SubShell: true,
+									File: File{
+										Lines: []Line{
+											{
+												Statements: []Statement{
+													{
+														Pipeline: Pipeline{
+															CommandOrCompound: CommandOrCompound{
+																Command: &Command{
+																	AssignmentsOrWords: []AssignmentOrWord{
+																		{
+																			Word: &Word{
+																				Parts: []WordPart{
+																					{
+																						Part:   &tk[3],
+																						Tokens: tk[3:4],
+																					},
+																				},
+																				Tokens: tk[3:4],
+																			},
+																			Tokens: tk[3:4],
+																		},
+																	},
+																	Tokens: tk[3:4],
+																},
+																Tokens: tk[3:4],
+															},
+															Tokens: tk[3:4],
+														},
+														Tokens: tk[3:4],
+													},
+												},
+												Tokens: tk[3:4],
+											},
+										},
+										Tokens: tk[3:4],
+									},
+									Tokens: tk[2:5],
+								},
+								Tokens: tk[2:5],
+							},
+							Tokens: tk[2:5],
+						},
+						Tokens: tk[2:5],
+					},
+					Tokens: tk[2:5],
+				},
+				File: File{
+					Lines: []Line{
+						{
+							Statements: []Statement{
+								{
+									Pipeline: Pipeline{
+										CommandOrCompound: CommandOrCompound{
+											Command: &Command{
+												AssignmentsOrWords: []AssignmentOrWord{
+													{
+														Word: &Word{
+															Parts: []WordPart{
+																{
+																	Part:   &tk[8],
+																	Tokens: tk[8:9],
+																},
+															},
+															Tokens: tk[8:9],
+														},
+														Tokens: tk[8:9],
+													},
+												},
+												Tokens: tk[8:9],
+											},
+											Tokens: tk[8:9],
+										},
+										Tokens: tk[8:9],
+									},
+									Tokens: tk[8:9],
+								},
+							},
+							Tokens: tk[8:9],
+						},
+					},
+					Tokens: tk[8:9],
+				},
+				Tokens: tk[:11],
+			}
+		}},
 		{"until a; do b; done", func(t *test, tk Tokens) { // 2
 			t.Output = LoopCompound{
 				Until: true,
