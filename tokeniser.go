@@ -188,7 +188,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastState() {
-	case stateArrayIndex, stateBraceExpansionWord, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
+	case stateArrayIndex, stateBraceExpansionWord, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateArithmeticParens, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
 	default:
 		b.pushState(stateInCommand)
 	}
