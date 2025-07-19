@@ -111,6 +111,7 @@ const (
 	stateLoopBody
 	stateLoopCondition
 	stateParens
+	stateParensGroup
 	stateStringDouble
 	stateStringSingle
 	stateStringSpecial
@@ -521,7 +522,7 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.pushState(stateArithmeticExpansion)
 		} else {
 			b.setInCommand()
-			b.pushState(stateParens)
+			b.pushState(stateParensGroup)
 		}
 	case '{':
 		t.Next()
@@ -535,9 +536,15 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			return b.braceExpansion(t)
 		}
 	case ')':
+		t.Next()
 		b.endCommand()
 
-		if td := b.lastState(); td == stateParens {
+		if td := b.lastState(); td == stateParensGroup {
+			b.popState()
+			b.endCommand()
+
+			return b.endGroup(t)
+		} else if td == stateParens {
 			b.popState()
 		} else if td == stateCaseEnd {
 			b.popState()
@@ -545,12 +552,15 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 		} else {
 			return t.ReturnError(ErrInvalidCharacter)
 		}
-
-		t.Next()
 	case '}':
 		t.Next()
 
-		if td := b.lastState(); td == stateBrace || td == stateBraceExpansion {
+		if td := b.lastState(); td == stateBrace {
+			b.popState()
+			b.endCommand()
+
+			return b.endGroup(t)
+		} else if td == stateBraceExpansion {
 			b.popState()
 			b.endCommand()
 		} else if td == stateBraceExpansionWord {
@@ -586,6 +596,28 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 	}
 
 	return t.Return(TokenPunctuator, b.main)
+}
+
+func (b *bashTokeniser) endGroup(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	state := t.State()
+	next := b.main
+
+	t.AcceptRun(whitespace)
+
+	switch b.lastState() {
+	case stateIfTest:
+		if t.AcceptString("then", false) == 4 && isWordSeperator(t) {
+			next = b.ifThen
+		}
+	case stateLoopCondition:
+		if t.AcceptString("do", false) == 2 && isWordSeperator(t) {
+			next = b.loopDo
+		}
+	}
+
+	state.Reset()
+
+	return t.Return(TokenPunctuator, next)
 }
 
 func (b *bashTokeniser) startBacktick(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -1176,7 +1208,7 @@ func (b *bashTokeniser) identOrWord(t *parser.Tokeniser) (parser.Token, parser.T
 				return t.Return(TokenWord, b.startCommandIndex)
 			} else if c := t.Peek(); !b.isInCommand() && c == '[' || b.isArrayStart(t) {
 				return t.Return(TokenIdentifierAssign, b.startArrayAssign)
-			} else if td := b.lastState(); c == '}' && td == stateBrace || c == ')' && td == stateParens || td == stateBraceExpansion {
+			} else if td := b.lastState(); c == '}' && td == stateBrace || c == ')' && (td == stateParens || td == stateParensGroup) || td == stateBraceExpansion {
 				return t.Return(TokenWord, b.main)
 			} else if !b.isInCommand() {
 				t.AcceptRun(whitespace)
