@@ -155,6 +155,34 @@ func (f *BraceExpansion) printType(w writer, v bool) {
 	w.WriteString("\n}")
 }
 
+func (f *BraceWord) printType(w writer, v bool) {
+	pp := indentPrinter{writer: w}
+
+	pp.WriteString("BraceWord {")
+
+	if f.Parts == nil {
+		pp.WriteString("\nParts: nil")
+	} else if len(f.Parts) > 0 {
+		pp.WriteString("\nParts: [")
+
+		ipp := indentPrinter{writer: &pp}
+
+		for n, e := range f.Parts {
+			ipp.Printf("\n%d: ", n)
+			e.printType(&ipp, v)
+		}
+
+		pp.WriteString("\n]")
+	} else if v {
+		pp.WriteString("\nParts: []")
+	}
+
+	pp.WriteString("\nTokens: ")
+	f.Tokens.printType(&pp, v)
+
+	w.WriteString("\n}")
+}
+
 func (f *CaseCompound) printType(w writer, v bool) {
 	pp := indentPrinter{writer: w}
 
@@ -789,11 +817,11 @@ func (f *ParameterExpansion) printType(w writer, v bool) {
 		pp.WriteString("\nSubstringEnd: nil")
 	}
 
-	if f.Word != nil {
-		pp.WriteString("\nWord: ")
-		f.Word.printType(&pp, v)
+	if f.BraceWord != nil {
+		pp.WriteString("\nBraceWord: ")
+		f.BraceWord.printType(&pp, v)
 	} else if v {
-		pp.WriteString("\nWord: nil")
+		pp.WriteString("\nBraceWord: nil")
 	}
 
 	if f.Pattern != nil {

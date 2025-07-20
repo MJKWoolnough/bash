@@ -20,6 +20,8 @@ func (AssignmentOrWord) bashType() {}
 
 func (BraceExpansion) bashType() {}
 
+func (BraceWord) bashType() {}
+
 func (CaseCompound) bashType() {}
 
 func (Command) bashType() {}
