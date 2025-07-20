@@ -2087,6 +2087,45 @@ func TestBraceWord(t *testing.T) {
 				Tokens: tk[3:6],
 			}
 		}},
+		{"${a:-$(||)}", func(t *test, tk Tokens) { // 3
+			t.Err = Error{
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err:     ErrMissingWord,
+												Parsing: "Command",
+												Token:   tk[4],
+											},
+											Parsing: "CommandOrCompound",
+											Token:   tk[4],
+										},
+										Parsing: "Pipeline",
+										Token:   tk[4],
+									},
+									Parsing: "Statement",
+									Token:   tk[4],
+								},
+								Parsing: "Line",
+								Token:   tk[4],
+							},
+							Parsing: "File",
+							Token:   tk[4],
+						},
+						Parsing: "CommandSubstitution",
+						Token:   tk[4],
+					},
+					Parsing: "WordPart",
+					Token:   tk[3],
+				},
+				Parsing: "BraceWord",
+				Token:   tk[3],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var bw BraceWord
 
