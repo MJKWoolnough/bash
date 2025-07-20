@@ -1012,6 +1012,10 @@ func (t Tests) lastIsComment() bool {
 func (t TestConsequence) printSource(w writer, v bool) {
 	t.Test.printSource(w, v)
 
+	if t.Test.endsWithGrouping() {
+		w.WriteString(";")
+	}
+
 	ip := indentPrinter{writer: w}
 
 	if len(t.Comments) > 0 {
