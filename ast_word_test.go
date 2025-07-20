@@ -1257,7 +1257,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1276,7 +1276,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1295,7 +1295,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1314,7 +1314,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1333,7 +1333,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1352,7 +1352,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1371,7 +1371,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1390,7 +1390,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1478,7 +1478,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1497,7 +1497,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1516,7 +1516,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1535,7 +1535,7 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				Word: &Word{
+				BraceWord: &BraceWord{
 					Parts: []WordPart{
 						{
 							Part:   &tk[3],
@@ -1954,7 +1954,7 @@ func TestParameterExpansion(t *testing.T) {
 						Parsing: "WordPart",
 						Token:   tk[3],
 					},
-					Parsing: "Word",
+					Parsing: "BraceWord",
 					Token:   tk[3],
 				},
 				Parsing: "ParameterExpansion",

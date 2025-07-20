@@ -396,7 +396,7 @@ type ParameterExpansion struct {
 	Type           ParameterType
 	SubstringStart *Token
 	SubstringEnd   *Token
-	Word           *Word
+	BraceWord      *BraceWord
 	Pattern        *Token
 	String         *String
 	Tokens         Tokens
@@ -533,9 +533,9 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 
 		if parseWord {
 			c := b.NewGoal()
-			p.Word = new(Word)
+			p.BraceWord = new(BraceWord)
 
-			if err := p.Word.parse(c, false); err != nil {
+			if err := p.BraceWord.parse(c); err != nil {
 				return b.Error("ParameterExpansion", err)
 			}
 
@@ -568,13 +568,48 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 }
 
 func (p *ParameterExpansion) isMultiline(v bool) bool {
-	if p.Word != nil && p.Word.isMultiline(v) {
+	if p.BraceWord != nil && p.BraceWord.isMultiline(v) {
 		return true
 	} else if p.String != nil && p.String.isMultiline(v) {
 		return true
 	}
 
 	return p.Parameter.isMultiline(v)
+}
+
+type BraceWord struct {
+	Parts  []WordPart
+	Tokens Tokens
+}
+
+func (bw *BraceWord) parse(b *bashParser) error {
+	for b.Peek() != (parser.Token{Type: TokenPunctuator, Data: "}"}) {
+		c := b.NewGoal()
+
+		var wp WordPart
+
+		if err := wp.parse(c); err != nil {
+			return b.Error("BraceWord", err)
+		}
+
+		bw.Parts = append(bw.Parts, wp)
+
+		b.Score(c)
+	}
+
+	bw.Tokens = b.ToTokens()
+
+	return nil
+}
+
+func (b *BraceWord) isMultiline(v bool) bool {
+	for _, wp := range b.Parts {
+		if wp.isMultiline(v) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // Parameter represents the Parameter, an Identifier with a possible Array

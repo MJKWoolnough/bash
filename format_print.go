@@ -101,6 +101,9 @@ func (b BraceExpansion) printSource(w writer, v bool) {
 	}
 }
 
+func (b BraceWord) printSource(w writer, v bool) {
+}
+
 func (c CaseCompound) printSource(w writer, v bool) {
 	w.WriteString("case ")
 	c.Word.printSource(w, v)
@@ -560,44 +563,44 @@ func (p ParameterExpansion) printSource(w writer, v bool) {
 
 	p.Parameter.printSource(w, v)
 
-	if p.Word != nil {
+	if p.BraceWord != nil {
 		switch p.Type {
 		case ParameterSubstitution:
 			w.WriteString(":=")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterAssignment:
 			w.WriteString(":?")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterMessage:
 			w.WriteString(":+")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterSetAssign:
 			w.WriteString(":-")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterUnsetSubstitution:
 			w.WriteString("=")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterUnsetAssignment:
 			w.WriteString("?")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterUnsetMessage:
 			w.WriteString("+")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterUnsetSetAssign:
 			w.WriteString("-")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterRemoveStartShortest:
 			w.WriteString("#")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterRemoveStartLongest:
 			w.WriteString("##")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterRemoveEndShortest:
 			w.WriteString("%")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		case ParameterRemoveEndLongest:
 			w.WriteString("%%")
-			p.Word.printSource(w, v)
+			p.BraceWord.printSource(w, v)
 		}
 	} else if p.Pattern != nil {
 		isReplacement := false
