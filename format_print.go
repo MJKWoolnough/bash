@@ -102,6 +102,9 @@ func (b BraceExpansion) printSource(w writer, v bool) {
 }
 
 func (b BraceWord) printSource(w writer, v bool) {
+	for _, wp := range b.Parts {
+		wp.printSource(w, v)
+	}
 }
 
 func (c CaseCompound) printSource(w writer, v bool) {
