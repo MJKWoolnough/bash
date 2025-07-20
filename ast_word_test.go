@@ -2055,6 +2055,48 @@ func TestParameterExpansion(t *testing.T) {
 	})
 }
 
+func TestBraceWord(t *testing.T) {
+	doTests(t, []sourceFn{
+		{"${a:-b}", func(t *test, tk Tokens) { // 1
+			t.Output = BraceWord{
+				Parts: []WordPart{
+					{
+						Part:   &tk[3],
+						Tokens: tk[3:4],
+					},
+				},
+				Tokens: tk[3:4],
+			}
+		}},
+		{"${a:-b c}", func(t *test, tk Tokens) { // 2
+			t.Output = BraceWord{
+				Parts: []WordPart{
+					{
+						Part:   &tk[3],
+						Tokens: tk[3:4],
+					},
+					{
+						Part:   &tk[4],
+						Tokens: tk[4:5],
+					},
+					{
+						Part:   &tk[5],
+						Tokens: tk[5:6],
+					},
+				},
+				Tokens: tk[3:6],
+			}
+		}},
+	}, func(t *test) (Type, error) {
+		var bw BraceWord
+
+		t.Parser.Tokens = t.Parser.Tokens[3:3]
+		err := bw.parse(t.Parser)
+
+		return bw, err
+	})
+}
+
 func TestParameter(t *testing.T) {
 	doTests(t, []sourceFn{
 		{"${a}", func(t *test, tk Tokens) { // 1
