@@ -29,7 +29,7 @@ func run() error {
 	if file != "" {
 		f, err := os.Open(file)
 		if err != nil {
-			return nil
+			return err
 		}
 
 		r = f
@@ -47,7 +47,7 @@ func run() error {
 	if write && r != os.Stdin {
 		f, err := os.Create(file)
 		if err != nil {
-			return nil
+			return err
 		}
 		defer f.Close()
 
