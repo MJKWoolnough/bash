@@ -1151,7 +1151,7 @@ func (b *bashTokeniser) number(t *parser.Tokeniser) (parser.Token, parser.TokenF
 
 	if t.Accept("#") {
 		if !t.Accept(numberChars) {
-			return t.ReturnError(ErrInvalidNumber)
+			return b.word(t)
 		}
 
 		t.AcceptRun(numberChars)
