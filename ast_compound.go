@@ -88,6 +88,19 @@ func (cc *Compound) parse(b *bashParser) error {
 		c.AcceptRunWhitespace()
 	}
 
+	c = b.NewGoal()
+	c.AcceptRunWhitespace()
+
+	switch tk := c.Peek(); tk.Type {
+	case TokenLineTerminator, TokenComment, TokenKeyword, parser.TokenDone:
+	default:
+		switch tk {
+		case parser.Token{Type: TokenPunctuator, Data: ";"}, parser.Token{Type: TokenPunctuator, Data: "&"}, parser.Token{Type: TokenPunctuator, Data: ";;"}, parser.Token{Type: TokenPunctuator, Data: ";&"}, parser.Token{Type: TokenPunctuator, Data: ";;&"}, parser.Token{Type: TokenPunctuator, Data: "|"}, parser.Token{Type: TokenPunctuator, Data: "&&"}, parser.Token{Type: TokenPunctuator, Data: "||"}, parser.Token{Type: TokenPunctuator, Data: ")"}, parser.Token{Type: TokenPunctuator, Data: "}"}:
+		default:
+			return c.Error("Compound", ErrInvalidEndOfStatement)
+		}
+	}
+
 	cc.Tokens = b.ToTokens()
 
 	return nil
