@@ -734,6 +734,9 @@ Loop:
 		delim:    unstring(tk.Data),
 	}
 	hdt.expand = hdt.delim == tk.Data
+	inCommand := b.isInCommand()
+
+	b.endCommand()
 
 	if b.lastState() == stateHeredoc {
 		b.heredoc[len(b.heredoc)-1] = append(b.heredoc[len(b.heredoc)-1], hdt)
@@ -741,6 +744,10 @@ Loop:
 		b.pushState(stateHeredoc)
 
 		b.heredoc = append(b.heredoc, []heredocType{hdt})
+	}
+
+	if inCommand {
+		b.setInCommand()
 	}
 
 	return tk, b.main
