@@ -1187,6 +1187,13 @@ func TestCompounds(t *testing.T) {
 				Token:   tk[10],
 			}
 		}},
+		{"if a; then b; fi c", func(t *test, tk Tokens) { // 26
+			t.Err = Error{
+				Err:     ErrInvalidEndOfStatement,
+				Parsing: "Compound",
+				Token:   tk[12],
+			}
+		}},
 	}, func(t *test) (Type, error) {
 		var c Compound
 
