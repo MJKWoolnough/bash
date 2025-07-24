@@ -474,14 +474,14 @@ func (l Line) printSourceEnd(w writer, v, end bool) {
 		l.Comments[0].printSource(w, true)
 		l.Statements[0].printSourceEnd(w, v, end || len(l.Statements) > 1)
 
-		eos := " "
-
-		if v {
-			eos = "\n"
-		}
-
 		for n, s := range l.Statements[1:] {
-			w.WriteString(eos)
+			if v {
+				l.Statements[n].printHeredoc(w, v)
+				w.WriteString("\n")
+			} else {
+				w.WriteString(" ")
+			}
+
 			s.printSourceEnd(w, v, end || len(l.Statements) > n+1)
 		}
 
@@ -490,8 +490,12 @@ func (l Line) printSourceEnd(w writer, v, end bool) {
 			l.Comments[1].printSource(w, false)
 		}
 
-		for _, s := range l.Statements {
-			s.printHeredoc(w, v)
+		if v {
+			l.Statements[len(l.Statements)-1].printHeredoc(w, v)
+		} else {
+			for _, s := range l.Statements {
+				s.printHeredoc(w, v)
+			}
 		}
 	}
 }
