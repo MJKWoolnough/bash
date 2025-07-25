@@ -460,9 +460,9 @@ func (a *Assignment) parse(b *bashParser) error {
 
 	b.Score(c)
 
-	if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "="}) {
+	if b.AcceptToken(parser.Token{Type: TokenAssignment, Data: "="}) {
 		a.Assignment = AssignmentAssign
-	} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "+="}) {
+	} else if b.AcceptToken(parser.Token{Type: TokenAssignment, Data: "+="}) {
 		a.Assignment = AssignmentAppend
 	}
 

@@ -56,6 +56,7 @@ const (
 	TokenFunctionIdentifier
 	TokenIdentifierAssign
 	TokenLetIdentifierAssign
+	TokenAssignment
 	TokenKeyword
 	TokenBuiltin
 	TokenWord
@@ -2039,10 +2040,10 @@ func (b *bashTokeniser) startAssign(t *parser.Tokeniser) (parser.Token, parser.T
 	t.Accept("=")
 
 	if b.lastState() == stateBuiltinLetExpression {
-		return t.Return(TokenPunctuator, b.main)
+		return t.Return(TokenAssignment, b.main)
 	}
 
-	return t.Return(TokenPunctuator, b.value)
+	return t.Return(TokenAssignment, b.value)
 }
 
 func (b *bashTokeniser) value(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
