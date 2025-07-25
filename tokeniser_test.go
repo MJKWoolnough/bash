@@ -4580,6 +4580,18 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenKeyword, Data: "done"},
 			},
 		},
+		{ // 309
+			"a=b= c",
+			[]parser.Token{
+				{Type: TokenIdentifierAssign, Data: "a"},
+				{Type: TokenAssignment, Data: "="},
+				{Type: TokenIdentifierAssign, Data: "b"},
+				{Type: TokenAssignment, Data: "="},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "c"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
