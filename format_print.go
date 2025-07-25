@@ -1122,7 +1122,10 @@ func (wt WordOrToken) printSource(w writer, v bool) {
 
 func (wp WordPart) printSource(w writer, v bool) {
 	if wp.Part != nil {
-		w.WriteString(wp.Part.Data)
+		if len(wp.Part.Data) > 0 {
+			w.WriteString(wp.Part.Data[:1])
+			w.Underlying().WriteString(wp.Part.Data[1:])
+		}
 	} else if wp.ArithmeticExpansion != nil {
 		wp.ArithmeticExpansion.printSource(w, v)
 	} else if wp.CommandSubstitution != nil {
