@@ -241,10 +241,10 @@ func (c CommandSubstitution) printSource(w writer, v bool) {
 	}
 
 	if c.Command.isMultiline(v) {
-		ip := indentPrinter{writer: w}
+		ip := w.Indent()
 
 		ip.WriteString("\n")
-		c.Command.printSource(&ip, v)
+		c.Command.printSource(ip, v)
 		w.WriteString("\n")
 	} else {
 		c.Command.printSourceEnd(w, v, false)
@@ -303,7 +303,7 @@ func (f File) printSource(w writer, v bool) {
 func (f File) printSourceEnd(w writer, v, end bool) {
 	f.Comments[0].printSource(w, true)
 
-	_, topLevel := w.(*countPrinter)
+	topLevel := w.Underlying() == w
 
 	if len(f.Lines) > 0 {
 		if topLevel && len(f.Comments[0]) > 0 {
@@ -373,12 +373,12 @@ func (f ForCompound) printSource(w writer, v bool) {
 			}
 		}
 
-		ip := indentPrinter{writer: w}
+		ip := w.Indent()
 
 		ip.WriteString("; ")
-		f.Comments[1].printSource(&ip, true)
+		f.Comments[1].printSource(ip, true)
 		ip.WriteString("do\n")
-		f.File.printSource(&ip, v)
+		f.File.printSource(ip, v)
 		w.WriteString("\ndone")
 	}
 }
@@ -403,7 +403,7 @@ func (g GroupingCompound) printSource(w writer, v bool) {
 		w.WriteString("{")
 	}
 
-	ip := indentPrinter{writer: w}
+	ip := w.Indent()
 	multiline := v || g.File.isMultiline(v)
 
 	if len(g.File.Comments[0]) > 0 || !multiline {
@@ -412,7 +412,7 @@ func (g GroupingCompound) printSource(w writer, v bool) {
 		ip.WriteString("\n")
 	}
 
-	g.File.printSource(&ip, v)
+	g.File.printSource(ip, v)
 
 	if multiline {
 		w.WriteString("\n")
@@ -453,11 +453,11 @@ func (i IfCompound) printSource(w writer, v bool) {
 	}
 
 	if i.Else != nil {
-		ip := indentPrinter{writer: w}
+		ip := w.Indent()
 
 		w.WriteString("\nelse")
 		ip.WriteString("\n")
-		i.Else.printSource(&ip, v)
+		i.Else.printSource(ip, v)
 	}
 
 	w.WriteString("\nfi")
@@ -531,10 +531,10 @@ func (l LoopCompound) printSource(w writer, v bool) {
 		w.WriteString(" do")
 	}
 
-	ip := indentPrinter{writer: w}
+	ip := w.Indent()
 
 	ip.WriteString("\n")
-	l.File.printSource(&ip, v)
+	l.File.printSource(ip, v)
 	w.WriteString("\ndone")
 }
 
@@ -733,18 +733,18 @@ func (p PatternLines) printSource(w writer, v bool) {
 			pattern.printSource(w, v)
 		}
 
-		ip := indentPrinter{writer: w}
+		ip := w.Indent()
 
 		w.WriteString(")")
 		ip.WriteString("\n")
 
 		if len(p.Lines.Lines) > 0 {
-			p.Lines.printSource(&ip, v)
+			p.Lines.printSource(ip, v)
 		} else {
 			ip.WriteString(";")
 		}
 
-		p.CaseTerminationType.printSource(&ip, v)
+		p.CaseTerminationType.printSource(ip, v)
 	}
 }
 
@@ -839,12 +839,12 @@ func (s SelectCompound) printSource(w writer, v bool) {
 			}
 		}
 
-		ip := indentPrinter{writer: w}
+		ip := w.Indent()
 
 		ip.WriteString("; ")
 		s.Comments[1].printSource(w, true)
 		ip.WriteString("do\n")
-		s.File.printSource(&ip, v)
+		s.File.printSource(ip, v)
 		w.WriteString("\ndone")
 	}
 }
@@ -911,7 +911,7 @@ func (t TestCompound) printSource(w writer, v bool) {
 	multi := t.isMultiline(v)
 
 	if multi {
-		iw = &indentPrinter{writer: w}
+		iw = w.Indent()
 		multi = true
 
 		if len(t.Comments[0]) > 0 {
@@ -958,7 +958,7 @@ func (t Tests) printSource(w writer, v bool) {
 		iw := w
 
 		if multi {
-			iw = &indentPrinter{writer: w}
+			iw = w.Indent()
 
 			if len(t.Comments[2]) > 0 {
 				w.WriteString(" ")
@@ -1026,7 +1026,7 @@ func (t TestConsequence) printSource(w writer, v bool) {
 		w.WriteString(";")
 	}
 
-	ip := indentPrinter{writer: w}
+	ip := w.Indent()
 
 	if len(t.Comments) > 0 {
 		w.WriteString(" ")
@@ -1036,7 +1036,7 @@ func (t TestConsequence) printSource(w writer, v bool) {
 		ip.WriteString(" then\n")
 	}
 
-	t.Consequence.printSource(&ip, v)
+	t.Consequence.printSource(ip, v)
 }
 
 func (ve Value) printSource(w writer, v bool) {
@@ -1048,7 +1048,7 @@ func (ve Value) printSource(w writer, v bool) {
 		lastHadComment := ml
 
 		if ml {
-			iw = &indentPrinter{writer: w}
+			iw = w.Indent()
 		}
 
 		if len(ve.Comments[0]) > 0 {
