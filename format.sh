@@ -17,7 +17,7 @@ HEREDOC
 
 	while read type; do
 		echo -e "\nfunc (f *$type) printType(w writer, v bool) {";
-		echo "	pp := indentPrinter{writer: w}";
+		echo "	pp := w.Indent()";
 		echo;
 		echo "	pp.WriteString(\"$type {\")";
 
@@ -39,11 +39,11 @@ HEREDOC
 				echo "	} else if len(f.$fieldName) > 0 {";
 				echo "		pp.WriteString(\"\\n$fieldName: [\")";
 				echo;
-				echo "		ipp := indentPrinter{writer: &pp}";
+				echo "		ipp := pp.Indent()";
 				echo;
 				echo "		for n, e := range f.$fieldName {";
 				echo "			ipp.Printf(\"\n%d: \", n)";
-				echo "			e.printType(&ipp, v)";
+				echo "			e.printType(ipp, v)";
 				echo "		}";
 				echo;
 				echo "		pp.WriteString(\"\\n]\")";
@@ -53,11 +53,11 @@ HEREDOC
 			elif [ "${fieldType:0:1}" = "[" ]; then
 				echo "	pp.WriteString(\"\\n$fieldName: [\")";
 				echo;
-				echo "	ipp := indentPrinter{writer: &pp}";
+				echo "	ipp := pp.Indent()";
 				echo;
 				echo "	for n, e := range f.$fieldName {";
 				echo "		ipp.Printf(\"\n%d: \", n)";
-				echo "		e.printType(&ipp, v)";
+				echo "		e.printType(ipp, v)";
 				echo "	}";
 				echo;
 				echo "	pp.WriteString(\"\n]\")";
@@ -65,14 +65,14 @@ HEREDOC
 				echo;
 				echo "	if f.$fieldName != nil {";
 				echo "		pp.WriteString(\"\\n$fieldName: \")";
-				echo "		f.$fieldName.printType(&pp, v)";
+				echo "		f.$fieldName.printType(pp, v)";
 				echo "	} else if v {";
 				echo "		pp.WriteString(\"\\n$fieldName: nil\")";
 				echo "	}";
 			else
 				echo;
 				echo "	pp.WriteString(\"\\n$fieldName: \")";
-				echo "	f.$fieldName.printType(&pp, v)";
+				echo "	f.$fieldName.printType(pp, v)";
 			fi;
 		done < <(sed '/^type '$type' struct {$/,/^}$/!d;//d' $(files));
 
