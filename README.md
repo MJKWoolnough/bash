@@ -15,6 +15,7 @@ const (
 	TokenFunctionIdentifier
 	TokenIdentifierAssign
 	TokenLetIdentifierAssign
+	TokenAssignment
 	TokenKeyword
 	TokenBuiltin
 	TokenWord
@@ -109,7 +110,7 @@ type ArrayWord struct {
 
 ArrayWord a word in a Values array value.
 
-The first set of comments are from just beofre the word, and the second set are
+The first set of comments are from just before the word, and the second set are
 from just after.
 
 #### func (ArrayWord) Format
@@ -228,6 +229,23 @@ Brace Expansion types.
 ```go
 func (b BraceExpansionType) String() string
 ```
+
+#### type BraceWord
+
+```go
+type BraceWord struct {
+	Parts  []WordPart
+	Tokens Tokens
+}
+```
+
+
+#### func (BraceWord) Format
+
+```go
+func (f BraceWord) Format(s fmt.State, v rune)
+```
+Format implements the fmt.Formatter interface.
 
 #### type CaseCompound
 
@@ -656,7 +674,7 @@ LoopCompound represents either While or Until loops.
 
 The File must contain at least one statement.
 
-The Comments are from just before the 'do' keyword.
+The comments are parsed after statement, before the 'do' keyword.
 
 #### func (LoopCompound) Format
 
@@ -716,7 +734,7 @@ type ParameterExpansion struct {
 	Type           ParameterType
 	SubstringStart *Token
 	SubstringEnd   *Token
-	Word           *Word
+	BraceWord      *BraceWord
 	Pattern        *Token
 	String         *String
 	Tokens         Tokens
@@ -1031,6 +1049,8 @@ section.
 
 The Consequence must contain at least one statement.
 
+The comments are parsed after the test statement, before the 'then' keyword.
+
 #### func (TestConsequence) Format
 
 ```go
@@ -1044,7 +1064,7 @@ Format implements the fmt.Formatter interface.
 type TestOperator uint8
 ```
 
-TestOperator represnets the type of test being represented.
+TestOperator represents the type of test being represented.
 
 ```go
 const (
