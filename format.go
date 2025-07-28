@@ -15,7 +15,7 @@ var (
 
 type writer interface {
 	io.Writer
-	io.StringWriter
+	WriteString(string)
 	Pos() int
 	Printf(string, ...any)
 	Underlying() writer
@@ -85,8 +85,8 @@ func (i *indentPrinter) Printf(format string, args ...interface{}) {
 	fmt.Fprintf(i, format, args...)
 }
 
-func (i *indentPrinter) WriteString(s string) (int, error) {
-	return i.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
+func (i *indentPrinter) WriteString(s string) {
+	i.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
 func (i *indentPrinter) Indent() writer {
@@ -110,8 +110,8 @@ func (c *countPrinter) Write(p []byte) (int, error) {
 	return c.Writer.Write(p)
 }
 
-func (c *countPrinter) WriteString(s string) (int, error) {
-	return c.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
+func (c *countPrinter) WriteString(s string) {
+	c.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
 func (c *countPrinter) Printf(format string, args ...interface{}) {
