@@ -124,7 +124,7 @@ func (v *Value) isMultiline(vs bool) bool {
 
 // ArrayWord a word in a Values array value.
 //
-// The first set of comments are from just beofre the word, and the second set
+// The first set of comments are from just before the word, and the second set
 // are from just after.
 type ArrayWord struct {
 	Word     Word
