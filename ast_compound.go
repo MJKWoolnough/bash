@@ -203,6 +203,8 @@ func (i *IfCompound) parse(b *bashParser) error {
 // section.
 //
 // The Consequence must contain at least one statement.
+//
+// The comments are parsed after the test statement, before the 'then' keyword.
 type TestConsequence struct {
 	Test        Statement
 	Consequence File
@@ -394,7 +396,7 @@ func (pl *PatternLines) parse(b *bashParser) error {
 //
 // The File must contain at least one statement.
 //
-// The Comments are from just before the 'do' keyword.
+// The comments are parsed after statement, before the 'do' keyword.
 type LoopCompound struct {
 	Until     bool
 	Statement Statement
@@ -643,7 +645,7 @@ func (t *TestCompound) isMultiline(v bool) bool {
 	return len(t.Comments[0]) > 0 || len(t.Comments[1]) > 0 || t.Tests.isMultiline(v)
 }
 
-// TestOperator represnets the type of test being represented.
+// TestOperator represents the type of test being represented.
 type TestOperator uint8
 
 const (
