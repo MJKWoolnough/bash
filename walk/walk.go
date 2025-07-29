@@ -182,7 +182,7 @@ func walkArithmeticExpansion(t *bash.ArithmeticExpansion, fn Handler) error {
 }
 
 func walkArrayWord(t *bash.ArrayWord, fn Handler) error {
-	return nil
+	return Walk(&t.Word, fn)
 }
 
 func walkAssignment(t *bash.Assignment, fn Handler) error {
