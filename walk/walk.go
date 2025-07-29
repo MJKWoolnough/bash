@@ -172,6 +172,12 @@ func Walk(t bash.Type, fn Handler) error {
 }
 
 func walkArithmeticExpansion(t *bash.ArithmeticExpansion, fn Handler) error {
+	for n := range t.WordsAndOperators {
+		if err := Walk(&t.WordsAndOperators[n], fn); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
