@@ -186,6 +186,20 @@ func walkArrayWord(t *bash.ArrayWord, fn Handler) error {
 }
 
 func walkAssignment(t *bash.Assignment, fn Handler) error {
+	if err := Walk(&t.Identifier, fn); err != nil {
+		return err
+	}
+
+	for n := range t.Expression {
+		if err := Walk(&t.Expression[n], fn); err != nil {
+			return err
+		}
+	}
+
+	if t.Value != nil {
+		return Walk(t.Value, fn)
+	}
+
 	return nil
 }
 
