@@ -204,6 +204,14 @@ func walkAssignment(t *bash.Assignment, fn Handler) error {
 }
 
 func walkAssignmentOrWord(t *bash.AssignmentOrWord, fn Handler) error {
+	if t.Assignment != nil {
+		return Walk(t.Assignment, fn)
+	}
+
+	if t.Word != nil {
+		return Walk(t.Word, fn)
+	}
+
 	return nil
 }
 
