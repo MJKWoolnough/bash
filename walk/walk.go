@@ -216,6 +216,12 @@ func walkAssignmentOrWord(t *bash.AssignmentOrWord, fn Handler) error {
 }
 
 func walkBraceExpansion(t *bash.BraceExpansion, fn Handler) error {
+	for n := range t.Words {
+		if err := Walk(&t.Words[n], fn); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
