@@ -284,7 +284,7 @@ func walkCommandOrCompound(t *bash.CommandOrCompound, fn Handler) error {
 }
 
 func walkCommandSubstitution(t *bash.CommandSubstitution, fn Handler) error {
-	return nil
+	return fn.Handle(&t.Command)
 }
 
 func walkCompound(t *bash.Compound, fn Handler) error {
