@@ -250,6 +250,24 @@ func walkCaseCompound(t *bash.CaseCompound, fn Handler) error {
 }
 
 func walkCommand(t *bash.Command, fn Handler) error {
+	for n := range t.Vars {
+		if err := fn.Handle(&t.Vars[n]); err != nil {
+			return err
+		}
+	}
+
+	for n := range t.AssignmentsOrWords {
+		if err := fn.Handle(&t.AssignmentsOrWords[n]); err != nil {
+			return err
+		}
+	}
+
+	for n := range t.Redirections {
+		if err := fn.Handle(&t.Redirections[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
