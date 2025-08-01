@@ -236,6 +236,16 @@ func walkBraceWord(t *bash.BraceWord, fn Handler) error {
 }
 
 func walkCaseCompound(t *bash.CaseCompound, fn Handler) error {
+	if err := fn.Handle(&t.Word); err != nil {
+		return err
+	}
+
+	for n := range t.Matches {
+		if err := fn.Handle(&t.Matches[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
