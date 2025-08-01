@@ -173,7 +173,7 @@ func Walk(t bash.Type, fn Handler) error {
 
 func walkArithmeticExpansion(t *bash.ArithmeticExpansion, fn Handler) error {
 	for n := range t.WordsAndOperators {
-		if err := Walk(&t.WordsAndOperators[n], fn); err != nil {
+		if err := fn.Handle(&t.WordsAndOperators[n]); err != nil {
 			return err
 		}
 	}
@@ -182,22 +182,22 @@ func walkArithmeticExpansion(t *bash.ArithmeticExpansion, fn Handler) error {
 }
 
 func walkArrayWord(t *bash.ArrayWord, fn Handler) error {
-	return Walk(&t.Word, fn)
+	return fn.Handle(&t.Word)
 }
 
 func walkAssignment(t *bash.Assignment, fn Handler) error {
-	if err := Walk(&t.Identifier, fn); err != nil {
+	if err := fn.Handle(&t.Identifier); err != nil {
 		return err
 	}
 
 	for n := range t.Expression {
-		if err := Walk(&t.Expression[n], fn); err != nil {
+		if err := fn.Handle(&t.Expression[n]); err != nil {
 			return err
 		}
 	}
 
 	if t.Value != nil {
-		return Walk(t.Value, fn)
+		return fn.Handle(t.Value)
 	}
 
 	return nil
@@ -205,11 +205,11 @@ func walkAssignment(t *bash.Assignment, fn Handler) error {
 
 func walkAssignmentOrWord(t *bash.AssignmentOrWord, fn Handler) error {
 	if t.Assignment != nil {
-		return Walk(t.Assignment, fn)
+		return fn.Handle(t.Assignment)
 	}
 
 	if t.Word != nil {
-		return Walk(t.Word, fn)
+		return fn.Handle(t.Word)
 	}
 
 	return nil
@@ -217,7 +217,7 @@ func walkAssignmentOrWord(t *bash.AssignmentOrWord, fn Handler) error {
 
 func walkBraceExpansion(t *bash.BraceExpansion, fn Handler) error {
 	for n := range t.Words {
-		if err := Walk(&t.Words[n], fn); err != nil {
+		if err := fn.Handle(&t.Words[n]); err != nil {
 			return err
 		}
 	}
@@ -227,7 +227,7 @@ func walkBraceExpansion(t *bash.BraceExpansion, fn Handler) error {
 
 func walkBraceWord(t *bash.BraceWord, fn Handler) error {
 	for n := range t.Parts {
-		if err := Walk(&t.Parts[n], fn); err != nil {
+		if err := fn.Handle(&t.Parts[n]); err != nil {
 			return err
 		}
 	}
