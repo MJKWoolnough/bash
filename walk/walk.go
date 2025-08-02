@@ -288,6 +288,50 @@ func walkCommandSubstitution(t *bash.CommandSubstitution, fn Handler) error {
 }
 
 func walkCompound(t *bash.Compound, fn Handler) error {
+	if t.IfCompound != nil {
+		if err := fn.Handle(t.IfCompound); err != nil {
+			return err
+		}
+	} else if t.CaseCompound != nil {
+		if err := fn.Handle(t.CaseCompound); err != nil {
+			return err
+		}
+	} else if t.LoopCompound != nil {
+		if err := fn.Handle(t.LoopCompound); err != nil {
+			return err
+		}
+	} else if t.ForCompound != nil {
+		if err := fn.Handle(t.ForCompound); err != nil {
+			return err
+		}
+	} else if t.SelectCompound != nil {
+		if err := fn.Handle(t.SelectCompound); err != nil {
+			return err
+		}
+	} else if t.GroupingCompound != nil {
+		if err := fn.Handle(t.GroupingCompound); err != nil {
+			return err
+		}
+	} else if t.TestCompound != nil {
+		if err := fn.Handle(t.TestCompound); err != nil {
+			return err
+		}
+	} else if t.ArithmeticCompound != nil {
+		if err := fn.Handle(t.ArithmeticCompound); err != nil {
+			return err
+		}
+	} else if t.FunctionCompound != nil {
+		if err := fn.Handle(t.FunctionCompound); err != nil {
+			return err
+		}
+	}
+
+	for n := range t.Redirections {
+		if err := fn.Handle(&t.Redirections[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
