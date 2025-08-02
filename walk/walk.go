@@ -406,6 +406,12 @@ func walkIfCompound(t *bash.IfCompound, fn Handler) error {
 }
 
 func walkLine(t *bash.Line, fn Handler) error {
+	for n := range t.Statements {
+		if err := fn.Handle(&t.Statements[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
