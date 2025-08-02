@@ -346,7 +346,19 @@ func walkFile(t *bash.File, fn Handler) error {
 }
 
 func walkForCompound(t *bash.ForCompound, fn Handler) error {
-	return nil
+	if t.Identifier != nil {
+		for n := range t.Words {
+			if err := fn.Handle(&t.Words[n]); err != nil {
+				return err
+			}
+		}
+	} else if t.ArithmeticExpansion != nil {
+		if err := fn.Handle(t.ArithmeticExpansion); err != nil {
+			return err
+		}
+	}
+
+	return fn.Handle(&t.File)
 }
 
 func walkFunctionCompound(t *bash.FunctionCompound, fn Handler) error {
