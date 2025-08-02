@@ -388,6 +388,20 @@ func walkHeredocPartOrWord(t *bash.HeredocPartOrWord, fn Handler) error {
 }
 
 func walkIfCompound(t *bash.IfCompound, fn Handler) error {
+	if err := fn.Handle(&t.If); err != nil {
+		return err
+	}
+
+	for n := range t.ElIf {
+		if err := fn.Handle(&t.ElIf[n]); err != nil {
+			return err
+		}
+	}
+
+	if t.Else != nil {
+		return fn.Handle(t.Else)
+	}
+
 	return nil
 }
 
