@@ -370,6 +370,12 @@ func walkGroupingCompound(t *bash.GroupingCompound, fn Handler) error {
 }
 
 func walkHeredoc(t *bash.Heredoc, fn Handler) error {
+	for n := range t.HeredocPartsOrWords {
+		if err := fn.Handle(&t.HeredocPartsOrWords[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
