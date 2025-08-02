@@ -366,7 +366,7 @@ func walkFunctionCompound(t *bash.FunctionCompound, fn Handler) error {
 }
 
 func walkGroupingCompound(t *bash.GroupingCompound, fn Handler) error {
-	return nil
+	return fn.Handle(&t.File)
 }
 
 func walkHeredoc(t *bash.Heredoc, fn Handler) error {
