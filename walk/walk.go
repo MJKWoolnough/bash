@@ -336,6 +336,12 @@ func walkCompound(t *bash.Compound, fn Handler) error {
 }
 
 func walkFile(t *bash.File, fn Handler) error {
+	for n := range t.Lines {
+		if err := fn.Handle(&t.Lines[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
