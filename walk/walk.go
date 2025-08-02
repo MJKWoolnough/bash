@@ -416,7 +416,11 @@ func walkLine(t *bash.Line, fn Handler) error {
 }
 
 func walkLoopCompound(t *bash.LoopCompound, fn Handler) error {
-	return nil
+	if err := fn.Handle(&t.Statement); err != nil {
+		return err
+	}
+
+	return fn.Handle(&t.File)
 }
 
 func walkParameter(t *bash.Parameter, fn Handler) error {
