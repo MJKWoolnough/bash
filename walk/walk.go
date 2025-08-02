@@ -380,6 +380,10 @@ func walkHeredoc(t *bash.Heredoc, fn Handler) error {
 }
 
 func walkHeredocPartOrWord(t *bash.HeredocPartOrWord, fn Handler) error {
+	if t.Word != nil {
+		return fn.Handle(t.Word)
+	}
+
 	return nil
 }
 
