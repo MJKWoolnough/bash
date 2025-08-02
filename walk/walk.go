@@ -362,7 +362,7 @@ func walkForCompound(t *bash.ForCompound, fn Handler) error {
 }
 
 func walkFunctionCompound(t *bash.FunctionCompound, fn Handler) error {
-	return nil
+	return fn.Handle(&t.Body)
 }
 
 func walkGroupingCompound(t *bash.GroupingCompound, fn Handler) error {
