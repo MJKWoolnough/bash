@@ -424,6 +424,12 @@ func walkLoopCompound(t *bash.LoopCompound, fn Handler) error {
 }
 
 func walkParameter(t *bash.Parameter, fn Handler) error {
+	for n := range t.Array {
+		if err := fn.Handle(&t.Array[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
