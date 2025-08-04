@@ -434,6 +434,12 @@ func walkParameter(t *bash.Parameter, fn Handler) error {
 }
 
 func walkParameterAssign(t *bash.ParameterAssign, fn Handler) error {
+	for n := range t.Subscript {
+		if err := fn.Handle(&t.Subscript[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
