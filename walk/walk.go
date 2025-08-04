@@ -458,6 +458,12 @@ func walkParameterExpansion(t *bash.ParameterExpansion, fn Handler) error {
 }
 
 func walkPattern(t *bash.Pattern, fn Handler) error {
+	for n := range t.Parts {
+		if err := fn.Handle(&t.Parts[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
