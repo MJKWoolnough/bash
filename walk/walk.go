@@ -444,6 +444,16 @@ func walkParameterAssign(t *bash.ParameterAssign, fn Handler) error {
 }
 
 func walkParameterExpansion(t *bash.ParameterExpansion, fn Handler) error {
+	if err := fn.Handle(t.Parameter); err != nil {
+		return err
+	}
+
+	if t.BraceWord != nil {
+		return fn.Handle(t.BraceWord)
+	} else if t.String != nil {
+		return fn.Handle(t.String)
+	}
+
 	return nil
 }
 
