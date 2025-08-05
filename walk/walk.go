@@ -534,7 +534,7 @@ func walkString(t *bash.String, fn Handler) error {
 }
 
 func walkTestCompound(t *bash.TestCompound, fn Handler) error {
-	return nil
+	return fn.Handle(&t.Tests)
 }
 
 func walkTestConsequence(t *bash.TestConsequence, fn Handler) error {
