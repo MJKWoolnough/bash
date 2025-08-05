@@ -490,6 +490,14 @@ func walkPipeline(t *bash.Pipeline, fn Handler) error {
 }
 
 func walkRedirection(t *bash.Redirection, fn Handler) error {
+	if err := fn.Handle(&t.Output); err != nil {
+		return err
+	}
+
+	if t.Heredoc != nil {
+		return fn.Handle(t.Heredoc)
+	}
+
 	return nil
 }
 
