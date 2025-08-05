@@ -468,7 +468,13 @@ func walkPattern(t *bash.Pattern, fn Handler) error {
 }
 
 func walkPatternLines(t *bash.PatternLines, fn Handler) error {
-	return nil
+	for n := range t.Patterns {
+		if err := fn.Handle(&t.Patterns[n]); err != nil {
+			return err
+		}
+	}
+
+	return fn.Handle(t.Lines)
 }
 
 func walkPipeline(t *bash.Pipeline, fn Handler) error {
