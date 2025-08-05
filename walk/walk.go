@@ -524,6 +524,12 @@ func walkStatement(t *bash.Statement, fn Handler) error {
 }
 
 func walkString(t *bash.String, fn Handler) error {
+	for n := range t.WordsOrTokens {
+		if err := fn.Handle(&t.WordsOrTokens[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
