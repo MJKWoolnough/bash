@@ -512,6 +512,14 @@ func walkSelectCompound(t *bash.SelectCompound, fn Handler) error {
 }
 
 func walkStatement(t *bash.Statement, fn Handler) error {
+	if err := fn.Handle(&t.Pipeline); err != nil {
+		return err
+	}
+
+	if t.Statement != nil {
+		return fn.Handle(t.Statement)
+	}
+
 	return nil
 }
 
