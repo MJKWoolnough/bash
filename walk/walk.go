@@ -538,6 +538,14 @@ func walkTestCompound(t *bash.TestCompound, fn Handler) error {
 }
 
 func walkTestConsequence(t *bash.TestConsequence, fn Handler) error {
+	if err := fn.Handle(&t.Test); err != nil {
+		return err
+	}
+
+	if err := fn.Handle(&t.Consequence); err != nil {
+		return err
+	}
+
 	return nil
 }
 
