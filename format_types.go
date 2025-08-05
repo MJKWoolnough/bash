@@ -41,6 +41,7 @@ func (f *ArrayWord) printType(w writer, v bool) {
 
 	pp.WriteString("\nWord: ")
 	f.Word.printType(pp, v)
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -207,6 +208,7 @@ func (f *CaseCompound) printType(w writer, v bool) {
 	} else if v {
 		pp.WriteString("\nMatches: []")
 	}
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -447,6 +449,7 @@ func (f *File) printType(w writer, v bool) {
 	} else if v {
 		pp.WriteString("\nLines: []")
 	}
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -502,6 +505,7 @@ func (f *ForCompound) printType(w writer, v bool) {
 
 	pp.WriteString("\nFile: ")
 	f.File.printType(pp, v)
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -677,6 +681,7 @@ func (f *Line) printType(w writer, v bool) {
 	} else if v {
 		pp.WriteString("\nStatements: []")
 	}
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -1014,6 +1019,7 @@ func (f *SelectCompound) printType(w writer, v bool) {
 
 	pp.WriteString("\nFile: ")
 	f.File.printType(pp, v)
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -1093,6 +1099,7 @@ func (f *TestCompound) printType(w writer, v bool) {
 
 	pp.WriteString("\nTests: ")
 	f.Tests.printType(pp, v)
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -1172,6 +1179,7 @@ func (f *Tests) printType(w writer, v bool) {
 	} else if v {
 		pp.WriteString("\nTests: nil")
 	}
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
@@ -1217,6 +1225,7 @@ func (f *Value) printType(w writer, v bool) {
 	} else if v {
 		pp.WriteString("\nArray: []")
 	}
+
 	pp.WriteString("\nComments: [")
 
 	ipp := pp.Indent()
