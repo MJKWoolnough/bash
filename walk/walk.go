@@ -502,7 +502,13 @@ func walkRedirection(t *bash.Redirection, fn Handler) error {
 }
 
 func walkSelectCompound(t *bash.SelectCompound, fn Handler) error {
-	return nil
+	for n := range t.Words {
+		if err := fn.Handle(&t.Words[n]); err != nil {
+			return err
+		}
+	}
+
+	return fn.Handle(&t.File)
 }
 
 func walkStatement(t *bash.Statement, fn Handler) error {
