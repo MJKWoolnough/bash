@@ -478,6 +478,14 @@ func walkPatternLines(t *bash.PatternLines, fn Handler) error {
 }
 
 func walkPipeline(t *bash.Pipeline, fn Handler) error {
+	if err := fn.Handle(&t.CommandOrCompound); err != nil {
+		return err
+	}
+
+	if t.Pipeline != nil {
+		return fn.Handle(t.Pipeline)
+	}
+
 	return nil
 }
 
