@@ -550,6 +550,26 @@ func walkTestConsequence(t *bash.TestConsequence, fn Handler) error {
 }
 
 func walkTests(t *bash.Tests, fn Handler) error {
+	if t.Parens != nil {
+		if err := fn.Handle(t.Parens); err != nil {
+			return err
+		}
+	} else if t.Word != nil {
+		if err := fn.Handle(t.Word); err != nil {
+			return err
+		}
+
+		if t.Pattern != nil {
+			if err := fn.Handle(t.Pattern); err != nil {
+				return err
+			}
+		}
+	}
+
+	if t.Tests != nil && (t.LogicalOperator == bash.LogicalOperatorOr || t.LogicalOperator == bash.LogicalOperatorAnd) {
+		return fn.Handle(t.Tests)
+	}
+
 	return nil
 }
 
