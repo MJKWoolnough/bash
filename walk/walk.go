@@ -588,6 +588,12 @@ func walkValue(t *bash.Value, fn Handler) error {
 }
 
 func walkWord(t *bash.Word, fn Handler) error {
+	for n := range t.Parts {
+		if err := fn.Handle(&t.Parts[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
