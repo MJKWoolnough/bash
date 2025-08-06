@@ -574,6 +574,16 @@ func walkTests(t *bash.Tests, fn Handler) error {
 }
 
 func walkValue(t *bash.Value, fn Handler) error {
+	if t.Word != nil {
+		return fn.Handle(t.Word)
+	}
+
+	for n := range t.Array {
+		if err := fn.Handle(&t.Array[n]); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
