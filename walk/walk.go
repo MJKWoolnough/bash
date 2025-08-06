@@ -598,6 +598,10 @@ func walkWord(t *bash.Word, fn Handler) error {
 }
 
 func walkWordOrOperator(t *bash.WordOrOperator, fn Handler) error {
+	if t.Word != nil {
+		return fn.Handle(t.Word)
+	}
+
 	return nil
 }
 
