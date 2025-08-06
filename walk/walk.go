@@ -614,5 +614,15 @@ func walkWordOrToken(t *bash.WordOrToken, fn Handler) error {
 }
 
 func walkWordPart(t *bash.WordPart, fn Handler) error {
+	if t.ParameterExpansion != nil {
+		return fn.Handle(t.ParameterExpansion)
+	} else if t.CommandSubstitution != nil {
+		return fn.Handle(t.CommandSubstitution)
+	} else if t.ArithmeticExpansion != nil {
+		return fn.Handle(t.ArithmeticExpansion)
+	} else if t.BraceExpansion != nil {
+		return fn.Handle(t.BraceExpansion)
+	}
+
 	return nil
 }
