@@ -1,17 +1,22 @@
+// Package walk provides a bash type walker.
 package walk
 
 import "vimagination.zapto.org/bash"
 
+// Handler is used to process bash types.
 type Handler interface {
 	Handle(bash.Type) error
 }
 
+// Handle implements the Handler interface.
 type HandlerFunc func(bash.Type) error
 
 func (h HandlerFunc) Handle(t bash.Type) error {
 	return h(t)
 }
 
+// Walk calls the Handle function on the given interface for each non-nil,
+// non-Token field of the given bash type.
 func Walk(t bash.Type, fn Handler) error {
 	switch t := t.(type) {
 	case bash.ArithmeticExpansion:
