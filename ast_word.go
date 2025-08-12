@@ -394,8 +394,8 @@ type ParameterExpansion struct {
 	Indirect       bool
 	Parameter      Parameter
 	Type           ParameterType
-	SubstringStart *Token
-	SubstringEnd   *Token
+	SubstringStart *Word
+	SubstringEnd   *Word
 	BraceWord      *BraceWord
 	Pattern        *Token
 	String         *String
@@ -452,13 +452,28 @@ func (p *ParameterExpansion) parse(b *bashParser) error {
 			b.AcceptRunWhitespace()
 			b.Accept(TokenNumberLiteral)
 
-			p.SubstringStart = b.GetLastToken()
+			c := b.NewGoal()
+			p.SubstringStart = new(Word)
+
+			if err := p.SubstringStart.parse(c, false); err != nil {
+				return b.Error("ParameterExpansion", err)
+			}
+
+			b.Score(c)
+			b.AcceptRunWhitespace()
 
 			if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: ":"}) {
 				b.AcceptRunWhitespace()
-				b.Accept(TokenNumberLiteral)
 
-				p.SubstringEnd = b.GetLastToken()
+				c = b.NewGoal()
+				p.SubstringEnd = new(Word)
+
+				if err := p.SubstringEnd.parse(c, false); err != nil {
+					return b.Error("ParameterExpansion", err)
+				}
+
+				b.Score(c)
+				b.AcceptRunWhitespace()
 			}
 		} else if b.AcceptToken(parser.Token{Type: TokenPunctuator, Data: "#"}) {
 			p.Type = ParameterRemoveStartShortest
