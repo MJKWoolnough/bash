@@ -36,6 +36,7 @@ const (
 	wordBreakBrace        = "\\\"'`() \t\n$|&;,<>}"
 	wordBreakArithmetic   = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,;"
 	wordBreakNoBrace      = wordBreak + "#}]"
+	wordBreakSubstring    = wordBreakNoBrace + ":"
 	wordBreakIndex        = wordBreakArithmetic + "]"
 	wordBreakCommandIndex = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,]"
 	testWordBreak         = " `\\\t\n\"'$|&;<>(){}!,"
@@ -111,6 +112,7 @@ const (
 	stateInCommand
 	stateLoopBody
 	stateLoopCondition
+	stateParameterExpansionSubString
 	stateParens
 	stateParensGroup
 	stateStringDouble
@@ -189,7 +191,7 @@ func (b *bashTokeniser) endCommand() {
 
 func (b *bashTokeniser) setInCommand() {
 	switch b.lastState() {
-	case stateArrayIndex, stateBraceExpansionWord, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateArithmeticParens, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary:
+	case stateArrayIndex, stateBraceExpansionWord, stateBraceExpansionArrayIndex, stateInCommand, stateHeredocIdentifier, stateStringDouble, stateArithmeticExpansion, stateArithmeticParens, stateBraceExpansion, stateCaseParam, stateForArithmetic, stateTest, stateTestBinary, stateValue, stateCommandIndex, stateBuiltinLet, stateBuiltinLetExpression, stateBuiltinLetParens, stateBuiltinLetTernary, stateParameterExpansionSubString:
 	default:
 		b.pushState(stateInCommand)
 	}
@@ -568,7 +570,17 @@ func (b *bashTokeniser) operatorOrWord(t *parser.Tokeniser) (parser.Token, parse
 			b.popState()
 
 			return t.Return(TokenBraceExpansion, b.main)
+		} else if td == stateParameterExpansionSubString {
+			b.popState()
+			b.popState()
 		}
+	case ':':
+		if td := b.lastState(); td != stateParameterExpansionSubString {
+			return b.keywordIdentOrWord(t)
+		}
+
+		b.popState()
+		t.Next()
 	case '$':
 		b.setInCommand()
 
@@ -899,6 +911,8 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 	switch b.lastState() {
 	case stateBraceExpansion:
 		wb = wordBreakNoBrace
+	case stateParameterExpansionSubString:
+		wb = wordBreakSubstring
 	case stateArrayIndex, stateBraceExpansionArrayIndex:
 		wb = wordBreakIndex
 	case stateCommandIndex:
@@ -1013,43 +1027,9 @@ func (b *bashTokeniser) parameterExpansionSubstringStart(t *parser.Tokeniser) (p
 		return t.Return(TokenWhitespace, b.parameterExpansionSubstringStart)
 	}
 
-	t.Accept("-")
-
-	if !t.Accept(decimalDigit) {
-		return t.ReturnError(ErrInvalidParameterExpansion)
-	}
-
-	t.AcceptRun(decimalDigit)
-
-	return t.Return(TokenNumberLiteral, b.parameterExpansionSubstringMid)
-}
-
-func (b *bashTokeniser) parameterExpansionSubstringMid(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if parseWhitespace(t) {
-		return t.Return(TokenWhitespace, b.parameterExpansionSubstringMid)
-	}
-
-	if t.Accept(":") {
-		return t.Return(TokenPunctuator, b.parameterExpansionSubstringEnd)
-	}
+	b.pushState(stateParameterExpansionSubString)
 
 	return b.main(t)
-}
-
-func (b *bashTokeniser) parameterExpansionSubstringEnd(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
-	if parseWhitespace(t) {
-		return t.Return(TokenWhitespace, b.parameterExpansionSubstringEnd)
-	}
-
-	t.Accept("-")
-
-	if !t.Accept(decimalDigit) {
-		return t.ReturnError(ErrInvalidParameterExpansion)
-	}
-
-	t.AcceptRun(decimalDigit)
-
-	return t.Return(TokenNumberLiteral, b.main)
 }
 
 func (b *bashTokeniser) parameterExpansionPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
@@ -1956,6 +1936,8 @@ func (b *bashTokeniser) word(t *parser.Tokeniser) (parser.Token, parser.TokenFun
 	switch td {
 	case stateBraceExpansion:
 		wb = wordBreakNoBrace
+	case stateParameterExpansionSubString:
+		wb = wordBreakSubstring
 	case stateBraceExpansionWord:
 		wb = wordBreakBrace
 	case stateArrayIndex, stateBraceExpansionArrayIndex:
