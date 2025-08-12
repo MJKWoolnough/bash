@@ -1436,8 +1436,16 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[3],
-				Tokens:         tk[:5],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				Tokens: tk[:5],
 			}
 		}},
 		{"${a: 1}", func(t *test, tk Tokens) { // 20
@@ -1447,8 +1455,16 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[4],
-				Tokens:         tk[:6],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[:6],
 			}
 		}},
 		{"${a: -1}", func(t *test, tk Tokens) { // 21
@@ -1458,8 +1474,16 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[4],
-				Tokens:         tk[:6],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[4],
+							Tokens: tk[4:5],
+						},
+					},
+					Tokens: tk[4:5],
+				},
+				Tokens: tk[:6],
 			}
 		}},
 		{"${a:1:2}", func(t *test, tk Tokens) { // 22
@@ -1469,9 +1493,25 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[3],
-				SubstringEnd:   &tk[5],
-				Tokens:         tk[:7],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				SubstringEnd: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[5],
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
 			}
 		}},
 		{"${a:1:-2}", func(t *test, tk Tokens) { // 23
@@ -1481,9 +1521,25 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[3],
-				SubstringEnd:   &tk[5],
-				Tokens:         tk[:7],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				SubstringEnd: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[5],
+							Tokens: tk[5:6],
+						},
+					},
+					Tokens: tk[5:6],
+				},
+				Tokens: tk[:7],
 			}
 		}},
 		{"${a:1: -2}", func(t *test, tk Tokens) { // 24
@@ -1493,9 +1549,25 @@ func TestParameterExpansion(t *testing.T) {
 					Parameter: &tk[1],
 					Tokens:    tk[1:2],
 				},
-				SubstringStart: &tk[3],
-				SubstringEnd:   &tk[6],
-				Tokens:         tk[:8],
+				SubstringStart: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[3],
+							Tokens: tk[3:4],
+						},
+					},
+					Tokens: tk[3:4],
+				},
+				SubstringEnd: &Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[6],
+							Tokens: tk[6:7],
+						},
+					},
+					Tokens: tk[6:7],
+				},
+				Tokens: tk[:8],
 			}
 		}},
 		{"${a#b}", func(t *test, tk Tokens) { // 25
@@ -1988,11 +2060,47 @@ func TestParameterExpansion(t *testing.T) {
 				Token:   tk[3],
 			}
 		}},
-		{"${a:1:2b}", func(t *test, tk Tokens) { // 55
+		{"${a:1:$(||)}", func(t *test, tk Tokens) { // 55
 			t.Err = Error{
-				Err:     ErrMissingClosingBrace,
+				Err: Error{
+					Err: Error{
+						Err: Error{
+							Err: Error{
+								Err: Error{
+									Err: Error{
+										Err: Error{
+											Err: Error{
+												Err: Error{
+													Err:     ErrMissingWord,
+													Parsing: "Command",
+													Token:   tk[6],
+												},
+												Parsing: "CommandOrCompound",
+												Token:   tk[6],
+											},
+											Parsing: "Pipeline",
+											Token:   tk[6],
+										},
+										Parsing: "Statement",
+										Token:   tk[6],
+									},
+									Parsing: "Line",
+									Token:   tk[6],
+								},
+								Parsing: "File",
+								Token:   tk[6],
+							},
+							Parsing: "CommandSubstitution",
+							Token:   tk[6],
+						},
+						Parsing: "WordPart",
+						Token:   tk[5],
+					},
+					Parsing: "Word",
+					Token:   tk[5],
+				},
 				Parsing: "ParameterExpansion",
-				Token:   tk[6],
+				Token:   tk[5],
 			}
 		}},
 		{"${a/b/$(||)}", func(t *test, tk Tokens) { // 56
