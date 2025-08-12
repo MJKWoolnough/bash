@@ -4596,6 +4596,36 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 310
+			"${a:${#b}}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: ":"},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenPunctuator, Data: "#"},
+				{Type: TokenIdentifier, Data: "b"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
+		{ // 311
+			"${a:${#b}:$c}",
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: ":"},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenPunctuator, Data: "#"},
+				{Type: TokenIdentifier, Data: "b"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenPunctuator, Data: ":"},
+				{Type: TokenIdentifier, Data: "$c"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
