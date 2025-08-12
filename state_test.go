@@ -26,6 +26,8 @@ func (s state) String() string {
 		return "stateBuiltinLet"
 	case stateBuiltinLetExpression:
 		return "stateBuiltinLetExpression"
+	case stateBuiltinLetParens:
+		return "stateBuiltinLetParens"
 	case stateBuiltinLetTernary:
 		return "stateBuiltinLetTernary"
 	case stateBuiltinReadonly:
@@ -58,8 +60,12 @@ func (s state) String() string {
 		return "stateLoopBody"
 	case stateLoopCondition:
 		return "stateLoopCondition"
+	case stateParameterExpansionSubString:
+		return "stateParameterExpansionSubString"
 	case stateParens:
 		return "stateParens"
+	case stateParensGroup:
+		return "stateParensGroup"
 	case stateStringDouble:
 		return "stateStringDouble"
 	case stateStringSingle:
@@ -76,6 +82,7 @@ func (s state) String() string {
 		return "stateTestPattern"
 	case stateValue:
 		return "stateValue"
+
 	}
 
 	return "unknown"
