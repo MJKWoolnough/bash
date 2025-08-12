@@ -665,15 +665,15 @@ func (p ParameterExpansion) printSource(w writer, v bool) {
 		if p.SubstringStart != nil {
 			w.WriteString(":")
 
-			if strings.HasPrefix(p.SubstringStart.Data, "-") {
+			if len(p.SubstringStart.Parts) > 0 && p.SubstringStart.Parts[0].Part != nil && strings.HasPrefix(p.SubstringStart.Parts[0].Part.Data, "-") {
 				w.WriteString(" ")
 			}
 
-			w.WriteString(p.SubstringStart.Data)
+			p.SubstringStart.printSource(w, v)
 
 			if p.SubstringEnd != nil {
 				w.WriteString(":")
-				w.WriteString(p.SubstringEnd.Data)
+				p.SubstringEnd.printSource(w, v)
 			}
 		}
 	case ParameterUppercase:
