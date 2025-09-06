@@ -927,6 +927,10 @@ func (b *bashTokeniser) identifier(t *parser.Tokeniser) (parser.Token, parser.To
 
 	t.ExceptRun(wb)
 
+	if t.Len() == 1 {
+		return t.Return(TokenWord, b.main)
+	}
+
 	return t.Return(TokenIdentifier, b.main)
 }
 
