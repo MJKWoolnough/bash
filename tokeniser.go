@@ -1836,9 +1836,23 @@ func (b *bashTokeniser) testPatternStart(t *parser.Tokeniser) (parser.Token, par
 }
 
 func (b *bashTokeniser) testPattern(t *parser.Tokeniser) (parser.Token, parser.TokenFunc) {
+	depth := 0
+
 Loop:
 	for {
 		switch t.ExceptRun("\\\"' \t\n$()") {
+		case '(':
+			t.Next()
+
+			depth++
+		case ')':
+			if depth == 0 {
+				break Loop
+			}
+
+			depth--
+
+			t.Next()
 		default:
 			break Loop
 		case -1:
