@@ -1855,6 +1855,16 @@ Loop:
 
 			return b.stringStart(t)
 		case '$':
+			state := t.State()
+
+			t.Next()
+
+			if isWhitespace(t) {
+				break Loop
+			}
+
+			state.Reset()
+
 			b.pushState(stateTestPattern)
 
 			if t.Len() > 0 {
