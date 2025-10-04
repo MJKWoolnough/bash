@@ -174,7 +174,7 @@ func TestParse(t *testing.T) {
 		Token:   tk[0],
 	}
 
-	f, err = Parse(makeTokeniser(parser.NewStringTokeniser("||")))
+	_, err = Parse(makeTokeniser(parser.NewStringTokeniser("||")))
 	if !reflect.DeepEqual(err, expectedErr) {
 		t.Errorf("expecting error: %v, got %v", expectedErr, err)
 	}
