@@ -13,7 +13,7 @@ Package bash implements a bash tokeniser and AST.
 
  - Parse Bash code into AST.
  - Modify parsed code.
- - Consistant bash formatting.
+ - Consistent bash formatting.
 
 ## Usage
 
