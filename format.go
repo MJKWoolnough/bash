@@ -81,7 +81,7 @@ func (i *indentPrinter) printIndent() error {
 	return nil
 }
 
-func (i *indentPrinter) Printf(format string, args ...interface{}) {
+func (i *indentPrinter) Printf(format string, args ...any) {
 	fmt.Fprintf(i, format, args...)
 }
 
@@ -114,7 +114,7 @@ func (c *countPrinter) WriteString(s string) {
 	c.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
 }
 
-func (c *countPrinter) Printf(format string, args ...interface{}) {
+func (c *countPrinter) Printf(format string, args ...any) {
 	fmt.Fprintf(c, format, args...)
 }
 
