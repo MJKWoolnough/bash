@@ -46,6 +46,7 @@ const (
 	letters               = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	identStart            = letters + "_"
 	identCont             = decimalDigit + identStart
+	functionCont          = identCont + "-"
 	numberChars           = identCont + "@"
 )
 
@@ -1209,6 +1210,10 @@ func (b *bashTokeniser) identOrWord(t *parser.Tokeniser) (parser.Token, parser.T
 			} else if td := b.lastState(); c == '}' && td == stateBrace || c == ')' && (td == stateParens || td == stateParensGroup) || td == stateBraceExpansion {
 				return t.Return(TokenWord, b.main)
 			} else if !b.isInCommand() {
+				t.AcceptRun(functionCont)
+
+				state = t.State()
+
 				t.AcceptRun(whitespace)
 
 				isFunc := t.Accept("(")
@@ -1607,7 +1612,7 @@ func (b *bashTokeniser) function(t *parser.Tokeniser) (parser.Token, parser.Toke
 		return t.ReturnError(ErrInvalidIdentifier)
 	}
 
-	t.AcceptRun(identCont)
+	t.AcceptRun(functionCont)
 
 	return t.Return(TokenFunctionIdentifier, b.functionOpenParen)
 }
