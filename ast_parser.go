@@ -2,6 +2,7 @@ package bash
 
 import (
 	"fmt"
+	"slices"
 
 	"vimagination.zapto.org/parser"
 )
@@ -101,10 +102,8 @@ func (b *bashParser) Peek() parser.Token {
 func (b *bashParser) Accept(ts ...parser.TokenType) bool {
 	tt := b.Next().Type
 
-	for _, pt := range ts {
-		if pt == tt {
-			return true
-		}
+	if slices.Contains(ts, tt) {
+		return true
 	}
 
 	b.backup()
