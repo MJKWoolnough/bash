@@ -121,6 +121,25 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "Pipeline"},
 		},
+		{ // 13
+			"a",
+			nilRet,
+			nil,
+		},
+		{ // 14
+			"a",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command"},
+		},
+		{ // 15
+			"(a)",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
