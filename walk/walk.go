@@ -211,9 +211,7 @@ func walkAssignment(t *bash.Assignment, fn Handler) error {
 func walkAssignmentOrWord(t *bash.AssignmentOrWord, fn Handler) error {
 	if t.Assignment != nil {
 		return fn.Handle(t.Assignment)
-	}
-
-	if t.Word != nil {
+	} else if t.Word != nil {
 		return fn.Handle(t.Word)
 	}
 
