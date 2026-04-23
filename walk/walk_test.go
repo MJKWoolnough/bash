@@ -140,6 +140,53 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound"},
 		},
+		{ // 16
+			"a=1 b=2 c d >e 2>f",
+			nilRet,
+			nil,
+		},
+		{ // 17
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment"},
+		},
+		{ // 18
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment"},
+		},
+		{ // 19
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord"},
+		},
+		{ // 20
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord"},
+		},
+		{ // 21
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection"},
+		},
+		{ // 22
+			"a=1 b=2 c d >e 2>f",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
