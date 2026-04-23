@@ -187,6 +187,44 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection"},
 		},
+		{ // 23
+			"a=1",
+			nilRet,
+			nil,
+		},
+		{ // 24
+			"a=1",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Identifier
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "ParameterAssign"},
+		},
+		{ // 25
+			"a=1",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value"},
+		},
+		{ // 26
+			"let a=1 b=2",
+			nilRet,
+			nil,
+		},
+		{ // 27
+			"let a=1 b=2",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[1].Assignment.Expression[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Assignment", "WordOrOperator"},
+		},
+		{ // 28
+			"let a=1+2",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[1].Assignment.Expression[2]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Assignment", "WordOrOperator"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
