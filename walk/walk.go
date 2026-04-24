@@ -447,7 +447,7 @@ func walkParameterAssign(t *bash.ParameterAssign, fn Handler) error {
 }
 
 func walkParameterExpansion(t *bash.ParameterExpansion, fn Handler) error {
-	if err := fn.Handle(t.Parameter); err != nil {
+	if err := fn.Handle(&t.Parameter); err != nil {
 		return err
 	}
 
