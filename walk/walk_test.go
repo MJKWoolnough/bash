@@ -284,6 +284,32 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "BraceExpansion"},
 		},
+		{ // 38
+			"${a}",
+			nilRet,
+			nil,
+		},
+		{ // 39
+			"${a/b/c}",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0].Word.Parts[0].ParameterExpansion.Parameter
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "ParameterExpansion", "Parameter"},
+		},
+		{ // 40
+			"${a#b}",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0].Word.Parts[0].ParameterExpansion.BraceWord
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "ParameterExpansion", "BraceWord"},
+		},
+		{ // 41
+			"${a/b/c}",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0].Word.Parts[0].ParameterExpansion.String
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "ParameterExpansion", "String"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
