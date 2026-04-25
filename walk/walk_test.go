@@ -513,6 +513,88 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Heredoc", "HeredocPartOrWord", "Word"},
 		},
+		{ // 73
+			"if a; then b;fi",
+			nilRet,
+			nil,
+		},
+		{ // 74
+			"if a; then b;fi",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound"},
+		},
+		{ // 75
+			"case a in b);;esac",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.CaseCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "CaseCompound"},
+		},
+		{ // 76
+			"while a; do b;done",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.LoopCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "LoopCompound"},
+		},
+		{ // 77
+			"for a; do b;done",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ForCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound"},
+		},
+		{ // 78
+			"select a; do b;done",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.SelectCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "SelectCompound"},
+		},
+		{ // 79
+			"{ a; }",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.GroupingCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "GroupingCompound"},
+		},
+		{ // 80
+			"[[ a ]]",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.TestCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound"},
+		},
+		{ // 81
+			"(( a ))",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ArithmeticCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ArithmeticExpansion"},
+		},
+		{ // 82
+			"function a() { b; }",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.FunctionCompound
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "FunctionCompound"},
+		},
+		{ // 83
+			"{ a; } > b 2> c",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.Redirections[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "Redirection"},
+		},
+		{ // 84
+			"{ a; } > b 2> c",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.Redirections[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "Redirection"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
