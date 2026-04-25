@@ -393,6 +393,32 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "ArithmeticExpansion", "WordOrOperator", "Word"},
 		},
+		{ // 55
+			"a=(b)",
+			nilRet,
+			nil,
+		},
+		{ // 56
+			"a=b",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Word
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "Word"},
+		},
+		{ // 57
+			"a=(b c)",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Array[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "ArrayWord"},
+		},
+		{ // 58
+			"a=(b c)",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Array[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "ArrayWord"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
