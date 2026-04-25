@@ -447,6 +447,27 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "CommandSubstitution", "File"},
 		},
+		{ // 63
+			"a > b",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Output
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Word"},
+		},
+		{ // 64
+			"a >>> b\n123\nb",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Output
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Word"},
+		},
+		{ // 65
+			"a <<b\n123\nb",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Heredoc
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Heredoc"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
