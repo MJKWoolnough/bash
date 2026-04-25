@@ -277,9 +277,7 @@ func walkCommand(t *bash.Command, fn Handler) error {
 func walkCommandOrCompound(t *bash.CommandOrCompound, fn Handler) error {
 	if t.Command != nil {
 		return fn.Handle(t.Command)
-	}
-
-	if t.Compound != nil {
+	} else if t.Compound != nil {
 		return fn.Handle(t.Compound)
 	}
 
