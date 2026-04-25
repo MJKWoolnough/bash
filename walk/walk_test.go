@@ -448,46 +448,65 @@ func TestWalk(t *testing.T) {
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "CommandSubstitution", "File"},
 		},
 		{ // 63
+			"{a,b}",
+			nilRet,
+			nil,
+		},
+		{ // 64
+			"{a,b}",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0].Word.Parts[0].BraceExpansion.Words[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "BraceExpansion", "Word"},
+		},
+		{ // 65
+			"{a,b}",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.AssignmentsOrWords[0].Word.Parts[0].BraceExpansion.Words[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "BraceExpansion", "Word"},
+		},
+		{ // 66
 			"a > b",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Output
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Word"},
 		},
-		{ // 64
+		{ // 67
 			"a >>> b\n123\nb",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Output
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Word"},
 		},
-		{ // 65
+		{ // 68
 			"a <<b\n123\nb",
 			func(f *bash.File) bash.Type {
 				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Heredoc
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Heredoc"},
 		},
-		{ // 66
+		{ // 69
 			"a <<b\n123$c\nb",
 			nilRet,
 			nil,
 		},
-		{ // 67
+		{ // 70
 			"a <<b\n123$c\nb",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Heredoc.HeredocPartsOrWords[0]
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Heredoc", "HeredocPartOrWord"},
 		},
-		{ // 68
+		{ // 71
 			"a <<b\n123$c\nb",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Heredoc.HeredocPartsOrWords[1]
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Redirection", "Heredoc", "HeredocPartOrWord"},
 		},
-		{ // 69
+		{ // 72
 			"a <<b\n123$c\nb",
 			func(f *bash.File) bash.Type {
 				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Redirections[0].Heredoc.HeredocPartsOrWords[1].Word
