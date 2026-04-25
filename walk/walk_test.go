@@ -394,32 +394,46 @@ func TestWalk(t *testing.T) {
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "AssignmentOrWord", "Word", "WordPart", "ArithmeticExpansion", "WordOrOperator", "Word"},
 		},
 		{ // 55
+			"a[b c]=",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Identifier.Subscript[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "ParameterAssign", "WordOrOperator"},
+		},
+		{ // 56
+			"a[b c]=",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Identifier.Subscript[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "ParameterAssign", "WordOrOperator"},
+		},
+		{ // 57
 			"a=(b)",
 			nilRet,
 			nil,
 		},
-		{ // 56
+		{ // 58
 			"a=b",
 			func(f *bash.File) bash.Type {
 				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Word
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "Word"},
 		},
-		{ // 57
+		{ // 59
 			"a=(b c)",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Array[0]
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "ArrayWord"},
 		},
-		{ // 58
+		{ // 60
 			"a=(b c)",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Array[1]
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Command", "Assignment", "Value", "ArrayWord"},
 		},
-		{ // 59
+		{ // 61
 			"a=(b)",
 			func(f *bash.File) bash.Type {
 				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Command.Vars[0].Value.Array[0].Word
