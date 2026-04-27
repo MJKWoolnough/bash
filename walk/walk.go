@@ -475,7 +475,7 @@ func walkPatternLines(t *bash.PatternLines, fn Handler) error {
 		}
 	}
 
-	return fn.Handle(t.Lines)
+	return fn.Handle(&t.Lines)
 }
 
 func walkPipeline(t *bash.Pipeline, fn Handler) error {
