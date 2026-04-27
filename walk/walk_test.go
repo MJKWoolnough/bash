@@ -642,6 +642,32 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence", "File"},
 		},
+		{ // 92
+			"case a in b) c;;d) e;;esac",
+			nilRet,
+			nil,
+		},
+		{ // 93
+			"case a in b) c;;d) e;;esac",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.CaseCompound.Word
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "CaseCompound", "Word"},
+		},
+		{ // 94
+			"case a in b) c;;d) e;;esac",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.CaseCompound.Matches[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "CaseCompound", "PatternLines"},
+		},
+		{ // 95
+			"case a in b) c;;d) e;;esac",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.CaseCompound.Matches[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "CaseCompound", "PatternLines"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
