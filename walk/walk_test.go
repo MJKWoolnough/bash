@@ -595,6 +595,39 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "Redirection"},
 		},
+		{ // 85
+			"if a; then b; elif c; then d; elif e; then f; else g;fi",
+			nilRet,
+			nil,
+		},
+		{ // 86
+			"if a; then b; elif c; then d; elif e; then f; else g;fi",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.If
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence"},
+		},
+		{ // 87
+			"if a; then b; elif c; then d; elif e; then f; else g;fi",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.ElIf[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence"},
+		},
+		{ // 88
+			"if a; then b; elif c; then d; elif e; then f; else g;fi",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.ElIf[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence"},
+		},
+		{ // 89
+			"if a; then b; elif c; then d; elif e; then f; else g;fi",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.Else
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "File"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
