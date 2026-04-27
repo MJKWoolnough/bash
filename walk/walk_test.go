@@ -628,6 +628,20 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "File"},
 		},
+		{ // 90
+			"if a; then b;fi",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.If.Test
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence", "Statement"},
+		},
+		{ // 91
+			"if a; then b;fi",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.IfCompound.If.Consequence
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "IfCompound", "TestConsequence", "File"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
