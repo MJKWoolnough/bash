@@ -731,6 +731,27 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound", "File"},
 		},
+		{ // 105
+			"select a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.SelectCompound.Words[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "SelectCompound", "Word"},
+		},
+		{ // 106
+			"select a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.SelectCompound.Words[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "SelectCompound", "Word"},
+		},
+		{ // 107
+			"select a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.SelectCompound.File
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "SelectCompound", "File"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
