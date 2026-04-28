@@ -703,6 +703,34 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "LoopCompound", "File"},
 		},
+		{ // 101
+			"for a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ForCompound.Words[0]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound", "Word"},
+		},
+		{ // 102
+			"for a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ForCompound.Words[1]
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound", "Word"},
+		},
+		{ // 103
+			"for ((a));do b;done",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ForCompound.ArithmeticExpansion
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound", "ArithmeticExpansion"},
+		},
+		{ // 104
+			"for a in b c; do d;done",
+			func(f *bash.File) bash.Type {
+				return &f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.ForCompound.File
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "ForCompound", "File"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
