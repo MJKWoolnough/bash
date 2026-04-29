@@ -67,9 +67,10 @@ func (a Assignment) printSource(w writer, v bool) {
 				e.printSource(w, v)
 
 				if v && e.Operator != nil {
-					if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: "("}) {
+					switch e.Operator.Token {
+					case parser.Token{Type: TokenPunctuator, Data: "("}:
 						parens++
-					} else if e.Operator.Token == (parser.Token{Type: TokenPunctuator, Data: ")"}) {
+					case parser.Token{Type: TokenPunctuator, Data: ")"}:
 						parens--
 					}
 				}
