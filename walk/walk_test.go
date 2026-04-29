@@ -759,6 +759,39 @@ func TestWalk(t *testing.T) {
 			},
 			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound", "Tests"},
 		},
+		{ // 109
+			"[[ a == b ]]",
+			nilRet,
+			nil,
+		},
+		{ // 110
+			"[[ a == b ]]",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.TestCompound.Tests.Word
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound", "Tests", "Word"},
+		},
+		{ // 111
+			"[[ a == b ]]",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.TestCompound.Tests.Pattern
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound", "Tests", "Pattern"},
+		},
+		{ // 112
+			"[[ (a == b) ]]",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.TestCompound.Tests.Parens
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound", "Tests", "Tests"},
+		},
+		{ // 113
+			"[[ a == b && c == d ]]",
+			func(f *bash.File) bash.Type {
+				return f.Lines[0].Statements[0].Pipeline.CommandOrCompound.Compound.TestCompound.Tests.Tests
+			},
+			[]string{"File", "Line", "Statement", "Pipeline", "CommandOrCompound", "Compound", "TestCompound", "Tests", "Tests"},
+		},
 	} {
 		tk := parser.NewStringTokeniser(test.Input)
 
