@@ -4683,6 +4683,25 @@ func TestTokeniser(t *testing.T) {
 				{Type: parser.TokenDone, Data: ""},
 			},
 		},
+		{ // 316
+			`$(if a; then b; fi)`,
+			[]parser.Token{
+				{Type: TokenPunctuator, Data: "$("},
+				{Type: TokenKeyword, Data: "if"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "a"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "then"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenWord, Data: "b"},
+				{Type: TokenPunctuator, Data: ";"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenKeyword, Data: "fi"},
+				{Type: TokenPunctuator, Data: ")"},
+				{Type: parser.TokenDone, Data: ""},
+			},
+		},
 	} {
 		p := parser.NewStringTokeniser(test.Input)
 
