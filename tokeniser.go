@@ -1247,7 +1247,12 @@ func isWhitespace(t *parser.Tokeniser) bool {
 }
 
 func isWordSeperator(t *parser.Tokeniser) bool {
-	return isWhitespace(t) || t.Peek() == ';'
+	switch t.Peek() {
+	case ';', '(', ')', ' ', '\t', '\n', -1:
+		return true
+	}
+
+	return false
 }
 
 func (b *bashTokeniser) isCommandIndex(t *parser.Tokeniser) bool {
