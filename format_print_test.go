@@ -984,6 +984,11 @@ func TestPrintSource(t *testing.T) {
 			"if a; then\n\ta=\"\n\";\nfi;\n",
 			"if a; then\n\ta=\"\n\";\nfi;\n",
 		},
+		{ // 196
+			"exec {fd}<file",
+			"exec {fd}<file;\n",
+			"exec {fd}< file;\n",
+		},
 	} {
 		for m, input := range test {
 			if m == 2 && (n == 18 || n == 43 || n == 36 || n == 182) {
