@@ -1,6 +1,10 @@
 package bash
 
-import "vimagination.zapto.org/parser"
+import (
+	"strings"
+
+	"vimagination.zapto.org/parser"
+)
 
 // LogicalOperator represents how two statements are joined.
 type LogicalOperator uint8
@@ -410,14 +414,14 @@ func (cc *Command) parseHeredocs(b *bashParser) error {
 func isRedirection(b *bashParser) bool {
 	c := b.NewGoal()
 
-	if c.Accept(TokenNumberLiteral, TokenBraceWord) {
+	if tk := c.Next(); tk.Type == TokenNumberLiteral || tk.Type == TokenBraceWord || tk.Type == TokenWord && strings.HasPrefix(tk.Data, "{") && strings.HasSuffix(tk.Data, "}") {
 		if c.Accept(TokenPunctuator) {
 			switch c.GetLastToken().Data {
 			case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>":
 				return true
 			}
 		}
-	} else if c.Accept(TokenPunctuator) {
+	} else if tk.Type == TokenPunctuator {
 		switch c.GetLastToken().Data {
 		case "<", ">", ">|", ">>", "<<", "<<-", "<<<", "<&", ">&", "<>", "&>", "&>>":
 			return true
@@ -589,7 +593,7 @@ type Redirection struct {
 }
 
 func (r *Redirection) parse(b *bashParser) error {
-	if b.Accept(TokenNumberLiteral, TokenBraceWord) {
+	if b.Accept(TokenNumberLiteral, TokenBraceWord, TokenWord) {
 		r.Input = b.GetLastToken()
 	}
 
