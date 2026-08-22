@@ -3077,7 +3077,23 @@ func TestRedirection(t *testing.T) {
 				Tokens: tk[:2],
 			}
 		}},
-		{">$(||)", func(t *test, tk Tokens) { // 20
+		{"{fd}<a", func(t *test, tk Tokens) { // 20
+			t.Output = Redirection{
+				Input:      &tk[0],
+				Redirector: &tk[1],
+				Output: Word{
+					Parts: []WordPart{
+						{
+							Part:   &tk[2],
+							Tokens: tk[2:3],
+						},
+					},
+					Tokens: tk[2:3],
+				},
+				Tokens: tk[:3],
+			}
+		}},
+		{">$(||)", func(t *test, tk Tokens) { // 21
 			t.Err = Error{
 				Err: Error{
 					Err: Error{
