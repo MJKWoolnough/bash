@@ -27,7 +27,7 @@ const (
 	newline               = "\n"
 	whitespaceNewline     = whitespace + newline
 	heredocsBreak         = whitespace + newline + "|&;()<>\\\"'"
-	heredocStringBreak    = newline + "$"
+	heredocStringBreak    = newline + "\\$"
 	doubleStops           = "\\`$\""
 	singleStops           = "'"
 	ansiStops             = "'\\"
@@ -839,6 +839,9 @@ func (b *bashTokeniser) heredocString(t *parser.Tokeniser) (parser.Token, parser
 		switch t.ExceptRun(charBreak) {
 		case -1:
 			return t.ReturnError(io.ErrUnexpectedEOF)
+		case '\\':
+			t.Next()
+			t.Next()
 		case '$':
 			state := t.State()
 
