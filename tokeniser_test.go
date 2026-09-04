@@ -1306,7 +1306,7 @@ func TestTokeniser(t *testing.T) {
 			},
 		},
 		{ // 90
-			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set} ${#a} ${#} ${a#b} ${a##b} ${a%b} ${a%%b} ${a/b/c} ${a//b/c} ${a/#b/c} ${a/%b/c} ${a^b} ${a^^b} ${a,b} ${a,,b} ${a@Q} ${a@a} ${a@P}",
+			": ${!a} ${!a*} ${!a@} ${!a[@]} ${!a[*]} ${a:1:2} ${a: -1 : -2} ${a:1} ${a:-b} ${a:=b} ${a:?a is unset} ${a:+a is set} ${#a} ${#} ${a#b} ${a##b} ${a%b} ${a%%b} ${a/b/c} ${a//b/c} ${a/#b/c} ${a/%b/c} ${a^b} ${a^^b} ${a,b} ${a,,b} ${a@Q} ${a@a} ${a@P} ${a+[]}",
 			[]parser.Token{
 				{Type: TokenWord, Data: ":"},
 				{Type: TokenWhitespace, Data: " "},
@@ -1505,6 +1505,12 @@ func TestTokeniser(t *testing.T) {
 				{Type: TokenIdentifier, Data: "a"},
 				{Type: TokenPunctuator, Data: "@"},
 				{Type: TokenBraceWord, Data: "P"},
+				{Type: TokenPunctuator, Data: "}"},
+				{Type: TokenWhitespace, Data: " "},
+				{Type: TokenPunctuator, Data: "${"},
+				{Type: TokenIdentifier, Data: "a"},
+				{Type: TokenPunctuator, Data: "+"},
+				{Type: TokenWord, Data: "[]"},
 				{Type: TokenPunctuator, Data: "}"},
 				{Type: parser.TokenDone, Data: ""},
 			},
