@@ -35,7 +35,7 @@ const (
 	wordBreak             = "\\\"'`() \t\n$|&;<>{"
 	wordBreakBrace        = "\\\"'`() \t\n$|&;,<>}"
 	wordBreakArithmetic   = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,;"
-	wordBreakNoBrace      = wordBreak + "#}]"
+	wordBreakNoBrace      = wordBreak + "#}"
 	wordBreakSubstring    = wordBreakNoBrace + ":"
 	wordBreakIndex        = wordBreakArithmetic + "]"
 	wordBreakCommandIndex = "\\\"'`(){} \t\n$+-!~*/%<=>&^|?:,]"
